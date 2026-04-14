@@ -2,48 +2,91 @@
 
 ## Context
 
-Функциональность без качества не готова к реальной эксплуатации.
+Даже если auth и CMS работают, без качества сервис хрупкий: регрессии, уязвимости и сложный дебаг быстро остановят развитие проекта.
 
 ## Concept
 
-Quality track объединяет тестируемость, безопасность, наблюдаемость и производительность.
+Production readiness = четыре слоя:
 
-## Code Changes
+1. тестируемость;
+2. безопасность;
+3. наблюдаемость;
+4. производительность.
 
-Запланированы улучшения:
+## Step-by-Step Implementation Plan
 
-- Тесты:
-  - unit для сервисов;
-  - integration для модульных сценариев;
-  - e2e для auth/cms happy-path и edge cases.
-- Security:
-  - `helmet`, `cors`, `throttler`, строгая валидация входа;
-  - минимизация утечек данных в ошибках.
-- Observability:
-  - структурированный логгер;
-  - correlation/request ID;
-  - healthchecks.
-- Performance:
-  - pagination defaults;
-  - selective fields;
-  - cache для read-heavy endpoints.
+### Step 1 - Testing strategy
+
+Цель: быстро ловить ошибки на разных уровнях.
+
+- Unit: тестируем сервисы изолированно.
+- Integration: тестируем модульную связку (service + repository).
+- E2E: прогоняем пользовательские сценарии через HTTP.
+
+Мини-пример unit теста:
+
+```ts
+describe('AuthService', () => {
+  it('returns tokens for valid credentials', async () => {
+    const result = await authService.login({ email, password });
+    expect(result.accessToken).toBeDefined();
+  });
+});
+```
+
+### Step 2 - Security baseline
+
+Добавляем:
+
+- `helmet`;
+- корректный `cors`;
+- rate limiting (`@nestjs/throttler`);
+- строгую валидацию входных DTO.
+
+Пример цели:
+
+```ts
+app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }));
+```
+
+### Step 3 - Observability
+
+Добавляем:
+
+- структурированный логгер;
+- request/correlation id;
+- health endpoints (`/health`, `/ready`).
+
+### Step 4 - Performance baseline
+
+Добавляем:
+
+- дефолтные лимиты пагинации;
+- выборочные поля в list endpoints;
+- кэширование read-heavy маршрутов.
 
 ## Why This Matters
 
-Качество - это не "после", а часть архитектуры API.
+Эти практики делают проект устойчивым: проще масштабировать, дебажить и безопасно развивать.
 
 ## What To Remember
 
-- Тесты фиксируют поведение и защищают от регрессий.
-- Безопасность должна быть defense-in-depth.
-- Наблюдаемость нужна для дебага и эксплуатации.
+- Без тестов невозможно безопасно рефакторить.
+- Security должна быть включена по умолчанию, а не "по запросу".
+- Наблюдаемость не роскошь, а инженерная необходимость.
 
 ## Verify
 
-- `npm run test`
-- `npm run test:e2e`
-- Проверка rate-limit и health endpoint.
+1. `npm run test`
+2. `npm run test:e2e`
+3. Проверка, что лишние поля в DTO отклоняются.
+4. Проверка rate-limit и health endpoint.
 
 ## Homework
 
-Опиши минимальный SLO для API и какие метрики нужны для его контроля.
+Определи минимальный набор operational метрик:
+
+- error rate;
+- p95 latency;
+- auth failure rate;
+- saturation (CPU/memory).

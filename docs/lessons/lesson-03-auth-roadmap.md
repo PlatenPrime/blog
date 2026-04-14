@@ -2,38 +2,115 @@
 
 ## Context
 
-Для Blog/CMS критична аутентификация и авторизация, поэтому auth-поток закладывается до доменной логики.
+До CMS функционала нам нужен безопасный вход в систему. В этом уроке мы не пишем финальный auth-код целиком, а строим понятную схему реализации и контракты.
 
 ## Concept
 
-Auth в NestJS строится как набор модулей: users (identity), auth (login/register), guards (access rules), sessions/tokens (state management).
+Auth состоит из двух слоев:
 
-## Code Changes
+- **Authentication**: подтверждаем личность пользователя;
+- **Authorization**: ограничиваем действия по ролям/правам.
 
-В auth-track будут последовательно добавлены:
+Для учебного сервиса используем гибрид:
 
-1. `users` module: регистрация, поиск пользователя, hash пароля.
-2. `auth` module: login/register use-cases.
-3. JWT strategy + `AuthGuard`.
-4. `RolesGuard` + `@Roles()` decorator.
-5. Session storage для refresh-token с возможностью logout/logout-all.
+- access через JWT;
+- refresh через session-aware подход (контролируемые сессии).
+
+## Architecture Snapshot
+
+```mermaid
+flowchart TD
+  Client --> AuthController
+  AuthController --> AuthService
+  AuthService --> UsersService
+  AuthService --> JwtService
+  AuthService --> SessionsService
+  RolesGuard --> ProtectedController
+```
+
+## Step-by-Step Implementation Plan
+
+### Step 1 - Users module
+
+Что делаем:
+
+- создаем `users` модуль;
+- храним user identity и password hash;
+- готовим методы `createUser`, `findByEmail`, `findById`.
+
+Пример сигнатур:
+
+```ts
+interface CreateUserInput {
+  email: string;
+  password: string;
+  displayName: string;
+}
+
+findByEmail(email: string): Promise<User | null>;
+```
+
+### Step 2 - Auth module (register/login)
+
+Что делаем:
+
+- `register` создает пользователя;
+- `login` проверяет пароль и возвращает токены;
+- ошибки логина не раскрывают лишние детали.
+
+Пример response:
+
+```json
+{
+  "accessToken": "<jwt>",
+  "refreshToken": "<refresh>",
+  "user": { "id": "u1", "email": "user@example.com", "role": "author" }
+}
+```
+
+### Step 3 - JWT guard
+
+Что делаем:
+
+- подключаем `passport-jwt`;
+- извлекаем bearer token из `Authorization`;
+- добавляем `JwtAuthGuard` на приватные роуты.
+
+### Step 4 - Roles guard
+
+Что делаем:
+
+- создаем `@Roles(...)` decorator;
+- в `RolesGuard` сравниваем роль пользователя с требуемой ролью endpoint.
+
+### Step 5 - Sessions + refresh
+
+Что делаем:
+
+- храним активные refresh-сессии;
+- endpoint `POST /auth/refresh` выдает новую пару токенов;
+- endpoint `POST /auth/logout` завершает текущую сессию.
 
 ## Why This Matters
 
-Этот фундамент обеспечит безопасный доступ к приватным CMS операциям.
+Эта схема дает баланс: быстрый stateless доступ через JWT и управляемое завершение сессий через refresh storage.
 
 ## What To Remember
 
-- Authentication отвечает на "кто ты?".
-- Authorization отвечает на "что тебе можно?".
-- JWT удобен для stateless доступа, session полезна для контролируемого revoke.
+- Логин и роли - разные задачи, не смешиваем.
+- Не храним plaintext пароли.
+- Refresh lifecycle должен поддерживать revoke.
 
 ## Verify
 
-- Сценарий: register -> login -> protected route.
-- Сценарий: user role vs admin role на одном endpoint.
-- Сценарий: refresh + revoke session.
+Минимальный сценарий проверки:
+
+1. `POST /auth/register`
+2. `POST /auth/login`
+3. `GET /profile` с bearer token
+4. `POST /auth/refresh`
+5. `POST /auth/logout`
 
 ## Homework
 
-Сравни trade-off JWT-only и JWT+sessions для мобильного и веб-клиента.
+Составь таблицу endpoint'ов auth с колонками: `route`, `public/private`, `required role`, `response`.

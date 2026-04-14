@@ -2,43 +2,113 @@
 
 ## Context
 
-После auth начинаем доменную часть Blog/CMS, где права пользователей влияют на CRUD и модерацию.
+Auth-слой определяет, кто может работать с контентом. Теперь проектируем домен Blog/CMS так, чтобы он был масштабируемым и управляемым.
 
 ## Concept
 
-Домен делится на независимые bounded modules: posts, tags/categories, comments, moderation.
+Разбиваем CMS на отдельные модули с четкими границами ответственности:
 
-## Code Changes
+- `posts` - жизненный цикл публикаций;
+- `tags` / `categories` - классификация;
+- `comments` - обсуждения;
+- `moderation` - административные решения.
 
-Запланированы модули:
+## Domain Model (Draft)
 
-- `posts`: создание/обновление/публикация постов.
-- `tags` и/или `categories`: классификация контента.
-- `comments`: пользовательские комментарии.
-- `moderation`: действия администратора/модератора.
+```mermaid
+flowchart TD
+  User --> Post
+  Post --> Category
+  Post --> Tag
+  User --> Comment
+  Comment --> Post
+  Moderator --> ModerationAction
+  ModerationAction --> Post
+  ModerationAction --> Comment
+```
 
-Дополнительно:
+## Step-by-Step Implementation Plan
 
-- ownership checks (автор может редактировать только свой пост);
-- status workflow (`draft`, `published`, `archived`);
-- pagination и фильтры списка.
+### Step 1 - Posts module
+
+Вводим статусы:
+
+- `draft`
+- `published`
+- `archived`
+
+Пример DTO:
+
+```ts
+interface CreatePostDto {
+  title: string;
+  content: string;
+  categoryId?: string;
+  tagIds?: string[];
+}
+```
+
+### Step 2 - Tags/Categories module
+
+Что делаем:
+
+- справочники для классификации постов;
+- валидация связей при создании/обновлении поста.
+
+### Step 3 - Comments module
+
+Что делаем:
+
+- комментарии только к доступным постам;
+- базовые anti-abuse ограничения (добавим глубже в security track).
+
+Пример guard-правила:
+
+```ts
+canComment(postStatus: PostStatus): boolean {
+  return postStatus === 'published';
+}
+```
+
+### Step 4 - Moderation module
+
+Что делаем:
+
+- endpoint'ы для модераторов/админов;
+- действия: hide/unhide/delete/restore;
+- аудит изменений (минимум: кто, что, когда).
+
+### Step 5 - Cross-cutting rules
+
+- ownership check для author-level операций;
+- pagination + sorting + filtering;
+- единый формат ошибок и валидации.
 
 ## Why This Matters
 
-CMS-функции - это практическая область, где хорошо видны преимущества NestJS модульности и guard-driven безопасности.
+Хорошо спроектированный домен уменьшает хаос в бизнес-правилах и упрощает поддержку API.
 
 ## What To Remember
 
-- Доменная логика не должна жить в контроллерах.
-- Проверка прав делается системно (guards/policies), а не точечно в каждом методе.
-- Статусы сущностей уменьшают риск неконсистентного поведения.
+- Контроллеры тонкие, логика в сервисах.
+- Права и ownership проверяем централизованно.
+- Статусы сущностей - это часть бизнес-правил, а не только поле в БД.
 
 ## Verify
 
-- Проверить CRUD постов с разными ролями.
-- Проверить, что комментарий нельзя оставить к архивному посту.
-- Проверить пагинацию и фильтрацию.
+Сценарии:
+
+1. Автор создает черновик, публикует, редактирует.
+2. Чужой автор не может редактировать пост.
+3. Комментарий не создается для `archived` поста.
+4. Модератор скрывает комментарий.
 
 ## Homework
 
-Добавь soft-delete для комментариев и опиши эффект на API-контракт.
+Предложи API-контракт для `GET /posts` с фильтрами:
+
+- `status`
+- `category`
+- `tag`
+- `page`
+- `limit`
