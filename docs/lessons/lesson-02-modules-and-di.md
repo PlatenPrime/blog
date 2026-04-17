@@ -46,9 +46,44 @@ export class AppController {
 - снижает связность;
 - делает расширение модулей предсказуемым.
 
+### Step 4 - Мини-пример `UsersService + UsersController`
+
+```ts
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export class UsersService {
+  findAll() {
+    return [{ id: 1, name: 'Mikasa' }];
+  }
+}
+```
+
+```ts
+import { Controller, Get } from '@nestjs/common';
+import { UsersService } from './users.service';
+
+@Controller('users')
+export class UsersController {
+  constructor(private readonly usersService: UsersService) {}
+
+  @Get()
+  getUsers() {
+    return this.usersService.findAll();
+  }
+}
+```
+
+Что важно в этом примере:
+
+- контроллер не создает `UsersService` через `new`;
+- зависимость объявляется через конструктор;
+- DI контейнер сам подставляет зарегистрированный provider.
+
 ## Code Changes In This Lesson
 
 - Проанализирована связь `AppController -> AppService` через DI.
+- Добавлен мини-пример `UsersController -> UsersService` для доменного сценария.
 - Зафиксирован паттерн разделения ответственности для следующих модулей (`users`, `auth`, `posts`).
 
 ## Why This Matters
@@ -66,6 +101,7 @@ export class AppController {
 1. Проследи цепочку: endpoint в контроллере -> вызов сервиса.
 2. Временно добавь новый `HealthService` и внедри его в контроллер.
 3. Убедись, что endpoint продолжает работать.
+4. Проверь мысленно или в коде, что `UsersController` получает `UsersService` через constructor injection.
 
 ## Mini Practice
 
