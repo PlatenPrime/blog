@@ -1,21 +1,37 @@
 {
   "name": "nestjs-st",
   "private": true,
-  "description": "Monorepo: NestJS API + TanStack Start (Nx) — Blog/CMS learning track",
+  "description": "Monorepo: NestJS API + TanStack Start (Nx) - Blog/CMS learning track",
   "workspaces": [
-    "app"
+    "apps/api"
   ],
   "scripts": {
-    "build": "npm run build -w app",
-    "start": "npm run start -w app",
-    "start:dev": "npm run start:dev -w app",
-    "start:prod": "npm run start:prod -w app",
-    "lint": "npm run lint -w app",
-    "test": "npm run test -w app",
-    "test:e2e": "npm run test:e2e -w app",
-    "format": "npm run format -w app"
+    "build": "npm run build -w api",
+    "start": "npm run start -w api",
+    "start:dev": "npm run start:dev -w api",
+    "start:prod": "npm run start:prod -w api",
+    "lint": "npm run lint -w api",
+    "test": "npm run test -w api",
+    "test:e2e": "npm run test:e2e -w api",
+    "format": "npm run format -w api",
+    "nx": "nx",
+    "nx:show": "nx show projects",
+    "nx:graph": "nx graph",
+    "nx:build": "nx run api:build",
+    "nx:test": "nx run api:test",
+    "nx:e2e": "nx run api:test:e2e",
+    "nx:lint": "nx run api:lint"
   },
   "engines": {
-    "node": ">=20.10.0"
+    "node": ">=20.10.0",
+    "npm": ">=10.0.0"
+  },
+  "packageManager": "npm@10.8.2",
+  "devDependencies": {
+    "@nx/eslint": "22.7.0",
+    "@nx/jest": "22.7.0",
+    "eslint": "~8.57.0",
+    "jest": "^30.0.2",
+    "nx": "22.7.0"
   }
 }

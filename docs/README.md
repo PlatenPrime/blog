@@ -1,46 +1,37 @@
-# NestJS + TanStack Start Practice Track
+﻿# NestJS + TanStack Start Practice Track
 
-Репозиторий — практический **fullstack** трек: NestJS API + TanStack Start (SSR/SEO) + Nx monorepo, в формате *learn by building* для платформы **Blog/CMS**.
+This repository is a fullstack practice track: NestJS API + TanStack Start + Nx.
 
-## Цель
+## Documentation
 
-Построить production-minded платформу и по пути разобрать:
+- [development-roadmap.md](./development-roadmap.md)
+- [LOCAL_SETUP.md](./LOCAL_SETUP.md)
+- [learning-path.md](./learning-path.md)
+- [lesson-authoring-guide.md](./lesson-authoring-guide.md)
+- [lessons/lesson-template.md](./lessons/lesson-template.md)
 
-- NestJS: модули, DI, контроллеры, валидация, guards, auth, домен CMS;
-- TanStack Start: публичный блог и админ-редактор с сильным SEO;
-- Nx: граф задач, библиотеки `libs/*`, CI и качество;
-- Тестирование, безопасность, наблюдаемость, поставка в прод.
-
-## Документация
-
-| Документ | Назначение |
-|----------|------------|
-| [`development-roadmap.md`](./development-roadmap.md) | **Master-план разработки**: шаги 001–320, треки, проверки |
-| [`learning-path.md`](./learning-path.md) | Фазы обучения и ссылки на roadmap |
-| [`lesson-authoring-guide.md`](./lesson-authoring-guide.md) | Стандарт урока-спринта |
-| [`lessons/lesson-template.md`](./lessons/lesson-template.md) | Шаблон урока |
-| [`lessons/`](./lessons/) | Уроки по шагам (`lesson-NNN-...md`) |
-
-## Быстрый старт (после шага 001)
-
-Из **корня** репозитория:
+## Quick Start
 
 ```bash
 npm install
 npm run start:dev
-```
-
-Тесты:
-
-```bash
 npm run test
 npm run test:e2e
 ```
 
-Подробности шага 001: [`lessons/lesson-001-root-npm-workspaces.md`](./lessons/lesson-001-root-npm-workspaces.md).
+## Completed Lessons
 
-## Текущий прогесс (высокий уровень)
+- Step 001: [lesson-001-root-npm-workspaces.md](./lessons/lesson-001-root-npm-workspaces.md)
+- Step 002: [lesson-002-local-setup-and-node-policy.md](./lessons/lesson-002-local-setup-and-node-policy.md)
+- Step 003: [lesson-003-nx-init.md](./lessons/lesson-003-nx-init.md)
+- Step 004: [lesson-004-nx-targets-and-inference.md](./lessons/lesson-004-nx-targets-and-inference.md)
+- Step 005: [lesson-005-nest-apps-api-migration.md](./lessons/lesson-005-nest-apps-api-migration.md)
 
-- [x] Документационный каркас и master roadmap.
-- [x] Шаг 001: корневой npm workspace + скрипты оркестрации.
-- [ ] Шаг 002+: Nx, перенос API, scaffold web — см. roadmap.
+Nx commands from repo root:
+
+- `npm run nx:show`
+- `npm run nx:lint`
+- `npm run nx:test`
+- `npm run nx:e2e`
+- `npm run nx:build`
+- `npm run nx:graph`

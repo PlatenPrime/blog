@@ -6,7 +6,7 @@ import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 const envPaths = [
-  resolve(__dirname, '../../.env'),
+  resolve(__dirname, '../../../.env'),
   resolve(process.cwd(), '.env'),
 ];
 
@@ -55,4 +55,4 @@ async function bootstrap() {
     }.`,
   );
 }
-bootstrap();
+void bootstrap();

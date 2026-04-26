@@ -4,3 +4,11 @@ coverage
 dist
 *.log
 .DS_Store
+
+
+.nx/cache
+.nx/workspace-data
+
+# Local Nx graph export (`nx graph --file=...`, only at repo root)
+/nx-graph.html
+/static/

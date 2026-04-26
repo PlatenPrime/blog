@@ -4,16 +4,18 @@ Monorepo-практикум: **NestJS** (API) + **TanStack Start** (SSR/SEO) + *
 
 ## Требования
 
-- Node.js >= 20.10
+- Node.js и npm: см. [docs/LOCAL_SETUP.md](docs/LOCAL_SETUP.md) (рекомендуется **20.18.0** из `.nvmrc`).
 
 ## Команды (корень репозитория)
 
 ```bash
 npm install
-npm run start:dev    # Nest в workspace app
+npm run start:dev    # Nest в workspace api (apps/api)
 npm run test
 npm run test:e2e
 npm run build
+npm run nx:show      # проекты Nx (сейчас: api)
+npm run nx:build     # то же через nx run api:build
 ```
 
-Документация и первый урок: [`docs/README.md`](docs/README.md).
+Документация: [`docs/README.md`](docs/README.md). Локальная настройка: [`docs/LOCAL_SETUP.md`](docs/LOCAL_SETUP.md).
