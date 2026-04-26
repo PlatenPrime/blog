@@ -1,37 +1,46 @@
-# NestJS Practice Course
+# NestJS + TanStack Start Practice Track
 
-Этот репозиторий используется как практический учебный трек по NestJS в формате "learn by building".
+Репозиторий — практический **fullstack** трек: NestJS API + TanStack Start (SSR/SEO) + Nx monorepo, в формате *learn by building* для платформы **Blog/CMS**.
 
-## Цель курса
+## Цель
 
-Построить production-minded `Blog/CMS API` и по пути разобрать ключевые концепции NestJS:
+Построить production-minded платформу и по пути разобрать:
 
-- modules, controllers, providers, DI;
-- auth, roles, guards, sessions, JWT;
-- validation, filters, interceptors;
-- data layer, domain modules, тестирование;
-- безопасность, наблюдаемость и подготовка к продакшену.
+- NestJS: модули, DI, контроллеры, валидация, guards, auth, домен CMS;
+- TanStack Start: публичный блог и админ-редактор с сильным SEO;
+- Nx: граф задач, библиотеки `libs/*`, CI и качество;
+- Тестирование, безопасность, наблюдаемость, поставка в прод.
 
-## Формат обучения
+## Документация
 
-- Один урок = одно понятие.
-- Сначала теория коротко, затем изменение в коде.
-- После каждого урока: что запомнить + как проверить.
-- Каждый урок содержит пошаговый сценарий и минимум один код-пример.
-- Уроки пишутся так, чтобы их можно было пройти без внешних туториалов.
+| Документ | Назначение |
+|----------|------------|
+| [`development-roadmap.md`](./development-roadmap.md) | **Master-план разработки**: шаги 001–320, треки, проверки |
+| [`learning-path.md`](./learning-path.md) | Фазы обучения и ссылки на roadmap |
+| [`lesson-authoring-guide.md`](./lesson-authoring-guide.md) | Стандарт урока-спринта |
+| [`lessons/lesson-template.md`](./lessons/lesson-template.md) | Шаблон урока |
+| [`lessons/`](./lessons/) | Уроки по шагам (`lesson-NNN-...md`) |
 
-## Структура документации
+## Быстрый старт (после шага 001)
 
-- `docs/learning-path.md` - дорожная карта курса.
-- `docs/lesson-authoring-guide.md` - внутренний стандарт качества уроков.
-- `docs/lessons/lesson-template.md` - шаблон урока.
-- `docs/lessons/*.md` - уроки по порядку.
+Из **корня** репозитория:
 
-## Текущий прогресс
+```bash
+npm install
+npm run start:dev
+```
 
-- [x] Документационный каркас.
-- [x] Шаблон уроков и правила повествования.
-- [x] Bootstrap уроки.
-- [x] Auth track (users, roles, sessions, JWT).
-- [x] CMS track (posts, tags, comments, moderation).
-- [x] Quality track (tests, security, observability, performance).
+Тесты:
+
+```bash
+npm run test
+npm run test:e2e
+```
+
+Подробности шага 001: [`lessons/lesson-001-root-npm-workspaces.md`](./lessons/lesson-001-root-npm-workspaces.md).
+
+## Текущий прогесс (высокий уровень)
+
+- [x] Документационный каркас и master roadmap.
+- [x] Шаг 001: корневой npm workspace + скрипты оркестрации.
+- [ ] Шаг 002+: Nx, перенос API, scaffold web — см. roadmap.

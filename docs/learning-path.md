@@ -1,39 +1,49 @@
 # Learning Path
 
-## Phase 1: Bootstrap and Core
+Обучение идёт **по master roadmap разработки**: каждый шаг = один спринт с кодом, проверками и файлом урока. Источник истины по нумерации и составу шагов — [`development-roadmap.md`](./development-roadmap.md).
 
-1. `lesson-01-project-bootstrap.md` - создание и запуск NestJS приложения.
-2. `lesson-02-modules-and-di.md` - modules, providers, dependency injection.
-3. `lesson-03-controllers-and-routing.md` - controllers, routes, params, responses.
+## Как читать этот файл
 
-## Phase 2: Auth Foundation
+- **Фазы ниже** — логическая группировка для студента (удобно для «большой картины»).
+- **Конкретный порядок работ** — только таблица шагов `001–320` в roadmap.
+- Уроки лежат в [`docs/lessons/`](./lessons/); имя файла: `lesson-NNN-topic.md` (NNN = номер шага из roadmap).
 
-4. `lesson-04-users-and-passwords.md` - users module и безопасное хранение паролей.
-5. `lesson-05-jwt-authentication.md` - login/register, access token, JWT strategy.
-6. `lesson-06-roles-and-guards.md` - RBAC, custom decorators, guards.
-7. `lesson-07-sessions-and-refresh-tokens.md` - sessions, refresh token flow, logout.
+## Phase 1: Monorepo и фундамент (Track 0)
 
-## Phase 3: Validation and Errors
+Соответствует шагам **001–032** в roadmap: корневой workspace, Nx, перенос Nest в `apps/api`, scaffold TanStack Start, CI, документация.
 
-8. `lesson-08-dto-validation-pipes.md` - DTO + `class-validator` + global ValidationPipe.
-9. `lesson-09-exception-filters.md` - consistent error contracts and filters.
+- Старт: [`lesson-001-root-npm-workspaces.md`](./lessons/lesson-001-root-npm-workspaces.md)
 
-## Phase 4: Data and CMS Domain
+## Phase 2: Платформа API (Track 1)
 
-10. `lesson-10-data-layer-and-migrations.md` - ORM и миграции.
-11. `lesson-11-posts-module.md` - CRUD постов.
-12. `lesson-12-tags-and-categories.md` - tags/categories и связи.
-13. `lesson-13-comments-and-moderation.md` - comments, moderation workflow.
+Шаги **033–056**: конфигурация, health, единый формат ошибок, валидация, логирование, основа API v1.
 
-## Phase 5: Advanced NestJS
+## Phase 3: Аутентификация и роли (Track 2)
 
-14. `lesson-14-interceptors-middleware.md` - interceptors, middleware, logging.
-15. `lesson-15-dynamic-modules-config.md` - config module и dynamic modules.
+Шаги **057–104**: пользователи, пароли, JWT + refresh, сессии, RBAC, сценарии безопасности.
 
-## Phase 6: Quality and Production
+## Phase 4: CMS и редактор на backend (Track 3)
 
-16. `lesson-16-testing-strategy.md` - unit/integration/e2e.
-17. `lesson-17-security-hardening.md` - helmet, cors, throttling, auth hardening.
-18. `lesson-18-observability-and-healthchecks.md` - logging, metrics, health endpoints.
-19. `lesson-19-performance-and-caching.md` - caching, pagination, response optimization.
-20. `lesson-20-capstone-review.md` - финальная ревизия архитектуры.
+Шаги **105–164**: посты (черновики, публикация, slug, SEO), теги и категории, комментарии, модерация, контракты для фронта.
+
+## Phase 5: Публичный сайт на TanStack Start (Track 4)
+
+Шаги **165–200**: SSR, SEO, лента и страница поста, sitemap, кеширование и revalidate.
+
+## Phase 6: Админка и редактор (Track 5)
+
+Шаги **201–252**: студия, полноценный UX редактора, автосохранение, превью, публикация, модерация в UI.
+
+## Phase 7: Масштаб и данные (Track 6)
+
+Шаги **253–278**: индексы, производительность запросов, кеш, CDN-заголовки.
+
+## Phase 8: Надёжность и продакшен (Tracks 7–8)
+
+- **Track 7** (**279–302**): throttling, security hardening, health, метрики, наблюдаемость.
+- **Track 8** (**303–320**): Docker, CI/CD, релизы, capstone review.
+
+## Шаблон и правила уроков
+
+- [Lesson authoring guide](./lesson-authoring-guide.md)
+- [Lesson template](./lessons/lesson-template.md)
