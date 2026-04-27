@@ -15,7 +15,8 @@ npm run test
 npm run test:e2e
 npm run build
 npm run nx:show      # проекты Nx (сейчас: api)
-npm run nx:build     # то же через nx run api:build
+npm run nx:graph     # граф проектов Nx
+# build / test / lint / test:e2e с корня уже вызывают nx run api:*
 ```
 
 Документация: [`docs/README.md`](docs/README.md). Локальная настройка: [`docs/LOCAL_SETUP.md`](docs/LOCAL_SETUP.md).

@@ -29,12 +29,9 @@ npm run test:e2e
 - Step 006: [lesson-006-root-tsconfig-base-and-paths.md](./lessons/lesson-006-root-tsconfig-base-and-paths.md)
 - Step 007: [lesson-007-root-eslint-flat-config.md](./lessons/lesson-007-root-eslint-flat-config.md)
 - Step 008: [lesson-008-root-prettier-and-editorconfig.md](./lessons/lesson-008-root-prettier-and-editorconfig.md)
+- Step 009: [lesson-009-root-scripts-via-nx.md](./lessons/lesson-009-root-scripts-via-nx.md)
 
-Nx commands from repo root:
+Quality scripts from repo root (`build`, `test`, `lint`, `test:e2e`) run through Nx on the `api` app. Utility scripts:
 
-- `npm run nx:show`
-- `npm run nx:lint`
-- `npm run nx:test`
-- `npm run nx:e2e`
-- `npm run nx:build`
-- `npm run nx:graph`
+- `npm run nx:show` — list Nx projects
+- `npm run nx:graph` — open the project graph

@@ -39,7 +39,6 @@
 - Для каждого нового понятия давать минимум один рабочий пример кода (TypeScript, DTO, guard, test, или command snippet).
 - Добавлять объяснение "как думать" (decision rationale), а не только "что сделать".
 - Добавлять "What To Remember" (3-5 тезисов, не больше).
-- Каждому уроку давать практический mini-homework.
 
 ## Lesson Depth Standard
 

@@ -6,22 +6,18 @@
     "apps/api"
   ],
   "scripts": {
-    "build": "npm run build -w api",
+    "build": "nx run api:build",
     "start": "npm run start -w api",
     "start:dev": "npm run start:dev -w api",
     "start:prod": "npm run start:prod -w api",
-    "lint": "npm run lint -w api",
-    "test": "npm run test -w api",
-    "test:e2e": "npm run test:e2e -w api",
+    "lint": "nx run api:lint",
+    "test": "nx run api:test",
+    "test:e2e": "nx run api:test:e2e",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "nx": "nx",
     "nx:show": "nx show projects",
-    "nx:graph": "nx graph",
-    "nx:build": "nx run api:build",
-    "nx:test": "nx run api:test",
-    "nx:e2e": "nx run api:test:e2e",
-    "nx:lint": "nx run api:lint"
+    "nx:graph": "nx graph"
   },
   "engines": {
     "node": ">=20.10.0",

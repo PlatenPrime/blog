@@ -23,6 +23,7 @@ Every step is a sprint and must produce code changes + a lesson file in `docs/le
 | Root tsconfig base + paths   | Step 006 completed                         |
 | Root ESLint flat config      | Step 007 completed                         |
 | Root Prettier + EditorConfig | Step 008 completed                         |
+| Root scripts via Nx (build/test/lint) | Step 009 completed                |
 
 ## Step Contract (mandatory for every lesson)
 
@@ -150,5 +151,6 @@ Each `lesson-NNN-*.md` must include:
 | 006  | [lesson-006-root-tsconfig-base-and-paths.md](./lessons/lesson-006-root-tsconfig-base-and-paths.md)     |
 | 007  | [lesson-007-root-eslint-flat-config.md](./lessons/lesson-007-root-eslint-flat-config.md)               |
 | 008  | [lesson-008-root-prettier-and-editorconfig.md](./lessons/lesson-008-root-prettier-and-editorconfig.md) |
+| 009  | [lesson-009-root-scripts-via-nx.md](./lessons/lesson-009-root-scripts-via-nx.md)                       |
 
 Entry point: [LOCAL_SETUP.md](./LOCAL_SETUP.md)

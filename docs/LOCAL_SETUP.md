@@ -1,6 +1,6 @@
 ﻿# Local Setup
 
-This file is the local setup entry point after steps 001-008.
+This file is the local setup entry point after steps 001-009.
 
 ## Toolchain
 
@@ -34,17 +34,24 @@ npm run format
 npm run format:check
 ```
 
+`npm run build`, `npm run test`, `npm run lint`, and `npm run test:e2e` invoke **Nx** targets on the `api` project (`nx run api:build`, and so on), so you get Nx caching and the same entry points future CI will use.
+
 ## Nx commands
 
 ```bash
 npm run nx:show
-npm run nx:lint
-npm run nx:test
-npm run nx:e2e
-npm run nx:build
 npm run nx:graph
+```
+
+Explicit target form (equivalent to the npm scripts above):
+
+```bash
+npx nx run api:build
+npx nx run api:test
+npx nx run api:lint
+npx nx run api:test:e2e
 ```
 
 ## Next roadmap step
 
-Step 009: root scripts via Nx for build/test/lint (see roadmap).
+Step 010: create `apps/web` (TanStack Start scaffold) — see [development-roadmap.md](./development-roadmap.md).
