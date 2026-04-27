@@ -59,18 +59,18 @@ Nest 11, будущий Nx и TanStack Start предполагают совре
 
 ## Changed Files
 
-| Файл | Действие |
-|------|----------|
-| [`.nvmrc`](../../.nvmrc) | создан |
-| [`.node-version`](../../.node-version) | создан |
-| [`.npmrc`](../../.npmrc) | создан |
-| [`package.json`](../../package.json) | изменён — `engines`, `packageManager` |
-| [`docs/LOCAL_SETUP.md`](../LOCAL_SETUP.md) | создан |
-| [`docs/README.md`](../README.md) | изменён — ссылка на LOCAL_SETUP, прогресс |
-| [`README.md`](../../README.md) | изменён — ссылка на LOCAL_SETUP |
-| [`docs/development-roadmap.md`](../development-roadmap.md) | изменён — baseline, выполненные шаги |
-| [`docs/learning-path.md`](../learning-path.md) | изменён — ссылка на урок 002 |
-| `docs/lessons/lesson-002-local-setup-and-node-policy.md` | создан (этот файл) |
+| Файл                                                       | Действие                                  |
+| ---------------------------------------------------------- | ----------------------------------------- |
+| [`.nvmrc`](../../.nvmrc)                                   | создан                                    |
+| [`.node-version`](../../.node-version)                     | создан                                    |
+| [`.npmrc`](../../.npmrc)                                   | создан                                    |
+| [`package.json`](../../package.json)                       | изменён — `engines`, `packageManager`     |
+| [`docs/LOCAL_SETUP.md`](../LOCAL_SETUP.md)                 | создан                                    |
+| [`docs/README.md`](../README.md)                           | изменён — ссылка на LOCAL_SETUP, прогресс |
+| [`README.md`](../../README.md)                             | изменён — ссылка на LOCAL_SETUP           |
+| [`docs/development-roadmap.md`](../development-roadmap.md) | изменён — baseline, выполненные шаги      |
+| [`docs/learning-path.md`](../learning-path.md)             | изменён — ссылка на урок 002              |
+| `docs/lessons/lesson-002-local-setup-and-node-policy.md`   | создан (этот файл)                        |
 
 ## Verification
 

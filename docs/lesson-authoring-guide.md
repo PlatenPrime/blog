@@ -21,7 +21,7 @@
 7. **Architecture Notes** — решения и trade-offs.
 8. **Definition of Done** — чеклист приёмки шага.
 
-Секции **Context**, **Concept**, **Code Changes**, **Why This Matters**, **What To Remember**, **Verify**, **Homework** из шаблона **не удалять**; дублирование с *Verification* допустимо, если *Verify* даёт краткую выжимку для быстрого прогона.
+Секции **Context**, **Concept**, **Code Changes**, **Why This Matters**, **What To Remember**, **Verify**, **Homework** из шаблона **не удалять**; дублирование с _Verification_ допустимо, если _Verify_ даёт краткую выжимку для быстрого прогона.
 
 ## Core Principles
 

@@ -25,7 +25,12 @@
     },
     "lint": {
       "cache": true,
-      "inputs": ["default", "{workspaceRoot}/apps/api/eslint.config.mjs"]
+      "inputs": [
+        "default",
+        "{workspaceRoot}/eslint.config.mjs",
+        "{workspaceRoot}/.prettierrc",
+        "{workspaceRoot}/.prettierignore"
+      ]
     }
   },
   "plugins": [

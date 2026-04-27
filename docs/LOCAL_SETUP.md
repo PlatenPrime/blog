@@ -1,6 +1,6 @@
 ﻿# Local Setup
 
-This file is the local setup entry point after steps 001-005.
+This file is the local setup entry point after steps 001-008.
 
 ## Toolchain
 
@@ -30,6 +30,8 @@ npm run test
 npm run test:e2e
 npm run build
 npm run lint
+npm run format
+npm run format:check
 ```
 
 ## Nx commands
@@ -45,4 +47,4 @@ npm run nx:graph
 
 ## Next roadmap step
 
-Step 006: add root `tsconfig.base.json` and path mappings (see roadmap).
+Step 009: root scripts via Nx for build/test/lint (see roadmap).

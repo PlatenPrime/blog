@@ -32,20 +32,20 @@ Place the NestJS application under the canonical monorepo layout `apps/api`, ren
 
 ## Changed Files
 
-| File | Action |
-|------|--------|
-| `apps/api/**` | created (moved from `app/`) |
-| `app/` | removed (or empty stub if locked — see below) |
-| [`package.json`](../../package.json) | workspaces + scripts + nx targets |
-| [`nx.json`](../../nx.json) | eslint input path |
-| [`apps/api/package.json`](../../apps/api/package.json) | name `api`, coverage path |
-| [`apps/api/src/main.ts`](../../apps/api/src/main.ts) | env path |
-| [`docs/development-roadmap.md`](../development-roadmap.md) | baseline + completed steps |
-| [`docs/README.md`](../README.md) | lesson 005 link |
-| [`docs/LOCAL_SETUP.md`](../LOCAL_SETUP.md) | next step 006 |
-| [`docs/learning-path.md`](../learning-path.md) | step 005 link |
-| [`README.md`](../../README.md) | comments for `api` |
-| `docs/lessons/lesson-005-nest-apps-api-migration.md` | this file |
+| File                                                       | Action                                        |
+| ---------------------------------------------------------- | --------------------------------------------- |
+| `apps/api/**`                                              | created (moved from `app/`)                   |
+| `app/`                                                     | removed (or empty stub if locked — see below) |
+| [`package.json`](../../package.json)                       | workspaces + scripts + nx targets             |
+| [`nx.json`](../../nx.json)                                 | eslint input path                             |
+| [`apps/api/package.json`](../../apps/api/package.json)     | name `api`, coverage path                     |
+| [`apps/api/src/main.ts`](../../apps/api/src/main.ts)       | env path                                      |
+| [`docs/development-roadmap.md`](../development-roadmap.md) | baseline + completed steps                    |
+| [`docs/README.md`](../README.md)                           | lesson 005 link                               |
+| [`docs/LOCAL_SETUP.md`](../LOCAL_SETUP.md)                 | next step 006                                 |
+| [`docs/learning-path.md`](../learning-path.md)             | step 005 link                                 |
+| [`README.md`](../../README.md)                             | comments for `api`                            |
+| `docs/lessons/lesson-005-nest-apps-api-migration.md`       | this file                                     |
 
 ## Verification
 

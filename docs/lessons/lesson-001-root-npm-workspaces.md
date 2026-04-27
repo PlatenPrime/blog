@@ -29,17 +29,17 @@
 
 ## Changed Files
 
-| Файл | Действие |
-|------|----------|
-| [`package.json`](../../package.json) | создан |
-| [`docs/development-roadmap.md`](../development-roadmap.md) | создан (master roadmap) |
-| [`docs/lessons/lesson-001-root-npm-workspaces.md`](./lesson-001-root-npm-workspaces.md) | создан (этот урок) |
-| [`docs/README.md`](../README.md) | обновлён — ссылка на roadmap |
-| [`docs/learning-path.md`](../learning-path.md) | обновлён — связь с roadmap |
-| [`docs/lesson-authoring-guide.md`](../lesson-authoring-guide.md) | обновлён — контракт спринта |
-| [`docs/lessons/lesson-template.md`](./lesson-template.md) | обновлён — секции спринта |
-| [`README.md`](../../README.md) | создан — быстрый старт с корня |
-| (исторически) `app/package-lock.json` | удалён — единый lockfile в корне при workspaces |
+| Файл                                                                                    | Действие                                        |
+| --------------------------------------------------------------------------------------- | ----------------------------------------------- |
+| [`package.json`](../../package.json)                                                    | создан                                          |
+| [`docs/development-roadmap.md`](../development-roadmap.md)                              | создан (master roadmap)                         |
+| [`docs/lessons/lesson-001-root-npm-workspaces.md`](./lesson-001-root-npm-workspaces.md) | создан (этот урок)                              |
+| [`docs/README.md`](../README.md)                                                        | обновлён — ссылка на roadmap                    |
+| [`docs/learning-path.md`](../learning-path.md)                                          | обновлён — связь с roadmap                      |
+| [`docs/lesson-authoring-guide.md`](../lesson-authoring-guide.md)                        | обновлён — контракт спринта                     |
+| [`docs/lessons/lesson-template.md`](./lesson-template.md)                               | обновлён — секции спринта                       |
+| [`README.md`](../../README.md)                                                          | создан — быстрый старт с корня                  |
+| (исторически) `app/package-lock.json`                                                   | удалён — единый lockfile в корне при workspaces |
 
 ## Verification
 

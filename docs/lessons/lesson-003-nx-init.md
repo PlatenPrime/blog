@@ -67,18 +67,18 @@ npx nx run api:build
 
 ## Changed Files
 
-| Файл | Действие |
-|------|----------|
-| [`nx.json`](../../nx.json) | создан |
-| [`package.json`](../../package.json) | изменён — `devDependencies`, скрипты `nx:*` |
-| [`package-lock.json`](../../package-lock.json) | изменён — lock после `nx init` |
-| [`.gitignore`](../../.gitignore) | изменён — игнор экспорта `nx graph` |
-| [`docs/development-roadmap.md`](../development-roadmap.md) | обновлён — baseline, выполненные шаги |
-| [`docs/README.md`](../README.md) | обновлён — прогресс, Nx команды |
-| [`docs/LOCAL_SETUP.md`](../LOCAL_SETUP.md) | обновлён — раздел про Nx |
-| [`docs/learning-path.md`](../learning-path.md) | обновлён — ссылка на урок 003 |
-| [`README.md`](../../README.md) | обновлён — команды Nx |
-| [`docs/lessons/lesson-003-nx-init.md`](./lesson-003-nx-init.md) | создан (этот файл) |
+| Файл                                                            | Действие                                    |
+| --------------------------------------------------------------- | ------------------------------------------- |
+| [`nx.json`](../../nx.json)                                      | создан                                      |
+| [`package.json`](../../package.json)                            | изменён — `devDependencies`, скрипты `nx:*` |
+| [`package-lock.json`](../../package-lock.json)                  | изменён — lock после `nx init`              |
+| [`.gitignore`](../../.gitignore)                                | изменён — игнор экспорта `nx graph`         |
+| [`docs/development-roadmap.md`](../development-roadmap.md)      | обновлён — baseline, выполненные шаги       |
+| [`docs/README.md`](../README.md)                                | обновлён — прогресс, Nx команды             |
+| [`docs/LOCAL_SETUP.md`](../LOCAL_SETUP.md)                      | обновлён — раздел про Nx                    |
+| [`docs/learning-path.md`](../learning-path.md)                  | обновлён — ссылка на урок 003               |
+| [`README.md`](../../README.md)                                  | обновлён — команды Nx                       |
+| [`docs/lessons/lesson-003-nx-init.md`](./lesson-003-nx-init.md) | создан (этот файл)                          |
 
 ## Verification
 
