@@ -36,6 +36,15 @@ npm run format:check
 
 `npm run build`, `npm run test`, `npm run lint`, and `npm run test:e2e` invoke **Nx** targets on the `api` project (`nx run api:build`, and so on), so you get Nx caching and the same entry points future CI will use.
 
+## TanStack Start (`apps/web`)
+
+The `web` workspace is a TanStack Start app (Vite + Nitro). From repository root:
+
+```bash
+npm run web:dev
+npx nx run web:build
+```
+
 ## Nx commands
 
 ```bash
@@ -50,8 +59,9 @@ npx nx run api:build
 npx nx run api:test
 npx nx run api:lint
 npx nx run api:test:e2e
+npx nx run web:build
 ```
 
 ## Next roadmap step
 
-Step 010: create `apps/web` (TanStack Start scaffold) — see [development-roadmap.md](./development-roadmap.md).
+Step 011: add `web:typecheck` Nx target — see [development-roadmap.md](./development-roadmap.md).

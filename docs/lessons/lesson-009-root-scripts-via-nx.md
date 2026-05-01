@@ -48,15 +48,15 @@ npm run test:e2e
 
 ## Changed Files
 
-| File                                                         | Action                    |
-| ------------------------------------------------------------ | ------------------------- |
-| [`package.json`](../../package.json)                         | scripts: Nx-backed gates  |
-| [`docs/LOCAL_SETUP.md`](../LOCAL_SETUP.md)                   | Nx section + next step 010 |
-| [`docs/README.md`](../README.md)                             | lesson 009 + Nx blurb     |
-| [`docs/development-roadmap.md`](../development-roadmap.md) | baseline + snapshot       |
-| [`docs/learning-path.md`](../learning-path.md)               | step 009                  |
-| [`README.md`](../../README.md) (repo root)                   | команды без `nx:build`    |
-| `docs/lessons/lesson-009-root-scripts-via-nx.md`            | this file                 |
+| File                                                       | Action                     |
+| ---------------------------------------------------------- | -------------------------- |
+| [`package.json`](../../package.json)                       | scripts: Nx-backed gates   |
+| [`docs/LOCAL_SETUP.md`](../LOCAL_SETUP.md)                 | Nx section + next step 010 |
+| [`docs/README.md`](../README.md)                           | lesson 009 + Nx blurb      |
+| [`docs/development-roadmap.md`](../development-roadmap.md) | baseline + snapshot        |
+| [`docs/learning-path.md`](../learning-path.md)             | step 009                   |
+| [`README.md`](../../README.md) (repo root)                 | команды без `nx:build`     |
+| `docs/lessons/lesson-009-root-scripts-via-nx.md`           | this file                  |
 
 ## Architecture Notes
 

@@ -12,18 +12,19 @@ Every step is a sprint and must produce code changes + a lesson file in `docs/le
 
 ## Baseline Status
 
-| Area                         | Status                                     |
-| ---------------------------- | ------------------------------------------ |
-| NestJS app                   | Exists in `apps/api/` (package name `api`) |
-| Root workspace               | Step 001 completed                         |
-| Node/npm policy              | Step 002 completed                         |
-| Nx init                      | Step 003 completed                         |
-| Nx target defaults           | Step 004 completed                         |
-| Nest in apps/api             | Step 005 completed                         |
-| Root tsconfig base + paths   | Step 006 completed                         |
-| Root ESLint flat config      | Step 007 completed                         |
-| Root Prettier + EditorConfig | Step 008 completed                         |
-| Root scripts via Nx (build/test/lint) | Step 009 completed                |
+| Area                                  | Status                                     |
+| ------------------------------------- | ------------------------------------------ |
+| NestJS app                            | Exists in `apps/api/` (package name `api`) |
+| Root workspace                        | Step 001 completed                         |
+| Node/npm policy                       | Step 002 completed                         |
+| Nx init                               | Step 003 completed                         |
+| Nx target defaults                    | Step 004 completed                         |
+| Nest in apps/api                      | Step 005 completed                         |
+| Root tsconfig base + paths            | Step 006 completed                         |
+| Root ESLint flat config               | Step 007 completed                         |
+| Root Prettier + EditorConfig          | Step 008 completed                         |
+| Root scripts via Nx (build/test/lint) | Step 009 completed                         |
+| TanStack Start app in `apps/web`      | Step 010 completed                         |
 
 ## Step Contract (mandatory for every lesson)
 
@@ -152,5 +153,6 @@ Each `lesson-NNN-*.md` must include:
 | 007  | [lesson-007-root-eslint-flat-config.md](./lessons/lesson-007-root-eslint-flat-config.md)               |
 | 008  | [lesson-008-root-prettier-and-editorconfig.md](./lessons/lesson-008-root-prettier-and-editorconfig.md) |
 | 009  | [lesson-009-root-scripts-via-nx.md](./lessons/lesson-009-root-scripts-via-nx.md)                       |
+| 010  | [lesson-010-apps-web-tanstack-start.md](./lessons/lesson-010-apps-web-tanstack-start.md)               |
 
 Entry point: [LOCAL_SETUP.md](./LOCAL_SETUP.md)

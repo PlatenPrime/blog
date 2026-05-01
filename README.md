@@ -14,8 +14,9 @@ npm run start:dev    # Nest в workspace api (apps/api)
 npm run test
 npm run test:e2e
 npm run build
-npm run nx:show      # проекты Nx (сейчас: api)
+npm run nx:show      # проекты Nx: api, web
 npm run nx:graph     # граф проектов Nx
+npm run web:dev      # TanStack Start (apps/web), порт 3000
 # build / test / lint / test:e2e с корня уже вызывают nx run api:*
 ```
 

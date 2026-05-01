@@ -3,3 +3,6 @@ dist
 coverage
 .nx
 package-lock.json
+.output
+**/.output
+apps/web/.output

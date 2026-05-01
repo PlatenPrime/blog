@@ -3,7 +3,8 @@
   "private": true,
   "description": "Monorepo: NestJS API + TanStack Start (Nx) - Blog/CMS learning track",
   "workspaces": [
-    "apps/api"
+    "apps/api",
+    "apps/web"
   ],
   "scripts": {
     "build": "nx run api:build",
@@ -13,11 +14,12 @@
     "lint": "nx run api:lint",
     "test": "nx run api:test",
     "test:e2e": "nx run api:test:e2e",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
+    "format": "prettier --write README.md package.json nx.json tsconfig.base.json eslint.config.mjs .prettierrc docs apps/api apps/web/src apps/web/public \"apps/web/package.json\" \"apps/web/tsconfig.json\" \"apps/web/vite.config.ts\" \"apps/web/eslint.config.js\" \"apps/web/prettier.config.js\" \"apps/web/README.md\" \"apps/web/.cta.json\" \"apps/web/.vscode/settings.json\"",
+    "format:check": "prettier --check README.md package.json nx.json tsconfig.base.json eslint.config.mjs .prettierrc docs apps/api apps/web/src apps/web/public \"apps/web/package.json\" \"apps/web/tsconfig.json\" \"apps/web/vite.config.ts\" \"apps/web/eslint.config.js\" \"apps/web/prettier.config.js\" \"apps/web/README.md\" \"apps/web/.cta.json\" \"apps/web/.vscode/settings.json\"",
     "nx": "nx",
     "nx:show": "nx show projects",
-    "nx:graph": "nx graph"
+    "nx:graph": "nx graph",
+    "web:dev": "npm run dev -w web"
   },
   "engines": {
     "node": ">=20.10.0",
@@ -28,6 +30,7 @@
     "@eslint/js": "^9.18.0",
     "@nx/eslint": "22.7.0",
     "@nx/jest": "22.7.0",
+    "@nx/vite": "22.7.0",
     "eslint": "^9.18.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.2",
