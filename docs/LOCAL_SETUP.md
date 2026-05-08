@@ -60,8 +60,9 @@ npx nx run api:test
 npx nx run api:lint
 npx nx run api:test:e2e
 npx nx run web:build
+npx nx run web:typecheck
 ```
 
 ## Next roadmap step
 
-Step 011: add `web:typecheck` Nx target — see [development-roadmap.md](./development-roadmap.md).
+Step 012: create `libs/shared-contracts` — see [development-roadmap.md](./development-roadmap.md).

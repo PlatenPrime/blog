@@ -154,5 +154,6 @@ Each `lesson-NNN-*.md` must include:
 | 008  | [lesson-008-root-prettier-and-editorconfig.md](./lessons/lesson-008-root-prettier-and-editorconfig.md) |
 | 009  | [lesson-009-root-scripts-via-nx.md](./lessons/lesson-009-root-scripts-via-nx.md)                       |
 | 010  | [lesson-010-apps-web-tanstack-start.md](./lessons/lesson-010-apps-web-tanstack-start.md)               |
+| 011  | [lesson-011-web-typecheck-target.md](./lessons/lesson-011-web-typecheck-target.md)                     |
 
 Entry point: [LOCAL_SETUP.md](./LOCAL_SETUP.md)
