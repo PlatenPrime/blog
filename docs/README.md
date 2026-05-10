@@ -34,6 +34,7 @@ npm run test:e2e
 - Step 011: [lesson-011-web-typecheck-target.md](./lessons/lesson-011-web-typecheck-target.md)
 - Step 012: [lesson-012-shared-contracts-lib.md](./lessons/lesson-012-shared-contracts-lib.md)
 - Step 013: [lesson-013-wire-shared-contracts-api.md](./lessons/lesson-013-wire-shared-contracts-api.md)
+- Step 014: [lesson-014-wire-shared-contracts-web.md](./lessons/lesson-014-wire-shared-contracts-web.md)
 
 Quality scripts from repo root (`build`, `test`, `lint`, `test:e2e`) run through Nx on the `api` app. The `web` app (TanStack Start) builds with `npx nx run web:build` or `npm run web:dev` for local dev. Utility scripts:
 

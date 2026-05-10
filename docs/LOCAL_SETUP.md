@@ -66,4 +66,4 @@ npx nx run shared-contracts:build
 
 ## Next roadmap step
 
-Step 014: wire shared lib into web — see [development-roadmap.md](./development-roadmap.md).
+Step 015: define CORS/dev origins — see [development-roadmap.md](./development-roadmap.md).

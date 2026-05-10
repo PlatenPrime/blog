@@ -15,6 +15,7 @@
     "check": "prettier --check ."
   },
   "dependencies": {
+    "@nestjs-st/shared-contracts": "file:../../libs/shared-contracts",
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/react-devtools": "latest",
     "@tanstack/react-router": "latest",
@@ -50,5 +51,12 @@
       "esbuild",
       "lightningcss"
     ]
+  },
+  "nx": {
+    "targets": {
+      "build": {
+        "dependsOn": ["shared-contracts:build"]
+      }
+    }
   }
 }

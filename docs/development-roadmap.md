@@ -159,5 +159,6 @@ Each `lesson-NNN-*.md` must include:
 | 011  | [lesson-011-web-typecheck-target.md](./lessons/lesson-011-web-typecheck-target.md)                     |
 | 012  | [lesson-012-shared-contracts-lib.md](./lessons/lesson-012-shared-contracts-lib.md)                     |
 | 013  | [lesson-013-wire-shared-contracts-api.md](./lessons/lesson-013-wire-shared-contracts-api.md)           |
+| 014  | [lesson-014-wire-shared-contracts-web.md](./lessons/lesson-014-wire-shared-contracts-web.md)             |
 
 Entry point: [LOCAL_SETUP.md](./LOCAL_SETUP.md)
