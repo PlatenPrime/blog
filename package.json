@@ -4,7 +4,8 @@
   "description": "Monorepo: NestJS API + TanStack Start (Nx) - Blog/CMS learning track",
   "workspaces": [
     "apps/api",
-    "apps/web"
+    "apps/web",
+    "libs/shared-contracts"
   ],
   "scripts": {
     "prepare": "husky",
@@ -17,8 +18,8 @@
     "test:e2e": "nx run api:test:e2e",
     "precommit:tests-first": "node scripts/validate-tests-first.mjs",
     "ci:tests-first": "node scripts/validate-tests-first.mjs --ci",
-    "format": "prettier --write README.md package.json nx.json tsconfig.base.json eslint.config.mjs .prettierrc docs apps/api apps/web/src apps/web/public \"apps/web/package.json\" \"apps/web/tsconfig.json\" \"apps/web/vite.config.ts\" \"apps/web/eslint.config.js\" \"apps/web/prettier.config.js\" \"apps/web/README.md\" \"apps/web/.cta.json\" \"apps/web/.vscode/settings.json\"",
-    "format:check": "prettier --check README.md package.json nx.json tsconfig.base.json eslint.config.mjs .prettierrc docs apps/api apps/web/src apps/web/public \"apps/web/package.json\" \"apps/web/tsconfig.json\" \"apps/web/vite.config.ts\" \"apps/web/eslint.config.js\" \"apps/web/prettier.config.js\" \"apps/web/README.md\" \"apps/web/.cta.json\" \"apps/web/.vscode/settings.json\"",
+    "format": "prettier --write README.md package.json nx.json tsconfig.base.json eslint.config.mjs .prettierrc docs apps/api libs apps/web/src apps/web/public \"apps/web/package.json\" \"apps/web/tsconfig.json\" \"apps/web/vite.config.ts\" \"apps/web/eslint.config.js\" \"apps/web/prettier.config.js\" \"apps/web/README.md\" \"apps/web/.cta.json\" \"apps/web/.vscode/settings.json\"",
+    "format:check": "prettier --check README.md package.json nx.json tsconfig.base.json eslint.config.mjs .prettierrc docs apps/api libs apps/web/src apps/web/public \"apps/web/package.json\" \"apps/web/tsconfig.json\" \"apps/web/vite.config.ts\" \"apps/web/eslint.config.js\" \"apps/web/prettier.config.js\" \"apps/web/README.md\" \"apps/web/.cta.json\" \"apps/web/.vscode/settings.json\"",
     "nx": "nx",
     "nx:show": "nx show projects",
     "nx:graph": "nx graph",

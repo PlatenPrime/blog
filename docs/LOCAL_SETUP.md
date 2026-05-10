@@ -61,8 +61,9 @@ npx nx run api:lint
 npx nx run api:test:e2e
 npx nx run web:build
 npx nx run web:typecheck
+npx nx run shared-contracts:build
 ```
 
 ## Next roadmap step
 
-Step 012: create `libs/shared-contracts` — see [development-roadmap.md](./development-roadmap.md).
+Step 014: wire shared lib into web — see [development-roadmap.md](./development-roadmap.md).

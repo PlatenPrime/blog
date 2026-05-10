@@ -15,8 +15,8 @@ describe('AppController', () => {
   });
 
   describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toBe('Hello World!');
+    it('should return hello with shared contracts version', () => {
+      expect(appController.getHello()).toBe('Hello World! (0.0.1)');
     });
   });
 });
