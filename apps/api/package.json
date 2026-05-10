@@ -60,6 +60,9 @@
       "ts"
     ],
     "rootDir": "src",
+    "moduleNameMapper": {
+      "^@nestjs-st/shared-contracts$": "<rootDir>/../../../libs/shared-contracts/src/index.ts"
+    },
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
