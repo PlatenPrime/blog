@@ -64,6 +64,30 @@ npx nx run web:typecheck
 npx nx run shared-contracts:build
 ```
 
+## Environment variables
+
+The API reads environment variables at bootstrap (and from a root `.env` file if present, loaded by `dotenv` in [`apps/api/src/main.ts`](../apps/api/src/main.ts)).
+
+| Variable       | Default                 | Purpose                                                                                                                                                                         |
+| -------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `PORT`         | `4000`                  | Initial port for the NestJS API. If busy, it auto-increments up to 20 times.                                                                                                    |
+| `CORS_ORIGINS` | `http://localhost:3000` | Comma-separated whitelist of allowed origins. Use `*` (alone or with others) to reflect any origin. **Note:** combining `*` with `credentials: true` will be banned in Track 2. |
+
+The TanStack Start app (`apps/web`) listens on `http://localhost:3000` by default (see [`apps/web/package.json`](../apps/web/package.json) `scripts.dev`).
+
+Example dev session (two terminals):
+
+```bash
+npm run start:dev           # API on http://localhost:4000
+npm run web:dev             # web on http://localhost:3000
+```
+
+Override the CORS whitelist:
+
+```bash
+CORS_ORIGINS="http://localhost:3000,http://localhost:5173" npm run start:dev
+```
+
 ## Next roadmap step
 
-Step 015: define CORS/dev origins — see [development-roadmap.md](./development-roadmap.md).
+Step 016: add PostgreSQL compose for local dev — see [development-roadmap.md](./development-roadmap.md).

@@ -4,6 +4,7 @@ import { Logger } from '@nestjs/common';
 import { config } from 'dotenv';
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { buildCorsOptions } from './config/cors.config';
 
 const envPaths = [
   resolve(__dirname, '../../../.env'),
@@ -16,16 +17,21 @@ if (envPath) {
   config({ path: envPath });
 }
 
+const DEFAULT_API_PORT = 4000;
 const MAX_PORT_ATTEMPTS = 20;
 const bootstrapLogger = new Logger('Bootstrap');
 
 const resolveInitialPort = (): number => {
-  const parsedPort = Number.parseInt(process.env.PORT ?? '3000', 10);
-  return Number.isNaN(parsedPort) ? 3000 : parsedPort;
+  const parsedPort = Number.parseInt(
+    process.env.PORT ?? String(DEFAULT_API_PORT),
+    10,
+  );
+  return Number.isNaN(parsedPort) ? DEFAULT_API_PORT : parsedPort;
 };
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors(buildCorsOptions(process.env));
   const initialPort = resolveInitialPort();
 
   for (let attempt = 0; attempt < MAX_PORT_ATTEMPTS; attempt += 1) {

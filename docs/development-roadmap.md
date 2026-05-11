@@ -25,6 +25,11 @@ Every step is a sprint and must produce code changes + a lesson file in `docs/le
 | Root Prettier + EditorConfig          | Step 008 completed                         |
 | Root scripts via Nx (build/test/lint) | Step 009 completed                         |
 | TanStack Start app in `apps/web`      | Step 010 completed                         |
+| `web:typecheck` Nx target             | Step 011 completed                         |
+| `libs/shared-contracts`               | Step 012 completed                         |
+| Wire shared-contracts into API        | Step 013 completed                         |
+| Wire shared-contracts into web        | Step 014 completed                         |
+| CORS + dev origins                    | Step 015 completed                         |
 
 ## Step Contract (mandatory for every lesson)
 
@@ -159,6 +164,7 @@ Each `lesson-NNN-*.md` must include:
 | 011  | [lesson-011-web-typecheck-target.md](./lessons/lesson-011-web-typecheck-target.md)                     |
 | 012  | [lesson-012-shared-contracts-lib.md](./lessons/lesson-012-shared-contracts-lib.md)                     |
 | 013  | [lesson-013-wire-shared-contracts-api.md](./lessons/lesson-013-wire-shared-contracts-api.md)           |
-| 014  | [lesson-014-wire-shared-contracts-web.md](./lessons/lesson-014-wire-shared-contracts-web.md)             |
+| 014  | [lesson-014-wire-shared-contracts-web.md](./lessons/lesson-014-wire-shared-contracts-web.md)           |
+| 015  | [lesson-015-cors-and-dev-origins.md](./lessons/lesson-015-cors-and-dev-origins.md)                     |
 
 Entry point: [LOCAL_SETUP.md](./LOCAL_SETUP.md)
