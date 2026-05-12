@@ -14,7 +14,7 @@ Introduce the first shared TypeScript library in the Nx workspace so API and web
 
 ## Dependencies
 
-- Root [`tsconfig.base.json`](../../tsconfig.base.json) path alias `@nestjs-st/*` → `libs/*/src/index.ts` (lesson 006).
+- Root [`tsconfig.base.json`](../../tsconfig.base.json) path alias `@blog/*` → `libs/*/src/index.ts` (lesson 006).
 - Nx workspace and TypeScript available from the repo (TypeScript hoisted via `apps/api`).
 
 ## Step-by-Step Changes

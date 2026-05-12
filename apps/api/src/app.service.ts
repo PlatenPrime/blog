@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { SHARED_CONTRACTS_VERSION } from '@nestjs-st/shared-contracts';
+import { SHARED_CONTRACTS_VERSION } from '@blog/shared-contracts';
 
 @Injectable()
 export class AppService {

@@ -6,8 +6,8 @@ Make the TanStack Start app consume the shared library as a real npm workspace d
 
 ## Implementation Scope
 
-- Declared [`@nestjs-st/shared-contracts`](../../libs/shared-contracts/package.json) in [`apps/web/package.json`](../../apps/web/package.json) via `file:../../libs/shared-contracts` and Nx `dependsOn: ["shared-contracts:build"]` on the inferred `build` target (mirror of lesson 013 for `api`).
-- Mapped [`@nestjs-st/shared-contracts`](../../libs/shared-contracts/src/index.ts) to library **source** in [`apps/web/tsconfig.json`](../../apps/web/tsconfig.json) so `web:typecheck` and Vite (`resolve.tsconfigPaths`) do not require a pre-existing `dist/` for editor/tsc resolution.
+- Declared [`@blog/shared-contracts`](../../libs/shared-contracts/package.json) in [`apps/web/package.json`](../../apps/web/package.json) via `file:../../libs/shared-contracts` and Nx `dependsOn: ["shared-contracts:build"]` on the inferred `build` target (mirror of lesson 013 for `api`).
+- Mapped [`@blog/shared-contracts`](../../libs/shared-contracts/src/index.ts) to library **source** in [`apps/web/tsconfig.json`](../../apps/web/tsconfig.json) so `web:typecheck` and Vite (`resolve.tsconfigPaths`) do not require a pre-existing `dist/` for editor/tsc resolution.
 - Imported [`SHARED_CONTRACTS_VERSION`](../../libs/shared-contracts/src/index.ts) in [`apps/web/src/routes/index.tsx`](../../apps/web/src/routes/index.tsx).
 - Added [`apps/web/src/shared-contracts-import.test.ts`](../../apps/web/src/shared-contracts-import.test.ts) (Vitest) asserting the shared constant.
 
@@ -21,7 +21,7 @@ Make the TanStack Start app consume the shared library as a real npm workspace d
 1. Added the workspace dependency and Nx `build.dependsOn` in `apps/web/package.json`.
 2. Extended `apps/web/tsconfig.json` `paths` with a direct mapping to `libs/shared-contracts/src/index.ts`.
 3. Rendered the shared version string on the home route.
-4. Added a minimal Vitest test that imports from `@nestjs-st/shared-contracts`.
+4. Added a minimal Vitest test that imports from `@blog/shared-contracts`.
 5. Ran `npm install`, `web:typecheck`, `web:test`, and `web:build` from the repository root.
 6. Registered step 014 in roadmap and documentation indexes.
 
@@ -46,7 +46,7 @@ Expected:
 | File                                                                                 | Action                                      |
 | ------------------------------------------------------------------------------------ | ------------------------------------------- |
 | [`apps/web/package.json`](../../apps/web/package.json)                               | dependency + `nx.targets.build.dependsOn`   |
-| [`apps/web/tsconfig.json`](../../apps/web/tsconfig.json)                             | `paths` for `@nestjs-st/shared-contracts`   |
+| [`apps/web/tsconfig.json`](../../apps/web/tsconfig.json)                             | `paths` for `@blog/shared-contracts`   |
 | [`apps/web/src/routes/index.tsx`](../../apps/web/src/routes/index.tsx)               | import + display `SHARED_CONTRACTS_VERSION` |
 | [`apps/web/src/shared-contracts-import.test.ts`](../../apps/web/src/shared-contracts-import.test.ts) | Vitest import smoke                         |
 | [`package-lock.json`](../../package-lock.json)                                       | workspace link for `web`                    |

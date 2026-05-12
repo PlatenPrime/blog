@@ -6,17 +6,17 @@ Make the NestJS API consume the shared library as a real npm workspace dependenc
 
 ## Implementation Scope
 
-- Registered [`libs/shared-contracts/package.json`](../../libs/shared-contracts/package.json) as workspace package `@nestjs-st/shared-contracts` with `main` / `types` pointing at `dist/`.
+- Registered [`libs/shared-contracts/package.json`](../../libs/shared-contracts/package.json) as workspace package `@blog/shared-contracts` with `main` / `types` pointing at `dist/`.
 - Added [`libs/shared-contracts`](../../libs/shared-contracts) to root [`package.json`](../../package.json) `workspaces`.
 - Declared dependency in [`apps/api/package.json`](../../apps/api/package.json) using `file:../../libs/shared-contracts` (reliable with npm workspaces; `workspace:*` is an alternative on npm versions that support it).
 - Added Nx `dependsOn` so `api:build` runs [`shared-contracts:build`](../../libs/shared-contracts/project.json) first.
 - Imported [`SHARED_CONTRACTS_VERSION`](../../libs/shared-contracts/src/index.ts) in [`apps/api/src/app.service.ts`](../../apps/api/src/app.service.ts) and aligned unit + e2e expectations.
-- Added Jest `moduleNameMapper` entries so `@nestjs-st/shared-contracts` resolves in CI (Jest does not apply TypeScript `paths`; `rootDir` differs between unit and e2e configs).
+- Added Jest `moduleNameMapper` entries so `@blog/shared-contracts` resolves in CI (Jest does not apply TypeScript `paths`; `rootDir` differs between unit and e2e configs).
 
 ## Dependencies
 
 - Lesson 012: buildable `shared-contracts` library.
-- Root path alias `@nestjs-st/*` (lesson 006) remains useful for editors and tools; runtime resolution uses the workspace package under `node_modules`.
+- Root path alias `@blog/*` (lesson 006) remains useful for editors and tools; runtime resolution uses the workspace package under `node_modules`.
 
 ## Step-by-Step Changes
 
@@ -61,8 +61,8 @@ Expected:
 
 ## Architecture Notes
 
-- The API resolves `@nestjs-st/shared-contracts` via the symlinked workspace package; consumers must build the library so `dist/` exists before `nest build` / `node dist/main` (enforced by Nx `dependsOn`).
-- TypeScript path mapping in [`tsconfig.base.json`](../../tsconfig.base.json) still maps `@nestjs-st/*` to `libs/*/src/index.ts` for direct source navigation; the declared dependency is the source of truth for bundling and Node resolution.
+- The API resolves `@blog/shared-contracts` via the symlinked workspace package; consumers must build the library so `dist/` exists before `nest build` / `node dist/main` (enforced by Nx `dependsOn`).
+- TypeScript path mapping in [`tsconfig.base.json`](../../tsconfig.base.json) still maps `@blog/*` to `libs/*/src/index.ts` for direct source navigation; the declared dependency is the source of truth for bundling and Node resolution.
 - Jest resolves modules independently: `moduleNameMapper` points at library **source** so `api:test` / `api:test:e2e` do not require a prebuilt `dist/` in `shared-contracts` (unlike `nest build`, which uses the workspace package `main`).
 
 ## Definition of Done

@@ -1,4 +1,4 @@
-# nestjs-st
+# blog
 
 Monorepo-практикум: **NestJS** (API) + **TanStack Start** (SSR/SEO) + **Nx**. Подробный план шагов — [`docs/development-roadmap.md`](docs/development-roadmap.md).
 

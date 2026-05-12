@@ -14,7 +14,7 @@
     "paths": {
       "#/*": ["./src/*"],
       "@/*": ["./src/*"],
-      "@nestjs-st/shared-contracts": ["../../libs/shared-contracts/src/index.ts"]
+      "@blog/shared-contracts": ["../../libs/shared-contracts/src/index.ts"]
     },
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "types": ["vite/client"],

@@ -1,18 +1,18 @@
-name: nestjs-st
+name: blog
 
 services:
   db:
     image: postgres:16-alpine
-    container_name: nestjs-st-db
+    container_name: blog-db
     restart: unless-stopped
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-nestjs_st}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-nestjs_st}
-      POSTGRES_DB: ${POSTGRES_DB:-nestjs_st_dev}
+      POSTGRES_USER: ${POSTGRES_USER:-blog}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-blog}
+      POSTGRES_DB: ${POSTGRES_DB:-blog_dev}
     ports:
       - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
     volumes:
-      - nestjs_st_pgdata:/var/lib/postgresql/data
+      - blog_pgdata:/var/lib/postgresql/data
     healthcheck:
       test:
         - CMD-SHELL
@@ -23,5 +23,5 @@ services:
       start_period: 10s
 
 volumes:
-  nestjs_st_pgdata:
-    name: nestjs_st_pgdata
+  blog_pgdata:
+    name: blog_pgdata

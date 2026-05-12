@@ -1,5 +1,5 @@
 {
-  "name": "nestjs-st",
+  "name": "blog",
   "private": true,
   "description": "Monorepo: NestJS API + TanStack Start (Nx) - Blog/CMS learning track",
   "workspaces": [
@@ -28,7 +28,7 @@
     "db:down": "docker compose down",
     "db:reset": "docker compose down -v",
     "db:logs": "docker compose logs -f db",
-    "db:psql": "docker compose exec db psql -U nestjs_st -d nestjs_st_dev"
+    "db:psql": "docker compose exec db psql -U blog -d blog_dev"
   },
   "engines": {
     "node": ">=20.10.0",

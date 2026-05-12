@@ -19,7 +19,7 @@
     "test:e2e": "vitest run -c vitest.config.e2e.ts"
   },
   "dependencies": {
-    "@nestjs-st/shared-contracts": "file:../../libs/shared-contracts",
+    "@blog/shared-contracts": "file:../../libs/shared-contracts",
     "@nestjs/common": "^11.0.1",
     "@nestjs/core": "^11.0.1",
     "@nestjs/platform-express": "^11.0.1",

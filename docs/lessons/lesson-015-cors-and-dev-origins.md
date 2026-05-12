@@ -92,7 +92,7 @@ app.enableCors(buildCorsOptions(process.env));
 К моменту шага 015 в монорепо уже есть:
 
 - NestJS API в `apps/api` (lesson 005), TanStack Start в `apps/web` (lesson 010).
-- Shared-библиотека `@nestjs-st/shared-contracts` подключена и в API (lesson 013), и в web (lesson 014).
+- Shared-библиотека `@blog/shared-contracts` подключена и в API (lesson 013), и в web (lesson 014).
 - Корневой Nx, ESLint, Prettier, TS path mapping (lessons 003-008).
 
 CORS до сих пор был **выключен**: браузерный фронт мог дергать API только через прокси

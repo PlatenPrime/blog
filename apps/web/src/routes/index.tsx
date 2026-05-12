@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { SHARED_CONTRACTS_VERSION } from '@nestjs-st/shared-contracts'
+import { SHARED_CONTRACTS_VERSION } from '@blog/shared-contracts'
 
 export const Route = createFileRoute('/')({ component: Home })
 
