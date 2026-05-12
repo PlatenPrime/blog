@@ -143,4 +143,4 @@ npm run db:psql -- -c "select version();"        # PostgreSQL 16.x
 
 ## Next roadmap step
 
-Step 018: root README for API + web runbook — see [development-roadmap.md](./development-roadmap.md).
+Step 019: CI pipeline baseline — see [development-roadmap.md](./development-roadmap.md).

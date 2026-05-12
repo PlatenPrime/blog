@@ -1,201 +1,54 @@
-Welcome to your new TanStack Start app!
+# apps/web — TanStack Start (SSR/SEO)
 
-# Getting Started
+Публичный сайт блога: TanStack Start (Vite 8 + Nitro) + React 19 + Tailwind 4 + TanStack Router (file-based routing). Workspace входит в Nx-граф под именем `web`.
 
-To run this application:
+Канонический entry point — Nx-таргеты с корня репозитория (кеширование, `dependsOn` `web:build` → `shared-contracts:build`, единый CI-интерфейс). Workspace-local команды оставлены как escape hatch для отладки.
 
-```bash
-npm install
-npm run dev
-```
-
-# Building For Production
-
-To build this application for production:
+## Run (preferred — from repo root)
 
 ```bash
-npm run build
+npm run web:dev              # npm -w web run dev  -> vite dev --port 3000
+npx nx run web:build         # production-сборка (Vite + Nitro)
+npx nx run web:typecheck     # tsc --noEmit (см. lesson-011)
 ```
 
-## Testing
+Список Nx-целей: `npm run nx:show` и `npm run nx:graph` с корня.
 
-This project uses [Vitest](https://vitest.dev/) for testing. You can run the tests with:
+## Run (workspace-local, отладка)
 
 ```bash
-npm run test
+npm -w web run dev
+npm -w web run build
+npm -w web run preview        # vite preview production-сборки
+npm -w web run test           # vitest run
+npm -w web run lint
+npm -w web run format         # prettier + eslint --fix
 ```
 
-## Styling
+## Environment
 
-This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
+Web и API разнесены по **разным** `.env*` файлам — это физический guardrail против утечки серверных секретов (`POSTGRES_*`, будущий `JWT_SECRET`) в client-бандл через `import.meta.env`.
 
-### Removing Tailwind CSS
-
-If you prefer not to use Tailwind CSS:
-
-1. Remove the demo pages in `src/routes/demo/`
-2. Replace the Tailwind import in `src/styles.css` with your own styles
-3. Remove `tailwindcss()` from the plugins array in `vite.config.ts`
-4. Uninstall the packages: `npm install @tailwindcss/vite tailwindcss -D`
-
-## Linting & Formatting
-
-This project uses [eslint](https://eslint.org/) and [prettier](https://prettier.io/) for linting and formatting. Eslint is configured using [tanstack/eslint-config](https://tanstack.com/config/latest/docs/eslint). The following scripts are available:
-
-```bash
-npm run lint
-npm run format
-npm run check
-```
+- Шаблон — [`apps/web/.env.example`](.env.example). Реальный `.env` коммитом не уходит (см. [`apps/web/.gitignore`](.gitignore)).
+- **Vite namespace contract**:
+  - `VITE_PUBLIC_*` — инжектится в client-бандл (виден в браузере). Только для нечувствительных данных.
+  - Без префикса `VITE_*` — server-only (Nitro/SSR). Не попадает в JS, который скачивает браузер.
+- Полный разбор контракта — [lesson-017](../../docs/lessons/lesson-017-env-example-files.md).
 
 ## Routing
 
-This project uses [TanStack Router](https://tanstack.com/router) with file-based routing. Routes are managed as files in `src/routes`.
+File-based routing через TanStack Router: каждый файл в `src/routes/` становится маршрутом. Корневой layout — `src/routes/__root.tsx`. Для навигации внутри SPA — компонент `<Link to="...">` из `@tanstack/react-router`. Подробнее: [TanStack Router docs](https://tanstack.com/router/latest).
 
-### Adding A Route
+## Styling, testing, linting
 
-To add a new route to your application just add a new file in the `./src/routes` directory.
+- **Styling**: Tailwind CSS 4 через `@tailwindcss/vite`-плагин, базовые стили в `src/styles.css`.
+- **Testing**: Vitest 4 + React Testing Library + jsdom (`npm -w web run test`).
+- **Linting / formatting**: ESLint 9 (`@tanstack/eslint-config`) + Prettier 3. С корня — `npm run format:check` (`apps/web/src`, `apps/web/public`, ряд `apps/web/*` файлов входит в общий Prettier-glob — см. [`package.json`](../../package.json)).
 
-TanStack will automatically generate the content of the route file for you.
+## See also
 
-Now that you have two routes you can use a `Link` component to navigate between them.
-
-### Adding Links
-
-To use SPA (Single Page Application) navigation you will need to import the `Link` component from `@tanstack/react-router`.
-
-```tsx
-import { Link } from '@tanstack/react-router'
-```
-
-Then anywhere in your JSX you can use it like so:
-
-```tsx
-<Link to="/about">About</Link>
-```
-
-This will create a link that will navigate to the `/about` route.
-
-More information on the `Link` component can be found in the [Link documentation](https://tanstack.com/router/v1/docs/framework/react/api/router/linkComponent).
-
-### Using A Layout
-
-In the File Based Routing setup the layout is located in `src/routes/__root.tsx`. Anything you add to the root route will appear in all the routes. The route content will appear in the JSX where you render `{children}` in the `shellComponent`.
-
-Here is an example layout that includes a header:
-
-```tsx
-import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
-
-export const Route = createRootRoute({
-  head: () => ({
-    meta: [
-      { charSet: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { title: 'My App' },
-    ],
-  }),
-  shellComponent: ({ children }) => (
-    <html lang="en">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        <header>
-          <nav>
-            <Link to="/">Home</Link>
-            <Link to="/about">About</Link>
-          </nav>
-        </header>
-        {children}
-        <Scripts />
-      </body>
-    </html>
-  ),
-})
-```
-
-More information on layouts can be found in the [Layouts documentation](https://tanstack.com/router/latest/docs/framework/react/guide/routing-concepts#layouts).
-
-## Server Functions
-
-TanStack Start provides server functions that allow you to write server-side code that seamlessly integrates with your client components.
-
-```tsx
-import { createServerFn } from '@tanstack/react-start'
-
-const getServerTime = createServerFn({
-  method: 'GET',
-}).handler(async () => {
-  return new Date().toISOString()
-})
-
-// Use in a component
-function MyComponent() {
-  const [time, setTime] = useState('')
-
-  useEffect(() => {
-    getServerTime().then(setTime)
-  }, [])
-
-  return <div>Server time: {time}</div>
-}
-```
-
-## API Routes
-
-You can create API routes by using the `server` property in your route definitions:
-
-```tsx
-import { createFileRoute } from '@tanstack/react-router'
-import { json } from '@tanstack/react-start'
-
-export const Route = createFileRoute('/api/hello')({
-  server: {
-    handlers: {
-      GET: () => json({ message: 'Hello, World!' }),
-    },
-  },
-})
-```
-
-## Data Fetching
-
-There are multiple ways to fetch data in your application. You can use TanStack Query to fetch data from a server. But you can also use the `loader` functionality built into TanStack Router to load the data for a route before it's rendered.
-
-For example:
-
-```tsx
-import { createFileRoute } from '@tanstack/react-router'
-
-export const Route = createFileRoute('/people')({
-  loader: async () => {
-    const response = await fetch('https://swapi.dev/api/people')
-    return response.json()
-  },
-  component: PeopleComponent,
-})
-
-function PeopleComponent() {
-  const data = Route.useLoaderData()
-  return (
-    <ul>
-      {data.results.map((person) => (
-        <li key={person.name}>{person.name}</li>
-      ))}
-    </ul>
-  )
-}
-```
-
-Loaders simplify your data fetching logic dramatically. Check out more information in the [Loader documentation](https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#loader-parameters).
-
-# Demo files
-
-Files prefixed with `demo` can be safely deleted. They are there to provide a starting point for you to play around with the features you've installed.
-
-# Learn More
-
-You can learn more about all of the offerings from TanStack in the [TanStack documentation](https://tanstack.com).
-
-For TanStack Start specific documentation, visit [TanStack Start](https://tanstack.com/start).
+- Root [README](../../README.md) — runbook монорепо.
+- [`docs/development-roadmap.md`](../../docs/development-roadmap.md) — план шагов.
+- [`docs/LOCAL_SETUP.md`](../../docs/LOCAL_SETUP.md) — детальный setup.
+- Релевантные уроки: [010](../../docs/lessons/lesson-010-apps-web-tanstack-start.md), [011](../../docs/lessons/lesson-011-web-typecheck-target.md), [012](../../docs/lessons/lesson-012-shared-contracts-lib.md), [014](../../docs/lessons/lesson-014-wire-shared-contracts-web.md), [017](../../docs/lessons/lesson-017-env-example-files.md).
+- Upstream-документация TanStack: [Start](https://tanstack.com/start), [Router](https://tanstack.com/router/latest), [Query](https://tanstack.com/query/latest).

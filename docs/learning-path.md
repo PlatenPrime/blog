@@ -21,6 +21,7 @@ Use [development-roadmap.md](./development-roadmap.md) as the source of truth fo
 - Step 015: [lesson-015-cors-and-dev-origins.md](./lessons/lesson-015-cors-and-dev-origins.md)
 - Step 016: [lesson-016-postgres-compose-local-dev.md](./lessons/lesson-016-postgres-compose-local-dev.md)
 - Step 017: [lesson-017-env-example-files.md](./lessons/lesson-017-env-example-files.md)
+- Step 018: [lesson-018-root-readme-runbook.md](./lessons/lesson-018-root-readme-runbook.md)
 
 ## Phase 2: Platform Core (Track 1)
 

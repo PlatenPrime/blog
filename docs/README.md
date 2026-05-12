@@ -38,6 +38,7 @@ npm run test:e2e
 - Step 015: [lesson-015-cors-and-dev-origins.md](./lessons/lesson-015-cors-and-dev-origins.md)
 - Step 016: [lesson-016-postgres-compose-local-dev.md](./lessons/lesson-016-postgres-compose-local-dev.md)
 - Step 017: [lesson-017-env-example-files.md](./lessons/lesson-017-env-example-files.md)
+- Step 018: [lesson-018-root-readme-runbook.md](./lessons/lesson-018-root-readme-runbook.md)
 
 Quality scripts from repo root (`build`, `test`, `lint`, `test:e2e`) run through Nx on the `api` app. The `web` app (TanStack Start) builds with `npx nx run web:build` or `npm run web:dev` for local dev. Utility scripts:
 

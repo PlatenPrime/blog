@@ -1,98 +1,64 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# apps/api — NestJS API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Backend для блога/CMS: NestJS 11 + Express 5. Workspace входит в Nx-граф под именем `api`.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Канонический entry point — npm-скрипты с корня репозитория. Quality-команды (`build`, `test`, `test:e2e`, `lint`) идут через Nx и дают кеширование, `dependsOn` (например, `api:build` → `shared-contracts:build`) и единый CI-интерфейс. Команды жизненного цикла приложения (`start`, `start:dev`, `start:prod`) пробрасываются через `npm -w api` напрямую, потому что Nest CLI сам обрабатывает watch-режим.
 
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Project setup
+## Run (preferred — from repo root)
 
 ```bash
-$ npm install
+npm run start:dev    # npm -w api run start:dev  -> nest start --watch
+npm run start        # npm -w api run start      -> nest start
+npm run start:prod   # npm -w api run start:prod -> node dist/main
+npm run test         # nx run api:test           -> vitest run
+npm run test:e2e     # nx run api:test:e2e       -> vitest -c vitest.config.e2e.ts
+npm run lint         # nx run api:lint
+npm run build        # nx run api:build          (depends on shared-contracts:build)
 ```
 
-## Compile and run the project
+Explicit-форма любой Nx-цели: `npx nx run api:<target>`. Список целей и зависимостей — `npm run nx:show` и `npm run nx:graph` (с корня).
+
+## Run (workspace-local, отладка)
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm -w api run start:dev
+npm -w api run test
+npm -w api run test:e2e
+npm -w api run start:debug    # nest start --debug --watch
+npm -w api run test:cov       # vitest run --coverage
 ```
 
-## Run tests
+## Environment
+
+API стартует через [`src/main.ts`](src/main.ts) и читает переменные окружения:
+
+- Корневой [`.env`](../../.env) (если есть) подхватывается dotenv — поиск идёт по `__dirname/../../../.env` и `process.cwd()/.env` (см. [`src/main.ts`](src/main.ts) строки 9-18).
+- Шаблон — [`.env.example`](../../.env.example) в корне репо. Полная таблица переменных, дефолтов и потребителей — в [`docs/LOCAL_SETUP.md`](../../docs/LOCAL_SETUP.md), обоснование контракта — в [`lesson-017`](../../docs/lessons/lesson-017-env-example-files.md).
+
+Ключевые точки потребления:
+
+| Переменная     | Дефолт                  | Читается в                                                                      |
+| -------------- | ----------------------- | ------------------------------------------------------------------------------- |
+| `PORT`         | `4000` (auto-increment) | [`src/main.ts`](src/main.ts) → `resolveInitialPort()`                           |
+| `CORS_ORIGINS` | `http://localhost:3000` | [`src/config/cors.config.ts`](src/config/cors.config.ts) → `buildCorsOptions()` |
+
+## Database (local)
+
+PostgreSQL поднимается через корневой [`docker-compose.yml`](../../docker-compose.yml) (service `db`, образ `postgres:16-alpine`, healthcheck, named volume `blog_pgdata`, bind на `127.0.0.1:5432`).
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm run db:up        # docker compose up -d db
+npm run db:psql      # psql -U blog -d blog_dev внутри контейнера
+npm run db:down      # остановить (volume сохраняется)
+npm run db:reset     # полный сброс (volume удаляется)
 ```
 
-## Deployment
+Подключение из кода ещё не настроено (это Track 1, lesson 033 — Config module + env-валидация). Сейчас БД нужна для смоук-проверок compose и подготовки к Track 1.
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+## See also
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+- Root [README](../../README.md) — runbook монорепо.
+- [`docs/development-roadmap.md`](../../docs/development-roadmap.md) — план шагов.
+- [`docs/LOCAL_SETUP.md`](../../docs/LOCAL_SETUP.md) — детальный setup, env-таблицы.
+- Релевантные уроки: [005](../../docs/lessons/lesson-005-nest-apps-api-migration.md), [013](../../docs/lessons/lesson-013-wire-shared-contracts-api.md), [015](../../docs/lessons/lesson-015-cors-and-dev-origins.md), [016](../../docs/lessons/lesson-016-postgres-compose-local-dev.md), [017](../../docs/lessons/lesson-017-env-example-files.md).
+- Upstream-документация NestJS: [docs.nestjs.com](https://docs.nestjs.com).
