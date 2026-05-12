@@ -31,6 +31,7 @@ Every step is a sprint and must produce code changes + a lesson file in `docs/le
 | Wire shared-contracts into web        | Step 014 completed                         |
 | CORS + dev origins                    | Step 015 completed                         |
 | Local infra: Postgres compose         | Step 016 completed                         |
+| `.env.example` files                  | Step 017 completed                         |
 
 ## Step Contract (mandatory for every lesson)
 
@@ -168,5 +169,6 @@ Each `lesson-NNN-*.md` must include:
 | 014  | [lesson-014-wire-shared-contracts-web.md](./lessons/lesson-014-wire-shared-contracts-web.md)           |
 | 015  | [lesson-015-cors-and-dev-origins.md](./lessons/lesson-015-cors-and-dev-origins.md)                     |
 | 016  | [lesson-016-postgres-compose-local-dev.md](./lessons/lesson-016-postgres-compose-local-dev.md)         |
+| 017  | [lesson-017-env-example-files.md](./lessons/lesson-017-env-example-files.md)                           |
 
 Entry point: [LOCAL_SETUP.md](./LOCAL_SETUP.md)

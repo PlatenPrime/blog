@@ -73,6 +73,24 @@ The API reads environment variables at bootstrap (and from a root `.env` file if
 | `PORT`         | `4000`                  | Initial port for the NestJS API. If busy, it auto-increments up to 20 times.                                                                                                    |
 | `CORS_ORIGINS` | `http://localhost:3000` | Comma-separated whitelist of allowed origins. Use `*` (alone or with others) to reflect any origin. **Note:** combining `*` with `credentials: true` will be banned in Track 2. |
 
+### `.env.example` files
+
+Шаблоны переменных окружения коммитятся в репозиторий, реальные значения — нет (`.env` уже в [`.gitignore`](../.gitignore) и [`apps/web/.gitignore`](../apps/web/.gitignore)).
+
+| File                                                | Назначение                                                                                                                  |
+| --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| [`.env.example`](../.env.example) (корень)          | API (`PORT`, `CORS_ORIGINS`) + Postgres compose (`POSTGRES_USER/PASSWORD/DB/PORT`). Подхватывается dotenv и Docker Compose. |
+| [`apps/web/.env.example`](../apps/web/.env.example) | TanStack Start / Vite. Stub без активных ключей; документирует namespace `VITE_PUBLIC_*` (client) vs server-only.           |
+
+Первый запуск:
+
+```bash
+cp .env.example .env                     # backend + infra
+cp apps/web/.env.example apps/web/.env   # web (пока без активных ключей)
+```
+
+Значения в шаблонах совпадают с дефолтами в коде и [`docker-compose.yml`](../docker-compose.yml), поэтому `cp` даёт работоспособную конфигурацию без правок. Любое расхождение `.env.example` со списком `process.env.*`, читаемых кодом, — это баг шаблона; смотри [`docs/lessons/lesson-017-env-example-files.md`](./lessons/lesson-017-env-example-files.md).
+
 The TanStack Start app (`apps/web`) listens on `http://localhost:3000` by default (see [`apps/web/package.json`](../apps/web/package.json) `scripts.dev`).
 
 Example dev session (two terminals):
@@ -106,14 +124,14 @@ npm run db:reset       # остановить и удалить volume (полн
 
 Переменные (дефолты прописаны прямо в [`docker-compose.yml`](../docker-compose.yml) через `${VAR:-default}` — `npm run db:up` работает «из коробки» без `.env`):
 
-| Variable            | Default         | Назначение                           |
-| ------------------- | --------------- | ------------------------------------ |
-| `POSTGRES_USER`     | `blog`          | Имя суперпользователя БД             |
-| `POSTGRES_PASSWORD` | `blog`          | Пароль суперпользователя (dev-only)  |
-| `POSTGRES_DB`       | `blog_dev`      | База, создаваемая при первом запуске |
-| `POSTGRES_PORT`     | `5432`          | Host-side порт mapping'а             |
+| Variable            | Default    | Назначение                           |
+| ------------------- | ---------- | ------------------------------------ |
+| `POSTGRES_USER`     | `blog`     | Имя суперпользователя БД             |
+| `POSTGRES_PASSWORD` | `blog`     | Пароль суперпользователя (dev-only)  |
+| `POSTGRES_DB`       | `blog_dev` | База, создаваемая при первом запуске |
+| `POSTGRES_PORT`     | `5432`     | Host-side порт mapping'а             |
 
-Переопределить значения можно через переменные окружения сессии или через корневой `.env` — Docker Compose автоматически подхватит `.env` в `cwd`.
+Переопределить значения можно через переменные окружения сессии или через **корневой** `.env` (тот же файл, что подхватывает API) — Docker Compose автоматически читает `.env` из `cwd`. Канонический список ключей лежит в [`.env.example`](../.env.example).
 
 Quick smoke (после `npm run db:up`):
 
@@ -125,4 +143,4 @@ npm run db:psql -- -c "select version();"        # PostgreSQL 16.x
 
 ## Next roadmap step
 
-Step 017: add `.env.example` files — see [development-roadmap.md](./development-roadmap.md).
+Step 018: root README for API + web runbook — see [development-roadmap.md](./development-roadmap.md).
