@@ -23,7 +23,12 @@
     "nx": "nx",
     "nx:show": "nx show projects",
     "nx:graph": "nx graph",
-    "web:dev": "npm run dev -w web"
+    "web:dev": "npm run dev -w web",
+    "db:up": "docker compose up -d db",
+    "db:down": "docker compose down",
+    "db:reset": "docker compose down -v",
+    "db:logs": "docker compose logs -f db",
+    "db:psql": "docker compose exec db psql -U nestjs_st -d nestjs_st_dev"
   },
   "engines": {
     "node": ">=20.10.0",

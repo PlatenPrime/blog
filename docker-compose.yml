@@ -1,0 +1,27 @@
+name: nestjs-st
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: nestjs-st-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-nestjs_st}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-nestjs_st}
+      POSTGRES_DB: ${POSTGRES_DB:-nestjs_st_dev}
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - nestjs_st_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U "$${POSTGRES_USER}" -d "$${POSTGRES_DB}"
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  nestjs_st_pgdata:
+    name: nestjs_st_pgdata
