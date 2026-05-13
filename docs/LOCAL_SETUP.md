@@ -143,4 +143,4 @@ npm run db:psql -- -c "select version();"        # PostgreSQL 16.x
 
 ## Next roadmap step
 
-Step 021: Nx affected flow in CI — see [development-roadmap.md](./development-roadmap.md).
+Step 022: Optional husky/lint-staged policy — see [development-roadmap.md](./development-roadmap.md).

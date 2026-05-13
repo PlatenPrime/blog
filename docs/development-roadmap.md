@@ -35,6 +35,7 @@ Every step is a sprint and must produce code changes + a lesson file in `docs/le
 | Root README + API/web runbook         | Step 018 completed                         |
 | CI pipeline baseline (GitHub Actions) | Step 019 completed                         |
 | Nx cache in CI                        | Step 020 completed                         |
+| Nx affected flow in CI                | Step 021 completed                         |
 
 ## Step Contract (mandatory for every lesson)
 
@@ -176,5 +177,6 @@ Each `lesson-NNN-*.md` must include:
 | 018  | [lesson-018-root-readme-runbook.md](./lessons/lesson-018-root-readme-runbook.md)                       |
 | 019  | [lesson-019-ci-pipeline-baseline.md](./lessons/lesson-019-ci-pipeline-baseline.md)                     |
 | 020  | [lesson-020-nx-cache-in-ci.md](./lessons/lesson-020-nx-cache-in-ci.md)                                 |
+| 021  | [lesson-021-nx-affected-flow-in-ci.md](./lessons/lesson-021-nx-affected-flow-in-ci.md)                 |
 
 Entry point: [LOCAL_SETUP.md](./LOCAL_SETUP.md)

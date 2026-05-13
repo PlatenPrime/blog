@@ -37,6 +37,25 @@ jobs:
       - name: Fetch branch refs for diff
         run: git fetch --no-tags --prune --depth=200 origin +refs/heads/*:refs/remotes/origin/*
 
+      - name: Resolve Nx affected range
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            NX_BASE="origin/${{ github.base_ref }}"
+          elif [[ -n "${{ github.event.before }}" && "${{ github.event.before }}" != "0000000000000000000000000000000000000000" ]]; then
+            NX_BASE="${{ github.event.before }}"
+          else
+            NX_BASE="$(git rev-parse HEAD~1)"
+          fi
+
+          NX_HEAD="${{ github.sha }}"
+
+          echo "NX_BASE=$NX_BASE" >> "$GITHUB_ENV"
+          echo "NX_HEAD=$NX_HEAD" >> "$GITHUB_ENV"
+          echo "Using Nx affected range: $NX_BASE..$NX_HEAD"
+
       - name: Tests-first gate
         env:
           CI: 'true'
@@ -50,17 +69,17 @@ jobs:
       - name: Prettier check
         run: npm run format:check
 
-      - name: ESLint (CI, no fix)
-        run: npm run lint:ci
+      - name: Affected lint
+        run: npx nx affected -t lint --base="$NX_BASE" --head="$NX_HEAD"
 
-      - name: Typecheck
-        run: npx nx run-many -t typecheck -p api -p web
+      - name: Affected typecheck
+        run: npx nx affected -t typecheck --base="$NX_BASE" --head="$NX_HEAD"
 
-      - name: Build
-        run: npx nx run-many -t build -p api -p web
+      - name: Affected build
+        run: npx nx affected -t build --base="$NX_BASE" --head="$NX_HEAD"
 
-      - name: Unit tests
-        run: npm test
+      - name: Affected unit tests
+        run: npx nx affected -t test --base="$NX_BASE" --head="$NX_HEAD"
 
-      - name: E2E tests
-        run: npm run test:e2e
+      - name: Affected e2e tests
+        run: npx nx affected -t test:e2e --base="$NX_BASE" --head="$NX_HEAD"
