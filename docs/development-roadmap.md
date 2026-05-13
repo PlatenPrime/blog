@@ -38,6 +38,7 @@ Every step is a sprint and must produce code changes + a lesson file in `docs/le
 | Nx affected flow in CI                | Step 021 completed                         |
 | Optional husky/lint-staged policy     | Step 022 completed                         |
 | Lessons folder structure conventions  | Step 023 completed                         |
+| Release stub and changelog policy     | Step 024 completed                         |
 
 ## Step Contract (mandatory for every lesson)
 
@@ -181,5 +182,6 @@ Each `lesson-NNN-*.md` must include:
 | 020  | [lesson-020-nx-cache-in-ci.md](./lessons/lesson-020-nx-cache-in-ci.md)                                       |
 | 021  | [lesson-021-nx-affected-flow-in-ci.md](./lessons/lesson-021-nx-affected-flow-in-ci.md)                       |
 | 022  | [lesson-022-optional-husky-lint-staged-policy.md](./lessons/lesson-022-optional-husky-lint-staged-policy.md) |
+| 024  | [lesson-024-release-stub-and-changelog-policy.md](./lessons/lesson-024-release-stub-and-changelog-policy.md) |
 
 Entry point: [LOCAL_SETUP.md](./LOCAL_SETUP.md)
