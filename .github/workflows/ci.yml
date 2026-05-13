@@ -6,9 +6,16 @@ on:
       - '**'
   pull_request:
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+permissions:
+  contents: read
+
 jobs:
   baseline:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     env:
       NX_CACHE_DIRECTORY: .nx/cache
     steps:
@@ -27,7 +34,7 @@ jobs:
         run: npm ci
 
       - name: Restore Nx cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: .nx/cache
           key: nx-${{ runner.os }}-${{ hashFiles('package-lock.json', 'nx.json', 'package.json', 'apps/**/package.json', 'libs/**/package.json') }}
