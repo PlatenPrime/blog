@@ -15,6 +15,14 @@ export default tseslint.config(
   {
     ignores: ['**/dist/**', '**/node_modules/**', 'eslint.config.mjs'],
   },
+  {
+    files: ['scripts/**/*.mjs'],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+      },
+    },
+  },
   eslint.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked.map((config) => ({
     ...config,
