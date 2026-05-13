@@ -20,8 +20,8 @@
     "ci:tests-first": "node scripts/validate-tests-first.mjs --ci",
     "lint:ci": "nx run api:lint:ci && nx run web:lint",
     "ci": "npm run ci:tests-first && npm run format:check && npm run lint:ci && nx run-many -t typecheck -p api -p web && nx run-many -t build -p api -p web && npm test && npm run test:e2e",
-    "format": "prettier --write README.md package.json nx.json tsconfig.base.json eslint.config.mjs .prettierrc docs apps/api libs apps/web/src apps/web/public \"apps/web/package.json\" \"apps/web/tsconfig.json\" \"apps/web/vite.config.ts\" \"apps/web/eslint.config.js\" \"apps/web/prettier.config.js\" \"apps/web/README.md\" \"apps/web/.cta.json\" \"apps/web/.vscode/settings.json\"",
-    "format:check": "prettier --check README.md package.json nx.json tsconfig.base.json eslint.config.mjs .prettierrc docs apps/api libs apps/web/src apps/web/public \"apps/web/package.json\" \"apps/web/tsconfig.json\" \"apps/web/vite.config.ts\" \"apps/web/eslint.config.js\" \"apps/web/prettier.config.js\" \"apps/web/README.md\" \"apps/web/.cta.json\" \"apps/web/.vscode/settings.json\"",
+    "format": "npx --no-install prettier --write README.md package.json nx.json tsconfig.base.json eslint.config.mjs .prettierrc docs apps/api libs apps/web/src apps/web/public \"apps/web/package.json\" \"apps/web/tsconfig.json\" \"apps/web/vite.config.ts\" \"apps/web/eslint.config.js\" \"apps/web/prettier.config.js\" \"apps/web/README.md\" \"apps/web/.cta.json\" \"apps/web/.vscode/settings.json\"",
+    "format:check": "npx --no-install prettier --check README.md package.json nx.json tsconfig.base.json eslint.config.mjs .prettierrc docs apps/api libs apps/web/src apps/web/public \"apps/web/package.json\" \"apps/web/tsconfig.json\" \"apps/web/vite.config.ts\" \"apps/web/eslint.config.js\" \"apps/web/prettier.config.js\" \"apps/web/README.md\" \"apps/web/.cta.json\" \"apps/web/.vscode/settings.json\"",
     "nx": "nx",
     "nx:show": "nx show projects",
     "nx:graph": "nx graph",
@@ -33,7 +33,7 @@
     "db:psql": "docker compose exec db psql -U blog -d blog_dev"
   },
   "engines": {
-    "node": ">=20.10.0",
+    "node": ">=20.19.0",
     "npm": ">=10.0.0"
   },
   "packageManager": "npm@10.8.2",

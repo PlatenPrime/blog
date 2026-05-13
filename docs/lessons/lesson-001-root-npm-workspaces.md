@@ -13,7 +13,7 @@
 
 ## Dependencies
 
-- **Node.js** >= 20.10 (задано в `engines`; локально проверьте `node -v`).
+- **Node.js** >= 20.19 (задано в `engines`; локально проверьте `node -v`).
 - Существующий пакет Nest (сейчас: [`apps/api/`](../../apps/api/)).
 
 ## Step-by-Step Changes

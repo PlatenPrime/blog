@@ -115,6 +115,7 @@
 - Запускать `web:lint` после `web:build` без ignore `.output` — получите ложные ошибки parser.
 - Оставить старый workflow параллельно новому — двойные биллы и путаница в статусе.
 - Добавлять в CI `api:lint` с `--fix` — непредсказуемое поведение на агентах.
+- Транзитивные зависимости с полем `engines` в `package.json` (например цепочка web → `@asamuzakjp/css-color`) при `engine-strict=true` требуют **поднять pin в `.nvmrc` / `engines`**, если `npm ci` падает с `EBADENGINE` на патче ниже заявленного минимума.
 
 ## References
 

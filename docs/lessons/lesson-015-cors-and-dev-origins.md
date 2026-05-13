@@ -24,7 +24,7 @@
 
 ## Dependencies
 
-- Node.js `>=20.10.0` (см. [`package.json`](../../package.json) `engines`).
+- Node.js `>=20.19.0` (см. [`package.json`](../../package.json) `engines`).
 - Существующие пакеты: `@nestjs/common`, `@nestjs/core`, `@nestjs/platform-express`, `supertest`, `jest` — никаких новых установок.
 - Переменные окружения:
   - `PORT` — дефолт `4000` (новый дефолт для API).

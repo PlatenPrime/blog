@@ -25,7 +25,7 @@
 
 - Docker Engine **24+** или Docker Desktop с включённой compose v2 (`docker compose ...`, не `docker-compose ...`).
 - Свободный порт `5432` на хосте (либо переопределить через `POSTGRES_PORT`).
-- Node.js `>=20.10.0` (см. [`package.json`](../../package.json) `engines`) — только чтобы npm-скрипты `db:*` корректно резолвились.
+- Node.js `>=20.19.0` (см. [`package.json`](../../package.json) `engines`) — только чтобы npm-скрипты `db:*` корректно резолвились.
 - Никаких новых npm-зависимостей в этом шаге.
 
 Переменные окружения (с дефолтами в [`docker-compose.yml`](../../docker-compose.yml)):
