@@ -6,7 +6,7 @@
 
 ## Implementation Scope
 
-- Добавлены файлы версий: [`.nvmrc`](../../.nvmrc), [`.node-version`](../../.node-version) → **22.12.0**.
+- Добавлены файлы версий: [`.nvmrc`](../../.nvmrc), [`.node-version`](../../.node-version) → **22.14.0**.
 - Корневой [`.npmrc`](../../.npmrc): `engine-strict=true`.
 - Расширены `engines` и поле `packageManager` в корневом [`package.json`](../../package.json).
 - Документ [`docs/LOCAL_SETUP.md`](../LOCAL_SETUP.md) — единая инструкция по окружению и командам.
@@ -16,12 +16,12 @@
 
 ## Dependencies
 
-- Node.js **22.12.0** (рекомендуемая точка в `.nvmrc`; минимум в `engines`: `>=22.12.0`).
+- Node.js **22.14.0** (рекомендуемая точка в `.nvmrc`; минимум в `engines`: `>=22.13.0`).
 - npm **>= 10** (рекомендуется версия из `packageManager`).
 
 ## Step-by-Step Changes
 
-1. Создан `.nvmrc` / `.node-version` с `22.12.0` для nvm и fnm.
+1. Создан `.nvmrc` / `.node-version` с `22.14.0` для nvm и fnm.
 2. Добавлен `.npmrc` с `engine-strict=true`, чтобы `npm install` падал при несовместимом Node/npm.
 3. В `package.json` уточнены `engines` (верхняя граница Node `<23`, npm `>=10`) и `packageManager: npm@10.8.2` для явной фиксации линии npm (Corepack / документация).
 4. Написан `docs/LOCAL_SETUP.md` с проверками версий и таблицей команд из корня.
@@ -53,7 +53,7 @@ Nest 11, будущий Nx и TanStack Start предполагают совре
 
 ## Architecture Notes
 
-- **Почему 22.12.0 в `.nvmrc`**: единая рекомендуемая точка для команды и CI; это минимальная версия, требуемая `@tanstack/react-start`.
+- **Почему 22.14.0 в `.nvmrc`**: единая рекомендуемая точка для команды и CI; покрывает требования `@tanstack/react-start` и `@eslint/js`.
 - **Почему в `engines` только нижняя граница**: разработчики на Node 22/24 LTS не получают ложный `EBADENGINE`, если их версия новее; риск микроскопических расхождений снижается выравниванием через CI на версии из `.nvmrc`.
 - **Trade-off**: без верхней границы в `engines` возможны редкие несовместимости на «слишком новой» версии — ловим их в CI и уроках, при необходимости ужесточаем `engines` осознанно (ADR).
 
@@ -85,7 +85,7 @@ npm run test
 
 Ожидаемо:
 
-- `node -v` → `v22.12.0` (если следуете `.nvmrc`) или любая версия в диапазоне `engines`.
+- `node -v` → `v22.14.0` (если следуете `.nvmrc`) или любая версия в диапазоне `engines`.
 - `npm install` завершается без `EBADENGINE` при допустимых версиях.
 - `npm run test` — зелёный.
 
