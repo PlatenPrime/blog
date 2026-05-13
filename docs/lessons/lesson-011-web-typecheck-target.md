@@ -40,7 +40,7 @@ Expected:
 
 | File                                                       | Action                                           |
 | ---------------------------------------------------------- | ------------------------------------------------ |
-| [`apps/web/project.json`](../../apps/web/project.json)    | added explicit Nx config + `typecheck` target    |
+| [`apps/web/project.json`](../../apps/web/project.json)     | added explicit Nx config + `typecheck` target    |
 | [`docs/development-roadmap.md`](../development-roadmap.md) | added lesson 011 to completed snapshot           |
 | [`docs/learning-path.md`](../learning-path.md)             | added step 011 lesson link                       |
 | [`docs/README.md`](../README.md)                           | added step 011 to completed lessons              |

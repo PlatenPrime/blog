@@ -55,7 +55,9 @@
   "nx": {
     "targets": {
       "build": {
-        "dependsOn": ["shared-contracts:build"]
+        "dependsOn": [
+          "shared-contracts:build"
+        ]
       }
     }
   }

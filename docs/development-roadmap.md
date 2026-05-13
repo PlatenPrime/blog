@@ -33,6 +33,7 @@ Every step is a sprint and must produce code changes + a lesson file in `docs/le
 | Local infra: Postgres compose         | Step 016 completed                         |
 | `.env.example` files                  | Step 017 completed                         |
 | Root README + API/web runbook         | Step 018 completed                         |
+| CI pipeline baseline (GitHub Actions) | Step 019 completed                         |
 
 ## Step Contract (mandatory for every lesson)
 
@@ -172,5 +173,6 @@ Each `lesson-NNN-*.md` must include:
 | 016  | [lesson-016-postgres-compose-local-dev.md](./lessons/lesson-016-postgres-compose-local-dev.md)         |
 | 017  | [lesson-017-env-example-files.md](./lessons/lesson-017-env-example-files.md)                           |
 | 018  | [lesson-018-root-readme-runbook.md](./lessons/lesson-018-root-readme-runbook.md)                       |
+| 019  | [lesson-019-ci-pipeline-baseline.md](./lessons/lesson-019-ci-pipeline-baseline.md)                     |
 
 Entry point: [LOCAL_SETUP.md](./LOCAL_SETUP.md)

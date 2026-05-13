@@ -143,4 +143,4 @@ npm run db:psql -- -c "select version();"        # PostgreSQL 16.x
 
 ## Next roadmap step
 
-Step 019: CI pipeline baseline — see [development-roadmap.md](./development-roadmap.md).
+Step 020: Nx cache in CI — see [development-roadmap.md](./development-roadmap.md).

@@ -43,18 +43,18 @@ Expected:
 
 ## Changed Files
 
-| File                                                                                 | Action                                      |
-| ------------------------------------------------------------------------------------ | ------------------------------------------- |
-| [`apps/web/package.json`](../../apps/web/package.json)                               | dependency + `nx.targets.build.dependsOn`   |
-| [`apps/web/tsconfig.json`](../../apps/web/tsconfig.json)                             | `paths` for `@blog/shared-contracts`   |
-| [`apps/web/src/routes/index.tsx`](../../apps/web/src/routes/index.tsx)               | import + display `SHARED_CONTRACTS_VERSION` |
+| File                                                                                                 | Action                                      |
+| ---------------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| [`apps/web/package.json`](../../apps/web/package.json)                                               | dependency + `nx.targets.build.dependsOn`   |
+| [`apps/web/tsconfig.json`](../../apps/web/tsconfig.json)                                             | `paths` for `@blog/shared-contracts`        |
+| [`apps/web/src/routes/index.tsx`](../../apps/web/src/routes/index.tsx)                               | import + display `SHARED_CONTRACTS_VERSION` |
 | [`apps/web/src/shared-contracts-import.test.ts`](../../apps/web/src/shared-contracts-import.test.ts) | Vitest import smoke                         |
-| [`package-lock.json`](../../package-lock.json)                                       | workspace link for `web`                    |
-| [`docs/development-roadmap.md`](../development-roadmap.md)                           | step 014 in completed snapshot              |
-| [`docs/learning-path.md`](../learning-path.md)                                       | step 014 lesson link                        |
-| [`docs/README.md`](../README.md)                                                     | step 014 in completed lessons               |
-| [`docs/LOCAL_SETUP.md`](../LOCAL_SETUP.md)                                           | next step → 015                             |
-| `docs/lessons/lesson-014-wire-shared-contracts-web.md`                               | this file                                   |
+| [`package-lock.json`](../../package-lock.json)                                                       | workspace link for `web`                    |
+| [`docs/development-roadmap.md`](../development-roadmap.md)                                           | step 014 in completed snapshot              |
+| [`docs/learning-path.md`](../learning-path.md)                                                       | step 014 lesson link                        |
+| [`docs/README.md`](../README.md)                                                                     | step 014 in completed lessons               |
+| [`docs/LOCAL_SETUP.md`](../LOCAL_SETUP.md)                                                           | next step → 015                             |
+| `docs/lessons/lesson-014-wire-shared-contracts-web.md`                                               | this file                                   |
 
 ## Architecture Notes
 
