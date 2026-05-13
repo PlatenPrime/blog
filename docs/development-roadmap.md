@@ -39,6 +39,7 @@ Every step is a sprint and must produce code changes + a lesson file in `docs/le
 | Optional husky/lint-staged policy     | Step 022 completed                         |
 | Lessons folder structure conventions  | Step 023 completed                         |
 | Release stub and changelog policy     | Step 024 completed                         |
+| Normalize `.gitignore`                | Step 025 completed                         |
 
 ## Step Contract (mandatory for every lesson)
 
@@ -183,5 +184,6 @@ Each `lesson-NNN-*.md` must include:
 | 021  | [lesson-021-nx-affected-flow-in-ci.md](./lessons/lesson-021-nx-affected-flow-in-ci.md)                       |
 | 022  | [lesson-022-optional-husky-lint-staged-policy.md](./lessons/lesson-022-optional-husky-lint-staged-policy.md) |
 | 024  | [lesson-024-release-stub-and-changelog-policy.md](./lessons/lesson-024-release-stub-and-changelog-policy.md) |
+| 025  | [lesson-025-normalize-gitignore.md](./lessons/lesson-025-normalize-gitignore.md)                             |
 
 Entry point: [LOCAL_SETUP.md](./LOCAL_SETUP.md)

@@ -28,6 +28,7 @@ Use [development-roadmap.md](./development-roadmap.md) as the source of truth fo
 - Step 022: [lesson-022-optional-husky-lint-staged-policy.md](./lessons/lesson-022-optional-husky-lint-staged-policy.md)
 - Step 023: [lesson-023-lessons-folder-structure-conventions.md](./lessons/lesson-023-lessons-folder-structure-conventions.md)
 - Step 024: [lesson-024-release-stub-and-changelog-policy.md](./lessons/lesson-024-release-stub-and-changelog-policy.md)
+- Step 025: [lesson-025-normalize-gitignore.md](./lessons/lesson-025-normalize-gitignore.md)
 
 ## Phase 2: Platform Core (Track 1)
 

@@ -143,4 +143,4 @@ npm run db:psql -- -c "select version();"        # PostgreSQL 16.x
 
 ## Next roadmap step
 
-Step 025: Normalize `.gitignore` — see [development-roadmap.md](./development-roadmap.md).
+Step 026: Optional VS Code recommendations — see [development-roadmap.md](./development-roadmap.md).

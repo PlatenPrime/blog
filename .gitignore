@@ -1,14 +1,30 @@
-node_modules
+# Dependencies
+node_modules/
+
+# Environment files (keep examples committed)
 .env
-coverage
-dist
-.output
+.env.*
+!.env.example
+
+# Build and test artifacts
+coverage/
+dist/
+.output/
+
+# Logs
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Nx local cache/runtime data
+.nx/cache/
+.nx/workspace-data/
+
+# OS files
 .DS_Store
-
-
-.nx/cache
-.nx/workspace-data
+Thumbs.db
 
 # Local Nx graph export (`nx graph --file=...`, only at repo root)
 /nx-graph.html
