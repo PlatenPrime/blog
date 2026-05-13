@@ -23,6 +23,7 @@ Use [development-roadmap.md](./development-roadmap.md) as the source of truth fo
 - Step 017: [lesson-017-env-example-files.md](./lessons/lesson-017-env-example-files.md)
 - Step 018: [lesson-018-root-readme-runbook.md](./lessons/lesson-018-root-readme-runbook.md)
 - Step 019: [lesson-019-ci-pipeline-baseline.md](./lessons/lesson-019-ci-pipeline-baseline.md)
+- Step 020: [lesson-020-nx-cache-in-ci.md](./lessons/lesson-020-nx-cache-in-ci.md)
 
 ## Phase 2: Platform Core (Track 1)
 

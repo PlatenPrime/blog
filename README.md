@@ -90,6 +90,8 @@ blog/
 
 Эквивалентная explicit-форма для любой Nx-цели — `npx nx run <project>:<target>`.
 
+GitHub Actions дополнительно восстанавливает `.nx/cache` между повторными CI runs, чтобы Nx мог переиспользовать task outputs (`build`, `test`, `lint`, `typecheck`) при совпадающих inputs. Детали и проверка cache hit: [lesson-020](docs/lessons/lesson-020-nx-cache-in-ci.md).
+
 ## Ports & URLs
 
 | Сервис     | URL / Host              | Источник                                                                                                  |
@@ -119,7 +121,7 @@ blog/
 
 ## Status
 
-Текущий трек: **Track 0 — Workspace Foundation** (in progress). Последний завершённый шаг — **019: CI pipeline baseline**. Полный план и прогресс: [`docs/development-roadmap.md`](docs/development-roadmap.md).
+Текущий трек: **Track 0 — Workspace Foundation** (in progress). Последний завершённый шаг — **020: Nx cache in CI**. Полный план и прогресс: [`docs/development-roadmap.md`](docs/development-roadmap.md).
 
 ## Documentation map
 

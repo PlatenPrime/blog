@@ -9,6 +9,8 @@ on:
 jobs:
   baseline:
     runs-on: ubuntu-latest
+    env:
+      NX_CACHE_DIRECTORY: .nx/cache
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -23,6 +25,14 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Restore Nx cache
+        uses: actions/cache@v4
+        with:
+          path: .nx/cache
+          key: nx-${{ runner.os }}-${{ hashFiles('package-lock.json', 'nx.json', 'package.json', 'apps/**/package.json', 'libs/**/package.json') }}
+          restore-keys: |
+            nx-${{ runner.os }}-
 
       - name: Fetch branch refs for diff
         run: git fetch --no-tags --prune --depth=200 origin +refs/heads/*:refs/remotes/origin/*
