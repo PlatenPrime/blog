@@ -17,6 +17,8 @@
     "test": "nx run api:test",
     "test:e2e": "nx run api:test:e2e",
     "precommit:tests-first": "node scripts/validate-tests-first.mjs",
+    "precommit:lint-staged": "lint-staged --concurrent=false --relative",
+    "prepush:quick-check": "node scripts/husky-pre-push.mjs",
     "ci:tests-first": "node scripts/validate-tests-first.mjs --ci",
     "lint:ci": "nx run api:lint:ci && nx run web:lint",
     "ci": "npm run ci:tests-first && npm run format:check && npm run lint:ci && nx run-many -t typecheck -p api -p web && nx run-many -t build -p api -p web && npm test && npm run test:e2e",
@@ -32,6 +34,20 @@
     "db:logs": "docker compose logs -f db",
     "db:psql": "docker compose exec db psql -U blog -d blog_dev"
   },
+  "lint-staged": {
+    "*.{js,cjs,mjs,ts,tsx,jsx,json,md,yml,yaml}": [
+      "prettier --write"
+    ],
+    "apps/api/{src,test}/**/*.{js,ts,tsx}": [
+      "eslint --max-warnings=0"
+    ],
+    "apps/web/src/**/*.{js,jsx,ts,tsx}": [
+      "eslint --max-warnings=0"
+    ],
+    "*": [
+      "node scripts/run-staged-tests.mjs"
+    ]
+  },
   "engines": {
     "node": ">=22.13.0",
     "npm": ">=10.0.0"
@@ -46,6 +62,7 @@
     "eslint-plugin-prettier": "^5.2.2",
     "globals": "^17.0.0",
     "husky": "^9.0.0",
+    "lint-staged": "^16.4.0",
     "nx": "22.7.0",
     "prettier": "^3.4.2",
     "typescript-eslint": "^8.20.0"

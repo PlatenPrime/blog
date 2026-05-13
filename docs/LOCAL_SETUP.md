@@ -143,4 +143,4 @@ npm run db:psql -- -c "select version();"        # PostgreSQL 16.x
 
 ## Next roadmap step
 
-Step 022: Optional husky/lint-staged policy — see [development-roadmap.md](./development-roadmap.md).
+Step 023: Lessons folder structure conventions — see [development-roadmap.md](./development-roadmap.md).

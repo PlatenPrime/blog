@@ -36,6 +36,7 @@ Every step is a sprint and must produce code changes + a lesson file in `docs/le
 | CI pipeline baseline (GitHub Actions) | Step 019 completed                         |
 | Nx cache in CI                        | Step 020 completed                         |
 | Nx affected flow in CI                | Step 021 completed                         |
+| Optional husky/lint-staged policy     | Step 022 completed                         |
 
 ## Step Contract (mandatory for every lesson)
 
@@ -155,28 +156,29 @@ Each `lesson-NNN-*.md` must include:
 
 ## Completed Steps Snapshot
 
-| Step | Lesson                                                                                                 |
-| ---- | ------------------------------------------------------------------------------------------------------ |
-| 001  | [lesson-001-root-npm-workspaces.md](./lessons/lesson-001-root-npm-workspaces.md)                       |
-| 002  | [lesson-002-local-setup-and-node-policy.md](./lessons/lesson-002-local-setup-and-node-policy.md)       |
-| 003  | [lesson-003-nx-init.md](./lessons/lesson-003-nx-init.md)                                               |
-| 004  | [lesson-004-nx-targets-and-inference.md](./lessons/lesson-004-nx-targets-and-inference.md)             |
-| 005  | [lesson-005-nest-apps-api-migration.md](./lessons/lesson-005-nest-apps-api-migration.md)               |
-| 006  | [lesson-006-root-tsconfig-base-and-paths.md](./lessons/lesson-006-root-tsconfig-base-and-paths.md)     |
-| 007  | [lesson-007-root-eslint-flat-config.md](./lessons/lesson-007-root-eslint-flat-config.md)               |
-| 008  | [lesson-008-root-prettier-and-editorconfig.md](./lessons/lesson-008-root-prettier-and-editorconfig.md) |
-| 009  | [lesson-009-root-scripts-via-nx.md](./lessons/lesson-009-root-scripts-via-nx.md)                       |
-| 010  | [lesson-010-apps-web-tanstack-start.md](./lessons/lesson-010-apps-web-tanstack-start.md)               |
-| 011  | [lesson-011-web-typecheck-target.md](./lessons/lesson-011-web-typecheck-target.md)                     |
-| 012  | [lesson-012-shared-contracts-lib.md](./lessons/lesson-012-shared-contracts-lib.md)                     |
-| 013  | [lesson-013-wire-shared-contracts-api.md](./lessons/lesson-013-wire-shared-contracts-api.md)           |
-| 014  | [lesson-014-wire-shared-contracts-web.md](./lessons/lesson-014-wire-shared-contracts-web.md)           |
-| 015  | [lesson-015-cors-and-dev-origins.md](./lessons/lesson-015-cors-and-dev-origins.md)                     |
-| 016  | [lesson-016-postgres-compose-local-dev.md](./lessons/lesson-016-postgres-compose-local-dev.md)         |
-| 017  | [lesson-017-env-example-files.md](./lessons/lesson-017-env-example-files.md)                           |
-| 018  | [lesson-018-root-readme-runbook.md](./lessons/lesson-018-root-readme-runbook.md)                       |
-| 019  | [lesson-019-ci-pipeline-baseline.md](./lessons/lesson-019-ci-pipeline-baseline.md)                     |
-| 020  | [lesson-020-nx-cache-in-ci.md](./lessons/lesson-020-nx-cache-in-ci.md)                                 |
-| 021  | [lesson-021-nx-affected-flow-in-ci.md](./lessons/lesson-021-nx-affected-flow-in-ci.md)                 |
+| Step | Lesson                                                                                                       |
+| ---- | ------------------------------------------------------------------------------------------------------------ |
+| 001  | [lesson-001-root-npm-workspaces.md](./lessons/lesson-001-root-npm-workspaces.md)                             |
+| 002  | [lesson-002-local-setup-and-node-policy.md](./lessons/lesson-002-local-setup-and-node-policy.md)             |
+| 003  | [lesson-003-nx-init.md](./lessons/lesson-003-nx-init.md)                                                     |
+| 004  | [lesson-004-nx-targets-and-inference.md](./lessons/lesson-004-nx-targets-and-inference.md)                   |
+| 005  | [lesson-005-nest-apps-api-migration.md](./lessons/lesson-005-nest-apps-api-migration.md)                     |
+| 006  | [lesson-006-root-tsconfig-base-and-paths.md](./lessons/lesson-006-root-tsconfig-base-and-paths.md)           |
+| 007  | [lesson-007-root-eslint-flat-config.md](./lessons/lesson-007-root-eslint-flat-config.md)                     |
+| 008  | [lesson-008-root-prettier-and-editorconfig.md](./lessons/lesson-008-root-prettier-and-editorconfig.md)       |
+| 009  | [lesson-009-root-scripts-via-nx.md](./lessons/lesson-009-root-scripts-via-nx.md)                             |
+| 010  | [lesson-010-apps-web-tanstack-start.md](./lessons/lesson-010-apps-web-tanstack-start.md)                     |
+| 011  | [lesson-011-web-typecheck-target.md](./lessons/lesson-011-web-typecheck-target.md)                           |
+| 012  | [lesson-012-shared-contracts-lib.md](./lessons/lesson-012-shared-contracts-lib.md)                           |
+| 013  | [lesson-013-wire-shared-contracts-api.md](./lessons/lesson-013-wire-shared-contracts-api.md)                 |
+| 014  | [lesson-014-wire-shared-contracts-web.md](./lessons/lesson-014-wire-shared-contracts-web.md)                 |
+| 015  | [lesson-015-cors-and-dev-origins.md](./lessons/lesson-015-cors-and-dev-origins.md)                           |
+| 016  | [lesson-016-postgres-compose-local-dev.md](./lessons/lesson-016-postgres-compose-local-dev.md)               |
+| 017  | [lesson-017-env-example-files.md](./lessons/lesson-017-env-example-files.md)                                 |
+| 018  | [lesson-018-root-readme-runbook.md](./lessons/lesson-018-root-readme-runbook.md)                             |
+| 019  | [lesson-019-ci-pipeline-baseline.md](./lessons/lesson-019-ci-pipeline-baseline.md)                           |
+| 020  | [lesson-020-nx-cache-in-ci.md](./lessons/lesson-020-nx-cache-in-ci.md)                                       |
+| 021  | [lesson-021-nx-affected-flow-in-ci.md](./lessons/lesson-021-nx-affected-flow-in-ci.md)                       |
+| 022  | [lesson-022-optional-husky-lint-staged-policy.md](./lessons/lesson-022-optional-husky-lint-staged-policy.md) |
 
 Entry point: [LOCAL_SETUP.md](./LOCAL_SETUP.md)

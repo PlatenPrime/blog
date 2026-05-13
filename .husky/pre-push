@@ -3,4 +3,4 @@
 unset FORCE_COLOR
 unset NO_COLOR
 export NODE_NO_WARNINGS=1
-node scripts/husky-pre-commit.mjs
+node scripts/husky-pre-push.mjs
