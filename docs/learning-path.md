@@ -29,6 +29,7 @@ Use [development-roadmap.md](./development-roadmap.md) as the source of truth fo
 - Step 023: [lesson-023-lessons-folder-structure-conventions.md](./lessons/lesson-023-lessons-folder-structure-conventions.md)
 - Step 024: [lesson-024-release-stub-and-changelog-policy.md](./lessons/lesson-024-release-stub-and-changelog-policy.md)
 - Step 025: [lesson-025-normalize-gitignore.md](./lessons/lesson-025-normalize-gitignore.md)
+- Step 026: [lesson-026-optional-vscode-recommendations.md](./lessons/lesson-026-optional-vscode-recommendations.md)
 
 ## Phase 2: Platform Core (Track 1)
 

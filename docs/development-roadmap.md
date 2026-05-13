@@ -40,6 +40,7 @@ Every step is a sprint and must produce code changes + a lesson file in `docs/le
 | Lessons folder structure conventions  | Step 023 completed                         |
 | Release stub and changelog policy     | Step 024 completed                         |
 | Normalize `.gitignore`                | Step 025 completed                         |
+| Optional VS Code recommendations      | Step 026 completed                         |
 
 ## Step Contract (mandatory for every lesson)
 

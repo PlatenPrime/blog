@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    "nrwl.angular-console",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "ms-azuretools.vscode-docker",
+    "mikestead.dotenv",
+    "yoavbls.pretty-ts-errors",
+    "github.vscode-github-actions",
+    "bierner.markdown-mermaid"
+  ]
+}
