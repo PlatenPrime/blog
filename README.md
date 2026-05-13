@@ -17,7 +17,7 @@ Monorepo-практикум: **NestJS API** + **TanStack Start** (SSR/SEO) + **N
 
 ## Prerequisites
 
-- **Node.js** `20.19.0` (зафиксирован в [`.nvmrc`](.nvmrc) и [`.node-version`](.node-version)) — `nvm`/`fnm` подхватят автоматически.
+- **Node.js** `22.12.0` (зафиксирован в [`.nvmrc`](.nvmrc) и [`.node-version`](.node-version)) — `nvm`/`fnm` подхватят автоматически.
 - **npm** ≥ `10` (см. `engines` в [`package.json`](package.json)).
 - **Docker** Engine 24+ с Compose v2 (`docker compose version` должен работать) — нужен только для локальной БД.
 
@@ -29,7 +29,7 @@ node -v && npm -v && docker compose version
 
 ```bash
 git clone <repo> && cd blog
-nvm use                                      # Node 20.19.0
+nvm use                                      # Node 22.12.0
 npm install
 cp .env.example .env                         # backend + infra envs
 cp apps/web/.env.example apps/web/.env       # web stub
@@ -114,7 +114,7 @@ blog/
 | `EADDRINUSE: 4000` при `npm run start:dev`                   | API сам инкрементит порт до `4019`. Чтобы зафиксировать: `PORT=4100 npm run start:dev`.                                                                                      |
 | Браузер блокирует запросы по CORS                            | Расширь whitelist: `CORS_ORIGINS="http://localhost:3000,http://localhost:5173" npm run start:dev`. Логика — в [lesson-015](docs/lessons/lesson-015-cors-and-dev-origins.md). |
 | `npm run db:up` — контейнер не healthy / `pg_isready` падает | `npm run db:logs` для деталей; при коррапте данных — `npm run db:reset` (удалит named volume `blog_pgdata`).                                                                 |
-| `nest: command not found` или странные ошибки версий         | Несовпадение Node. Проверь: `node -v` против `.nvmrc` (`20.19.0`); переключись `nvm use` / `fnm use`.                                                                        |
+| `nest: command not found` или странные ошибки версий         | Несовпадение Node. Проверь: `node -v` против `.nvmrc` (`22.12.0`); переключись `nvm use` / `fnm use`.                                                                        |
 | `npm run format:check` падает локально                       | Запусти `npm run format` (запись), потом коммить. Husky-precommit (`scripts/validate-tests-first.mjs`) ловит тесты, Prettier — отдельная цель.                               |
 
 ## Status
