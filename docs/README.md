@@ -5,6 +5,9 @@ This repository is a fullstack practice track: NestJS API + TanStack Start + Nx.
 ## Documentation
 
 - [development-roadmap.md](./development-roadmap.md)
+- [adr/README.md](./adr/README.md) — Architecture Decision Records (ADR)
+- [security/threat-model-stub.md](./security/threat-model-stub.md) — threat model stub (Track 7 precursor)
+- [track-0-acceptance-checklist.md](./track-0-acceptance-checklist.md) — Track 0 acceptance checklist
 - [LOCAL_SETUP.md](./LOCAL_SETUP.md)
 - [learning-path.md](./learning-path.md)
 - [release-policy.md](./release-policy.md)
@@ -48,6 +51,12 @@ npm run test:e2e
 - Step 024: [lesson-024-release-stub-and-changelog-policy.md](./lessons/lesson-024-release-stub-and-changelog-policy.md)
 - Step 025: [lesson-025-normalize-gitignore.md](./lessons/lesson-025-normalize-gitignore.md)
 - Step 026: [lesson-026-optional-vscode-recommendations.md](./lessons/lesson-026-optional-vscode-recommendations.md)
+- Step 027: [lesson-027-adr-000-nx-tanstack-start.md](./lessons/lesson-027-adr-000-nx-tanstack-start.md)
+- Step 028: [lesson-028-threat-model-stub.md](./lessons/lesson-028-threat-model-stub.md)
+- Step 029: [lesson-029-health-smoke-script.md](./lessons/lesson-029-health-smoke-script.md)
+- Step 030: [lesson-030-track-0-acceptance-checklist.md](./lessons/lesson-030-track-0-acceptance-checklist.md)
+- Step 031: [lesson-031-ci-matrix-improvements.md](./lessons/lesson-031-ci-matrix-improvements.md)
+- Step 032: [lesson-032-adr-process-deviations.md](./lessons/lesson-032-adr-process-deviations.md)
 
 Quality scripts from repo root (`build`, `test`, `lint`, `test:e2e`) run through Nx on the `api` app. The `web` app (TanStack Start) builds with `npx nx run web:build` or `npm run web:dev` for local dev. Full CI parity from root: `npm run ci` (see [lesson-019](./lessons/lesson-019-ci-pipeline-baseline.md)); GitHub Actions restores `.nx/cache` for repeated CI runs (see [lesson-020](./lessons/lesson-020-nx-cache-in-ci.md)); CI targets now run through `nx affected` range detection (see [lesson-021](./lessons/lesson-021-nx-affected-flow-in-ci.md)). Utility scripts:
 

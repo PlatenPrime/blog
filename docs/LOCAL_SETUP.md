@@ -143,4 +143,4 @@ npm run db:psql -- -c "select version();"        # PostgreSQL 16.x
 
 ## Next roadmap step
 
-Step 027: ADR-000: why Nx + TanStack Start — see [development-roadmap.md](./development-roadmap.md).
+**Track 1 — Platform Core** starts at **Step 033** — see [development-roadmap.md](./development-roadmap.md). Track 0 (001–032) закрыт чеклистом [track-0-acceptance-checklist.md](./track-0-acceptance-checklist.md).

@@ -41,6 +41,12 @@ Every step is a sprint and must produce code changes + a lesson file in `docs/le
 | Release stub and changelog policy     | Step 024 completed                         |
 | Normalize `.gitignore`                | Step 025 completed                         |
 | Optional VS Code recommendations      | Step 026 completed                         |
+| ADR-000 (Nx + TanStack Start)         | Step 027 completed                         |
+| Threat model stub                     | Step 028 completed                         |
+| Health smoke script                   | Step 029 completed                         |
+| Track 0 acceptance checklist          | Step 030 completed                         |
+| CI matrix improvements (reserve)      | Step 031 completed                         |
+| ADR process for deviations (reserve)  | Step 032 completed                         |
 
 ## Step Contract (mandatory for every lesson)
 
@@ -160,31 +166,39 @@ Each `lesson-NNN-*.md` must include:
 
 ## Completed Steps Snapshot
 
-| Step | Lesson                                                                                                       |
-| ---- | ------------------------------------------------------------------------------------------------------------ |
-| 001  | [lesson-001-root-npm-workspaces.md](./lessons/lesson-001-root-npm-workspaces.md)                             |
-| 002  | [lesson-002-local-setup-and-node-policy.md](./lessons/lesson-002-local-setup-and-node-policy.md)             |
-| 003  | [lesson-003-nx-init.md](./lessons/lesson-003-nx-init.md)                                                     |
-| 004  | [lesson-004-nx-targets-and-inference.md](./lessons/lesson-004-nx-targets-and-inference.md)                   |
-| 005  | [lesson-005-nest-apps-api-migration.md](./lessons/lesson-005-nest-apps-api-migration.md)                     |
-| 006  | [lesson-006-root-tsconfig-base-and-paths.md](./lessons/lesson-006-root-tsconfig-base-and-paths.md)           |
-| 007  | [lesson-007-root-eslint-flat-config.md](./lessons/lesson-007-root-eslint-flat-config.md)                     |
-| 008  | [lesson-008-root-prettier-and-editorconfig.md](./lessons/lesson-008-root-prettier-and-editorconfig.md)       |
-| 009  | [lesson-009-root-scripts-via-nx.md](./lessons/lesson-009-root-scripts-via-nx.md)                             |
-| 010  | [lesson-010-apps-web-tanstack-start.md](./lessons/lesson-010-apps-web-tanstack-start.md)                     |
-| 011  | [lesson-011-web-typecheck-target.md](./lessons/lesson-011-web-typecheck-target.md)                           |
-| 012  | [lesson-012-shared-contracts-lib.md](./lessons/lesson-012-shared-contracts-lib.md)                           |
-| 013  | [lesson-013-wire-shared-contracts-api.md](./lessons/lesson-013-wire-shared-contracts-api.md)                 |
-| 014  | [lesson-014-wire-shared-contracts-web.md](./lessons/lesson-014-wire-shared-contracts-web.md)                 |
-| 015  | [lesson-015-cors-and-dev-origins.md](./lessons/lesson-015-cors-and-dev-origins.md)                           |
-| 016  | [lesson-016-postgres-compose-local-dev.md](./lessons/lesson-016-postgres-compose-local-dev.md)               |
-| 017  | [lesson-017-env-example-files.md](./lessons/lesson-017-env-example-files.md)                                 |
-| 018  | [lesson-018-root-readme-runbook.md](./lessons/lesson-018-root-readme-runbook.md)                             |
-| 019  | [lesson-019-ci-pipeline-baseline.md](./lessons/lesson-019-ci-pipeline-baseline.md)                           |
-| 020  | [lesson-020-nx-cache-in-ci.md](./lessons/lesson-020-nx-cache-in-ci.md)                                       |
-| 021  | [lesson-021-nx-affected-flow-in-ci.md](./lessons/lesson-021-nx-affected-flow-in-ci.md)                       |
-| 022  | [lesson-022-optional-husky-lint-staged-policy.md](./lessons/lesson-022-optional-husky-lint-staged-policy.md) |
-| 024  | [lesson-024-release-stub-and-changelog-policy.md](./lessons/lesson-024-release-stub-and-changelog-policy.md) |
-| 025  | [lesson-025-normalize-gitignore.md](./lessons/lesson-025-normalize-gitignore.md)                             |
+| Step | Lesson                                                                                                             |
+| ---- | ------------------------------------------------------------------------------------------------------------------ |
+| 001  | [lesson-001-root-npm-workspaces.md](./lessons/lesson-001-root-npm-workspaces.md)                                   |
+| 002  | [lesson-002-local-setup-and-node-policy.md](./lessons/lesson-002-local-setup-and-node-policy.md)                   |
+| 003  | [lesson-003-nx-init.md](./lessons/lesson-003-nx-init.md)                                                           |
+| 004  | [lesson-004-nx-targets-and-inference.md](./lessons/lesson-004-nx-targets-and-inference.md)                         |
+| 005  | [lesson-005-nest-apps-api-migration.md](./lessons/lesson-005-nest-apps-api-migration.md)                           |
+| 006  | [lesson-006-root-tsconfig-base-and-paths.md](./lessons/lesson-006-root-tsconfig-base-and-paths.md)                 |
+| 007  | [lesson-007-root-eslint-flat-config.md](./lessons/lesson-007-root-eslint-flat-config.md)                           |
+| 008  | [lesson-008-root-prettier-and-editorconfig.md](./lessons/lesson-008-root-prettier-and-editorconfig.md)             |
+| 009  | [lesson-009-root-scripts-via-nx.md](./lessons/lesson-009-root-scripts-via-nx.md)                                   |
+| 010  | [lesson-010-apps-web-tanstack-start.md](./lessons/lesson-010-apps-web-tanstack-start.md)                           |
+| 011  | [lesson-011-web-typecheck-target.md](./lessons/lesson-011-web-typecheck-target.md)                                 |
+| 012  | [lesson-012-shared-contracts-lib.md](./lessons/lesson-012-shared-contracts-lib.md)                                 |
+| 013  | [lesson-013-wire-shared-contracts-api.md](./lessons/lesson-013-wire-shared-contracts-api.md)                       |
+| 014  | [lesson-014-wire-shared-contracts-web.md](./lessons/lesson-014-wire-shared-contracts-web.md)                       |
+| 015  | [lesson-015-cors-and-dev-origins.md](./lessons/lesson-015-cors-and-dev-origins.md)                                 |
+| 016  | [lesson-016-postgres-compose-local-dev.md](./lessons/lesson-016-postgres-compose-local-dev.md)                     |
+| 017  | [lesson-017-env-example-files.md](./lessons/lesson-017-env-example-files.md)                                       |
+| 018  | [lesson-018-root-readme-runbook.md](./lessons/lesson-018-root-readme-runbook.md)                                   |
+| 019  | [lesson-019-ci-pipeline-baseline.md](./lessons/lesson-019-ci-pipeline-baseline.md)                                 |
+| 020  | [lesson-020-nx-cache-in-ci.md](./lessons/lesson-020-nx-cache-in-ci.md)                                             |
+| 021  | [lesson-021-nx-affected-flow-in-ci.md](./lessons/lesson-021-nx-affected-flow-in-ci.md)                             |
+| 022  | [lesson-022-optional-husky-lint-staged-policy.md](./lessons/lesson-022-optional-husky-lint-staged-policy.md)       |
+| 023  | [lesson-023-lessons-folder-structure-conventions.md](./lessons/lesson-023-lessons-folder-structure-conventions.md) |
+| 024  | [lesson-024-release-stub-and-changelog-policy.md](./lessons/lesson-024-release-stub-and-changelog-policy.md)       |
+| 025  | [lesson-025-normalize-gitignore.md](./lessons/lesson-025-normalize-gitignore.md)                                   |
+| 026  | [lesson-026-optional-vscode-recommendations.md](./lessons/lesson-026-optional-vscode-recommendations.md)           |
+| 027  | [lesson-027-adr-000-nx-tanstack-start.md](./lessons/lesson-027-adr-000-nx-tanstack-start.md)                       |
+| 028  | [lesson-028-threat-model-stub.md](./lessons/lesson-028-threat-model-stub.md)                                       |
+| 029  | [lesson-029-health-smoke-script.md](./lessons/lesson-029-health-smoke-script.md)                                   |
+| 030  | [lesson-030-track-0-acceptance-checklist.md](./lessons/lesson-030-track-0-acceptance-checklist.md)                 |
+| 031  | [lesson-031-ci-matrix-improvements.md](./lessons/lesson-031-ci-matrix-improvements.md)                             |
+| 032  | [lesson-032-adr-process-deviations.md](./lessons/lesson-032-adr-process-deviations.md)                             |
 
 Entry point: [LOCAL_SETUP.md](./LOCAL_SETUP.md)

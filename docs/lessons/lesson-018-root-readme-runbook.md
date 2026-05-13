@@ -17,7 +17,7 @@
 Намеренно **не** делаем в этом шаге:
 
 - Не добавляем CI status-badges в README — CI pipeline появится в step 019; добавлять «битый» бейдж бессмысленно.
-- Не пишем ADR-секцию «зачем Nx + TanStack» в README — она появится в step 027 (`ADR-000`) и оттуда же будет залинкована.
+- Не пишем ADR-секцию «зачем Nx + TanStack» в README — она оформлена в step 027 как [ADR-000](../adr/000-nx-and-tanstack-start.md) (см. [lesson-027](./lesson-027-adr-000-nx-tanstack-start.md)) и линкуется из корневого README / `docs/adr`.
 - Не трогаем содержательно [`docs/LOCAL_SETUP.md`](../LOCAL_SETUP.md) (кроме указателя на следующий шаг). LOCAL_SETUP — это источник истины для env-таблиц и инфраструктурных команд, и его контракт мы только-что зафиксировали в [lesson-017](./lesson-017-env-example-files.md).
 - Не дублируем таблицы переменных окружения в README — README только **ссылается** на [`.env.example`](../../.env.example) и `LOCAL_SETUP.md`. Дубликат — это будущий drift.
 - Не добавляем `apps/web/.env.example`-таблицу переменных — там пока только stub-комментарии (см. lesson-017).

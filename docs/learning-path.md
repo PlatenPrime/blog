@@ -30,6 +30,12 @@ Use [development-roadmap.md](./development-roadmap.md) as the source of truth fo
 - Step 024: [lesson-024-release-stub-and-changelog-policy.md](./lessons/lesson-024-release-stub-and-changelog-policy.md)
 - Step 025: [lesson-025-normalize-gitignore.md](./lessons/lesson-025-normalize-gitignore.md)
 - Step 026: [lesson-026-optional-vscode-recommendations.md](./lessons/lesson-026-optional-vscode-recommendations.md)
+- Step 027: [lesson-027-adr-000-nx-tanstack-start.md](./lessons/lesson-027-adr-000-nx-tanstack-start.md)
+- Step 028: [lesson-028-threat-model-stub.md](./lessons/lesson-028-threat-model-stub.md)
+- Step 029: [lesson-029-health-smoke-script.md](./lessons/lesson-029-health-smoke-script.md)
+- Step 030: [lesson-030-track-0-acceptance-checklist.md](./lessons/lesson-030-track-0-acceptance-checklist.md)
+- Step 031: [lesson-031-ci-matrix-improvements.md](./lessons/lesson-031-ci-matrix-improvements.md)
+- Step 032: [lesson-032-adr-process-deviations.md](./lessons/lesson-032-adr-process-deviations.md)
 
 ## Phase 2: Platform Core (Track 1)
 

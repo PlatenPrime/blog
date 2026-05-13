@@ -53,8 +53,9 @@ blog/
 │   ├── development-roadmap.md   # Источник истины по шагам
 │   ├── LOCAL_SETUP.md           # Глубокий setup-гайд
 │   ├── learning-path.md         # Карта фаз обучения
+│   ├── security/                # Threat model stub (Track 7 precursor)
 │   └── lessons/                 # lesson-NNN-*.md по каждому шагу
-├── scripts/                  # validate-tests-first.mjs и пр.
+├── scripts/                  # validate-tests-first.mjs, health-smoke.mjs, …
 ├── docker-compose.yml        # service db (Postgres 16)
 ├── .env.example              # API + Postgres env-шаблон
 ├── nx.json                   # target defaults, named inputs
@@ -64,29 +65,30 @@ blog/
 
 ## Common commands (from repo root)
 
-| Цель                        | npm-скрипт                 | Под капотом                                                     |
-| --------------------------- | -------------------------- | --------------------------------------------------------------- |
-| Полный CI parity (локально) | `npm run ci`               | tests-first → format → lint:ci → typecheck → build → test → e2e |
-| Lint API+web без `--fix`    | `npm run lint:ci`          | `nx run api:lint:ci` → `nx run web:lint`                        |
-| Установка зависимостей      | `npm install`              | npm workspaces (`apps/*`, `libs/*`)                             |
-| Старт API (watch)           | `npm run start:dev`        | `npm run start:dev -w api` → `nest start --watch`               |
-| Production-старт API        | `npm run start:prod`       | `npm run start:prod -w api`                                     |
-| Unit-тесты API              | `npm run test`             | `nx run api:test`                                               |
-| E2E-тесты API               | `npm run test:e2e`         | `nx run api:test:e2e`                                           |
-| Lint API                    | `npm run lint`             | `nx run api:lint`                                               |
-| Build API                   | `npm run build`            | `nx run api:build` (dependsOn `shared-contracts:build`)         |
-| Dev-сервер web              | `npm run web:dev`          | `npm run dev -w web` → Vite на `:3000`                          |
-| Build web                   | `npx nx run web:build`     | Vite + Nitro production-сборка                                  |
-| Typecheck web               | `npx nx run web:typecheck` | `tsc --noEmit`                                                  |
-| Поднять БД                  | `npm run db:up`            | `docker compose up -d db`                                       |
-| Логи БД (follow)            | `npm run db:logs`          | `docker compose logs -f db`                                     |
-| `psql` в контейнере         | `npm run db:psql`          | `docker compose exec db psql -U blog -d blog_dev`               |
-| Остановить БД (volume жив)  | `npm run db:down`          | `docker compose down`                                           |
-| Полный сброс БД             | `npm run db:reset`         | `docker compose down -v`                                        |
-| Список Nx-проектов          | `npm run nx:show`          | `nx show projects` (`api`, `web`, `shared-contracts`)           |
-| Граф проектов               | `npm run nx:graph`         | `nx graph`                                                      |
-| Prettier (запись)           | `npm run format`           | prettier --write по фиксированному glob                         |
-| Prettier (проверка)         | `npm run format:check`     | prettier --check (для CI и precommit)                           |
+| Цель                           | npm-скрипт                 | Под капотом                                                                                        |
+| ------------------------------ | -------------------------- | -------------------------------------------------------------------------------------------------- |
+| Smoke API+web (dev servers up) | `npm run health:smoke`     | `node scripts/health-smoke.mjs` (см. [lesson-029](docs/lessons/lesson-029-health-smoke-script.md)) |
+| Полный CI parity (локально)    | `npm run ci`               | tests-first → format → lint:ci → typecheck → build → test → e2e                                    |
+| Lint API+web без `--fix`       | `npm run lint:ci`          | `nx run api:lint:ci` → `nx run web:lint`                                                           |
+| Установка зависимостей         | `npm install`              | npm workspaces (`apps/*`, `libs/*`)                                                                |
+| Старт API (watch)              | `npm run start:dev`        | `npm run start:dev -w api` → `nest start --watch`                                                  |
+| Production-старт API           | `npm run start:prod`       | `npm run start:prod -w api`                                                                        |
+| Unit-тесты API                 | `npm run test`             | `nx run api:test`                                                                                  |
+| E2E-тесты API                  | `npm run test:e2e`         | `nx run api:test:e2e`                                                                              |
+| Lint API                       | `npm run lint`             | `nx run api:lint`                                                                                  |
+| Build API                      | `npm run build`            | `nx run api:build` (dependsOn `shared-contracts:build`)                                            |
+| Dev-сервер web                 | `npm run web:dev`          | `npm run dev -w web` → Vite на `:3000`                                                             |
+| Build web                      | `npx nx run web:build`     | Vite + Nitro production-сборка                                                                     |
+| Typecheck web                  | `npx nx run web:typecheck` | `tsc --noEmit`                                                                                     |
+| Поднять БД                     | `npm run db:up`            | `docker compose up -d db`                                                                          |
+| Логи БД (follow)               | `npm run db:logs`          | `docker compose logs -f db`                                                                        |
+| `psql` в контейнере            | `npm run db:psql`          | `docker compose exec db psql -U blog -d blog_dev`                                                  |
+| Остановить БД (volume жив)     | `npm run db:down`          | `docker compose down`                                                                              |
+| Полный сброс БД                | `npm run db:reset`         | `docker compose down -v`                                                                           |
+| Список Nx-проектов             | `npm run nx:show`          | `nx show projects` (`api`, `web`, `shared-contracts`)                                              |
+| Граф проектов                  | `npm run nx:graph`         | `nx graph`                                                                                         |
+| Prettier (запись)              | `npm run format`           | prettier --write по фиксированному glob                                                            |
+| Prettier (проверка)            | `npm run format:check`     | prettier --check (для CI и precommit)                                                              |
 
 Эквивалентная explicit-форма для любой Nx-цели — `npx nx run <project>:<target>`.
 
@@ -121,11 +123,15 @@ GitHub Actions дополнительно восстанавливает `.nx/ca
 
 ## Status
 
-Текущий трек: **Track 0 — Workspace Foundation** (in progress). Последний завершённый шаг — **020: Nx cache in CI**. Полный план и прогресс: [`docs/development-roadmap.md`](docs/development-roadmap.md).
+**Track 0 — Workspace Foundation** завершён (шаг **032**). Дальше — **Track 1 — Platform Core** с шага **033**: [`docs/development-roadmap.md`](docs/development-roadmap.md). Чеклист приёмки Track 0: [`docs/track-0-acceptance-checklist.md`](docs/track-0-acceptance-checklist.md).
 
 ## Documentation map
 
 - [`docs/development-roadmap.md`](docs/development-roadmap.md) — источник истины по шагам (001-320).
+- [`docs/adr/000-nx-and-tanstack-start.md`](docs/adr/000-nx-and-tanstack-start.md) — ADR-000: почему Nx и TanStack Start в этом монорепо (индекс: [`docs/adr/README.md`](docs/adr/README.md)).
+- [`docs/adr/001-process-for-architectural-deviations.md`](docs/adr/001-process-for-architectural-deviations.md) — ADR-001: как фиксировать отклонения от прошлых ADR.
+- [`docs/security/threat-model-stub.md`](docs/security/threat-model-stub.md) — заготовка threat model (развитие в Track 7).
+- [`docs/track-0-acceptance-checklist.md`](docs/track-0-acceptance-checklist.md) — приёмка Track 0 перед Platform Core.
 - [`docs/LOCAL_SETUP.md`](docs/LOCAL_SETUP.md) — детальный setup, env-таблицы, инфраструктура.
 - [`docs/learning-path.md`](docs/learning-path.md) — карта фаз обучения (Phase 1-8).
 - [`docs/lessons/`](docs/lessons/) — уроки `lesson-NNN-*.md`, по одному на шаг.
