@@ -1,2 +1,2 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+# LF in the working tree on all OSes (avoids Windows CI vs Ubuntu Prettier drift).
+* text=auto eol=lf
