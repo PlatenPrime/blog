@@ -143,4 +143,4 @@ npm run db:psql -- -c "select version();"        # PostgreSQL 16.x
 
 ## Next roadmap step
 
-Step 023: Lessons folder structure conventions — see [development-roadmap.md](./development-roadmap.md).
+Step 024: Release stub and changelog policy — see [development-roadmap.md](./development-roadmap.md).

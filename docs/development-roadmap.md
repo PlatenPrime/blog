@@ -37,6 +37,7 @@ Every step is a sprint and must produce code changes + a lesson file in `docs/le
 | Nx cache in CI                        | Step 020 completed                         |
 | Nx affected flow in CI                | Step 021 completed                         |
 | Optional husky/lint-staged policy     | Step 022 completed                         |
+| Lessons folder structure conventions  | Step 023 completed                         |
 
 ## Step Contract (mandatory for every lesson)
 

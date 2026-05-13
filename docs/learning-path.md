@@ -26,6 +26,7 @@ Use [development-roadmap.md](./development-roadmap.md) as the source of truth fo
 - Step 020: [lesson-020-nx-cache-in-ci.md](./lessons/lesson-020-nx-cache-in-ci.md)
 - Step 021: [lesson-021-nx-affected-flow-in-ci.md](./lessons/lesson-021-nx-affected-flow-in-ci.md)
 - Step 022: [lesson-022-optional-husky-lint-staged-policy.md](./lessons/lesson-022-optional-husky-lint-staged-policy.md)
+- Step 023: [lesson-023-lessons-folder-structure-conventions.md](./lessons/lesson-023-lessons-folder-structure-conventions.md)
 
 ## Phase 2: Platform Core (Track 1)
 
