@@ -1,23 +1,27 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
 import { App } from 'supertest/types';
 import { AppModule } from './../src/app.module';
-import { buildCorsOptions } from './../src/config/cors.config';
+import { enableApiCors } from './../src/config/enable-api-cors';
 
 const ALLOWED_ORIGIN = 'http://localhost:3000';
 const FORBIDDEN_ORIGIN = 'http://evil.example';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication<App>;
+  let prevCorsOrigins: string | undefined;
 
   beforeEach(async () => {
+    prevCorsOrigins = process.env.CORS_ORIGINS;
+    process.env.CORS_ORIGINS = ALLOWED_ORIGIN;
+
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    app.enableCors(buildCorsOptions({ CORS_ORIGINS: ALLOWED_ORIGIN }));
+    enableApiCors(app);
     await app.init();
   });
 
@@ -66,5 +70,10 @@ describe('AppController (e2e)', () => {
 
   afterEach(async () => {
     await app.close();
+    if (prevCorsOrigins === undefined) {
+      delete process.env.CORS_ORIGINS;
+    } else {
+      process.env.CORS_ORIGINS = prevCorsOrigins;
+    }
   });
 });

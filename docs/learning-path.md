@@ -41,6 +41,8 @@ Use [development-roadmap.md](./development-roadmap.md) as the source of truth fo
 
 Steps 033-056.
 
+- Step 033: [lesson-033-nest-config-and-env-validation.md](./lessons/lesson-033-nest-config-and-env-validation.md)
+
 ## Phase 3: Auth and Identity (Track 2)
 
 Steps 057-104.

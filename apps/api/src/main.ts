@@ -1,38 +1,24 @@
+import { Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { Logger } from '@nestjs/common';
-import { config } from 'dotenv';
-import { existsSync } from 'node:fs';
-import { resolve } from 'node:path';
-import { buildCorsOptions } from './config/cors.config';
-
-const envPaths = [
-  resolve(__dirname, '../../../.env'),
-  resolve(process.cwd(), '.env'),
-];
-
-const envPath = envPaths.find((pathToEnv) => existsSync(pathToEnv));
-
-if (envPath) {
-  config({ path: envPath });
-}
+import { enableApiCors } from './config/enable-api-cors';
 
 const DEFAULT_API_PORT = 4000;
 const MAX_PORT_ATTEMPTS = 20;
 const bootstrapLogger = new Logger('Bootstrap');
 
-const resolveInitialPort = (): number => {
-  const parsedPort = Number.parseInt(
-    process.env.PORT ?? String(DEFAULT_API_PORT),
-    10,
-  );
-  return Number.isNaN(parsedPort) ? DEFAULT_API_PORT : parsedPort;
-};
-
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.enableCors(buildCorsOptions(process.env));
-  const initialPort = resolveInitialPort();
+  enableApiCors(app);
+  const config = app.get(ConfigService);
+  const initialPortRaw = config.get<number>('PORT');
+  const initialPort =
+    typeof initialPortRaw === 'number' &&
+    Number.isFinite(initialPortRaw) &&
+    initialPortRaw >= 1
+      ? initialPortRaw
+      : DEFAULT_API_PORT;
 
   for (let attempt = 0; attempt < MAX_PORT_ATTEMPTS; attempt += 1) {
     const port = initialPort + attempt;

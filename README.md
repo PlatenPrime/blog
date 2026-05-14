@@ -8,7 +8,7 @@ Monorepo-практикум: **NestJS API** + **TanStack Start** (SSR/SEO) + **N
 
 | Слой                 | Технология                                                                        | Где живёт                                                      |
 | -------------------- | --------------------------------------------------------------------------------- | -------------------------------------------------------------- |
-| Backend API          | NestJS 11 + Express 5 + dotenv                                                    | [`apps/api/`](apps/api/)                                       |
+| Backend API          | NestJS 11 + Express 5 + @nestjs/config + Zod (env)                                | [`apps/api/`](apps/api/)                                       |
 | Public web (SSR/SEO) | TanStack Start (Vite 8 + Nitro), React 19, Tailwind 4                             | [`apps/web/`](apps/web/)                                       |
 | Shared contracts     | TypeScript типы/DTO, переиспользуемые API↔web                                     | [`libs/shared-contracts/`](libs/shared-contracts/)             |
 | Локальная инфра      | PostgreSQL 16 (`postgres:16-alpine`) + healthcheck + named volume                 | [`docker-compose.yml`](docker-compose.yml)                     |
@@ -96,18 +96,18 @@ GitHub Actions дополнительно восстанавливает `.nx/ca
 
 ## Ports & URLs
 
-| Сервис     | URL / Host              | Источник                                                                                                  |
-| ---------- | ----------------------- | --------------------------------------------------------------------------------------------------------- |
-| API        | `http://localhost:4000` | [`apps/api/src/main.ts`](apps/api/src/main.ts) → `resolveInitialPort()` (auto-increment +1 до 20 попыток) |
-| Web (SSR)  | `http://localhost:3000` | [`apps/web/package.json`](apps/web/package.json) → `vite dev --port 3000`                                 |
-| PostgreSQL | `127.0.0.1:5432`        | [`docker-compose.yml`](docker-compose.yml) → `ports: 127.0.0.1:${POSTGRES_PORT:-5432}:5432`               |
-| CORS allow | `http://localhost:3000` | [`apps/api/src/config/cors.config.ts`](apps/api/src/config/cors.config.ts) → `buildCorsOptions()`         |
+| Сервис     | URL / Host              | Источник                                                                                                    |
+| ---------- | ----------------------- | ----------------------------------------------------------------------------------------------------------- |
+| API        | `http://localhost:4000` | [`apps/api/src/main.ts`](apps/api/src/main.ts) → `ConfigService` / `PORT` (auto-increment +1 до 20 попыток) |
+| Web (SSR)  | `http://localhost:3000` | [`apps/web/package.json`](apps/web/package.json) → `vite dev --port 3000`                                   |
+| PostgreSQL | `127.0.0.1:5432`        | [`docker-compose.yml`](docker-compose.yml) → `ports: 127.0.0.1:${POSTGRES_PORT:-5432}:5432`                 |
+| CORS allow | `http://localhost:3000` | [`apps/api/src/config/cors.config.ts`](apps/api/src/config/cors.config.ts) → `buildCorsOptions()`           |
 
 ## Environment
 
 Переменные окружения коммитятся **только** как шаблоны; реальные `.env` в [`.gitignore`](.gitignore).
 
-- [`.env.example`](.env.example) — корневой, `PORT` + `CORS_ORIGINS` для API и `POSTGRES_*` для compose. API подхватывает через dotenv в [`apps/api/src/main.ts`](apps/api/src/main.ts).
+- [`.env.example`](.env.example) — корневой, `PORT` + `CORS_ORIGINS` для API и `POSTGRES_*` для compose. API загружает и валидирует через `@nestjs/config` + Zod (см. [`apps/api/src/config/env.schema.ts`](apps/api/src/config/env.schema.ts)).
 - [`apps/web/.env.example`](apps/web/.env.example) — отдельный, чтобы серверные секреты не попали в client-бандл через `import.meta.env`. Namespace: `VITE_PUBLIC_*` (виден браузеру) vs без префикса (server-only Nitro/SSR).
 - Полная таблица переменных, дефолтов и потребителей — в [`docs/LOCAL_SETUP.md`](docs/LOCAL_SETUP.md). Обоснование контракта — в [lesson-017](docs/lessons/lesson-017-env-example-files.md).
 

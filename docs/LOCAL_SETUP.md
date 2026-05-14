@@ -66,7 +66,7 @@ npx nx run shared-contracts:build
 
 ## Environment variables
 
-The API reads environment variables at bootstrap (and from a root `.env` file if present, loaded by `dotenv` in [`apps/api/src/main.ts`](../apps/api/src/main.ts)).
+The API reads environment variables at bootstrap. [`@nestjs/config`](https://docs.nestjs.com/techniques/configuration) loads the first existing file from [`resolveEnvFilePaths()`](../apps/api/src/config/env-file-paths.ts) (repo root or `apps/api` working directory), then validates the subset that matches [`.env.example`](../.env.example) using Zod in [`apps/api/src/config/env.schema.ts`](../apps/api/src/config/env.schema.ts).
 
 | Variable       | Default                 | Purpose                                                                                                                                                                         |
 | -------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -77,10 +77,10 @@ The API reads environment variables at bootstrap (and from a root `.env` file if
 
 Шаблоны переменных окружения коммитятся в репозиторий, реальные значения — нет (`.env` уже в [`.gitignore`](../.gitignore) и [`apps/web/.gitignore`](../apps/web/.gitignore)).
 
-| File                                                | Назначение                                                                                                                  |
-| --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| [`.env.example`](../.env.example) (корень)          | API (`PORT`, `CORS_ORIGINS`) + Postgres compose (`POSTGRES_USER/PASSWORD/DB/PORT`). Подхватывается dotenv и Docker Compose. |
-| [`apps/web/.env.example`](../apps/web/.env.example) | TanStack Start / Vite. Stub без активных ключей; документирует namespace `VITE_PUBLIC_*` (client) vs server-only.           |
+| File                                                | Назначение                                                                                                                          |
+| --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| [`.env.example`](../.env.example) (корень)          | API (`PORT`, `CORS_ORIGINS`) + Postgres compose (`POSTGRES_USER/PASSWORD/DB/PORT`). Загрузка через `ConfigModule` и Docker Compose. |
+| [`apps/web/.env.example`](../apps/web/.env.example) | TanStack Start / Vite. Stub без активных ключей; документирует namespace `VITE_PUBLIC_*` (client) vs server-only.                   |
 
 Первый запуск:
 

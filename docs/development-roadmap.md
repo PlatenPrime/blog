@@ -47,6 +47,7 @@ Every step is a sprint and must produce code changes + a lesson file in `docs/le
 | Track 0 acceptance checklist          | Step 030 completed                         |
 | CI matrix improvements (reserve)      | Step 031 completed                         |
 | ADR process for deviations (reserve)  | Step 032 completed                         |
+| Config module + env validation (Zod)  | Step 033 completed                         |
 
 ## Step Contract (mandatory for every lesson)
 
@@ -200,5 +201,6 @@ Each `lesson-NNN-*.md` must include:
 | 030  | [lesson-030-track-0-acceptance-checklist.md](./lessons/lesson-030-track-0-acceptance-checklist.md)                 |
 | 031  | [lesson-031-ci-matrix-improvements.md](./lessons/lesson-031-ci-matrix-improvements.md)                             |
 | 032  | [lesson-032-adr-process-deviations.md](./lessons/lesson-032-adr-process-deviations.md)                             |
+| 033  | [lesson-033-nest-config-and-env-validation.md](./lessons/lesson-033-nest-config-and-env-validation.md)             |
 
 Entry point: [LOCAL_SETUP.md](./LOCAL_SETUP.md)

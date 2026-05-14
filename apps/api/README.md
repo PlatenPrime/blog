@@ -30,17 +30,17 @@ npm -w api run test:cov       # vitest run --coverage
 
 ## Environment
 
-API стартует через [`src/main.ts`](src/main.ts) и читает переменные окружения:
+API стартует через [`src/main.ts`](src/main.ts). Переменные окружения:
 
-- Корневой [`.env`](../../.env) (если есть) подхватывается dotenv — поиск идёт по `__dirname/../../../.env` и `process.cwd()/.env` (см. [`src/main.ts`](src/main.ts) строки 9-18).
-- Шаблон — [`.env.example`](../../.env.example) в корне репо. Полная таблица переменных, дефолтов и потребителей — в [`docs/LOCAL_SETUP.md`](../../docs/LOCAL_SETUP.md), обоснование контракта — в [`lesson-017`](../../docs/lessons/lesson-017-env-example-files.md).
+- Корневой [`.env`](../../.env) (если есть) загружает [`@nestjs/config`](https://docs.nestjs.com/techniques/configuration): список кандидатных путей — [`src/config/env-file-paths.ts`](src/config/env-file-paths.ts). Валидация ключей из [`.env.example`](../../.env.example) — Zod в [`src/config/env.schema.ts`](src/config/env.schema.ts).
+- Шаблон — [`.env.example`](../../.env.example) в корне репо. Полная таблица переменных, дефолтов и потребителей — в [`docs/LOCAL_SETUP.md`](../../docs/LOCAL_SETUP.md), обоснование контракта — в [`lesson-017`](../../docs/lessons/lesson-017-env-example-files.md), шаг внедрения схемы — [`lesson-033`](../../docs/lessons/lesson-033-nest-config-and-env-validation.md).
 
 Ключевые точки потребления:
 
-| Переменная     | Дефолт                  | Читается в                                                                      |
-| -------------- | ----------------------- | ------------------------------------------------------------------------------- |
-| `PORT`         | `4000` (auto-increment) | [`src/main.ts`](src/main.ts) → `resolveInitialPort()`                           |
-| `CORS_ORIGINS` | `http://localhost:3000` | [`src/config/cors.config.ts`](src/config/cors.config.ts) → `buildCorsOptions()` |
+| Переменная     | Дефолт                  | Читается в                                                                                                    |
+| -------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `PORT`         | `4000` (auto-increment) | [`src/main.ts`](src/main.ts) → `ConfigService` после `rootEnvSchema`                                          |
+| `CORS_ORIGINS` | `http://localhost:3000` | [`src/config/cors.config.ts`](src/config/cors.config.ts) → `buildCorsOptions()` (значение из `ConfigService`) |
 
 ## Database (local)
 
@@ -53,12 +53,12 @@ npm run db:down      # остановить (volume сохраняется)
 npm run db:reset     # полный сброс (volume удаляется)
 ```
 
-Подключение из кода ещё не настроено (это Track 1, lesson 033 — Config module + env-валидация). Сейчас БД нужна для смоук-проверок compose и подготовки к Track 1.
+Подключение драйвера БД из Nest ещё не настроено (последующие шаги Track 1). Переменные `POSTGRES_*` уже валидируются при старте API вместе с остальными ключами [`.env.example`](../../.env.example), чтобы dev-окружение не расходилось с compose.
 
 ## See also
 
 - Root [README](../../README.md) — runbook монорепо.
 - [`docs/development-roadmap.md`](../../docs/development-roadmap.md) — план шагов.
 - [`docs/LOCAL_SETUP.md`](../../docs/LOCAL_SETUP.md) — детальный setup, env-таблицы.
-- Релевантные уроки: [005](../../docs/lessons/lesson-005-nest-apps-api-migration.md), [013](../../docs/lessons/lesson-013-wire-shared-contracts-api.md), [015](../../docs/lessons/lesson-015-cors-and-dev-origins.md), [016](../../docs/lessons/lesson-016-postgres-compose-local-dev.md), [017](../../docs/lessons/lesson-017-env-example-files.md).
+- Релевантные уроки: [005](../../docs/lessons/lesson-005-nest-apps-api-migration.md), [013](../../docs/lessons/lesson-013-wire-shared-contracts-api.md), [015](../../docs/lessons/lesson-015-cors-and-dev-origins.md), [016](../../docs/lessons/lesson-016-postgres-compose-local-dev.md), [017](../../docs/lessons/lesson-017-env-example-files.md), [033](../../docs/lessons/lesson-033-nest-config-and-env-validation.md).
 - Upstream-документация NestJS: [docs.nestjs.com](https://docs.nestjs.com).
