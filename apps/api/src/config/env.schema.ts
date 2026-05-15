@@ -37,6 +37,7 @@ export const rootEnvSchema = z.object({
   CORS_ORIGINS: z
     .union([z.string(), z.undefined()])
     .transform((raw) => (raw === undefined ? '' : String(raw))),
+  POSTGRES_HOST: postgresNonEmpty('127.0.0.1'),
   POSTGRES_USER: postgresNonEmpty('blog'),
   POSTGRES_PASSWORD: postgresNonEmpty('blog'),
   POSTGRES_DB: postgresNonEmpty('blog_dev'),
@@ -48,6 +49,7 @@ export type RootEnv = z.infer<typeof rootEnvSchema>;
 const ROOT_ENV_KEYS = [
   'PORT',
   'CORS_ORIGINS',
+  'POSTGRES_HOST',
   'POSTGRES_USER',
   'POSTGRES_PASSWORD',
   'POSTGRES_DB',

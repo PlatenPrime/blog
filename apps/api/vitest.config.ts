@@ -5,6 +5,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'node',
+    maxWorkers: 2,
     include: ['src/**/*.spec.ts'],
     setupFiles: ['./test/vitest-setup.ts'],
     coverage: {

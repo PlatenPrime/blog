@@ -4,6 +4,7 @@ import request from 'supertest';
 import { App } from 'supertest/types';
 import { AppModule } from './../src/app.module';
 import { enableApiCors } from './../src/config/enable-api-cors';
+import { PostgresHealthIndicator } from './../src/health/indicators/postgres.health-indicator';
 
 const ALLOWED_ORIGIN = 'http://localhost:3000';
 const FORBIDDEN_ORIGIN = 'http://evil.example';
@@ -18,7 +19,12 @@ describe('AppController (e2e)', () => {
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    })
+      .overrideProvider(PostgresHealthIndicator)
+      .useValue({
+        isHealthy: () => Promise.resolve({ database: { status: 'up' } }),
+      })
+      .compile();
 
     app = moduleFixture.createNestApplication();
     enableApiCors(app);
@@ -42,6 +48,19 @@ describe('AppController (e2e)', () => {
       info: { api: { status: 'up' } },
       error: {},
       details: { api: { status: 'up' } },
+    });
+  });
+
+  it('/health/ready (GET) readiness', async () => {
+    const response = await request(app.getHttpServer())
+      .get('/health/ready')
+      .expect(200);
+
+    expect(response.body).toMatchObject({
+      status: 'ok',
+      info: { database: { status: 'up' } },
+      error: {},
+      details: { database: { status: 'up' } },
     });
   });
 

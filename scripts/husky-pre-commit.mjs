@@ -13,6 +13,13 @@ delete childEnv.FORCE_COLOR;
 delete childEnv.NO_COLOR;
 childEnv.NODE_NO_WARNINGS = '1';
 
+const HEAP_FLAG = '--max-old-space-size=4096';
+if (!childEnv.NODE_OPTIONS?.includes('max-old-space-size')) {
+  childEnv.NODE_OPTIONS = childEnv.NODE_OPTIONS
+    ? `${childEnv.NODE_OPTIONS} ${HEAP_FLAG}`
+    : HEAP_FLAG;
+}
+
 /**
  * Avoid `npm run` inside Git hooks: some environments (WSL relay / minimal images)
  * invoke bash for npm lifecycle scripts and fail when `/bin/bash` is missing.

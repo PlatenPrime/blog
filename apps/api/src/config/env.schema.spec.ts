@@ -7,6 +7,7 @@ describe('parseRootEnv', () => {
     expect(env).toMatchObject({
       PORT: 4000,
       CORS_ORIGINS: '',
+      POSTGRES_HOST: '127.0.0.1',
       POSTGRES_USER: 'blog',
       POSTGRES_PASSWORD: 'blog',
       POSTGRES_DB: 'blog_dev',

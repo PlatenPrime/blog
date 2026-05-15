@@ -55,22 +55,39 @@ npm run db:reset     # полный сброс (volume удаляется)
 
 Подключение драйвера БД из Nest ещё не настроено (последующие шаги Track 1). Переменные `POSTGRES_*` уже валидируются при старте API вместе с остальными ключами [`.env.example`](../../.env.example), чтобы dev-окружение не расходилось с compose.
 
-## Health (liveness)
+## Health
 
-Liveness-проба для оркестраторов и ручных проверок:
+### Liveness
+
+Liveness-проба: процесс и HTTP-стек живы (без проверки БД).
 
 ```bash
 curl -sS http://127.0.0.1:4000/health
 ```
 
-Ожидается HTTP **200** и JSON Terminus с `status: "ok"` и `details.api.status: "up"`. Если порт 4000 занят, смотрите фактический порт в логе bootstrap (`Application is running on port …`).
+Ожидается HTTP **200** и JSON Terminus с `status: "ok"` и `details.api.status: "up"`.
 
-Реализация: [`src/health/`](src/health/) (`TerminusModule`, `HealthController`). Readiness с проверкой зависимостей — шаг 035 (см. roadmap Track 1); liveness — [`lesson-034`](../../docs/lessons/lesson-034-terminus-health-liveness.md).
+### Readiness
+
+Readiness-проба: API готов принимать трафик; проверяется PostgreSQL (`SELECT 1` через `pg`).
+
+```bash
+npm run db:up   # из корня репо, если БД ещё не запущена
+curl -sS http://127.0.0.1:4000/health/ready
+```
+
+Ожидается HTTP **200** и `details.database.status: "up"`. Если Postgres недоступен — **503** и `database` в `error`/`details` как `down`.
+
+Переменная `POSTGRES_HOST` (дефолт `127.0.0.1`) в [`.env.example`](../../.env.example); остальные `POSTGRES_*` — как для compose.
+
+Реализация: [`src/health/`](src/health/) (`TerminusModule`, `HealthController`, `PostgresHealthIndicator`). Уроки: liveness — [`lesson-034`](../../docs/lessons/lesson-034-terminus-health-liveness.md), readiness — [`lesson-035`](../../docs/lessons/lesson-035-readiness-probe-dependencies.md).
+
+Если порт 4000 занят, смотрите фактический порт в логе bootstrap (`Application is running on port …`).
 
 ## See also
 
 - Root [README](../../README.md) — runbook монорепо.
 - [`docs/development-roadmap.md`](../../docs/development-roadmap.md) — план шагов.
 - [`docs/LOCAL_SETUP.md`](../../docs/LOCAL_SETUP.md) — детальный setup, env-таблицы.
-- Релевантные уроки: [005](../../docs/lessons/lesson-005-nest-apps-api-migration.md), [013](../../docs/lessons/lesson-013-wire-shared-contracts-api.md), [015](../../docs/lessons/lesson-015-cors-and-dev-origins.md), [016](../../docs/lessons/lesson-016-postgres-compose-local-dev.md), [017](../../docs/lessons/lesson-017-env-example-files.md), [033](../../docs/lessons/lesson-033-nest-config-and-env-validation.md), [034](../../docs/lessons/lesson-034-terminus-health-liveness.md).
+- Релевантные уроки: [005](../../docs/lessons/lesson-005-nest-apps-api-migration.md), [013](../../docs/lessons/lesson-013-wire-shared-contracts-api.md), [015](../../docs/lessons/lesson-015-cors-and-dev-origins.md), [016](../../docs/lessons/lesson-016-postgres-compose-local-dev.md), [017](../../docs/lessons/lesson-017-env-example-files.md), [033](../../docs/lessons/lesson-033-nest-config-and-env-validation.md), [034](../../docs/lessons/lesson-034-terminus-health-liveness.md), [035](../../docs/lessons/lesson-035-readiness-probe-dependencies.md).
 - Upstream-документация NestJS: [docs.nestjs.com](https://docs.nestjs.com).

@@ -4,10 +4,14 @@ import {
   HealthCheckService,
   HealthCheckResult,
 } from '@nestjs/terminus';
+import { PostgresHealthIndicator } from './indicators/postgres.health-indicator';
 
 @Controller('health')
 export class HealthController {
-  constructor(private readonly health: HealthCheckService) {}
+  constructor(
+    private readonly health: HealthCheckService,
+    private readonly postgres: PostgresHealthIndicator,
+  ) {}
 
   @Get()
   @HealthCheck()
@@ -18,5 +22,11 @@ export class HealthController {
           api: { status: 'up' },
         }),
     ]);
+  }
+
+  @Get('ready')
+  @HealthCheck()
+  readiness(): Promise<HealthCheckResult> {
+    return this.health.check([() => this.postgres.isHealthy('database')]);
   }
 }

@@ -49,6 +49,7 @@ Every step is a sprint and must produce code changes + a lesson file in `docs/le
 | ADR process for deviations (reserve)  | Step 032 completed                         |
 | Config module + env validation (Zod)  | Step 033 completed                         |
 | Terminus `/health` liveness           | Step 034 completed                         |
+| Readiness probe `/health/ready`       | Step 035 completed                         |
 
 ## Step Contract (mandatory for every lesson)
 

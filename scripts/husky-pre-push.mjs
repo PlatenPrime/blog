@@ -14,6 +14,14 @@ delete childEnv.FORCE_COLOR;
 delete childEnv.NO_COLOR;
 childEnv.NODE_NO_WARNINGS = '1';
 
+/** Vitest/ESLint typecheck graphs can OOM on default heap during git hooks (Windows). */
+const HEAP_FLAG = '--max-old-space-size=4096';
+if (!childEnv.NODE_OPTIONS?.includes('max-old-space-size')) {
+  childEnv.NODE_OPTIONS = childEnv.NODE_OPTIONS
+    ? `${childEnv.NODE_OPTIONS} ${HEAP_FLAG}`
+    : HEAP_FLAG;
+}
+
 const result = spawnSync(
   process.execPath,
   [
@@ -21,6 +29,7 @@ const result = spawnSync(
     'affected',
     '-t',
     'lint,test',
+    '--parallel=1',
     '--base=HEAD~1',
     '--head=HEAD',
     '--skipNxCache',
