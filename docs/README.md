@@ -57,6 +57,10 @@ npm run test:e2e
 - Step 030: [lesson-030-track-0-acceptance-checklist.md](./lessons/lesson-030-track-0-acceptance-checklist.md)
 - Step 031: [lesson-031-ci-matrix-improvements.md](./lessons/lesson-031-ci-matrix-improvements.md)
 - Step 032: [lesson-032-adr-process-deviations.md](./lessons/lesson-032-adr-process-deviations.md)
+- Step 033: [lesson-033-nest-config-and-env-validation.md](./lessons/lesson-033-nest-config-and-env-validation.md)
+- Step 034: [lesson-034-terminus-health-liveness.md](./lessons/lesson-034-terminus-health-liveness.md)
+- Step 035: [lesson-035-readiness-probe-dependencies.md](./lessons/lesson-035-readiness-probe-dependencies.md)
+- Step 036: [lesson-036-health-response-dtos.md](./lessons/lesson-036-health-response-dtos.md)
 
 Quality scripts from repo root (`build`, `test`, `lint`, `test:e2e`) run through Nx on the `api` app. The `web` app (TanStack Start) builds with `npx nx run web:build` or `npm run web:dev` for local dev. Full CI parity from root: `npm run ci` (see [lesson-019](./lessons/lesson-019-ci-pipeline-baseline.md)); GitHub Actions restores `.nx/cache` for repeated CI runs (see [lesson-020](./lessons/lesson-020-nx-cache-in-ci.md)); CI targets now run through `nx affected` range detection (see [lesson-021](./lessons/lesson-021-nx-affected-flow-in-ci.md)). Utility scripts:
 

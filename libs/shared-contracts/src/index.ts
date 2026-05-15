@@ -10,3 +10,17 @@ export type ApiErrorBodyStub = {
   readonly code: string;
   readonly message: string;
 };
+
+export {
+  HEALTH_INDICATOR_API,
+  HEALTH_INDICATOR_DATABASE,
+} from './health/health-response.types.js';
+export type {
+  HealthCheckResponseBody,
+  HealthCheckStatus,
+  HealthIndicatorDetail,
+  HealthIndicatorMap,
+  HealthIndicatorStatus,
+  LivenessHealthResponse,
+  ReadinessHealthResponse,
+} from './health/health-response.types.js';
