@@ -48,6 +48,7 @@ Every step is a sprint and must produce code changes + a lesson file in `docs/le
 | CI matrix improvements (reserve)      | Step 031 completed                         |
 | ADR process for deviations (reserve)  | Step 032 completed                         |
 | Config module + env validation (Zod)  | Step 033 completed                         |
+| Terminus `/health` liveness           | Step 034 completed                         |
 
 ## Step Contract (mandatory for every lesson)
 
@@ -482,5 +483,6 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 031  | [lesson-031-ci-matrix-improvements.md](./lessons/lesson-031-ci-matrix-improvements.md)                             |
 | 032  | [lesson-032-adr-process-deviations.md](./lessons/lesson-032-adr-process-deviations.md)                             |
 | 033  | [lesson-033-nest-config-and-env-validation.md](./lessons/lesson-033-nest-config-and-env-validation.md)             |
+| 034  | [lesson-034-terminus-health-liveness.md](./lessons/lesson-034-terminus-health-liveness.md)                         |
 
 Entry point: [LOCAL_SETUP.md](./LOCAL_SETUP.md)

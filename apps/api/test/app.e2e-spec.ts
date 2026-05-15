@@ -32,6 +32,19 @@ describe('AppController (e2e)', () => {
       .expect('Hello World! (0.0.1)');
   });
 
+  it('/health (GET) liveness', async () => {
+    const response = await request(app.getHttpServer())
+      .get('/health')
+      .expect(200);
+
+    expect(response.body).toMatchObject({
+      status: 'ok',
+      info: { api: { status: 'up' } },
+      error: {},
+      details: { api: { status: 'up' } },
+    });
+  });
+
   describe('CORS', () => {
     it('answers preflight OPTIONS for an allowed origin with 204 and matching headers', () => {
       return request(app.getHttpServer())
