@@ -46,6 +46,7 @@ Steps 033-056.
 - Step 035: [lesson-035-readiness-probe-dependencies.md](./lessons/lesson-035-readiness-probe-dependencies.md)
 - Step 036: [lesson-036-health-response-dtos.md](./lessons/lesson-036-health-response-dtos.md)
 - Step 037: [lesson-037-api-error-envelope-types.md](./lessons/lesson-037-api-error-envelope-types.md)
+- Step 038: [lesson-038-global-exception-filter.md](./lessons/lesson-038-global-exception-filter.md)
 
 ## Phase 3: Auth and Identity (Track 2)
 

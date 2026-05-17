@@ -12,46 +12,47 @@ Every step is a sprint and must produce code changes + a lesson file in `docs/le
 
 ## Baseline Status
 
-| Area                                        | Status                                     |
-| ------------------------------------------- | ------------------------------------------ |
-| NestJS app                                  | Exists in `apps/api/` (package name `api`) |
-| Root workspace                              | Step 001 completed                         |
-| Node/npm policy                             | Step 002 completed                         |
-| Nx init                                     | Step 003 completed                         |
-| Nx target defaults                          | Step 004 completed                         |
-| Nest in apps/api                            | Step 005 completed                         |
-| Root tsconfig base + paths                  | Step 006 completed                         |
-| Root ESLint flat config                     | Step 007 completed                         |
-| Root Prettier + EditorConfig                | Step 008 completed                         |
-| Root scripts via Nx (build/test/lint)       | Step 009 completed                         |
-| TanStack Start app in `apps/web`            | Step 010 completed                         |
-| `web:typecheck` Nx target                   | Step 011 completed                         |
-| `libs/shared-contracts`                     | Step 012 completed                         |
-| Wire shared-contracts into API              | Step 013 completed                         |
-| Wire shared-contracts into web              | Step 014 completed                         |
-| CORS + dev origins                          | Step 015 completed                         |
-| Local infra: Postgres compose               | Step 016 completed                         |
-| `.env.example` files                        | Step 017 completed                         |
-| Root README + API/web runbook               | Step 018 completed                         |
-| CI pipeline baseline (GitHub Actions)       | Step 019 completed                         |
-| Nx cache in CI                              | Step 020 completed                         |
-| Nx affected flow in CI                      | Step 021 completed                         |
-| Optional husky/lint-staged policy           | Step 022 completed                         |
-| Lessons folder structure conventions        | Step 023 completed                         |
-| Release stub and changelog policy           | Step 024 completed                         |
-| Normalize `.gitignore`                      | Step 025 completed                         |
-| Optional VS Code recommendations            | Step 026 completed                         |
-| ADR-000 (Nx + TanStack Start)               | Step 027 completed                         |
-| Threat model stub                           | Step 028 completed                         |
-| Health smoke script                         | Step 029 completed                         |
-| Track 0 acceptance checklist                | Step 030 completed                         |
-| CI matrix improvements (reserve)            | Step 031 completed                         |
-| ADR process for deviations (reserve)        | Step 032 completed                         |
-| Config module + env validation (Zod)        | Step 033 completed                         |
-| Terminus `/health` liveness                 | Step 034 completed                         |
-| Readiness probe `/health/ready`             | Step 035 completed                         |
-| Health response DTOs (shared-contracts)     | Step 036 completed                         |
-| API error envelope types (shared-contracts) | Step 037 completed                         |
+| Area                                         | Status                                     |
+| -------------------------------------------- | ------------------------------------------ |
+| NestJS app                                   | Exists in `apps/api/` (package name `api`) |
+| Root workspace                               | Step 001 completed                         |
+| Node/npm policy                              | Step 002 completed                         |
+| Nx init                                      | Step 003 completed                         |
+| Nx target defaults                           | Step 004 completed                         |
+| Nest in apps/api                             | Step 005 completed                         |
+| Root tsconfig base + paths                   | Step 006 completed                         |
+| Root ESLint flat config                      | Step 007 completed                         |
+| Root Prettier + EditorConfig                 | Step 008 completed                         |
+| Root scripts via Nx (build/test/lint)        | Step 009 completed                         |
+| TanStack Start app in `apps/web`             | Step 010 completed                         |
+| `web:typecheck` Nx target                    | Step 011 completed                         |
+| `libs/shared-contracts`                      | Step 012 completed                         |
+| Wire shared-contracts into API               | Step 013 completed                         |
+| Wire shared-contracts into web               | Step 014 completed                         |
+| CORS + dev origins                           | Step 015 completed                         |
+| Local infra: Postgres compose                | Step 016 completed                         |
+| `.env.example` files                         | Step 017 completed                         |
+| Root README + API/web runbook                | Step 018 completed                         |
+| CI pipeline baseline (GitHub Actions)        | Step 019 completed                         |
+| Nx cache in CI                               | Step 020 completed                         |
+| Nx affected flow in CI                       | Step 021 completed                         |
+| Optional husky/lint-staged policy            | Step 022 completed                         |
+| Lessons folder structure conventions         | Step 023 completed                         |
+| Release stub and changelog policy            | Step 024 completed                         |
+| Normalize `.gitignore`                       | Step 025 completed                         |
+| Optional VS Code recommendations             | Step 026 completed                         |
+| ADR-000 (Nx + TanStack Start)                | Step 027 completed                         |
+| Threat model stub                            | Step 028 completed                         |
+| Health smoke script                          | Step 029 completed                         |
+| Track 0 acceptance checklist                 | Step 030 completed                         |
+| CI matrix improvements (reserve)             | Step 031 completed                         |
+| ADR process for deviations (reserve)         | Step 032 completed                         |
+| Config module + env validation (Zod)         | Step 033 completed                         |
+| Terminus `/health` liveness                  | Step 034 completed                         |
+| Readiness probe `/health/ready`              | Step 035 completed                         |
+| Health response DTOs (shared-contracts)      | Step 036 completed                         |
+| API error envelope types (shared-contracts)  | Step 037 completed                         |
+| Global exception filter + HTTP error mapping | Step 038 completed                         |
 
 ## Step Contract (mandatory for every lesson)
 
