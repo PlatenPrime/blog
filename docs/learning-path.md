@@ -45,6 +45,7 @@ Steps 033-056.
 - Step 034: [lesson-034-terminus-health-liveness.md](./lessons/lesson-034-terminus-health-liveness.md)
 - Step 035: [lesson-035-readiness-probe-dependencies.md](./lessons/lesson-035-readiness-probe-dependencies.md)
 - Step 036: [lesson-036-health-response-dtos.md](./lessons/lesson-036-health-response-dtos.md)
+- Step 037: [lesson-037-api-error-envelope-types.md](./lessons/lesson-037-api-error-envelope-types.md)
 
 ## Phase 3: Auth and Identity (Track 2)
 

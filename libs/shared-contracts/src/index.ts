@@ -3,13 +3,22 @@
  */
 export const SHARED_CONTRACTS_VERSION = '0.0.1' as const;
 
-/**
- * Placeholder for cross-stack API error payloads (expanded in Platform Core track).
- */
-export type ApiErrorBodyStub = {
-  readonly code: string;
-  readonly message: string;
-};
+export {
+  API_ERROR_CODE_BAD_REQUEST,
+  API_ERROR_CODE_CONFLICT,
+  API_ERROR_CODE_FORBIDDEN,
+  API_ERROR_CODE_INTERNAL,
+  API_ERROR_CODE_NOT_FOUND,
+  API_ERROR_CODE_UNAUTHORIZED,
+  API_ERROR_CODE_VALIDATION,
+} from './errors/api-error.types.js';
+export type {
+  ApiErrorBody,
+  ApiErrorCode,
+  ApiErrorDetails,
+  ApiValidationFieldError,
+  PlatformApiErrorCode,
+} from './errors/api-error.types.js';
 
 export {
   HEALTH_INDICATOR_API,
