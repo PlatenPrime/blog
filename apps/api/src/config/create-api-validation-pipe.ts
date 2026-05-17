@@ -8,6 +8,7 @@ export function createApiValidationPipe(): ValidationPipe {
     whitelist: true,
     forbidNonWhitelisted: true,
     transform: true,
+    transformOptions: { enableImplicitConversion: true },
     exceptionFactory: (errors) =>
       new BadRequestException({
         message: VALIDATION_FAILED_MESSAGE,

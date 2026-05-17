@@ -8,7 +8,7 @@ import { HealthModule } from './health/health.module';
 import { validateRootEnv } from './config/env.schema';
 import { resolveEnvFilePaths } from './config/env-file-paths';
 import { ApiExceptionFilter } from './errors/api-exception.filter';
-import { ValidationModule } from './validation/validation.module';
+import { ExamplesModule } from './examples/examples.module';
 
 @Module({
   imports: [
@@ -18,7 +18,7 @@ import { ValidationModule } from './validation/validation.module';
       validate: validateRootEnv,
     }),
     HealthModule,
-    ValidationModule,
+    ExamplesModule,
   ],
   controllers: [AppController],
   providers: [

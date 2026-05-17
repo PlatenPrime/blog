@@ -54,6 +54,7 @@ Every step is a sprint and must produce code changes + a lesson file in `docs/le
 | API error envelope types (shared-contracts)  | Step 037 completed                         |
 | Global exception filter + HTTP error mapping | Step 038 completed                         |
 | Global ValidationPipe (whitelist, transform) | Step 039 completed                         |
+| DTO validation conventions + sample resource | Step 040 completed                         |
 
 ## Step Contract (mandatory for every lesson)
 
@@ -494,5 +495,6 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 037  | [lesson-037-api-error-envelope-types.md](./lessons/lesson-037-api-error-envelope-types.md)                         |
 | 038  | [lesson-038-global-exception-filter.md](./lessons/lesson-038-global-exception-filter.md)                           |
 | 039  | [lesson-039-global-validation-pipe.md](./lessons/lesson-039-global-validation-pipe.md)                             |
+| 040  | [lesson-040-dto-validation-conventions.md](./lessons/lesson-040-dto-validation-conventions.md)                     |
 
 Entry point: [LOCAL_SETUP.md](./LOCAL_SETUP.md)

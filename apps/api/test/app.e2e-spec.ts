@@ -1,6 +1,8 @@
 import {
   API_ERROR_CODE_VALIDATION,
   type ApiErrorBody,
+  type ExampleItem,
+  type ListExamplesResponse,
 } from '@blog/shared-contracts';
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -68,10 +70,10 @@ describe('AppController (e2e)', () => {
     });
   });
 
-  describe('ValidationPipe (e2e)', () => {
-    it('returns VALIDATION_FAILED with details for an invalid body', async () => {
+  describe('Examples resource (e2e)', () => {
+    it('returns VALIDATION_FAILED with details for an invalid create body', async () => {
       const response = await request(app.getHttpServer())
-        .post('/validation-smoke')
+        .post('/examples')
         .send({})
         .expect(400);
 
@@ -81,26 +83,17 @@ describe('AppController (e2e)', () => {
         code: API_ERROR_CODE_VALIDATION,
         message: 'Validation failed',
       });
-      const countDetail = body.details?.find(
-        (detail) => detail.field === 'count',
+      const titleDetail = body.details?.find(
+        (detail) => detail.field === 'title',
       );
-      expect(countDetail).toBeDefined();
-      expect(countDetail?.message.length).toBeGreaterThan(0);
+      expect(titleDetail).toBeDefined();
+      expect(titleDetail?.message.length).toBeGreaterThan(0);
     });
 
-    it('transforms string numbers in the request body', async () => {
+    it('rejects non-whitelisted properties on create with 400', async () => {
       const response = await request(app.getHttpServer())
-        .post('/validation-smoke')
-        .send({ count: '3' })
-        .expect(200);
-
-      expect(response.body).toEqual({ count: 3 });
-    });
-
-    it('rejects non-whitelisted properties with 400', async () => {
-      const response = await request(app.getHttpServer())
-        .post('/validation-smoke')
-        .send({ count: 1, extra: 'x' })
+        .post('/examples')
+        .send({ title: 'T', body: 'B', extra: 'x' })
         .expect(400);
 
       const body = response.body as ApiErrorBody;
@@ -114,6 +107,64 @@ describe('AppController (e2e)', () => {
       );
       expect(extraDetail).toBeDefined();
       expect(extraDetail?.message).toContain('extra');
+    });
+
+    it('transforms string pagination query params', async () => {
+      await request(app.getHttpServer())
+        .post('/examples')
+        .send({ title: 'One', body: 'A' })
+        .expect(201);
+      await request(app.getHttpServer())
+        .post('/examples')
+        .send({ title: 'Two', body: 'B' })
+        .expect(201);
+      await request(app.getHttpServer())
+        .post('/examples')
+        .send({ title: 'Three', body: 'C' })
+        .expect(201);
+
+      const response = await request(app.getHttpServer())
+        .get('/examples')
+        .query({ page: '2', limit: '2' })
+        .expect(200);
+
+      const body = response.body as ListExamplesResponse;
+
+      expect(body).toMatchObject({
+        page: 2,
+        limit: 2,
+        total: 3,
+      });
+      expect(body.items).toHaveLength(1);
+    });
+
+    it('supports create, read, update, delete', async () => {
+      const created = await request(app.getHttpServer())
+        .post('/examples')
+        .send({ title: 'CRUD', body: 'Full flow' })
+        .expect(201);
+
+      const createdBody = created.body as ExampleItem;
+      const id = createdBody.id;
+
+      await request(app.getHttpServer())
+        .get(`/examples/${id}`)
+        .expect(200)
+        .expect((res) => {
+          expect((res.body as ExampleItem).title).toBe('CRUD');
+        });
+
+      await request(app.getHttpServer())
+        .patch(`/examples/${id}`)
+        .send({ title: 'Updated' })
+        .expect(200)
+        .expect((res) => {
+          expect((res.body as ExampleItem).title).toBe('Updated');
+        });
+
+      await request(app.getHttpServer()).delete(`/examples/${id}`).expect(204);
+
+      await request(app.getHttpServer()).get(`/examples/${id}`).expect(404);
     });
   });
 

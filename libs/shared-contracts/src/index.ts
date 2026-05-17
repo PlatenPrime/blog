@@ -20,6 +20,11 @@ export type {
   PlatformApiErrorCode,
 } from './errors/api-error.types.js';
 
+export type {
+  ExampleItem,
+  ListExamplesResponse,
+} from './examples/example.types.js';
+
 export {
   HEALTH_INDICATOR_API,
   HEALTH_INDICATOR_DATABASE,
