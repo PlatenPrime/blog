@@ -53,6 +53,7 @@ Every step is a sprint and must produce code changes + a lesson file in `docs/le
 | Health response DTOs (shared-contracts)      | Step 036 completed                         |
 | API error envelope types (shared-contracts)  | Step 037 completed                         |
 | Global exception filter + HTTP error mapping | Step 038 completed                         |
+| Global ValidationPipe (whitelist, transform) | Step 039 completed                         |
 
 ## Step Contract (mandatory for every lesson)
 
@@ -488,5 +489,10 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 032  | [lesson-032-adr-process-deviations.md](./lessons/lesson-032-adr-process-deviations.md)                             |
 | 033  | [lesson-033-nest-config-and-env-validation.md](./lessons/lesson-033-nest-config-and-env-validation.md)             |
 | 034  | [lesson-034-terminus-health-liveness.md](./lessons/lesson-034-terminus-health-liveness.md)                         |
+| 035  | [lesson-035-readiness-probe-dependencies.md](./lessons/lesson-035-readiness-probe-dependencies.md)                 |
+| 036  | [lesson-036-health-response-dtos.md](./lessons/lesson-036-health-response-dtos.md)                                 |
+| 037  | [lesson-037-api-error-envelope-types.md](./lessons/lesson-037-api-error-envelope-types.md)                         |
+| 038  | [lesson-038-global-exception-filter.md](./lessons/lesson-038-global-exception-filter.md)                           |
+| 039  | [lesson-039-global-validation-pipe.md](./lessons/lesson-039-global-validation-pipe.md)                             |
 
 Entry point: [LOCAL_SETUP.md](./LOCAL_SETUP.md)

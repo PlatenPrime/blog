@@ -1,3 +1,7 @@
+import {
+  API_ERROR_CODE_VALIDATION,
+  type ApiErrorBody,
+} from '@blog/shared-contracts';
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
@@ -61,6 +65,55 @@ describe('AppController (e2e)', () => {
       info: { database: { status: 'up' } },
       error: {},
       details: { database: { status: 'up' } },
+    });
+  });
+
+  describe('ValidationPipe (e2e)', () => {
+    it('returns VALIDATION_FAILED with details for an invalid body', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/validation-smoke')
+        .send({})
+        .expect(400);
+
+      const body = response.body as ApiErrorBody;
+
+      expect(body).toMatchObject({
+        code: API_ERROR_CODE_VALIDATION,
+        message: 'Validation failed',
+      });
+      const countDetail = body.details?.find(
+        (detail) => detail.field === 'count',
+      );
+      expect(countDetail).toBeDefined();
+      expect(countDetail?.message.length).toBeGreaterThan(0);
+    });
+
+    it('transforms string numbers in the request body', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/validation-smoke')
+        .send({ count: '3' })
+        .expect(200);
+
+      expect(response.body).toEqual({ count: 3 });
+    });
+
+    it('rejects non-whitelisted properties with 400', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/validation-smoke')
+        .send({ count: 1, extra: 'x' })
+        .expect(400);
+
+      const body = response.body as ApiErrorBody;
+
+      expect(body).toMatchObject({
+        code: API_ERROR_CODE_VALIDATION,
+        message: 'Validation failed',
+      });
+      const extraDetail = body.details?.find(
+        (detail) => detail.field === 'extra',
+      );
+      expect(extraDetail).toBeDefined();
+      expect(extraDetail?.message).toContain('extra');
     });
   });
 

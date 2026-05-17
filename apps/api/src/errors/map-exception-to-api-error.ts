@@ -5,8 +5,10 @@ import {
   API_ERROR_CODE_INTERNAL,
   API_ERROR_CODE_NOT_FOUND,
   API_ERROR_CODE_UNAUTHORIZED,
+  API_ERROR_CODE_VALIDATION,
   type ApiErrorBody,
   type ApiErrorCode,
+  type ApiErrorDetails,
 } from '@blog/shared-contracts';
 import {
   BadRequestException,
@@ -40,6 +42,19 @@ export function mapExceptionToApiError(exception: unknown): MappedApiError {
 
 function mapHttpException(exception: HttpException): MappedApiError {
   const status = exception.getStatus();
+  const validationDetails = extractValidationDetails(exception);
+
+  if (validationDetails !== undefined) {
+    return {
+      status,
+      body: {
+        code: API_ERROR_CODE_VALIDATION,
+        message: extractValidationMessage(exception),
+        details: validationDetails,
+      },
+    };
+  }
+
   const message = extractHttpExceptionMessage(exception);
 
   return {
@@ -49,6 +64,54 @@ function mapHttpException(exception: HttpException): MappedApiError {
       message,
     },
   };
+}
+
+function extractValidationDetails(
+  exception: HttpException,
+): ApiErrorDetails | undefined {
+  const response = exception.getResponse();
+
+  if (
+    typeof response === 'object' &&
+    response !== null &&
+    'details' in response &&
+    isApiErrorDetails((response as { details?: unknown }).details)
+  ) {
+    return (response as { details: ApiErrorDetails }).details;
+  }
+
+  return undefined;
+}
+
+function isApiErrorDetails(value: unknown): value is ApiErrorDetails {
+  if (!Array.isArray(value) || value.length === 0) {
+    return Array.isArray(value);
+  }
+
+  return value.every(
+    (item) =>
+      typeof item === 'object' &&
+      item !== null &&
+      'field' in item &&
+      'message' in item &&
+      typeof (item as { field: unknown }).field === 'string' &&
+      typeof (item as { message: unknown }).message === 'string',
+  );
+}
+
+function extractValidationMessage(exception: HttpException): string {
+  const response = exception.getResponse();
+
+  if (
+    typeof response === 'object' &&
+    response !== null &&
+    'message' in response &&
+    typeof (response as { message?: unknown }).message === 'string'
+  ) {
+    return (response as { message: string }).message;
+  }
+
+  return 'Validation failed';
 }
 
 function resolveApiErrorCode(

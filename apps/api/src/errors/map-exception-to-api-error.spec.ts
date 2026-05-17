@@ -13,6 +13,7 @@ import {
   API_ERROR_CODE_INTERNAL,
   API_ERROR_CODE_NOT_FOUND,
   API_ERROR_CODE_UNAUTHORIZED,
+  API_ERROR_CODE_VALIDATION,
 } from '@blog/shared-contracts';
 import { mapExceptionToApiError } from './map-exception-to-api-error';
 
@@ -73,6 +74,34 @@ describe('mapExceptionToApiError', () => {
       body: {
         code: API_ERROR_CODE_CONFLICT,
         message: 'Email already exists',
+      },
+    });
+  });
+
+  it('maps BadRequestException with details to VALIDATION_FAILED', () => {
+    const exception = new BadRequestException({
+      message: 'Validation failed',
+      details: [
+        {
+          field: 'count',
+          message: 'count must not be less than 1',
+          code: 'min',
+        },
+      ],
+    });
+
+    expect(mapExceptionToApiError(exception)).toEqual({
+      status: 400,
+      body: {
+        code: API_ERROR_CODE_VALIDATION,
+        message: 'Validation failed',
+        details: [
+          {
+            field: 'count',
+            message: 'count must not be less than 1',
+            code: 'min',
+          },
+        ],
       },
     });
   });
