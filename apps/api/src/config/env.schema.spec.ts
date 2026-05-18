@@ -6,6 +6,7 @@ describe('parseRootEnv', () => {
     const env = parseRootEnv({});
     expect(env).toMatchObject({
       PORT: 4000,
+      LOG_LEVEL: 'info',
       CORS_ORIGINS: '',
       POSTGRES_HOST: '127.0.0.1',
       POSTGRES_USER: 'blog',
@@ -40,6 +41,16 @@ describe('parseRootEnv', () => {
 
   it('rejects PORT out of range', () => {
     expect(() => parseRootEnv({ PORT: '70000' })).toThrow(/PORT/);
+  });
+
+  it('parses LOG_LEVEL case-insensitively', () => {
+    expect(parseRootEnv({ LOG_LEVEL: 'WARN' })).toMatchObject({
+      LOG_LEVEL: 'warn',
+    });
+  });
+
+  it('rejects invalid LOG_LEVEL', () => {
+    expect(() => parseRootEnv({ LOG_LEVEL: 'verbose' })).toThrow(/LOG_LEVEL/);
   });
 
   it('passes through CORS_ORIGINS string', () => {

@@ -17,7 +17,7 @@
 Намеренно **не** делаем:
 
 - `X-Correlation-Id` — [шаг 046](../development-roadmap.md).
-- Structured logging / request logging interceptor — [шаги 044–045](../development-roadmap.md).
+- Structured logging — [шаг 044](./lesson-044-structured-logging.md); request logging interceptor — [шаг 045](../development-roadmap.md).
 - Redaction в логах — [шаг 047](../development-roadmap.md).
 - `nestjs-cls` — нативный `AsyncLocalStorage` достаточен.
 

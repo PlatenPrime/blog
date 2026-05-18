@@ -1,15 +1,16 @@
-import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
+import { Logger } from 'nestjs-pino';
 import { AppModule } from './app.module';
 import { enableApiCors } from './config/enable-api-cors';
 
 const DEFAULT_API_PORT = 4000;
 const MAX_PORT_ATTEMPTS = 20;
-const bootstrapLogger = new Logger('Bootstrap');
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { bufferLogs: true });
+  app.useLogger(app.get(Logger));
+  const bootstrapLogger = app.get(Logger);
   enableApiCors(app);
   const config = app.get(ConfigService);
   const initialPortRaw = config.get<number>('PORT');

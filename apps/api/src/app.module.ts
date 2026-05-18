@@ -4,6 +4,7 @@ import { APP_FILTER, APP_PIPE } from '@nestjs/core';
 import { createApiValidationPipe } from './config/create-api-validation-pipe';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { LoggingModule } from './common/logging';
 import {
   RequestContextModule,
   RequestIdMiddleware,
@@ -22,6 +23,7 @@ import { ExamplesModule } from './examples/examples.module';
       validate: validateRootEnv,
     }),
     RequestContextModule,
+    LoggingModule,
     HealthModule,
     ExamplesModule,
   ],

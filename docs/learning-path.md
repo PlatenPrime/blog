@@ -54,6 +54,7 @@ Steps 033-056.
 - Step 041: [lesson-041-problem-details-alignment.md](./lessons/lesson-041-problem-details-alignment.md)
 - Step 042: [lesson-042-safe-unknown-errors.md](./lessons/lesson-042-safe-unknown-errors.md)
 - Step 043: [lesson-043-request-id-middleware.md](./lessons/lesson-043-request-id-middleware.md)
+- Step 044: [lesson-044-structured-logging.md](./lessons/lesson-044-structured-logging.md)
 
 ## Phase 3: Auth and Identity (Track 2)
 

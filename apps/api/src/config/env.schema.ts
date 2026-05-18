@@ -32,8 +32,32 @@ function postgresNonEmpty(fallback: string) {
  * Environment keys mirrored by the root `.env.example`.
  * Validated once at Nest bootstrap via {@link ConfigModule}.
  */
+const logLevelSchema = z.enum([
+  'trace',
+  'debug',
+  'info',
+  'warn',
+  'error',
+  'fatal',
+  'silent',
+]);
+
 export const rootEnvSchema = z.object({
   PORT: envTcpPort(4000),
+  LOG_LEVEL: z
+    .union([logLevelSchema, z.string(), z.undefined()])
+    .transform((raw) => {
+      if (raw === undefined || raw === '') {
+        return 'info' as const;
+      }
+      const normalized = String(raw).trim().toLowerCase();
+      const parsed = logLevelSchema.safeParse(normalized);
+      if (!parsed.success) {
+        return '__INVALID_LOG_LEVEL__';
+      }
+      return parsed.data;
+    })
+    .pipe(logLevelSchema),
   CORS_ORIGINS: z
     .union([z.string(), z.undefined()])
     .transform((raw) => (raw === undefined ? '' : String(raw))),
@@ -48,6 +72,7 @@ export type RootEnv = z.infer<typeof rootEnvSchema>;
 
 const ROOT_ENV_KEYS = [
   'PORT',
+  'LOG_LEVEL',
   'CORS_ORIGINS',
   'POSTGRES_HOST',
   'POSTGRES_USER',

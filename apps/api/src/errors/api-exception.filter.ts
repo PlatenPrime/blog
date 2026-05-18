@@ -3,9 +3,9 @@ import {
   Catch,
   ExceptionFilter,
   HttpException,
-  Logger,
 } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
+import { PinoLogger } from 'nestjs-pino';
 import { HealthCheckError } from '@nestjs/terminus';
 import type { Response } from 'express';
 import {
@@ -18,12 +18,13 @@ import { mapExceptionToApiError } from './map-exception-to-api-error';
 
 @Catch()
 export class ApiExceptionFilter implements ExceptionFilter {
-  private readonly logger = new Logger(ApiExceptionFilter.name);
-
   constructor(
+    private readonly logger: PinoLogger,
     private readonly httpAdapterHost: HttpAdapterHost,
     private readonly requestContextStore: RequestContextStore,
-  ) {}
+  ) {
+    this.logger.setContext(ApiExceptionFilter.name);
+  }
 
   catch(exception: unknown, host: ArgumentsHost): void {
     if (exception instanceof HealthCheckError) {
@@ -32,8 +33,13 @@ export class ApiExceptionFilter implements ExceptionFilter {
 
     if (!(exception instanceof HttpException)) {
       this.logger.error(
-        exception instanceof Error ? exception.message : 'Unknown error',
-        exception instanceof Error ? exception.stack : undefined,
+        {
+          err:
+            exception instanceof Error
+              ? exception
+              : { message: 'Unknown error' },
+        },
+        'Unhandled exception',
       );
     }
 

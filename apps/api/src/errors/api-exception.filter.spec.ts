@@ -14,6 +14,8 @@ import {
   PROBLEM_MEDIA_TYPE,
   problemTypeUriForCode,
 } from '@blog/shared-contracts';
+import type { PinoLogger } from 'nestjs-pino';
+import { describe, expect, it, vi } from 'vitest';
 import { RequestContextStore } from '../common/request-context';
 import { ApiExceptionFilter } from './api-exception.filter';
 
@@ -69,17 +71,31 @@ const httpAdapterHost = {
   },
 } as HttpAdapterHost;
 
-function createFilter(requestId?: string): ApiExceptionFilter {
+function createFilter(requestId?: string): {
+  filter: ApiExceptionFilter;
+  logger: { error: ReturnType<typeof vi.fn> };
+} {
+  const logger = {
+    error: vi.fn(),
+    setContext: vi.fn(),
+  };
   const requestContextStore = {
     getRequestId: () => requestId,
   } as RequestContextStore;
 
-  return new ApiExceptionFilter(httpAdapterHost, requestContextStore);
+  return {
+    logger,
+    filter: new ApiExceptionFilter(
+      logger as unknown as PinoLogger,
+      httpAdapterHost,
+      requestContextStore,
+    ),
+  };
 }
 
 describe('ApiExceptionFilter', () => {
   it('writes Problem Details envelope for HttpException', () => {
-    const filter = createFilter();
+    const { filter } = createFilter();
     const response = createMockResponse();
     const host = createArgumentsHost(response);
 
@@ -97,11 +113,18 @@ describe('ApiExceptionFilter', () => {
   });
 
   it('writes INTERNAL_ERROR Problem Details for unknown errors', () => {
-    const filter = createFilter();
+    const { filter, logger } = createFilter();
     const response = createMockResponse();
     const host = createArgumentsHost(response);
 
     filter.catch(new Error('secret db url'), host);
+
+    expect(logger.error).toHaveBeenCalledOnce();
+    const call = logger.error.mock.calls[0];
+    expect(call?.[1]).toBe('Unhandled exception');
+    expect(call?.[0]).toMatchObject({
+      err: { message: 'secret db url' },
+    });
 
     expect(response.statusCode).toBe(500);
     expect(response.headers['content-type']).toBe(PROBLEM_MEDIA_TYPE);
@@ -119,7 +142,7 @@ describe('ApiExceptionFilter', () => {
   });
 
   it('sanitizes 500 HttpException Problem Details without leaking message', () => {
-    const filter = createFilter();
+    const { filter } = createFilter();
     const response = createMockResponse();
     const host = createArgumentsHost(response);
 
@@ -144,7 +167,7 @@ describe('ApiExceptionFilter', () => {
   });
 
   it('rethrows HealthCheckError for Terminus handling', () => {
-    const filter = createFilter();
+    const { filter } = createFilter();
     const response = createMockResponse();
     const host = createArgumentsHost(response);
     const healthError = new HealthCheckError('Health check failed', {
@@ -156,7 +179,7 @@ describe('ApiExceptionFilter', () => {
   });
 
   it('includes requestId as instance when present in request context', () => {
-    const filter = createFilter('req-filter-1');
+    const { filter } = createFilter('req-filter-1');
     const response = createMockResponse();
     const host = createArgumentsHost(response);
 
@@ -173,7 +196,7 @@ describe('ApiExceptionFilter', () => {
   });
 
   it('does not leak stack traces in HttpException responses', () => {
-    const filter = createFilter();
+    const { filter } = createFilter();
     const response = createMockResponse();
     const host = createArgumentsHost(response);
     const exception = new HttpException(
