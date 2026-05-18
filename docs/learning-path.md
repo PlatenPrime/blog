@@ -57,6 +57,7 @@ Steps 033-056.
 - Step 044: [lesson-044-structured-logging.md](./lessons/lesson-044-structured-logging.md)
 - Step 045: [lesson-045-request-logging-interceptor.md](./lessons/lesson-045-request-logging-interceptor.md)
 - Step 046: [lesson-046-correlation-id.md](./lessons/lesson-046-correlation-id.md)
+- Step 047: [lesson-047-log-redaction.md](./lessons/lesson-047-log-redaction.md)
 
 ## Phase 3: Auth and Identity (Track 2)
 

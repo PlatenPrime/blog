@@ -535,7 +535,17 @@ Track 1 — **как API ведёт себя как сервис**: конфиг
 
 → [lesson-046](./lessons/lesson-046-correlation-id.md)
 
-**Итог Track 1 (пока):** API умеет стартовать с проверенным конфигом, отчитываться о здоровье, отвечать на сбои предсказуемо и безопасно, помечать запросы request/correlation id, писать структурированные логи и access-log. Дальше — redaction, трейсы (047+), затем auth и CMS.
+### Шаг 047: Redaction в логах
+
+**В сюжете:** Pino **редактирует** чувствительные поля (`password`, токены, `Authorization`, `Cookie` в `req.headers`) до записи в JSON — даже если разработчик случайно передал их в объект лога.
+
+**Зачем:** Логи уходят в агрегаторы и к поддержке; утечка секретов там хуже, чем в ответе API (где 5xx уже «закрыты»). Redact — страховка перед Track 2 (auth).
+
+**Что унести с собой:** Единый `LOG_REDACT_PATHS` + `redact` в `createPinoOptions`; access-log по-прежнему без body/headers.
+
+→ [lesson-047](./lessons/lesson-047-log-redaction.md)
+
+**Итог Track 1 (пока):** API умеет стартовать с проверенным конфигом, отчитываться о здоровье, отвечать на сбои предсказуемо и безопасно, помечать запросы request/correlation id, писать структурированные логи, access-log и редактировать секреты в JSON. Дальше — трейсы (048+), затем auth и CMS.
 
 ---
 
@@ -553,8 +563,8 @@ Track 1 — **как API ведёт себя как сервис**: конфиг
 
 ## Где мы сейчас
 
-- **Завершено:** Track 0 (001–032) и начало Track 1 (033–046).
-- **Есть в коде:** монорепо (api + web + shared-contracts), CI, локальный Postgres, конфиг с Zod, health liveness/readiness, единый pipeline ошибок до безопасных 5xx, request/correlation ID middleware + ALS, structured JSON logging (pino), HTTP access-log interceptor.
+- **Завершено:** Track 0 (001–032) и начало Track 1 (033–047).
+- **Есть в коде:** монорепо (api + web + shared-contracts), CI, локальный Postgres, конфиг с Zod, health liveness/readiness, единый pipeline ошибок до безопасных 5xx, request/correlation ID middleware + ALS, structured JSON logging (pino) с redaction, HTTP access-log interceptor.
 - **Ещё нет в сюжете продукта:** пользователи, JWT, посты CMS, публичные страницы блога — это следующие треки roadmap.
 
 ---
@@ -563,8 +573,7 @@ Track 1 — **как API ведёт себя как сервис**: конфиг
 
 Следующие шаги Track 1 (см. [development-roadmap.md](./development-roadmap.md)):
 
-- **047:** редактирование секретов в логах.
-- **048–056:** трейсинг, метрики, graceful shutdown, чеклист приёмки Track 1.
+- **048–056:** OpenTelemetry, метрики, graceful shutdown, чеклист приёмки Track 1.
 
 Затем **Track 2 (auth)** — база данных, пользователи, регистрация, сессии — и дальше домен CMS и публичный сайт.
 
