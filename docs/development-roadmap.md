@@ -60,6 +60,7 @@ Every step is a sprint and must produce code changes + a lesson file in `docs/le
 | Request ID middleware + ALS context          | Step 043 completed                         |
 | Structured logging (nestjs-pino)             | Step 044 completed                         |
 | Request logging interceptor                  | Step 045 completed                         |
+| Correlation ID in response headers           | Step 046 completed                         |
 
 ## Step Contract (mandatory for every lesson)
 
@@ -147,7 +148,7 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 043  | Request ID middleware / `AsyncLocalStorage` context     | header present in response — done |
 | 044  | Structured logging module (pino or Nest logger adapter) | log JSON shape check — done       |
 | 045  | Request logging interceptor                             | manual request log — done         |
-| 046  | Correlation ID in response headers                      | e2e assertion                     |
+| 046  | Correlation ID in response headers                      | e2e assertion — done              |
 | 047  | Redact sensitive fields in logs                         | unit test                         |
 | 048  | OpenTelemetry wiring + noop tracer provider             | `nx run api:build`                |
 | 049  | Trace context propagation for incoming HTTP             | manual trace check                |
@@ -507,5 +508,6 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 043  | [lesson-043-request-id-middleware.md](./lessons/lesson-043-request-id-middleware.md)                               |
 | 044  | [lesson-044-structured-logging.md](./lessons/lesson-044-structured-logging.md)                                     |
 | 045  | [lesson-045-request-logging-interceptor.md](./lessons/lesson-045-request-logging-interceptor.md)                   |
+| 046  | [lesson-046-correlation-id.md](./lessons/lesson-046-correlation-id.md)                                             |
 
 Entry point: [LOCAL_SETUP.md](./LOCAL_SETUP.md)

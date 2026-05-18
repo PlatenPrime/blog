@@ -12,6 +12,7 @@ type StructuredLogLine = {
   service: string;
   pid: number;
   requestId?: string;
+  correlationId?: string;
   err?: { type?: string; message?: string; stack?: string };
 };
 
@@ -64,13 +65,17 @@ describe('structured log JSON shape', () => {
     const requestContextStore = new RequestContextStore();
     const capture = createCapturingLogger(requestContextStore);
 
-    requestContextStore.run({ requestId: 'req-1' }, () => {
-      capture.logger.info('in request');
-    });
+    requestContextStore.run(
+      { requestId: 'req-1', correlationId: 'corr-1' },
+      () => {
+        capture.logger.info('in request');
+      },
+    );
 
     const line = capture.readLastLine();
     expect(line.msg).toBe('in request');
     expect(line.requestId).toBe('req-1');
+    expect(line.correlationId).toBe('corr-1');
   });
 
   it('serializes errors under err without top-level stack string', () => {

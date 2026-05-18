@@ -1,8 +1,8 @@
-import { randomUUID } from 'node:crypto';
 import { isValidTraceId, normalizeIncomingHeader } from './incoming-trace-id';
 
-export function resolveRequestId(
+export function resolveCorrelationId(
   incomingHeader: string | string[] | undefined,
+  requestId: string,
 ): string {
   const candidate = normalizeIncomingHeader(incomingHeader);
 
@@ -10,5 +10,5 @@ export function resolveRequestId(
     return candidate;
   }
 
-  return randomUUID();
+  return requestId;
 }

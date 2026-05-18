@@ -525,7 +525,17 @@ Track 1 — **как API ведёт себя как сервис**: конфиг
 
 → [lesson-045](./lessons/lesson-045-request-logging-interceptor.md)
 
-**Итог Track 1 (пока):** API умеет стартовать с проверенным конфигом, отчитываться о здоровье, отвечать на сбои предсказуемо и безопасно, помечать каждый запрос ID, писать структурированные логи и access-log по запросам. Дальше — correlation id, redaction, трейсы (046+), затем auth и CMS.
+### Шаг 046: Correlation ID
+
+**В сюжете:** Каждый ответ API несёт **`X-Correlation-Id`**: клиент может прислать свой ID для цепочки вызовов, иначе API подставляет тот же ID, что и `X-Request-Id`. Оба ID попадают в JSON-логи; в `problem+json` по-прежнему `instance` = request id.
+
+**Зачем:** Поддержка ищет по correlation id несколько связанных запросов; request id остаётся идентификатором одного HTTP-вызова.
+
+**Что унести с собой:** Echo валидного `X-Correlation-Id`; fallback на request id; общая валидация trace id в `incoming-trace-id.ts`.
+
+→ [lesson-046](./lessons/lesson-046-correlation-id.md)
+
+**Итог Track 1 (пока):** API умеет стартовать с проверенным конфигом, отчитываться о здоровье, отвечать на сбои предсказуемо и безопасно, помечать запросы request/correlation id, писать структурированные логи и access-log. Дальше — redaction, трейсы (047+), затем auth и CMS.
 
 ---
 
@@ -543,8 +553,8 @@ Track 1 — **как API ведёт себя как сервис**: конфиг
 
 ## Где мы сейчас
 
-- **Завершено:** Track 0 (001–032) и начало Track 1 (033–045).
-- **Есть в коде:** монорепо (api + web + shared-contracts), CI, локальный Postgres, конфиг с Zod, health liveness/readiness, единый pipeline ошибок до безопасных 5xx, request ID middleware + ALS, structured JSON logging (pino), HTTP access-log interceptor.
+- **Завершено:** Track 0 (001–032) и начало Track 1 (033–046).
+- **Есть в коде:** монорепо (api + web + shared-contracts), CI, локальный Postgres, конфиг с Zod, health liveness/readiness, единый pipeline ошибок до безопасных 5xx, request/correlation ID middleware + ALS, structured JSON logging (pino), HTTP access-log interceptor.
 - **Ещё нет в сюжете продукта:** пользователи, JWT, посты CMS, публичные страницы блога — это следующие треки roadmap.
 
 ---
@@ -553,7 +563,7 @@ Track 1 — **как API ведёт себя как сервис**: конфиг
 
 Следующие шаги Track 1 (см. [development-roadmap.md](./development-roadmap.md)):
 
-- **046–047:** correlation id, редактирование секретов в логах.
+- **047:** редактирование секретов в логах.
 - **048–056:** трейсинг, метрики, graceful shutdown, чеклист приёмки Track 1.
 
 Затем **Track 2 (auth)** — база данных, пользователи, регистрация, сессии — и дальше домен CMS и публичный сайт.

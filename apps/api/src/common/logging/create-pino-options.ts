@@ -20,7 +20,16 @@ export function createPinoOptions({
     },
     mixin() {
       const requestId = requestContextStore.getRequestId();
-      return requestId ? { requestId } : {};
+      const correlationId = requestContextStore.getCorrelationId();
+
+      if (!requestId && !correlationId) {
+        return {};
+      }
+
+      return {
+        ...(requestId ? { requestId } : {}),
+        ...(correlationId ? { correlationId } : {}),
+      };
     },
   };
 }

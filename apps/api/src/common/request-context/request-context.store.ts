@@ -13,4 +13,8 @@ export class RequestContextStore {
   getRequestId(): string | undefined {
     return this.storage.getStore()?.requestId;
   }
+
+  getCorrelationId(): string | undefined {
+    return this.storage.getStore()?.correlationId;
+  }
 }
