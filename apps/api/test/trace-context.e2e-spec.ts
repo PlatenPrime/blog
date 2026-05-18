@@ -7,6 +7,7 @@ import {
 import request from 'supertest';
 import { App } from 'supertest/types';
 import { AppModule } from './../src/app.module';
+import { configureApiHttp } from './../src/config/configure-api-http';
 import { enableApiCors } from './../src/config/enable-api-cors';
 import {
   registerNoopTracerProvider,
@@ -39,6 +40,7 @@ describe('Trace context propagation (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
     enableApiCors(app);
+    configureApiHttp(app);
     await app.init();
   });
 

@@ -61,6 +61,7 @@ Steps 033-056.
 - Step 048: [lesson-048-opentelemetry-noop.md](./lessons/lesson-048-opentelemetry-noop.md)
 - Step 049: [lesson-049-trace-context-propagation.md](./lessons/lesson-049-trace-context-propagation.md)
 - Step 050: [lesson-050-metrics-endpoint-stub.md](./lessons/lesson-050-metrics-endpoint-stub.md)
+- Step 051: [lesson-051-api-prefix-and-versioning.md](./lessons/lesson-051-api-prefix-and-versioning.md)
 
 ## Phase 3: Auth and Identity (Track 2)
 

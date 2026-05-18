@@ -5,29 +5,16 @@ import {
   problemTypeUriForCode,
 } from '@blog/shared-contracts';
 import { INestApplication } from '@nestjs/common';
-import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
 import { App } from 'supertest/types';
-import { AppModule } from '../app.module';
-import { enableApiCors } from '../config/enable-api-cors';
-import { PostgresHealthIndicator } from '../health/indicators/postgres.health-indicator';
+import { API_V1_BASE } from '../config/configure-api-http';
+import { createApiTestApp } from '../testing/create-api-test-app';
 
 describe('API error Problem Details contract', () => {
   let app: INestApplication<App>;
 
   beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    })
-      .overrideProvider(PostgresHealthIndicator)
-      .useValue({
-        isHealthy: () => Promise.resolve({ database: { status: 'up' } }),
-      })
-      .compile();
-
-    app = moduleFixture.createNestApplication();
-    enableApiCors(app);
-    await app.init();
+    app = await createApiTestApp();
   });
 
   afterEach(async () => {
@@ -36,7 +23,7 @@ describe('API error Problem Details contract', () => {
 
   it('returns application/problem+json VALIDATION_FAILED body matching schema', async () => {
     const response = await request(app.getHttpServer())
-      .post('/examples')
+      .post(`${API_V1_BASE}/examples`)
       .send({})
       .expect(400);
 

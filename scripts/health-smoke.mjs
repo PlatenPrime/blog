@@ -1,12 +1,24 @@
 ﻿/**
  * Dev smoke: assumes API and web dev servers are already listening.
- * Defaults: API http://127.0.0.1:4000/ , web http://127.0.0.1:3000/
+ * Defaults: API http://127.0.0.1:4000/health , web http://127.0.0.1:3000/
  *
  * Env:
- *   API_HEALTH_URL / API_URL — base URL for API (GET /)
+ *   API_HEALTH_URL — full URL for API liveness (default .../health)
+ *   API_URL — API origin; used when API_HEALTH_URL is unset (appends /health)
  *   WEB_HEALTH_URL / WEB_URL — base URL for web (GET /)
  *   SKIP_WEB=1 — only check API
  */
+
+function healthUrl(base) {
+  if (process.env.API_HEALTH_URL) {
+    return process.env.API_HEALTH_URL;
+  }
+  const u = new URL(base);
+  u.pathname = '/health';
+  u.search = '';
+  u.hash = '';
+  return u.href;
+}
 
 function rootUrl(base) {
   const u = new URL(base);
@@ -52,7 +64,9 @@ const webBase =
   process.env.WEB_HEALTH_URL ?? process.env.WEB_URL ?? 'http://127.0.0.1:3000';
 
 let ok = true;
-ok = (await check('api', rootUrl(apiBase), { substring: 'Hello World' })) && ok;
+ok =
+  (await check('api', healthUrl(apiBase), { substring: '"status":"ok"' })) &&
+  ok;
 
 if (process.env.SKIP_WEB !== '1') {
   ok = (await check('web', rootUrl(webBase), { substring: 'TanStack' })) && ok;

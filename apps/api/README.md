@@ -55,6 +55,24 @@ npm run db:reset     # полный сброс (volume удаляется)
 
 Подключение драйвера БД из Nest ещё не настроено (последующие шаги Track 1). Переменные `POSTGRES_*` уже валидируются при старте API вместе с остальными ключами [`.env.example`](../../.env.example), чтобы dev-окружение не расходилось с compose.
 
+## Routing
+
+Публичный API: **`/api/v1`** (глобальный префикс `api` + URI versioning `v1`). Ops без префикса.
+
+| Путь                               | Назначение               |
+| ---------------------------------- | ------------------------ |
+| `GET /api/v1`                      | Hello / smoke            |
+| `/api/v1/examples`                 | Sample CRUD (lesson 040) |
+| `GET /health`, `GET /health/ready` | Probes (см. ниже)        |
+| `GET /metrics`                     | Prometheus exposition    |
+
+```bash
+curl -sS http://127.0.0.1:4000/api/v1
+curl -sS http://127.0.0.1:4000/api/v1/examples
+```
+
+Конфигурация: [`src/config/configure-api-http.ts`](src/config/configure-api-http.ts). Полная таблица и правила v2 — [`docs/api/routing-and-versioning.md`](../../docs/api/routing-and-versioning.md). Урок: [`lesson-051`](../../docs/lessons/lesson-051-api-prefix-and-versioning.md).
+
 ## Health
 
 ### Liveness
@@ -89,5 +107,5 @@ curl -sS http://127.0.0.1:4000/health/ready
 - Root [README](../../README.md) — runbook монорепо.
 - [`docs/development-roadmap.md`](../../docs/development-roadmap.md) — план шагов.
 - [`docs/LOCAL_SETUP.md`](../../docs/LOCAL_SETUP.md) — детальный setup, env-таблицы.
-- Релевантные уроки: [005](../../docs/lessons/lesson-005-nest-apps-api-migration.md), [013](../../docs/lessons/lesson-013-wire-shared-contracts-api.md), [015](../../docs/lessons/lesson-015-cors-and-dev-origins.md), [016](../../docs/lessons/lesson-016-postgres-compose-local-dev.md), [017](../../docs/lessons/lesson-017-env-example-files.md), [033](../../docs/lessons/lesson-033-nest-config-and-env-validation.md), [034](../../docs/lessons/lesson-034-terminus-health-liveness.md), [035](../../docs/lessons/lesson-035-readiness-probe-dependencies.md).
+- Релевантные уроки: [005](../../docs/lessons/lesson-005-nest-apps-api-migration.md), [013](../../docs/lessons/lesson-013-wire-shared-contracts-api.md), [015](../../docs/lessons/lesson-015-cors-and-dev-origins.md), [016](../../docs/lessons/lesson-016-postgres-compose-local-dev.md), [017](../../docs/lessons/lesson-017-env-example-files.md), [033](../../docs/lessons/lesson-033-nest-config-and-env-validation.md), [034](../../docs/lessons/lesson-034-terminus-health-liveness.md), [035](../../docs/lessons/lesson-035-readiness-probe-dependencies.md), [051](../../docs/lessons/lesson-051-api-prefix-and-versioning.md).
 - Upstream-документация NestJS: [docs.nestjs.com](https://docs.nestjs.com).

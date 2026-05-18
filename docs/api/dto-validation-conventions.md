@@ -1,6 +1,6 @@
 # DTO validation conventions (API)
 
-Canonical rules for request validation in `apps/api` and public response types in `libs/shared-contracts`. Reference implementation: [`examples`](../../apps/api/src/examples/) module (lesson 040).
+Canonical rules for request validation in `apps/api` and public response types in `libs/shared-contracts`. Reference implementation: [`examples`](../../apps/api/src/examples/) module (lesson 040). HTTP paths are under **`/api/v1`** — see [routing-and-versioning.md](./routing-and-versioning.md).
 
 ## Split: request vs response
 

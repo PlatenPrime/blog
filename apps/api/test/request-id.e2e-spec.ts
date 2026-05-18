@@ -1,32 +1,19 @@
 import { INestApplication } from '@nestjs/common';
-import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
 import { App } from 'supertest/types';
-import { AppModule } from './../src/app.module';
-import { enableApiCors } from './../src/config/enable-api-cors';
-import { PostgresHealthIndicator } from './../src/health/indicators/postgres.health-indicator';
 import {
   API_ERROR_CODE_VALIDATION,
   PROBLEM_MEDIA_TYPE,
   type ProblemDetailsBody,
 } from '@blog/shared-contracts';
+import { API_V1_BASE } from './../src/config/configure-api-http';
+import { createApiTestApp } from './../src/testing/create-api-test-app';
 
 describe('Request ID (e2e)', () => {
   let app: INestApplication<App>;
 
   beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    })
-      .overrideProvider(PostgresHealthIndicator)
-      .useValue({
-        isHealthy: () => Promise.resolve({ database: { status: 'up' } }),
-      })
-      .compile();
-
-    app = moduleFixture.createNestApplication();
-    enableApiCors(app);
-    await app.init();
+    app = await createApiTestApp();
   });
 
   afterEach(async () => {
@@ -34,7 +21,9 @@ describe('Request ID (e2e)', () => {
   });
 
   it('returns X-Request-Id on successful responses', async () => {
-    const response = await request(app.getHttpServer()).get('/').expect(200);
+    const response = await request(app.getHttpServer())
+      .get(API_V1_BASE)
+      .expect(200);
 
     const requestId = response.headers['x-request-id'];
 
@@ -48,7 +37,7 @@ describe('Request ID (e2e)', () => {
     const clientRequestId = 'client-req-e2e-1';
 
     const response = await request(app.getHttpServer())
-      .get('/')
+      .get(API_V1_BASE)
       .set('X-Request-Id', clientRequestId)
       .expect(200);
 
@@ -59,7 +48,7 @@ describe('Request ID (e2e)', () => {
     const clientRequestId = 'client-req-validation';
 
     const response = await request(app.getHttpServer())
-      .post('/examples')
+      .post(`${API_V1_BASE}/examples`)
       .set('X-Request-Id', clientRequestId)
       .send({})
       .expect(400);

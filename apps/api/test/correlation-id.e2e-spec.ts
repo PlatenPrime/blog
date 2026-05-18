@@ -1,32 +1,19 @@
 import { INestApplication } from '@nestjs/common';
-import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
 import { App } from 'supertest/types';
-import { AppModule } from './../src/app.module';
-import { enableApiCors } from './../src/config/enable-api-cors';
-import { PostgresHealthIndicator } from './../src/health/indicators/postgres.health-indicator';
 import {
   API_ERROR_CODE_VALIDATION,
   PROBLEM_MEDIA_TYPE,
   type ProblemDetailsBody,
 } from '@blog/shared-contracts';
+import { API_V1_BASE } from './../src/config/configure-api-http';
+import { createApiTestApp } from './../src/testing/create-api-test-app';
 
 describe('Correlation ID (e2e)', () => {
   let app: INestApplication<App>;
 
   beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    })
-      .overrideProvider(PostgresHealthIndicator)
-      .useValue({
-        isHealthy: () => Promise.resolve({ database: { status: 'up' } }),
-      })
-      .compile();
-
-    app = moduleFixture.createNestApplication();
-    enableApiCors(app);
-    await app.init();
+    app = await createApiTestApp();
   });
 
   afterEach(async () => {
@@ -34,7 +21,9 @@ describe('Correlation ID (e2e)', () => {
   });
 
   it('returns X-Correlation-Id equal to X-Request-Id when client omits correlation header', async () => {
-    const response = await request(app.getHttpServer()).get('/').expect(200);
+    const response = await request(app.getHttpServer())
+      .get(API_V1_BASE)
+      .expect(200);
 
     const requestId = response.headers['x-request-id'];
     const correlationId = response.headers['x-correlation-id'];
@@ -51,7 +40,7 @@ describe('Correlation ID (e2e)', () => {
     const clientCorrelationId = 'client-corr-e2e-1';
 
     const response = await request(app.getHttpServer())
-      .get('/')
+      .get(API_V1_BASE)
       .set('X-Correlation-Id', clientCorrelationId)
       .expect(200);
 
@@ -63,7 +52,7 @@ describe('Correlation ID (e2e)', () => {
     const clientCorrelationId = 'client-corr-validation';
 
     const response = await request(app.getHttpServer())
-      .post('/examples')
+      .post(`${API_V1_BASE}/examples`)
       .set('X-Request-Id', clientRequestId)
       .set('X-Correlation-Id', clientCorrelationId)
       .send({})

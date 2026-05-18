@@ -7,12 +7,10 @@ import {
   problemTypeUriForCode,
 } from '@blog/shared-contracts';
 import { INestApplication } from '@nestjs/common';
-import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
 import { App } from 'supertest/types';
-import { AppModule } from './../src/app.module';
-import { enableApiCors } from './../src/config/enable-api-cors';
-import { PostgresHealthIndicator } from './../src/health/indicators/postgres.health-indicator';
+import { API_V1_BASE } from './../src/config/configure-api-http';
+import { createApiTestApp } from './../src/testing/create-api-test-app';
 
 const ALLOWED_ORIGIN = 'http://localhost:3000';
 const FORBIDDEN_ORIGIN = 'http://evil.example';
@@ -24,24 +22,12 @@ describe('AppController (e2e)', () => {
   beforeEach(async () => {
     prevCorsOrigins = process.env.CORS_ORIGINS;
     process.env.CORS_ORIGINS = ALLOWED_ORIGIN;
-
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    })
-      .overrideProvider(PostgresHealthIndicator)
-      .useValue({
-        isHealthy: () => Promise.resolve({ database: { status: 'up' } }),
-      })
-      .compile();
-
-    app = moduleFixture.createNestApplication();
-    enableApiCors(app);
-    await app.init();
+    app = await createApiTestApp();
   });
 
-  it('/ (GET)', () => {
+  it(`${API_V1_BASE} (GET)`, () => {
     return request(app.getHttpServer())
-      .get('/')
+      .get(API_V1_BASE)
       .expect(200)
       .expect('Hello World! (0.0.1)');
   });
@@ -84,10 +70,16 @@ describe('AppController (e2e)', () => {
     expect(response.text).toMatch(/process_/);
   });
 
+  it('returns 404 for legacy unversioned examples path', () => {
+    return request(app.getHttpServer()).get('/examples').expect(404);
+  });
+
   describe('Examples resource (e2e)', () => {
+    const examplesBase = `${API_V1_BASE}/examples`;
+
     it('returns VALIDATION_FAILED with details for an invalid create body', async () => {
       const response = await request(app.getHttpServer())
-        .post('/examples')
+        .post(examplesBase)
         .send({})
         .expect(400);
 
@@ -111,7 +103,7 @@ describe('AppController (e2e)', () => {
 
     it('rejects non-whitelisted properties on create with 400', async () => {
       const response = await request(app.getHttpServer())
-        .post('/examples')
+        .post(examplesBase)
         .send({ title: 'T', body: 'B', extra: 'x' })
         .expect(400);
 
@@ -131,20 +123,20 @@ describe('AppController (e2e)', () => {
 
     it('transforms string pagination query params', async () => {
       await request(app.getHttpServer())
-        .post('/examples')
+        .post(examplesBase)
         .send({ title: 'One', body: 'A' })
         .expect(201);
       await request(app.getHttpServer())
-        .post('/examples')
+        .post(examplesBase)
         .send({ title: 'Two', body: 'B' })
         .expect(201);
       await request(app.getHttpServer())
-        .post('/examples')
+        .post(examplesBase)
         .send({ title: 'Three', body: 'C' })
         .expect(201);
 
       const response = await request(app.getHttpServer())
-        .get('/examples')
+        .get(examplesBase)
         .query({ page: '2', limit: '2' })
         .expect(200);
 
@@ -160,7 +152,7 @@ describe('AppController (e2e)', () => {
 
     it('supports create, read, update, delete', async () => {
       const created = await request(app.getHttpServer())
-        .post('/examples')
+        .post(examplesBase)
         .send({ title: 'CRUD', body: 'Full flow' })
         .expect(201);
 
@@ -168,30 +160,34 @@ describe('AppController (e2e)', () => {
       const id = createdBody.id;
 
       await request(app.getHttpServer())
-        .get(`/examples/${id}`)
+        .get(`${examplesBase}/${id}`)
         .expect(200)
         .expect((res) => {
           expect((res.body as ExampleItem).title).toBe('CRUD');
         });
 
       await request(app.getHttpServer())
-        .patch(`/examples/${id}`)
+        .patch(`${examplesBase}/${id}`)
         .send({ title: 'Updated' })
         .expect(200)
         .expect((res) => {
           expect((res.body as ExampleItem).title).toBe('Updated');
         });
 
-      await request(app.getHttpServer()).delete(`/examples/${id}`).expect(204);
+      await request(app.getHttpServer())
+        .delete(`${examplesBase}/${id}`)
+        .expect(204);
 
-      await request(app.getHttpServer()).get(`/examples/${id}`).expect(404);
+      await request(app.getHttpServer())
+        .get(`${examplesBase}/${id}`)
+        .expect(404);
     });
   });
 
   describe('CORS', () => {
     it('answers preflight OPTIONS for an allowed origin with 204 and matching headers', () => {
       return request(app.getHttpServer())
-        .options('/')
+        .options(API_V1_BASE)
         .set('Origin', ALLOWED_ORIGIN)
         .set('Access-Control-Request-Method', 'GET')
         .expect(204)
@@ -204,7 +200,7 @@ describe('AppController (e2e)', () => {
 
     it('reflects the allowed origin on a regular GET', async () => {
       const response = await request(app.getHttpServer())
-        .get('/')
+        .get(API_V1_BASE)
         .set('Origin', ALLOWED_ORIGIN)
         .expect(200);
 
@@ -215,7 +211,7 @@ describe('AppController (e2e)', () => {
 
     it('does not expose Access-Control-Allow-Origin to a disallowed origin', async () => {
       const response = await request(app.getHttpServer())
-        .get('/')
+        .get(API_V1_BASE)
         .set('Origin', FORBIDDEN_ORIGIN)
         .expect(200);
 
