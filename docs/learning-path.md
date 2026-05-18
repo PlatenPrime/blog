@@ -53,6 +53,7 @@ Steps 033-056.
 - Step 040: [lesson-040-dto-validation-conventions.md](./lessons/lesson-040-dto-validation-conventions.md)
 - Step 041: [lesson-041-problem-details-alignment.md](./lessons/lesson-041-problem-details-alignment.md)
 - Step 042: [lesson-042-safe-unknown-errors.md](./lessons/lesson-042-safe-unknown-errors.md)
+- Step 043: [lesson-043-request-id-middleware.md](./lessons/lesson-043-request-id-middleware.md)
 
 ## Phase 3: Auth and Identity (Track 2)
 

@@ -57,6 +57,7 @@ Every step is a sprint and must produce code changes + a lesson file in `docs/le
 | DTO validation conventions + sample resource | Step 040 completed                         |
 | Problem Details (`problem+json`) alignment   | Step 041 completed                         |
 | Safe unknown errors (no stack leak)          | Step 042 completed                         |
+| Request ID middleware + ALS context          | Step 043 completed                         |
 
 ## Step Contract (mandatory for every lesson)
 
@@ -129,32 +130,32 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 
 ## Track 1 Detailed Steps (033-056)
 
-| Step | Title                                                   | Verify                          |
-| ---- | ------------------------------------------------------- | ------------------------------- |
-| 033  | NestJS ConfigModule + Zod env validation                | `nx run api:test`               |
-| 034  | Terminus health module + `/health` liveness             | curl `/health`                  |
-| 035  | Readiness probe + dependency indicators                 | curl `/health/ready`            |
-| 036  | Health response DTOs in `shared-contracts`              | `nx run shared-contracts:build` |
-| 037  | API error envelope types in `shared-contracts`          | `nx run shared-contracts:build` |
-| 038  | Global exception filter + HTTP error mapping            | `nx run api:test`               |
-| 039  | Global `ValidationPipe` (whitelist, transform)          | e2e smoke                       |
-| 040  | DTO validation conventions + sample resource            | `nx run api:lint`               |
-| 041  | Problem Details (`problem+json`) alignment (optional)   | contract test — done            |
-| 042  | Safe handling of unknown errors (no stack leak)         | unit test — done                |
-| 043  | Request ID middleware / `AsyncLocalStorage` context     | header present in response      |
-| 044  | Structured logging module (pino or Nest logger adapter) | log JSON shape check            |
-| 045  | Request logging interceptor                             | manual request log              |
-| 046  | Correlation ID in response headers                      | e2e assertion                   |
-| 047  | Redact sensitive fields in logs                         | unit test                       |
-| 048  | OpenTelemetry wiring + noop tracer provider             | `nx run api:build`              |
-| 049  | Trace context propagation for incoming HTTP             | manual trace check              |
-| 050  | Metrics endpoint stub (Prometheus exposition)           | curl `/metrics`                 |
-| 051  | Global API prefix + versioning strategy (URI or header) | docs review                     |
-| 052  | Graceful shutdown hooks                                 | SIGTERM smoke                   |
-| 053  | Request timeout / abort interceptor                     | unit/e2e                        |
-| 054  | Contract tests for error JSON shape                     | `nx run api:test`               |
-| 055  | Track 1 acceptance checklist                            | all DoD items                   |
-| 056  | Reserve: platform observability follow-ups              | ADR or docs check               |
+| Step | Title                                                   | Verify                            |
+| ---- | ------------------------------------------------------- | --------------------------------- |
+| 033  | NestJS ConfigModule + Zod env validation                | `nx run api:test`                 |
+| 034  | Terminus health module + `/health` liveness             | curl `/health`                    |
+| 035  | Readiness probe + dependency indicators                 | curl `/health/ready`              |
+| 036  | Health response DTOs in `shared-contracts`              | `nx run shared-contracts:build`   |
+| 037  | API error envelope types in `shared-contracts`          | `nx run shared-contracts:build`   |
+| 038  | Global exception filter + HTTP error mapping            | `nx run api:test`                 |
+| 039  | Global `ValidationPipe` (whitelist, transform)          | e2e smoke                         |
+| 040  | DTO validation conventions + sample resource            | `nx run api:lint`                 |
+| 041  | Problem Details (`problem+json`) alignment (optional)   | contract test — done              |
+| 042  | Safe handling of unknown errors (no stack leak)         | unit test — done                  |
+| 043  | Request ID middleware / `AsyncLocalStorage` context     | header present in response — done |
+| 044  | Structured logging module (pino or Nest logger adapter) | log JSON shape check              |
+| 045  | Request logging interceptor                             | manual request log                |
+| 046  | Correlation ID in response headers                      | e2e assertion                     |
+| 047  | Redact sensitive fields in logs                         | unit test                         |
+| 048  | OpenTelemetry wiring + noop tracer provider             | `nx run api:build`                |
+| 049  | Trace context propagation for incoming HTTP             | manual trace check                |
+| 050  | Metrics endpoint stub (Prometheus exposition)           | curl `/metrics`                   |
+| 051  | Global API prefix + versioning strategy (URI or header) | docs review                       |
+| 052  | Graceful shutdown hooks                                 | SIGTERM smoke                     |
+| 053  | Request timeout / abort interceptor                     | unit/e2e                          |
+| 054  | Contract tests for error JSON shape                     | `nx run api:test`                 |
+| 055  | Track 1 acceptance checklist                            | all DoD items                     |
+| 056  | Reserve: platform observability follow-ups              | ADR or docs check                 |
 
 ## Track 2 Detailed Steps (057-104)
 
@@ -501,5 +502,6 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 040  | [lesson-040-dto-validation-conventions.md](./lessons/lesson-040-dto-validation-conventions.md)                     |
 | 041  | [lesson-041-problem-details-alignment.md](./lessons/lesson-041-problem-details-alignment.md)                       |
 | 042  | [lesson-042-safe-unknown-errors.md](./lessons/lesson-042-safe-unknown-errors.md)                                   |
+| 043  | [lesson-043-request-id-middleware.md](./lessons/lesson-043-request-id-middleware.md)                               |
 
 Entry point: [LOCAL_SETUP.md](./LOCAL_SETUP.md)

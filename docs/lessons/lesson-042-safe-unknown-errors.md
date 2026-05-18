@@ -91,7 +91,7 @@ npx nx run api:test
 
 - Клиент видит generic detail на 5xx; оператор — полный stack в логах (unknown only).
 - 4xx messages намеренно информативны для клиента.
-- Request ID и log redaction — следующие шаги Track 1.
+- Request ID — [lesson-043](./lesson-043-request-id-middleware.md); log redaction — шаг 047.
 
 ## Verify
 

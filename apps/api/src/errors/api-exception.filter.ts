@@ -12,6 +12,7 @@ import {
   PROBLEM_MEDIA_TYPE,
   type ProblemDetailsBody,
 } from '@blog/shared-contracts';
+import { RequestContextStore } from '../common/request-context';
 import { mapApiErrorToProblemDetails } from './map-api-error-to-problem-details';
 import { mapExceptionToApiError } from './map-exception-to-api-error';
 
@@ -19,7 +20,10 @@ import { mapExceptionToApiError } from './map-exception-to-api-error';
 export class ApiExceptionFilter implements ExceptionFilter {
   private readonly logger = new Logger(ApiExceptionFilter.name);
 
-  constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
+  constructor(
+    private readonly httpAdapterHost: HttpAdapterHost,
+    private readonly requestContextStore: RequestContextStore,
+  ) {}
 
   catch(exception: unknown, host: ArgumentsHost): void {
     if (exception instanceof HealthCheckError) {
@@ -33,7 +37,9 @@ export class ApiExceptionFilter implements ExceptionFilter {
       );
     }
 
-    const { status, body } = mapExceptionToApiError(exception);
+    const { status, body } = mapExceptionToApiError(exception, {
+      requestId: this.requestContextStore.getRequestId(),
+    });
     const problemBody = mapApiErrorToProblemDetails(status, body);
     const { httpAdapter } = this.httpAdapterHost;
     const response = host.switchToHttp().getResponse<Response>();

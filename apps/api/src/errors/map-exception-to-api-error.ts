@@ -25,16 +25,45 @@ export type MappedApiError = {
   readonly body: ApiErrorBody;
 };
 
-export function mapExceptionToApiError(exception: unknown): MappedApiError {
+export type MapExceptionToApiErrorOptions = {
+  readonly requestId?: string;
+};
+
+export function mapExceptionToApiError(
+  exception: unknown,
+  options: MapExceptionToApiErrorOptions = {},
+): MappedApiError {
+  const { requestId } = options;
+
   if (exception instanceof HttpException) {
-    return mapHttpException(exception);
+    return withRequestId(mapHttpException(exception), requestId);
+  }
+
+  return withRequestId(
+    {
+      status: 500,
+      body: {
+        code: API_ERROR_CODE_INTERNAL,
+        message: API_INTERNAL_ERROR_MESSAGE,
+      },
+    },
+    requestId,
+  );
+}
+
+function withRequestId(
+  mapped: MappedApiError,
+  requestId: string | undefined,
+): MappedApiError {
+  if (requestId === undefined) {
+    return mapped;
   }
 
   return {
-    status: 500,
+    ...mapped,
     body: {
-      code: API_ERROR_CODE_INTERNAL,
-      message: API_INTERNAL_ERROR_MESSAGE,
+      ...mapped.body,
+      requestId,
     },
   };
 }

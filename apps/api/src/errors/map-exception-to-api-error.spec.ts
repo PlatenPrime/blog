@@ -215,4 +215,32 @@ describe('mapExceptionToApiError', () => {
       },
     });
   });
+
+  it('includes requestId in body when provided in options', () => {
+    const exception = new NotFoundException('Missing resource');
+
+    expect(mapExceptionToApiError(exception, { requestId: 'req-abc' })).toEqual(
+      {
+        status: 404,
+        body: {
+          code: API_ERROR_CODE_NOT_FOUND,
+          message: 'Missing resource',
+          requestId: 'req-abc',
+        },
+      },
+    );
+  });
+
+  it('includes requestId on unknown errors when provided', () => {
+    expect(
+      mapExceptionToApiError(new Error('boom'), { requestId: 'req-500' }),
+    ).toEqual({
+      status: 500,
+      body: {
+        code: API_ERROR_CODE_INTERNAL,
+        message: API_INTERNAL_ERROR_MESSAGE,
+        requestId: 'req-500',
+      },
+    });
+  });
 });

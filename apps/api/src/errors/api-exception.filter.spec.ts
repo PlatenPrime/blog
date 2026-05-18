@@ -14,6 +14,7 @@ import {
   PROBLEM_MEDIA_TYPE,
   problemTypeUriForCode,
 } from '@blog/shared-contracts';
+import { RequestContextStore } from '../common/request-context';
 import { ApiExceptionFilter } from './api-exception.filter';
 
 type MockResponse = {
@@ -52,29 +53,33 @@ function createArgumentsHost(response: MockResponse): ArgumentsHost {
   } as ArgumentsHost;
 }
 
-describe('ApiExceptionFilter', () => {
-  const httpAdapterHost = {
-    httpAdapter: {
-      setHeader: (
-        response: MockResponse,
-        name: string,
-        value: string,
-      ): void => {
-        response.headers[name.toLowerCase()] = value;
-      },
-      reply: (
-        response: MockResponse,
-        body: unknown,
-        statusCode: number,
-      ): void => {
-        response.status(statusCode);
-        response.json(body);
-      },
+const httpAdapterHost = {
+  httpAdapter: {
+    setHeader: (response: MockResponse, name: string, value: string): void => {
+      response.headers[name.toLowerCase()] = value;
     },
-  } as HttpAdapterHost;
+    reply: (
+      response: MockResponse,
+      body: unknown,
+      statusCode: number,
+    ): void => {
+      response.status(statusCode);
+      response.json(body);
+    },
+  },
+} as HttpAdapterHost;
 
+function createFilter(requestId?: string): ApiExceptionFilter {
+  const requestContextStore = {
+    getRequestId: () => requestId,
+  } as RequestContextStore;
+
+  return new ApiExceptionFilter(httpAdapterHost, requestContextStore);
+}
+
+describe('ApiExceptionFilter', () => {
   it('writes Problem Details envelope for HttpException', () => {
-    const filter = new ApiExceptionFilter(httpAdapterHost);
+    const filter = createFilter();
     const response = createMockResponse();
     const host = createArgumentsHost(response);
 
@@ -92,7 +97,7 @@ describe('ApiExceptionFilter', () => {
   });
 
   it('writes INTERNAL_ERROR Problem Details for unknown errors', () => {
-    const filter = new ApiExceptionFilter(httpAdapterHost);
+    const filter = createFilter();
     const response = createMockResponse();
     const host = createArgumentsHost(response);
 
@@ -114,7 +119,7 @@ describe('ApiExceptionFilter', () => {
   });
 
   it('sanitizes 500 HttpException Problem Details without leaking message', () => {
-    const filter = new ApiExceptionFilter(httpAdapterHost);
+    const filter = createFilter();
     const response = createMockResponse();
     const host = createArgumentsHost(response);
 
@@ -139,7 +144,7 @@ describe('ApiExceptionFilter', () => {
   });
 
   it('rethrows HealthCheckError for Terminus handling', () => {
-    const filter = new ApiExceptionFilter(httpAdapterHost);
+    const filter = createFilter();
     const response = createMockResponse();
     const host = createArgumentsHost(response);
     const healthError = new HealthCheckError('Health check failed', {
@@ -150,8 +155,25 @@ describe('ApiExceptionFilter', () => {
     expect(response.body).toBeUndefined();
   });
 
+  it('includes requestId as instance when present in request context', () => {
+    const filter = createFilter('req-filter-1');
+    const response = createMockResponse();
+    const host = createArgumentsHost(response);
+
+    filter.catch(new NotFoundException('Missing resource'), host);
+
+    expect(response.body).toEqual({
+      type: problemTypeUriForCode(API_ERROR_CODE_NOT_FOUND),
+      title: 'Not Found',
+      status: 404,
+      detail: 'Missing resource',
+      code: API_ERROR_CODE_NOT_FOUND,
+      instance: 'req-filter-1',
+    });
+  });
+
   it('does not leak stack traces in HttpException responses', () => {
-    const filter = new ApiExceptionFilter(httpAdapterHost);
+    const filter = createFilter();
     const response = createMockResponse();
     const host = createArgumentsHost(response);
     const exception = new HttpException(

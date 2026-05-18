@@ -1,9 +1,13 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_FILTER, APP_PIPE } from '@nestjs/core';
 import { createApiValidationPipe } from './config/create-api-validation-pipe';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import {
+  RequestContextModule,
+  RequestIdMiddleware,
+} from './common/request-context';
 import { HealthModule } from './health/health.module';
 import { validateRootEnv } from './config/env.schema';
 import { resolveEnvFilePaths } from './config/env-file-paths';
@@ -17,6 +21,7 @@ import { ExamplesModule } from './examples/examples.module';
       envFilePath: resolveEnvFilePaths(),
       validate: validateRootEnv,
     }),
+    RequestContextModule,
     HealthModule,
     ExamplesModule,
   ],
@@ -33,4 +38,8 @@ import { ExamplesModule } from './examples/examples.module';
     },
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(RequestIdMiddleware).forRoutes('*');
+  }
+}
