@@ -66,6 +66,7 @@ Every step is a sprint and must produce code changes + a lesson file in `docs/le
 | Trace context propagation (W3C)                | Step 049 completed                         |
 | Prometheus `/metrics` stub                     | Step 050 completed                         |
 | Global API prefix + URI versioning (`/api/v1`) | Step 051 completed                         |
+| Graceful shutdown hooks (SIGTERM)              | Step 052 completed                         |
 
 ## Step Contract (mandatory for every lesson)
 
@@ -159,7 +160,7 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 049  | Trace context propagation for incoming HTTP             | manual trace check — done         |
 | 050  | Metrics endpoint stub (Prometheus exposition)           | curl `/metrics` — done            |
 | 051  | Global API prefix + versioning strategy (URI or header) | docs review — done                |
-| 052  | Graceful shutdown hooks                                 | SIGTERM smoke                     |
+| 052  | Graceful shutdown hooks                                 | SIGTERM smoke — done              |
 | 053  | Request timeout / abort interceptor                     | unit/e2e                          |
 | 054  | Contract tests for error JSON shape                     | `nx run api:test`                 |
 | 055  | Track 1 acceptance checklist                            | all DoD items                     |
@@ -519,5 +520,6 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 049  | [lesson-049-trace-context-propagation.md](./lessons/lesson-049-trace-context-propagation.md)                       |
 | 050  | [lesson-050-metrics-endpoint-stub.md](./lessons/lesson-050-metrics-endpoint-stub.md)                               |
 | 051  | [lesson-051-api-prefix-and-versioning.md](./lessons/lesson-051-api-prefix-and-versioning.md)                       |
+| 052  | [lesson-052-graceful-shutdown-hooks.md](./lessons/lesson-052-graceful-shutdown-hooks.md)                           |
 
 Entry point: [LOCAL_SETUP.md](./LOCAL_SETUP.md)

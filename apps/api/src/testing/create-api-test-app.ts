@@ -3,6 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { App } from 'supertest/types';
 import { AppModule } from '../app.module';
 import { configureApiHttp } from '../config/configure-api-http';
+import { configureApiShutdown } from '../config/configure-api-shutdown';
 import { enableApiCors } from '../config/enable-api-cors';
 import { PostgresHealthIndicator } from '../health/indicators/postgres.health-indicator';
 
@@ -22,6 +23,7 @@ export async function createApiTestApp(): Promise<INestApplication<App>> {
   const app = moduleFixture.createNestApplication();
   enableApiCors(app);
   configureApiHttp(app);
+  configureApiShutdown(app);
   await app.init();
   return app;
 }

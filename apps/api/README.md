@@ -102,10 +102,21 @@ curl -sS http://127.0.0.1:4000/health/ready
 
 Если порт 4000 занят, смотрите фактический порт в логе bootstrap (`Application is running on port …`).
 
+## Graceful shutdown
+
+Bootstrap вызывает [`configureApiShutdown`](src/config/configure-api-shutdown.ts) (`enableShutdownHooks`). При SIGTERM/SIGINT Nest закрывает HTTP-сервер, вызывает `PostgresPoolLifecycle.onModuleDestroy` и логирует shutdown через [`ApiShutdownService`](src/common/shutdown/api-shutdown.service.ts).
+
+```bash
+npx nx run api:build          # из корня репо
+npm run shutdown:smoke        # spawn dist → /health → SIGTERM → exit 0
+```
+
+Урок: [`lesson-052`](../../docs/lessons/lesson-052-graceful-shutdown-hooks.md).
+
 ## See also
 
 - Root [README](../../README.md) — runbook монорепо.
 - [`docs/development-roadmap.md`](../../docs/development-roadmap.md) — план шагов.
 - [`docs/LOCAL_SETUP.md`](../../docs/LOCAL_SETUP.md) — детальный setup, env-таблицы.
-- Релевантные уроки: [005](../../docs/lessons/lesson-005-nest-apps-api-migration.md), [013](../../docs/lessons/lesson-013-wire-shared-contracts-api.md), [015](../../docs/lessons/lesson-015-cors-and-dev-origins.md), [016](../../docs/lessons/lesson-016-postgres-compose-local-dev.md), [017](../../docs/lessons/lesson-017-env-example-files.md), [033](../../docs/lessons/lesson-033-nest-config-and-env-validation.md), [034](../../docs/lessons/lesson-034-terminus-health-liveness.md), [035](../../docs/lessons/lesson-035-readiness-probe-dependencies.md), [051](../../docs/lessons/lesson-051-api-prefix-and-versioning.md).
+- Релевантные уроки: [005](../../docs/lessons/lesson-005-nest-apps-api-migration.md), [013](../../docs/lessons/lesson-013-wire-shared-contracts-api.md), [015](../../docs/lessons/lesson-015-cors-and-dev-origins.md), [016](../../docs/lessons/lesson-016-postgres-compose-local-dev.md), [017](../../docs/lessons/lesson-017-env-example-files.md), [033](../../docs/lessons/lesson-033-nest-config-and-env-validation.md), [034](../../docs/lessons/lesson-034-terminus-health-liveness.md), [035](../../docs/lessons/lesson-035-readiness-probe-dependencies.md), [051](../../docs/lessons/lesson-051-api-prefix-and-versioning.md), [052](../../docs/lessons/lesson-052-graceful-shutdown-hooks.md).
 - Upstream-документация NestJS: [docs.nestjs.com](https://docs.nestjs.com).

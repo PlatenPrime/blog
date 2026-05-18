@@ -5,6 +5,7 @@ import { createApiValidationPipe } from './config/create-api-validation-pipe';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { LoggingModule, RequestLoggingInterceptor } from './common/logging';
+import { ShutdownModule } from './common/shutdown';
 import { TraceContextMiddleware, TracingModule } from './common/tracing';
 import {
   RequestContextModule,
@@ -27,6 +28,7 @@ import { ExamplesModule } from './examples/examples.module';
     RequestContextModule,
     TracingModule,
     LoggingModule,
+    ShutdownModule,
     HealthModule,
     MetricsModule,
     ExamplesModule,

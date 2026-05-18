@@ -33,7 +33,8 @@
     "db:reset": "docker compose down -v",
     "db:logs": "docker compose logs -f db",
     "db:psql": "docker compose exec db psql -U blog -d blog_dev",
-    "health:smoke": "node scripts/health-smoke.mjs"
+    "health:smoke": "node scripts/health-smoke.mjs",
+    "shutdown:smoke": "node scripts/shutdown-smoke.mjs"
   },
   "lint-staged": {
     "*.{js,cjs,mjs,ts,tsx,jsx,json,md,yml,yaml}": [
