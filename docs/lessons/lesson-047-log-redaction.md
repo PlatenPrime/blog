@@ -15,7 +15,7 @@
 Намеренно **не** делаем:
 
 - Логирование query string / body в access-log — по-прежнему не логируем (см. [шаг 045](./lesson-045-request-logging-interceptor.md)).
-- OpenTelemetry / trace propagation — [шаги 048–049](../development-roadmap.md).
+- OpenTelemetry wiring — [шаг 048](./lesson-048-opentelemetry-noop.md); trace propagation — [шаг 049](../development-roadmap.md).
 - Кастомные serializers для `req`/`res` — redact достаточен для текущего объёма.
 
 ## Dependencies

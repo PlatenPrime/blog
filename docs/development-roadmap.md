@@ -511,5 +511,6 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 045  | [lesson-045-request-logging-interceptor.md](./lessons/lesson-045-request-logging-interceptor.md)                   |
 | 046  | [lesson-046-correlation-id.md](./lessons/lesson-046-correlation-id.md)                                             |
 | 047  | [lesson-047-log-redaction.md](./lessons/lesson-047-log-redaction.md)                                               |
+| 048  | [lesson-048-opentelemetry-noop.md](./lessons/lesson-048-opentelemetry-noop.md)                                     |
 
 Entry point: [LOCAL_SETUP.md](./LOCAL_SETUP.md)

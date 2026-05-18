@@ -5,6 +5,7 @@ import { createApiValidationPipe } from './config/create-api-validation-pipe';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { LoggingModule, RequestLoggingInterceptor } from './common/logging';
+import { TracingModule } from './common/tracing';
 import {
   RequestContextModule,
   RequestIdMiddleware,
@@ -23,6 +24,7 @@ import { ExamplesModule } from './examples/examples.module';
       validate: validateRootEnv,
     }),
     RequestContextModule,
+    TracingModule,
     LoggingModule,
     HealthModule,
     ExamplesModule,
