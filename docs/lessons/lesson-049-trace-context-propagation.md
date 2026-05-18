@@ -17,7 +17,8 @@
 
 Намеренно **не** делаем:
 
-- OTLP / Jaeger export, env `OTEL_*` — [шаги 050+](../development-roadmap.md).
+- Prometheus `/metrics` — [шаг 050](./lesson-050-metrics-endpoint-stub.md).
+- OTLP / Jaeger export, env `OTEL_*` — follow-up [шаг 056+](../development-roadmap.md).
 - `traceparent` в response headers.
 - Связка OTel trace id ↔ `X-Correlation-Id` / pino — позже.
 - Outgoing HTTP propagation, auto-instrumentation.

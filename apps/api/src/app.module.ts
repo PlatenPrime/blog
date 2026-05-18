@@ -11,6 +11,7 @@ import {
   RequestIdMiddleware,
 } from './common/request-context';
 import { HealthModule } from './health/health.module';
+import { MetricsModule } from './metrics';
 import { validateRootEnv } from './config/env.schema';
 import { resolveEnvFilePaths } from './config/env-file-paths';
 import { ApiExceptionFilter } from './errors/api-exception.filter';
@@ -27,6 +28,7 @@ import { ExamplesModule } from './examples/examples.module';
     TracingModule,
     LoggingModule,
     HealthModule,
+    MetricsModule,
     ExamplesModule,
   ],
   controllers: [AppController],

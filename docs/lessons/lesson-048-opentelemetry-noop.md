@@ -17,7 +17,8 @@
 Намеренно **не** делаем:
 
 - W3C `traceparent` propagation — [шаг 049](./lesson-049-trace-context-propagation.md).
-- OTLP exporter, auto-instrumentation HTTP, env `OTEL_*` — [шаги 049–050+](../development-roadmap.md).
+- W3C propagation — [шаг 049](./lesson-049-trace-context-propagation.md); Prometheus `/metrics` — [шаг 050](./lesson-050-metrics-endpoint-stub.md).
+- OTLP exporter, auto-instrumentation HTTP, env `OTEL_*` — follow-up [шаг 056+](../development-roadmap.md).
 - Связка span id ↔ pino logs — позже.
 
 ## Dependencies

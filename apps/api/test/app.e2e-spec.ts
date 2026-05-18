@@ -72,6 +72,18 @@ describe('AppController (e2e)', () => {
     });
   });
 
+  it('/metrics (GET) prometheus exposition', async () => {
+    const response = await request(app.getHttpServer())
+      .get('/metrics')
+      .expect(200);
+
+    expect(response.headers['content-type']).toMatch(/text\/plain/);
+    expect(response.headers['content-type']).toMatch(/version=0\.0\.4/);
+    expect(response.text).toContain('# HELP');
+    expect(response.text).toContain('# TYPE');
+    expect(response.text).toMatch(/process_/);
+  });
+
   describe('Examples resource (e2e)', () => {
     it('returns VALIDATION_FAILED with details for an invalid create body', async () => {
       const response = await request(app.getHttpServer())

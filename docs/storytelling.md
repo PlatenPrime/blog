@@ -565,7 +565,17 @@ Track 1 — **как API ведёт себя как сервис**: конфиг
 
 → [lesson-049](./lessons/lesson-049-trace-context-propagation.md)
 
-**Итог Track 1 (пока):** API умеет стартовать с проверенным конфигом, отчитываться о здоровье, отвечать на сбои предсказуемо и безопасно, помечать запросы request/correlation id, писать структурированные логи, access-log, редактировать секреты в JSON, держать OTel tracer provider (noop export) и продолжать W3C trace с входящего HTTP. Дальше — метрики (050+), затем auth и CMS.
+### Шаг 050: Prometheus `/metrics` stub
+
+**В сюжете:** API отдаёт `GET /metrics` в формате Prometheus text exposition: default process metrics через `prom-client` и отдельный registry, не смешивая с JSON health checks.
+
+**Зачем:** Точка подключения scraper'а (Prometheus/Grafana позже); ops видят CPU/memory/process без кастомной инструментализации приложения.
+
+**Что унести с собой:** Отдельный `MetricsModule`; `collectDefaultMetrics` один раз в `onModuleInit`; `Content-Type: text/plain; version=0.0.4`; health и metrics — разные контракты.
+
+→ [lesson-050](./lessons/lesson-050-metrics-endpoint-stub.md)
+
+**Итог Track 1 (пока):** API умеет стартовать с проверенным конфигом, отчитываться о здоровье, отвечать на сбои предсказуемо и безопасно, помечать запросы request/correlation id, писать структурированные логи, access-log, редактировать секреты в JSON, держать OTel tracer provider (noop export), продолжать W3C trace с входящего HTTP и отдавать Prometheus metrics stub на `/metrics`. Дальше — prefix/shutdown (051+), затем auth и CMS.
 
 ---
 
@@ -583,8 +593,8 @@ Track 1 — **как API ведёт себя как сервис**: конфиг
 
 ## Где мы сейчас
 
-- **Завершено:** Track 0 (001–032) и начало Track 1 (033–049).
-- **Есть в коде:** монорепо (api + web + shared-contracts), CI, локальный Postgres, конфиг с Zod, health liveness/readiness, единый pipeline ошибок до безопасных 5xx, request/correlation ID middleware + ALS, structured JSON logging (pino) с redaction, HTTP access-log interceptor, OpenTelemetry noop tracer wiring (`TracingModule`, `API_TRACER`), W3C `traceparent` propagation (`TraceContextMiddleware`).
+- **Завершено:** Track 0 (001–032) и начало Track 1 (033–050).
+- **Есть в коде:** монорепо (api + web + shared-contracts), CI, локальный Postgres, конфиг с Zod, health liveness/readiness, единый pipeline ошибок до безопасных 5xx, request/correlation ID middleware + ALS, structured JSON logging (pino) с redaction, HTTP access-log interceptor, OpenTelemetry noop tracer wiring (`TracingModule`, `API_TRACER`), W3C `traceparent` propagation (`TraceContextMiddleware`), Prometheus `/metrics` stub (`MetricsModule`, `prom-client`).
 - **Ещё нет в сюжете продукта:** пользователи, JWT, посты CMS, публичные страницы блога — это следующие треки roadmap.
 
 ---
@@ -593,7 +603,7 @@ Track 1 — **как API ведёт себя как сервис**: конфиг
 
 Следующие шаги Track 1 (см. [development-roadmap.md](./development-roadmap.md)):
 
-- **050–056:** метрики, graceful shutdown, чеклист приёмки Track 1.
+- **051–056:** API prefix, graceful shutdown, чеклист приёмки Track 1.
 
 Затем **Track 2 (auth)** — база данных, пользователи, регистрация, сессии — и дальше домен CMS и публичный сайт.
 
