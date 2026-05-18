@@ -1,10 +1,10 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { APP_FILTER, APP_PIPE } from '@nestjs/core';
+import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { createApiValidationPipe } from './config/create-api-validation-pipe';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { LoggingModule } from './common/logging';
+import { LoggingModule, RequestLoggingInterceptor } from './common/logging';
 import {
   RequestContextModule,
   RequestIdMiddleware,
@@ -37,6 +37,10 @@ import { ExamplesModule } from './examples/examples.module';
     {
       provide: APP_PIPE,
       useFactory: createApiValidationPipe,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: RequestLoggingInterceptor,
     },
   ],
 })
