@@ -49,7 +49,20 @@ Registered via `APP_PIPE` in `AppModule`:
 - `forbidNonWhitelisted: true` — extra properties → `400` + `VALIDATION_FAILED`.
 - `transform: true` — applies `@Type()` (e.g. `"3"` → `3`).
 
-Validation failures map to `ApiErrorBody` with `code: VALIDATION_FAILED` and `details[]` (field + message). See [`map-class-validator-errors.ts`](../../apps/api/src/errors/map-class-validator-errors.ts).
+Validation failures map to RFC 7807 **Problem Details** (`Content-Type: application/problem+json`) with `code: VALIDATION_FAILED` and extension `details[]` (field + message). See [`map-class-validator-errors.ts`](../../apps/api/src/errors/map-class-validator-errors.ts) and [`problem-details.types.ts`](../../libs/shared-contracts/src/errors/problem-details.types.ts).
+
+Example error body:
+
+```json
+{
+  "type": "https://blog.dev/problems/validation-failed",
+  "title": "Validation Failed",
+  "status": 400,
+  "detail": "Validation failed",
+  "code": "VALIDATION_FAILED",
+  "details": [{ "field": "title", "message": "title should not be empty" }]
+}
+```
 
 ## Route parameters
 

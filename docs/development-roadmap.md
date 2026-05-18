@@ -55,6 +55,7 @@ Every step is a sprint and must produce code changes + a lesson file in `docs/le
 | Global exception filter + HTTP error mapping | Step 038 completed                         |
 | Global ValidationPipe (whitelist, transform) | Step 039 completed                         |
 | DTO validation conventions + sample resource | Step 040 completed                         |
+| Problem Details (`problem+json`) alignment   | Step 041 completed                         |
 
 ## Step Contract (mandatory for every lesson)
 
@@ -136,7 +137,7 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 038  | Global exception filter + HTTP error mapping            | `nx run api:test`               |
 | 039  | Global `ValidationPipe` (whitelist, transform)          | e2e smoke                       |
 | 040  | DTO validation conventions + sample resource            | `nx run api:lint`               |
-| 041  | Problem Details (`problem+json`) alignment (optional)   | contract test                   |
+| 041  | Problem Details (`problem+json`) alignment (optional)   | contract test — done            |
 | 042  | Safe handling of unknown errors (no stack leak)         | unit test                       |
 | 043  | Request ID middleware / `AsyncLocalStorage` context     | header present in response      |
 | 044  | Structured logging module (pino or Nest logger adapter) | log JSON shape check            |
@@ -496,5 +497,6 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 038  | [lesson-038-global-exception-filter.md](./lessons/lesson-038-global-exception-filter.md)                           |
 | 039  | [lesson-039-global-validation-pipe.md](./lessons/lesson-039-global-validation-pipe.md)                             |
 | 040  | [lesson-040-dto-validation-conventions.md](./lessons/lesson-040-dto-validation-conventions.md)                     |
+| 041  | [lesson-041-problem-details-alignment.md](./lessons/lesson-041-problem-details-alignment.md)                       |
 
 Entry point: [LOCAL_SETUP.md](./LOCAL_SETUP.md)

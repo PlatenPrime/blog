@@ -20,6 +20,21 @@ export type {
   PlatformApiErrorCode,
 } from './errors/api-error.types.js';
 
+export {
+  PROBLEM_MEDIA_TYPE,
+  PROBLEM_TITLE_BY_CODE,
+  PROBLEM_TYPE_BASE_URI,
+  problemTitleForCode,
+  problemTypeSlugForCode,
+  problemTypeUriForCode,
+} from './errors/problem-details.types.js';
+export type { ProblemDetailsBody } from './errors/problem-details.types.js';
+export {
+  apiValidationFieldErrorSchema,
+  problemDetailsBodySchema,
+} from './errors/problem-details.schema.js';
+export type { ProblemDetailsBodySchema } from './errors/problem-details.schema.js';
+
 export type {
   ExampleItem,
   ListExamplesResponse,

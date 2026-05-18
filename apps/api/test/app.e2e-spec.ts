@@ -1,8 +1,10 @@
 import {
   API_ERROR_CODE_VALIDATION,
-  type ApiErrorBody,
+  PROBLEM_MEDIA_TYPE,
   type ExampleItem,
   type ListExamplesResponse,
+  type ProblemDetailsBody,
+  problemTypeUriForCode,
 } from '@blog/shared-contracts';
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -77,11 +79,16 @@ describe('AppController (e2e)', () => {
         .send({})
         .expect(400);
 
-      const body = response.body as ApiErrorBody;
+      expect(response.headers['content-type']).toContain(PROBLEM_MEDIA_TYPE);
+
+      const body = response.body as ProblemDetailsBody;
 
       expect(body).toMatchObject({
+        type: problemTypeUriForCode(API_ERROR_CODE_VALIDATION),
+        title: 'Validation Failed',
+        status: 400,
+        detail: 'Validation failed',
         code: API_ERROR_CODE_VALIDATION,
-        message: 'Validation failed',
       });
       const titleDetail = body.details?.find(
         (detail) => detail.field === 'title',
@@ -96,11 +103,12 @@ describe('AppController (e2e)', () => {
         .send({ title: 'T', body: 'B', extra: 'x' })
         .expect(400);
 
-      const body = response.body as ApiErrorBody;
+      const body = response.body as ProblemDetailsBody;
 
       expect(body).toMatchObject({
         code: API_ERROR_CODE_VALIDATION,
-        message: 'Validation failed',
+        detail: 'Validation failed',
+        status: 400,
       });
       const extraDetail = body.details?.find(
         (detail) => detail.field === 'extra',

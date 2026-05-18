@@ -8,7 +8,11 @@ import {
 import { HttpAdapterHost } from '@nestjs/core';
 import { HealthCheckError } from '@nestjs/terminus';
 import type { Response } from 'express';
-import type { ApiErrorBody } from '@blog/shared-contracts';
+import {
+  PROBLEM_MEDIA_TYPE,
+  type ProblemDetailsBody,
+} from '@blog/shared-contracts';
+import { mapApiErrorToProblemDetails } from './map-api-error-to-problem-details';
 import { mapExceptionToApiError } from './map-exception-to-api-error';
 
 @Catch()
@@ -30,9 +34,15 @@ export class ApiExceptionFilter implements ExceptionFilter {
     }
 
     const { status, body } = mapExceptionToApiError(exception);
+    const problemBody = mapApiErrorToProblemDetails(status, body);
     const { httpAdapter } = this.httpAdapterHost;
     const response = host.switchToHttp().getResponse<Response>();
 
-    httpAdapter.reply(response, body satisfies ApiErrorBody, status);
+    httpAdapter.setHeader(response, 'Content-Type', PROBLEM_MEDIA_TYPE);
+    httpAdapter.reply(
+      response,
+      problemBody satisfies ProblemDetailsBody,
+      status,
+    );
   }
 }

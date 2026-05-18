@@ -41,8 +41,8 @@ export type ApiValidationFieldError = {
 export type ApiErrorDetails = readonly ApiValidationFieldError[];
 
 /**
- * Cross-stack API error JSON envelope (`code`, `message`, optional `requestId`, `details`).
- * HTTP status is carried in the response status line (see global exception filter, step 038).
+ * Internal mapper shape between Nest exceptions and RFC 7807 `ProblemDetailsBody` (step 041).
+ * Wire format is `application/problem+json` — use `ProblemDetailsBody` for clients and contract tests.
  */
 export type ApiErrorBody = {
   readonly code: ApiErrorCode;

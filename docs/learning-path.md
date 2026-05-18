@@ -49,6 +49,7 @@ Steps 033-056.
 - Step 038: [lesson-038-global-exception-filter.md](./lessons/lesson-038-global-exception-filter.md)
 - Step 039: [lesson-039-global-validation-pipe.md](./lessons/lesson-039-global-validation-pipe.md)
 - Step 040: [lesson-040-dto-validation-conventions.md](./lessons/lesson-040-dto-validation-conventions.md)
+- Step 041: [lesson-041-problem-details-alignment.md](./lessons/lesson-041-problem-details-alignment.md)
 
 ## Phase 3: Auth and Identity (Track 2)
 
