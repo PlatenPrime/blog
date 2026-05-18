@@ -6,6 +6,7 @@ import {
   API_ERROR_CODE_NOT_FOUND,
   API_ERROR_CODE_UNAUTHORIZED,
   API_ERROR_CODE_VALIDATION,
+  API_INTERNAL_ERROR_MESSAGE,
   type ApiErrorBody,
   type ApiErrorCode,
   type ApiErrorDetails,
@@ -18,8 +19,6 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-
-const INTERNAL_ERROR_MESSAGE = 'Internal server error';
 
 export type MappedApiError = {
   readonly status: number;
@@ -35,7 +34,7 @@ export function mapExceptionToApiError(exception: unknown): MappedApiError {
     status: 500,
     body: {
       code: API_ERROR_CODE_INTERNAL,
-      message: INTERNAL_ERROR_MESSAGE,
+      message: API_INTERNAL_ERROR_MESSAGE,
     },
   };
 }
@@ -55,7 +54,10 @@ function mapHttpException(exception: HttpException): MappedApiError {
     };
   }
 
-  const message = extractHttpExceptionMessage(exception);
+  const message = resolveClientErrorMessage(
+    status,
+    extractHttpExceptionMessage(exception),
+  );
 
   return {
     status,
@@ -64,6 +66,14 @@ function mapHttpException(exception: HttpException): MappedApiError {
       message,
     },
   };
+}
+
+function resolveClientErrorMessage(status: number, message: string): string {
+  if (status >= 500) {
+    return API_INTERNAL_ERROR_MESSAGE;
+  }
+
+  return message;
 }
 
 function extractValidationDetails(

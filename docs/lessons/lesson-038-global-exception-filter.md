@@ -18,7 +18,7 @@
 
 - `ValidationPipe` и `details` для полей — [шаг 039](../development-roadmap.md).
 - `requestId` в envelope — шаги 043–046.
-- Расширенная политика unknown errors без stack leak — [шаг 042](../development-roadmap.md).
+- Расширенная политика unknown errors без stack leak — [шаг 042 / lesson-042](./lesson-042-safe-unknown-errors.md).
 - Contract-тесты JSON shape — [шаг 054](../development-roadmap.md).
 - `problem+json` — [шаг 041](../development-roadmap.md).
 

@@ -3,6 +3,7 @@ import {
   ConflictException,
   ForbiddenException,
   HttpException,
+  InternalServerErrorException,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -14,6 +15,7 @@ import {
   API_ERROR_CODE_NOT_FOUND,
   API_ERROR_CODE_UNAUTHORIZED,
   API_ERROR_CODE_VALIDATION,
+  API_INTERNAL_ERROR_MESSAGE,
 } from '@blog/shared-contracts';
 import { mapExceptionToApiError } from './map-exception-to-api-error';
 
@@ -140,7 +142,7 @@ describe('mapExceptionToApiError', () => {
       status: 500,
       body: {
         code: API_ERROR_CODE_INTERNAL,
-        message: 'Internal server error',
+        message: API_INTERNAL_ERROR_MESSAGE,
       },
     });
   });
@@ -150,7 +152,66 @@ describe('mapExceptionToApiError', () => {
       status: 500,
       body: {
         code: API_ERROR_CODE_INTERNAL,
-        message: 'Internal server error',
+        message: API_INTERNAL_ERROR_MESSAGE,
+      },
+    });
+  });
+
+  it('sanitizes HttpException 500 message to generic INTERNAL_ERROR detail', () => {
+    const exception = new HttpException('secret db url', 500);
+
+    expect(mapExceptionToApiError(exception)).toEqual({
+      status: 500,
+      body: {
+        code: API_ERROR_CODE_INTERNAL,
+        message: API_INTERNAL_ERROR_MESSAGE,
+      },
+    });
+  });
+
+  it('sanitizes InternalServerErrorException message', () => {
+    const exception = new InternalServerErrorException('connection refused');
+
+    expect(mapExceptionToApiError(exception)).toEqual({
+      status: 500,
+      body: {
+        code: API_ERROR_CODE_INTERNAL,
+        message: API_INTERNAL_ERROR_MESSAGE,
+      },
+    });
+  });
+
+  it('does not leak stack or internal message from 500 object response', () => {
+    const exception = new HttpException(
+      {
+        message: 'leak',
+        stack: 'at foo (secret.ts:1:1)',
+      },
+      500,
+    );
+
+    const result = mapExceptionToApiError(exception);
+    const serialized = JSON.stringify(result.body);
+
+    expect(result).toEqual({
+      status: 500,
+      body: {
+        code: API_ERROR_CODE_INTERNAL,
+        message: API_INTERNAL_ERROR_MESSAGE,
+      },
+    });
+    expect(serialized).not.toContain('stack');
+    expect(serialized).not.toContain('leak');
+  });
+
+  it('keeps 404 NotFoundException client message unchanged', () => {
+    const exception = new NotFoundException('Missing resource');
+
+    expect(mapExceptionToApiError(exception)).toEqual({
+      status: 404,
+      body: {
+        code: API_ERROR_CODE_NOT_FOUND,
+        message: 'Missing resource',
       },
     });
   });

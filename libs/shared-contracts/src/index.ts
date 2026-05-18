@@ -11,6 +11,7 @@ export {
   API_ERROR_CODE_NOT_FOUND,
   API_ERROR_CODE_UNAUTHORIZED,
   API_ERROR_CODE_VALIDATION,
+  API_INTERNAL_ERROR_MESSAGE,
 } from './errors/api-error.types.js';
 export type {
   ApiErrorBody,

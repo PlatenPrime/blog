@@ -10,6 +10,7 @@ import {
   API_ERROR_CODE_BAD_REQUEST,
   API_ERROR_CODE_INTERNAL,
   API_ERROR_CODE_NOT_FOUND,
+  API_INTERNAL_ERROR_MESSAGE,
   PROBLEM_MEDIA_TYPE,
   problemTypeUriForCode,
 } from '@blog/shared-contracts';
@@ -103,9 +104,38 @@ describe('ApiExceptionFilter', () => {
       type: problemTypeUriForCode(API_ERROR_CODE_INTERNAL),
       title: 'Internal Server Error',
       status: 500,
-      detail: 'Internal server error',
+      detail: API_INTERNAL_ERROR_MESSAGE,
       code: API_ERROR_CODE_INTERNAL,
     });
+
+    const serialized = JSON.stringify(response.body);
+    expect(serialized).not.toContain('stack');
+    expect(serialized).not.toContain('secret db url');
+  });
+
+  it('sanitizes 500 HttpException Problem Details without leaking message', () => {
+    const filter = new ApiExceptionFilter(httpAdapterHost);
+    const response = createMockResponse();
+    const host = createArgumentsHost(response);
+
+    filter.catch(
+      new HttpException('secret db url', HttpStatus.INTERNAL_SERVER_ERROR),
+      host,
+    );
+
+    expect(response.statusCode).toBe(500);
+    expect(response.headers['content-type']).toBe(PROBLEM_MEDIA_TYPE);
+    expect(response.body).toEqual({
+      type: problemTypeUriForCode(API_ERROR_CODE_INTERNAL),
+      title: 'Internal Server Error',
+      status: 500,
+      detail: API_INTERNAL_ERROR_MESSAGE,
+      code: API_ERROR_CODE_INTERNAL,
+    });
+
+    const serialized = JSON.stringify(response.body);
+    expect(serialized).not.toContain('stack');
+    expect(serialized).not.toContain('secret db url');
   });
 
   it('rethrows HealthCheckError for Terminus handling', () => {

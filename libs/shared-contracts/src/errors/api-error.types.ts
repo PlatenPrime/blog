@@ -1,6 +1,9 @@
 /** Platform-wide error code for unexpected server failures. */
 export const API_ERROR_CODE_INTERNAL = 'INTERNAL_ERROR' as const;
 
+/** Safe client-facing message for 5xx / unknown errors (no internal detail leak). */
+export const API_INTERNAL_ERROR_MESSAGE = 'Internal server error' as const;
+
 /** Request body or query failed validation. */
 export const API_ERROR_CODE_VALIDATION = 'VALIDATION_FAILED' as const;
 
