@@ -1,5 +1,7 @@
 ﻿# Learning Path
 
+For the **why** behind each step (plain-language narrative), read [storytelling.md](./storytelling.md).
+
 Use [development-roadmap.md](./development-roadmap.md) as the source of truth for exact order.
 
 ## Phase 1: Monorepo Foundation (Track 0)
