@@ -22,6 +22,8 @@
   "dependencies": {
     "@blog/shared-contracts": "file:../../libs/shared-contracts",
     "@opentelemetry/api": "^1.9.0",
+    "@opentelemetry/context-async-hooks": "^2.0.0",
+    "@opentelemetry/core": "^2.0.0",
     "@opentelemetry/sdk-trace-base": "^2.0.0",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.4",

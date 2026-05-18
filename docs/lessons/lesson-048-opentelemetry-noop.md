@@ -16,7 +16,7 @@
 
 Намеренно **не** делаем:
 
-- W3C `traceparent` propagation — [шаг 049](../development-roadmap.md).
+- W3C `traceparent` propagation — [шаг 049](./lesson-049-trace-context-propagation.md).
 - OTLP exporter, auto-instrumentation HTTP, env `OTEL_*` — [шаги 049–050+](../development-roadmap.md).
 - Связка span id ↔ pino logs — позже.
 

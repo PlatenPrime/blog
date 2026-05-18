@@ -74,6 +74,7 @@ npm run test:e2e
 - Step 046: [lesson-046-correlation-id.md](./lessons/lesson-046-correlation-id.md)
 - Step 047: [lesson-047-log-redaction.md](./lessons/lesson-047-log-redaction.md)
 - Step 048: [lesson-048-opentelemetry-noop.md](./lessons/lesson-048-opentelemetry-noop.md)
+- Step 049: [lesson-049-trace-context-propagation.md](./lessons/lesson-049-trace-context-propagation.md)
 
 Quality scripts from repo root (`build`, `test`, `lint`, `test:e2e`) run through Nx on the `api` app. The `web` app (TanStack Start) builds with `npx nx run web:build` or `npm run web:dev` for local dev. Full CI parity from root: `npm run ci` (see [lesson-019](./lessons/lesson-019-ci-pipeline-baseline.md)); GitHub Actions restores `.nx/cache` for repeated CI runs (see [lesson-020](./lessons/lesson-020-nx-cache-in-ci.md)); CI targets now run through `nx affected` range detection (see [lesson-021](./lessons/lesson-021-nx-affected-flow-in-ci.md)). Utility scripts:
 

@@ -59,6 +59,7 @@ Steps 033-056.
 - Step 046: [lesson-046-correlation-id.md](./lessons/lesson-046-correlation-id.md)
 - Step 047: [lesson-047-log-redaction.md](./lessons/lesson-047-log-redaction.md)
 - Step 048: [lesson-048-opentelemetry-noop.md](./lessons/lesson-048-opentelemetry-noop.md)
+- Step 049: [lesson-049-trace-context-propagation.md](./lessons/lesson-049-trace-context-propagation.md)
 
 ## Phase 3: Auth and Identity (Track 2)
 

@@ -555,7 +555,17 @@ Track 1 — **как API ведёт себя как сервис**: конфиг
 
 → [lesson-048](./lessons/lesson-048-opentelemetry-noop.md)
 
-**Итог Track 1 (пока):** API умеет стартовать с проверенным конфигом, отчитываться о здоровье, отвечать на сбои предсказуемо и безопасно, помечать запросы request/correlation id, писать структурированные логи, access-log, редактировать секреты в JSON и держать OTel tracer provider (noop export). Дальше — propagation (049+), затем auth и CMS.
+### Шаг 049: W3C trace context на входящем HTTP
+
+**В сюжете:** API **читает** заголовок `traceparent`, поднимает server span в том же trace и держит active context на весь Nest pipeline (`TraceContextMiddleware` перед request id). Export по-прежнему noop — проверка через e2e и curl smoke.
+
+**Зачем:** Сквозной trace от gateway/другого сервиса; без propagation каждый запрос — новый изолированный root.
+
+**Что унести с собой:** `W3CTraceContextPropagator` + `AsyncLocalStorageContextManager`; `propagation.extract` → `startSpan(SERVER)` → `span.end()` на `res.finish`; в тестах — `setDelegate` на proxy provider.
+
+→ [lesson-049](./lessons/lesson-049-trace-context-propagation.md)
+
+**Итог Track 1 (пока):** API умеет стартовать с проверенным конфигом, отчитываться о здоровье, отвечать на сбои предсказуемо и безопасно, помечать запросы request/correlation id, писать структурированные логи, access-log, редактировать секреты в JSON, держать OTel tracer provider (noop export) и продолжать W3C trace с входящего HTTP. Дальше — метрики (050+), затем auth и CMS.
 
 ---
 
@@ -573,8 +583,8 @@ Track 1 — **как API ведёт себя как сервис**: конфиг
 
 ## Где мы сейчас
 
-- **Завершено:** Track 0 (001–032) и начало Track 1 (033–048).
-- **Есть в коде:** монорепо (api + web + shared-contracts), CI, локальный Postgres, конфиг с Zod, health liveness/readiness, единый pipeline ошибок до безопасных 5xx, request/correlation ID middleware + ALS, structured JSON logging (pino) с redaction, HTTP access-log interceptor, OpenTelemetry noop tracer wiring (`TracingModule`, `API_TRACER`).
+- **Завершено:** Track 0 (001–032) и начало Track 1 (033–049).
+- **Есть в коде:** монорепо (api + web + shared-contracts), CI, локальный Postgres, конфиг с Zod, health liveness/readiness, единый pipeline ошибок до безопасных 5xx, request/correlation ID middleware + ALS, structured JSON logging (pino) с redaction, HTTP access-log interceptor, OpenTelemetry noop tracer wiring (`TracingModule`, `API_TRACER`), W3C `traceparent` propagation (`TraceContextMiddleware`).
 - **Ещё нет в сюжете продукта:** пользователи, JWT, посты CMS, публичные страницы блога — это следующие треки roadmap.
 
 ---
@@ -583,7 +593,7 @@ Track 1 — **как API ведёт себя как сервис**: конфиг
 
 Следующие шаги Track 1 (см. [development-roadmap.md](./development-roadmap.md)):
 
-- **049–056:** trace propagation, метрики, graceful shutdown, чеклист приёмки Track 1.
+- **050–056:** метрики, graceful shutdown, чеклист приёмки Track 1.
 
 Затем **Track 2 (auth)** — база данных, пользователи, регистрация, сессии — и дальше домен CMS и публичный сайт.
 

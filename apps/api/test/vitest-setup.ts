@@ -8,3 +8,4 @@
  * or similar metadata-related errors.
  */
 import 'reflect-metadata';
+import '../src/instrumentation';

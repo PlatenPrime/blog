@@ -151,8 +151,8 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 045  | Request logging interceptor                             | manual request log — done         |
 | 046  | Correlation ID in response headers                      | e2e assertion — done              |
 | 047  | Redact sensitive fields in logs                         | unit test — done                  |
-| 048  | OpenTelemetry wiring + noop tracer provider             | `nx run api:build`                |
-| 049  | Trace context propagation for incoming HTTP             | manual trace check                |
+| 048  | OpenTelemetry wiring + noop tracer provider             | `nx run api:build` — done         |
+| 049  | Trace context propagation for incoming HTTP             | manual trace check — done         |
 | 050  | Metrics endpoint stub (Prometheus exposition)           | curl `/metrics`                   |
 | 051  | Global API prefix + versioning strategy (URI or header) | docs review                       |
 | 052  | Graceful shutdown hooks                                 | SIGTERM smoke                     |
@@ -512,5 +512,6 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 046  | [lesson-046-correlation-id.md](./lessons/lesson-046-correlation-id.md)                                             |
 | 047  | [lesson-047-log-redaction.md](./lessons/lesson-047-log-redaction.md)                                               |
 | 048  | [lesson-048-opentelemetry-noop.md](./lessons/lesson-048-opentelemetry-noop.md)                                     |
+| 049  | [lesson-049-trace-context-propagation.md](./lessons/lesson-049-trace-context-propagation.md)                       |
 
 Entry point: [LOCAL_SETUP.md](./LOCAL_SETUP.md)
