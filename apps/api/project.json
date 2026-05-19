@@ -6,6 +6,7 @@
   "targets": {
     "lint": {
       "executor": "nx:run-commands",
+      "dependsOn": ["shared-contracts:build"],
       "options": {
         "command": "eslint apps/api/src apps/api/test --max-warnings=0",
         "cwd": "{workspaceRoot}"
@@ -13,6 +14,7 @@
     },
     "lint:fix": {
       "executor": "nx:run-commands",
+      "dependsOn": ["shared-contracts:build"],
       "options": {
         "command": "eslint apps/api/src apps/api/test --fix",
         "cwd": "{workspaceRoot}"
@@ -20,6 +22,7 @@
     },
     "lint:ci": {
       "executor": "nx:run-commands",
+      "dependsOn": ["shared-contracts:build"],
       "options": {
         "command": "eslint apps/api/src apps/api/test --max-warnings=0",
         "cwd": "{workspaceRoot}"

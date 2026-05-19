@@ -5,6 +5,7 @@
     "outDir": "./dist",
     "types": ["vitest/globals", "node"],
     "paths": {
+      "@blog/shared-contracts": ["../../libs/shared-contracts/src/index.ts"],
       "@nestjs/typeorm": ["../../node_modules/@nestjs/typeorm/index.d.ts"]
     }
   }
