@@ -36,6 +36,14 @@ npm run format:check
 
 `npm run build`, `npm run test`, `npm run lint`, and `npm run test:e2e` invoke **Nx** targets on the `api` project (`nx run api:build`, and so on), so you get Nx caching and the same entry points future CI will use.
 
+### Formatting (Prettier)
+
+With the recommended [Prettier extension](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) installed, workspace [`.vscode/settings.json`](../.vscode/settings.json) formats the current file on **save** using the root [`.prettierrc`](../.prettierrc) (same rules as CI).
+
+- **On save:** Prettier runs for the file you edited (lessons in `docs/`, API, web, config).
+- **`npm run format`:** optional batch pass over the full path list in [`package.json`](../package.json) — use after edits outside the editor or to refresh the whole repo.
+- **`npm run format:check`:** read-only check (same as CI); run before push if you skipped the editor.
+
 ## TanStack Start (`apps/web`)
 
 The `web` workspace is a TanStack Start app (Vite + Nitro). From repository root:
