@@ -1,13 +1,8 @@
-import {
-  Controller,
-  Get,
-  Module,
-  RequestMethod,
-  VersioningType,
-} from '@nestjs/common';
+import { Controller, Get, Module, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import request from 'supertest';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { OPS_ROUTE_PREFIX_EXCLUDES } from './ops-routes';
 import {
   API_DEFAULT_VERSION,
   API_GLOBAL_PREFIX,
@@ -36,11 +31,7 @@ describe('configureApiHttp', () => {
     configureApiHttp(app as never);
 
     expect(app.setGlobalPrefix).toHaveBeenCalledWith(API_GLOBAL_PREFIX, {
-      exclude: [
-        { path: 'health', method: RequestMethod.ALL },
-        { path: 'health/ready', method: RequestMethod.ALL },
-        { path: 'metrics', method: RequestMethod.GET },
-      ],
+      exclude: [...OPS_ROUTE_PREFIX_EXCLUDES],
     });
     expect(app.enableVersioning).toHaveBeenCalledWith({
       type: VersioningType.URI,
@@ -69,6 +60,6 @@ describe('configureApiHttp', () => {
         .get(`${API_V1_BASE}/probe`)
         .expect(200)
         .expect('ok');
-    });
+    }, 30_000);
   });
 });

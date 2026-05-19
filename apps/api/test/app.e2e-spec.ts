@@ -59,6 +59,8 @@ describe('AppController (e2e)', () => {
   });
 
   it('/metrics (GET) prometheus exposition', async () => {
+    await request(app.getHttpServer()).get(API_V1_BASE).expect(200);
+
     const response = await request(app.getHttpServer())
       .get('/metrics')
       .expect(200);
@@ -68,6 +70,9 @@ describe('AppController (e2e)', () => {
     expect(response.text).toContain('# HELP');
     expect(response.text).toContain('# TYPE');
     expect(response.text).toMatch(/process_/);
+    expect(response.text).toContain(
+      '# TYPE http_request_duration_seconds histogram',
+    );
   });
 
   it('returns 404 for legacy unversioned examples path', () => {

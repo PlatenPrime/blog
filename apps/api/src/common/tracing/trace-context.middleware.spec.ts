@@ -8,7 +8,7 @@ import { TRACEPARENT_HEADER } from './trace-context.constants';
 import {
   registerTracerProviderForTests,
   resetTracerProviderRegistrationForTests,
-} from './register-noop-tracer-provider';
+} from './register-tracer-provider';
 import { TraceContextMiddleware } from './trace-context.middleware';
 import { OTEL_TRACER_NAME } from './tracing.constants';
 

@@ -124,7 +124,7 @@ GitHub Actions дополнительно восстанавливает `.nx/ca
 
 ## Status
 
-**Track 0 — Workspace Foundation** завершён (шаг **032**). **Track 1 — Platform Core** завершён (шаг **055**). Дальше — **Track 2 — Auth and Identity** с шага **057**: [`docs/development-roadmap.md`](docs/development-roadmap.md). Чеклисты: Track 0 [`docs/track-0-acceptance-checklist.md`](docs/track-0-acceptance-checklist.md), Track 1 [`docs/track-1-acceptance-checklist.md`](docs/track-1-acceptance-checklist.md).
+**Track 0 — Workspace Foundation** завершён (шаг **032**). **Track 1 — Platform Core** завершён (шаг **056**). Дальше — **Track 2 — Auth and Identity** с шага **057**: [`docs/development-roadmap.md`](docs/development-roadmap.md). Чеклисты: Track 0 [`docs/track-0-acceptance-checklist.md`](docs/track-0-acceptance-checklist.md), Track 1 [`docs/track-1-acceptance-checklist.md`](docs/track-1-acceptance-checklist.md).
 
 ## Documentation map
 

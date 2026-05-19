@@ -19,7 +19,7 @@
 Намеренно **не** делаем:
 
 - Per-route timeout, `@Timeout()` decorator.
-- OTel attributes для timeout/abort — [шаг 056](../development-roadmap.md).
+- OTel attributes для timeout/abort — реализовано в [шаг 056](./lesson-056-platform-observability-follow-ups.md).
 - Изменения Docker/K8s `terminationGracePeriodSeconds`.
 
 ## Dependencies

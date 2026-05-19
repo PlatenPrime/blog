@@ -15,10 +15,9 @@
 
 Намеренно **не** делаем:
 
-- HTTP histograms, business/CMS metrics, OTel Metrics SDK — [шаги 051–056+](../development-roadmap.md).
-- Auth / network policy для scraper'а.
-- Исключение `/metrics` из access-log — опционально в 056.
-- OTLP / Jaeger export для traces — follow-up в 056.
+- HTTP histogram `http_request_duration_seconds`, skip ops access-log, OTLP export — [шаг 056](./lesson-056-platform-observability-follow-ups.md).
+- Business/CMS metrics, OTel Metrics SDK — доменные треки / [шаг 312+](../development-roadmap.md).
+- Auth / network policy для scraper'а — позже.
 
 ## Dependencies
 

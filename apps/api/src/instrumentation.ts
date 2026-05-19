@@ -1,3 +1,4 @@
-import { registerNoopTracerProvider } from './common/tracing/register-noop-tracer-provider';
+import { registerTracerProvider } from './common/tracing/register-tracer-provider';
+import { parseOtelEnv } from './config/otel-env';
 
-registerNoopTracerProvider();
+registerTracerProvider(parseOtelEnv(process.env));

@@ -43,11 +43,13 @@ With API running (`npm run start:dev`) and `npm run db:up`:
 - [ ] Log redaction unit tests pass in `api:test` ([`lesson-047`](./lessons/lesson-047-log-redaction.md)).
 - [ ] Structured JSON logs and per-request access log documented ([`lesson-044`](./lessons/lesson-044-structured-logging.md), [`lesson-045`](./lessons/lesson-045-request-logging-interceptor.md)).
 
-## Observability (048–050)
+## Observability (048–050, 056)
 
 - [ ] `npx nx run api:build` succeeds with OpenTelemetry noop wiring ([`lesson-048`](./lessons/lesson-048-opentelemetry-noop.md)).
 - [ ] W3C `traceparent` propagation covered by unit/e2e tests ([`lesson-049`](./lessons/lesson-049-trace-context-propagation.md)).
 - [ ] With API running: `curl -sS http://127.0.0.1:4000/metrics | head` — Prometheus text exposition ([`lesson-050`](./lessons/lesson-050-metrics-endpoint-stub.md)).
+- [ ] Optional OTLP: `OTEL_TRACES_EXPORTER=otlp` + collector — traces export ([`lesson-056`](./lessons/lesson-056-platform-observability-follow-ups.md), [ADR-002](./adr/002-platform-observability.md)).
+- [ ] `/metrics` scrape includes `http_request_duration_seconds` after at least one `/api/v1` request ([`lesson-056`](./lessons/lesson-056-platform-observability-follow-ups.md)).
 
 ## API surface (051)
 
@@ -73,12 +75,12 @@ With `npm run db:up` and `npm run start:dev` (and optionally `npm run web:dev`):
 
 ## Documentation
 
-- [ ] [`development-roadmap.md`](./development-roadmap.md) baseline reflects completed steps through **055**.
-- [ ] Lessons **033–055** linked in roadmap index and [`learning-path.md`](./learning-path.md).
-- [ ] [`storytelling.md`](./storytelling.md) — Track 1 epilogue / «Где мы сейчас» updated for step 055.
+- [ ] [`development-roadmap.md`](./development-roadmap.md) baseline reflects completed steps through **056**.
+- [ ] Lessons **033–056** linked in roadmap index and [`learning-path.md`](./learning-path.md).
+- [ ] [`storytelling.md`](./storytelling.md) — Track 1 epilogue / «Где мы сейчас» updated for step 056.
 
 ## Sign-off
 
 - [ ] Owner reviewed Track 1 lessons **033–054** for link rot against this checklist.
-- [ ] Step **056** (reserve observability follow-ups) is optional — not a blocker for Track 2.
+- [ ] Step **056** (observability follow-ups) completed or consciously skipped with ADR-002 noted.
 - [ ] Next work item is **Track 2 — Auth and Identity** starting at step **057** ([`development-roadmap.md`](./development-roadmap.md)).

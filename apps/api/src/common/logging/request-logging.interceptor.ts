@@ -9,6 +9,8 @@ import type { Request, Response } from 'express';
 import { PinoLogger } from 'nestjs-pino';
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
+import { isOpsRoutePath } from '../../config/ops-routes';
+import { HttpRequestMetricsService } from '../../metrics/http-request-metrics.service';
 import {
   REQUEST_COMPLETED_MESSAGE,
   buildRequestLogPayload,
@@ -18,7 +20,10 @@ import {
 
 @Injectable()
 export class RequestLoggingInterceptor implements NestInterceptor {
-  constructor(private readonly logger: PinoLogger) {
+  constructor(
+    private readonly logger: PinoLogger,
+    private readonly httpMetrics: HttpRequestMetricsService,
+  ) {
     this.logger.setContext(RequestLoggingInterceptor.name);
   }
 
@@ -30,11 +35,16 @@ export class RequestLoggingInterceptor implements NestInterceptor {
     const http = context.switchToHttp();
     const request = http.getRequest<Request>();
     const response = http.getResponse<Response>();
+
+    if (isOpsRoutePath(request.path)) {
+      return next.handle();
+    }
+
     const startedAt = process.hrtime.bigint();
 
     return next.handle().pipe(
       tap(() => {
-        this.logRequest({
+        this.recordRequestOutcome({
           method: request.method,
           path: request.path,
           statusCode: response.statusCode,
@@ -45,7 +55,7 @@ export class RequestLoggingInterceptor implements NestInterceptor {
         const statusCode =
           error instanceof HttpException ? error.getStatus() : 500;
 
-        this.logRequest({
+        this.recordRequestOutcome({
           method: request.method,
           path: request.path,
           statusCode,
@@ -57,17 +67,26 @@ export class RequestLoggingInterceptor implements NestInterceptor {
     );
   }
 
-  private logRequest(params: {
+  private recordRequestOutcome(params: {
     readonly method: string;
     readonly path: string;
     readonly statusCode: number;
     readonly startedAt: bigint;
   }): void {
+    const responseTimeMs = elapsedMilliseconds(params.startedAt);
+
+    this.httpMetrics.observe({
+      method: params.method,
+      route: params.path,
+      statusCode: params.statusCode,
+      durationSeconds: responseTimeMs / 1000,
+    });
+
     const payload = buildRequestLogPayload({
       method: params.method,
       path: params.path,
       statusCode: params.statusCode,
-      responseTimeMs: elapsedMilliseconds(params.startedAt),
+      responseTimeMs,
     });
     const level = resolveRequestLogLevel(params.statusCode);
 

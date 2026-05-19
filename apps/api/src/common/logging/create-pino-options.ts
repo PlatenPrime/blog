@@ -1,3 +1,4 @@
+import { trace } from '@opentelemetry/api';
 import type { LoggerOptions } from 'pino';
 import type { RequestContextStore } from '../request-context/request-context.store';
 import { API_SERVICE_NAME } from './logging.constants';
@@ -26,14 +27,26 @@ export function createPinoOptions({
     mixin() {
       const requestId = requestContextStore.getRequestId();
       const correlationId = requestContextStore.getCorrelationId();
+      const activeSpan = trace.getActiveSpan();
+      const spanContext = activeSpan?.spanContext();
+      const traceId =
+        spanContext !== undefined && spanContext.traceId !== ''
+          ? spanContext.traceId
+          : undefined;
+      const spanId =
+        spanContext !== undefined && spanContext.spanId !== ''
+          ? spanContext.spanId
+          : undefined;
 
-      if (!requestId && !correlationId) {
+      if (!requestId && !correlationId && !traceId && !spanId) {
         return {};
       }
 
       return {
         ...(requestId ? { requestId } : {}),
         ...(correlationId ? { correlationId } : {}),
+        ...(traceId ? { traceId } : {}),
+        ...(spanId ? { spanId } : {}),
       };
     },
   };

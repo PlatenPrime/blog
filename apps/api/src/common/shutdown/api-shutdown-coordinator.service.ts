@@ -6,7 +6,10 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { Logger } from 'nestjs-pino';
 import { GRACEFUL_SHUTDOWN_IPC_MESSAGE } from '../../config/configure-api-shutdown';
+import { shutdownTracerProvider } from '../tracing/register-tracer-provider';
 import { InFlightRequestsService } from './in-flight-requests.service';
+
+const TRACER_SHUTDOWN_TIMEOUT_MS = 5_000;
 
 export const SHUTDOWN_GRACE_STARTED_MESSAGE = 'shutdown grace period started';
 export const SHUTDOWN_GRACE_EXCEEDED_MESSAGE = 'shutdown grace period exceeded';
@@ -115,10 +118,33 @@ export class ApiShutdownCoordinator implements OnModuleDestroy {
       return;
     }
 
+    await shutdownTracerProviderWithTimeout();
+
     if (this.app !== null) {
       await this.app.close();
     }
 
     process.exit(0);
+  }
+}
+
+async function shutdownTracerProviderWithTimeout(): Promise<void> {
+  let timeoutId: ReturnType<typeof setTimeout> | undefined;
+
+  try {
+    await Promise.race([
+      shutdownTracerProvider(),
+      new Promise<void>((_resolve, reject) => {
+        timeoutId = setTimeout(() => {
+          reject(new Error('tracer provider shutdown timed out'));
+        }, TRACER_SHUTDOWN_TIMEOUT_MS);
+      }),
+    ]);
+  } catch {
+    // Best-effort flush before process exit; do not block shutdown indefinitely.
+  } finally {
+    if (timeoutId !== undefined) {
+      clearTimeout(timeoutId);
+    }
   }
 }

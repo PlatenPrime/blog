@@ -141,6 +141,23 @@ docker compose exec db pg_isready -U blog        # accepting connections
 npm run db:psql -- -c "select version();"        # PostgreSQL 16.x
 ```
 
+## Optional: OpenTelemetry OTLP export (step 056)
+
+По умолчанию API создаёт spans in-process (`OTEL_TRACES_EXPORTER=none`) — CI и локальный dev без collector. Чтобы отправлять traces в Jaeger:
+
+```bash
+docker run --rm -p 16686:16686 -p 4318:4318 jaegertracing/all-in-one:latest
+```
+
+В корневом `.env`:
+
+```env
+OTEL_TRACES_EXPORTER=otlp
+OTEL_EXPORTER_OTLP_ENDPOINT=http://127.0.0.1:4318/v1/traces
+```
+
+Запустить API (`npm run start:dev`), сделать несколько запросов к `http://127.0.0.1:4000/api/v1`, открыть UI Jaeger: http://localhost:16686 (service `api`). Подробнее — [lesson-056](./lessons/lesson-056-platform-observability-follow-ups.md), [ADR-002](./adr/002-platform-observability.md).
+
 ## Next roadmap step
 
-**Track 1 — Platform Core** (033–055) закрыт чеклистом [track-1-acceptance-checklist.md](./track-1-acceptance-checklist.md). Следующий шаг — **Track 2 — Auth and Identity**, **Step 057** (database bootstrap) — см. [development-roadmap.md](./development-roadmap.md). Track 0 (001–032): [track-0-acceptance-checklist.md](./track-0-acceptance-checklist.md).
+**Track 1 — Platform Core** (033–056) закрыт. Следующий шаг — **Track 2 — Auth and Identity**, **Step 057** (database bootstrap) — см. [development-roadmap.md](./development-roadmap.md). Track 0 (001–032): [track-0-acceptance-checklist.md](./track-0-acceptance-checklist.md).

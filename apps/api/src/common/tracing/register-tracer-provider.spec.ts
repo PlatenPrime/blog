@@ -5,10 +5,11 @@ import {
   areTracingGlobalsConfiguredForTests,
   isTracerProviderRegistered,
   registerNoopTracerProvider,
+  registerTracerProvider,
   resetTracerProviderRegistrationForTests,
-} from './register-noop-tracer-provider';
+} from './register-tracer-provider';
 
-describe('registerNoopTracerProvider', () => {
+describe('registerTracerProvider', () => {
   afterEach(() => {
     resetTracerProviderRegistrationForTests();
   });
@@ -57,5 +58,20 @@ describe('registerNoopTracerProvider', () => {
     });
 
     outerSpan.end();
+  });
+
+  it('registers OTLP exporter when env requests otlp', () => {
+    registerTracerProvider({
+      OTEL_SERVICE_NAME: 'api-test',
+      OTEL_TRACES_EXPORTER: 'otlp',
+      OTEL_EXPORTER_OTLP_ENDPOINT: 'http://127.0.0.1:4318/v1/traces',
+    });
+
+    expect(isTracerProviderRegistered()).toBe(true);
+
+    const tracer = trace.getTracer(OTEL_TRACER_NAME);
+    const span = tracer.startSpan('otlp-span');
+
+    expect(() => span.end()).not.toThrow();
   });
 });

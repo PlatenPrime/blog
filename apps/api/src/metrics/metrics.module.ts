@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { Registry } from 'prom-client';
+import { HttpRequestMetricsService } from './http-request-metrics.service';
 import { MetricsController } from './metrics.controller';
 import { MetricsService } from './metrics.service';
 import { PROMETHEUS_REGISTRY } from './prometheus-registry.token';
@@ -12,6 +13,8 @@ import { PROMETHEUS_REGISTRY } from './prometheus-registry.token';
       useFactory: (): Registry => new Registry(),
     },
     MetricsService,
+    HttpRequestMetricsService,
   ],
+  exports: [HttpRequestMetricsService],
 })
 export class MetricsModule {}

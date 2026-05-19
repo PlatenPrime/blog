@@ -1,4 +1,9 @@
 import { z } from 'zod';
+import {
+  DEFAULT_OTEL_SERVICE_NAME,
+  DEFAULT_OTEL_TRACES_EXPORTER,
+  OTEL_TRACES_EXPORTER_VALUES,
+} from './otel-env';
 
 function envTcpPort(defaultWhenEmpty: number) {
   return z.preprocess((val: unknown) => {
@@ -61,36 +66,86 @@ const logLevelSchema = z.enum([
   'silent',
 ]);
 
-export const rootEnvSchema = z.object({
-  PORT: envTcpPort(4000),
-  LOG_LEVEL: z
-    .union([logLevelSchema, z.string(), z.undefined()])
-    .transform((raw) => {
-      if (raw === undefined || raw === '') {
-        return 'info' as const;
-      }
-      const normalized = String(raw).trim().toLowerCase();
-      const parsed = logLevelSchema.safeParse(normalized);
-      if (!parsed.success) {
-        return '__INVALID_LOG_LEVEL__';
-      }
-      return parsed.data;
-    })
-    .pipe(logLevelSchema),
-  CORS_ORIGINS: z
-    .union([z.string(), z.undefined()])
-    .transform((raw) => (raw === undefined ? '' : String(raw))),
-  POSTGRES_HOST: postgresNonEmpty('127.0.0.1'),
-  POSTGRES_USER: postgresNonEmpty('blog'),
-  POSTGRES_PASSWORD: postgresNonEmpty('blog'),
-  POSTGRES_DB: postgresNonEmpty('blog_dev'),
-  POSTGRES_PORT: envTcpPort(5432),
-  REQUEST_TIMEOUT_MS: envMilliseconds(30_000, { min: 1_000, max: 300_000 }),
-  SHUTDOWN_GRACE_PERIOD_MS: envMilliseconds(10_000, {
-    min: 1_000,
-    max: 120_000,
-  }),
-});
+export const rootEnvSchema = z
+  .object({
+    PORT: envTcpPort(4000),
+    LOG_LEVEL: z
+      .union([logLevelSchema, z.string(), z.undefined()])
+      .transform((raw) => {
+        if (raw === undefined || raw === '') {
+          return 'info' as const;
+        }
+        const normalized = String(raw).trim().toLowerCase();
+        const parsed = logLevelSchema.safeParse(normalized);
+        if (!parsed.success) {
+          return '__INVALID_LOG_LEVEL__';
+        }
+        return parsed.data;
+      })
+      .pipe(logLevelSchema),
+    CORS_ORIGINS: z
+      .union([z.string(), z.undefined()])
+      .transform((raw) => (raw === undefined ? '' : String(raw))),
+    POSTGRES_HOST: postgresNonEmpty('127.0.0.1'),
+    POSTGRES_USER: postgresNonEmpty('blog'),
+    POSTGRES_PASSWORD: postgresNonEmpty('blog'),
+    POSTGRES_DB: postgresNonEmpty('blog_dev'),
+    POSTGRES_PORT: envTcpPort(5432),
+    REQUEST_TIMEOUT_MS: envMilliseconds(30_000, { min: 1_000, max: 300_000 }),
+    SHUTDOWN_GRACE_PERIOD_MS: envMilliseconds(10_000, {
+      min: 1_000,
+      max: 120_000,
+    }),
+    OTEL_SERVICE_NAME: z
+      .string()
+      .optional()
+      .transform((raw) => {
+        if (raw === undefined || raw.trim() === '') {
+          return DEFAULT_OTEL_SERVICE_NAME;
+        }
+        return raw.trim();
+      })
+      .pipe(z.string().min(1)),
+    OTEL_TRACES_EXPORTER: z
+      .union([z.enum(OTEL_TRACES_EXPORTER_VALUES), z.string(), z.undefined()])
+      .transform((raw) => {
+        if (raw === undefined || raw === '') {
+          return DEFAULT_OTEL_TRACES_EXPORTER;
+        }
+        const normalized = String(raw).trim().toLowerCase();
+        const parsed = z
+          .enum(OTEL_TRACES_EXPORTER_VALUES)
+          .safeParse(normalized);
+        if (!parsed.success) {
+          return '__INVALID_OTEL_TRACES_EXPORTER__';
+        }
+        return parsed.data;
+      })
+      .pipe(z.enum(OTEL_TRACES_EXPORTER_VALUES)),
+    OTEL_EXPORTER_OTLP_ENDPOINT: z
+      .string()
+      .optional()
+      .transform((raw) => {
+        if (raw === undefined) {
+          return undefined;
+        }
+        const trimmed = raw.trim();
+        return trimmed.length === 0 ? undefined : trimmed;
+      }),
+  })
+  .superRefine((value, ctx) => {
+    if (
+      value.OTEL_TRACES_EXPORTER === 'otlp' &&
+      !value.OTEL_EXPORTER_OTLP_ENDPOINT
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message:
+          'OTEL_EXPORTER_OTLP_ENDPOINT is required when OTEL_TRACES_EXPORTER=otlp',
+        path: ['OTEL_EXPORTER_OTLP_ENDPOINT'],
+      });
+    }
+  });
 
 export type RootEnv = z.infer<typeof rootEnvSchema>;
 
@@ -105,6 +160,9 @@ const ROOT_ENV_KEYS = [
   'POSTGRES_PORT',
   'REQUEST_TIMEOUT_MS',
   'SHUTDOWN_GRACE_PERIOD_MS',
+  'OTEL_SERVICE_NAME',
+  'OTEL_TRACES_EXPORTER',
+  'OTEL_EXPORTER_OTLP_ENDPOINT',
 ] as const;
 
 function pickRootEnvKeys(

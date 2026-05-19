@@ -9,7 +9,8 @@ import {
 } from '@nestjs/common';
 import type { Request, Response } from 'express';
 import { Observable, TimeoutError, defer, throwError } from 'rxjs';
-import { catchError, finalize, takeUntil, timeout } from 'rxjs/operators';
+import { catchError, finalize, takeUntil, tap, timeout } from 'rxjs/operators';
+import { recordRequestLifecycleSpanEvent } from '../tracing/record-request-lifecycle-span';
 import { ApiShutdownCoordinator } from '../shutdown/api-shutdown-coordinator.service';
 import { InFlightRequestsService } from '../shutdown/in-flight-requests.service';
 import { clientAbort$ } from './client-abort';
@@ -38,14 +39,21 @@ export class RequestTimeoutInterceptor implements NestInterceptor {
     const http = context.switchToHttp();
     const request = http.getRequest<Request>();
     const response = http.getResponse<Response>();
+    const abort$ = clientAbort$(request, response).pipe(
+      tap(() => {
+        recordRequestLifecycleSpanEvent('client_abort');
+      }),
+    );
+
     return defer(() => {
       this.inFlight.increment();
       return next.handle();
     }).pipe(
       timeout({ first: this.requestTimeoutMs }),
-      takeUntil(clientAbort$(request, response)),
+      takeUntil(abort$),
       catchError((error: unknown) => {
         if (error instanceof TimeoutError) {
+          recordRequestLifecycleSpanEvent('timeout');
           return throwError(() => new RequestTimeoutException());
         }
 

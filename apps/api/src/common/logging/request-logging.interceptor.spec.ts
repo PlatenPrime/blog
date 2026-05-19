@@ -9,6 +9,7 @@ import { firstValueFrom, of, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 import type { RequestLogPayload } from './build-request-log-payload';
 import { REQUEST_COMPLETED_MESSAGE } from './build-request-log-payload';
+import type { HttpRequestMetricsService } from '../../metrics/http-request-metrics.service';
 import { RequestLoggingInterceptor } from './request-logging.interceptor';
 
 function createHttpContext(params: {
@@ -40,6 +41,17 @@ function createCallHandler(result: unknown): CallHandler {
   };
 }
 
+function createHttpMetrics(): {
+  httpMetrics: HttpRequestMetricsService;
+  observe: ReturnType<typeof vi.fn>;
+} {
+  const observe = vi.fn();
+  return {
+    observe,
+    httpMetrics: { observe } as unknown as HttpRequestMetricsService,
+  };
+}
+
 function createLogger(): {
   logger: PinoLogger;
   info: ReturnType<typeof vi.fn>;
@@ -66,7 +78,10 @@ function createLogger(): {
 describe('RequestLoggingInterceptor', () => {
   it('skips logging for non-http contexts', async () => {
     const { logger, info, warn, error } = createLogger();
-    const interceptor = new RequestLoggingInterceptor(logger);
+    const interceptor = new RequestLoggingInterceptor(
+      logger,
+      createHttpMetrics().httpMetrics,
+    );
     const context = {
       getType: () => 'rpc',
     } as ExecutionContext;
@@ -82,7 +97,8 @@ describe('RequestLoggingInterceptor', () => {
 
   it('logs successful requests at info with access fields', async () => {
     const { logger, info } = createLogger();
-    const interceptor = new RequestLoggingInterceptor(logger);
+    const { httpMetrics, observe } = createHttpMetrics();
+    const interceptor = new RequestLoggingInterceptor(logger, httpMetrics);
 
     await firstValueFrom(
       interceptor.intercept(
@@ -103,11 +119,31 @@ describe('RequestLoggingInterceptor', () => {
       },
       REQUEST_COMPLETED_MESSAGE,
     );
+    expect(observe).toHaveBeenCalledOnce();
+  });
+
+  it('skips access-log and metrics for ops routes', async () => {
+    const { logger, info } = createLogger();
+    const { httpMetrics, observe } = createHttpMetrics();
+    const interceptor = new RequestLoggingInterceptor(logger, httpMetrics);
+
+    await firstValueFrom(
+      interceptor.intercept(
+        createHttpContext({ method: 'GET', path: '/metrics', statusCode: 200 }),
+        createCallHandler('ok'),
+      ),
+    );
+
+    expect(info).not.toHaveBeenCalled();
+    expect(observe).not.toHaveBeenCalled();
   });
 
   it('logs HttpException at warn with exception status', async () => {
     const { logger, warn } = createLogger();
-    const interceptor = new RequestLoggingInterceptor(logger);
+    const interceptor = new RequestLoggingInterceptor(
+      logger,
+      createHttpMetrics().httpMetrics,
+    );
 
     await expect(
       firstValueFrom(
@@ -134,7 +170,10 @@ describe('RequestLoggingInterceptor', () => {
 
   it('logs unknown errors at error with status 500', async () => {
     const { logger, error } = createLogger();
-    const interceptor = new RequestLoggingInterceptor(logger);
+    const interceptor = new RequestLoggingInterceptor(
+      logger,
+      createHttpMetrics().httpMetrics,
+    );
 
     await expect(
       firstValueFrom(
@@ -161,7 +200,10 @@ describe('RequestLoggingInterceptor', () => {
 
   it('does not include headers or body in the log payload', async () => {
     const { logger, info } = createLogger();
-    const interceptor = new RequestLoggingInterceptor(logger);
+    const interceptor = new RequestLoggingInterceptor(
+      logger,
+      createHttpMetrics().httpMetrics,
+    );
 
     await firstValueFrom(
       interceptor.intercept(createHttpContext({}), createCallHandler('ok')),
