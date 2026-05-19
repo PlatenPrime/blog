@@ -68,6 +68,8 @@ Every step is a sprint and must produce code changes + a lesson file in `docs/le
 | Global API prefix + URI versioning (`/api/v1`) | Step 051 completed                         |
 | Graceful shutdown hooks (SIGTERM)              | Step 052 completed                         |
 | Request timeout / abort + shutdown grace       | Step 053 completed                         |
+| Contract tests for error JSON shape            | Step 054 completed                         |
+| Track 1 acceptance checklist                   | Step 055 completed                         |
 
 ## Step Contract (mandatory for every lesson)
 
@@ -164,7 +166,7 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 052  | Graceful shutdown hooks                                 | SIGTERM smoke — done              |
 | 053  | Request timeout / abort interceptor                     | unit/e2e — done                   |
 | 054  | Contract tests for error JSON shape                     | `nx run api:test` — done          |
-| 055  | Track 1 acceptance checklist                            | all DoD items                     |
+| 055  | Track 1 acceptance checklist                            | all DoD items — done              |
 | 056  | Reserve: platform observability follow-ups              | ADR or docs check                 |
 
 ## Track 2 Detailed Steps (057-104)
@@ -524,5 +526,6 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 052  | [lesson-052-graceful-shutdown-hooks.md](./lessons/lesson-052-graceful-shutdown-hooks.md)                           |
 | 053  | [lesson-053-request-timeout-abort.md](./lessons/lesson-053-request-timeout-abort.md)                               |
 | 054  | [lesson-054-error-json-contract-tests.md](./lessons/lesson-054-error-json-contract-tests.md)                       |
+| 055  | [lesson-055-track-1-acceptance-checklist.md](./lessons/lesson-055-track-1-acceptance-checklist.md)                 |
 
 Entry point: [LOCAL_SETUP.md](./LOCAL_SETUP.md)

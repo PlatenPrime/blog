@@ -48,7 +48,7 @@ export type ApiValidationFieldError = {
 export type ApiErrorDetails = readonly ApiValidationFieldError[];
 
 /**
- * Internal mapper shape between Nest exceptions and RFC 7807 `ProblemDetailsBody` (step 041).
+ * Internal mapper shape between Nest exceptions and RFC 9457 `ProblemDetailsBody` (step 041).
  * Wire format is `application/problem+json` — use `ProblemDetailsBody` for clients and contract tests.
  */
 export type ApiErrorBody = {

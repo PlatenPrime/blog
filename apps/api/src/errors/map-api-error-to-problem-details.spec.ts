@@ -6,7 +6,7 @@ import {
 import { mapApiErrorToProblemDetails } from './map-api-error-to-problem-details';
 
 describe('mapApiErrorToProblemDetails', () => {
-  it('maps ApiErrorBody to RFC 7807 Problem Details', () => {
+  it('maps ApiErrorBody to RFC 9457 Problem Details', () => {
     expect(
       mapApiErrorToProblemDetails(404, {
         code: API_ERROR_CODE_NOT_FOUND,

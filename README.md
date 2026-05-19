@@ -124,7 +124,7 @@ GitHub Actions дополнительно восстанавливает `.nx/ca
 
 ## Status
 
-**Track 0 — Workspace Foundation** завершён (шаг **032**). Дальше — **Track 1 — Platform Core** с шага **033**: [`docs/development-roadmap.md`](docs/development-roadmap.md). Чеклист приёмки Track 0: [`docs/track-0-acceptance-checklist.md`](docs/track-0-acceptance-checklist.md).
+**Track 0 — Workspace Foundation** завершён (шаг **032**). **Track 1 — Platform Core** завершён (шаг **055**). Дальше — **Track 2 — Auth and Identity** с шага **057**: [`docs/development-roadmap.md`](docs/development-roadmap.md). Чеклисты: Track 0 [`docs/track-0-acceptance-checklist.md`](docs/track-0-acceptance-checklist.md), Track 1 [`docs/track-1-acceptance-checklist.md`](docs/track-1-acceptance-checklist.md).
 
 ## Documentation map
 
@@ -132,7 +132,8 @@ GitHub Actions дополнительно восстанавливает `.nx/ca
 - [`docs/adr/000-nx-and-tanstack-start.md`](docs/adr/000-nx-and-tanstack-start.md) — ADR-000: почему Nx и TanStack Start в этом монорепо (индекс: [`docs/adr/README.md`](docs/adr/README.md)).
 - [`docs/adr/001-process-for-architectural-deviations.md`](docs/adr/001-process-for-architectural-deviations.md) — ADR-001: как фиксировать отклонения от прошлых ADR.
 - [`docs/security/threat-model-stub.md`](docs/security/threat-model-stub.md) — заготовка threat model (развитие в Track 7).
-- [`docs/track-0-acceptance-checklist.md`](docs/track-0-acceptance-checklist.md) — приёмка Track 0 перед Platform Core.
+- [`docs/track-0-acceptance-checklist.md`](docs/track-0-acceptance-checklist.md) — приёмка Track 0 (Workspace Foundation).
+- [`docs/track-1-acceptance-checklist.md`](docs/track-1-acceptance-checklist.md) — приёмка Track 1 (Platform Core) перед Auth.
 - [`docs/LOCAL_SETUP.md`](docs/LOCAL_SETUP.md) — детальный setup, env-таблицы, инфраструктура.
 - [`docs/learning-path.md`](docs/learning-path.md) — карта фаз обучения (Phase 1-8).
 - [`docs/lessons/`](docs/lessons/) — уроки `lesson-NNN-*.md`, по одному на шаг.

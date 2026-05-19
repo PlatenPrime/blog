@@ -143,4 +143,4 @@ npm run db:psql -- -c "select version();"        # PostgreSQL 16.x
 
 ## Next roadmap step
 
-**Track 1 — Platform Core** starts at **Step 033** — see [development-roadmap.md](./development-roadmap.md). Track 0 (001–032) закрыт чеклистом [track-0-acceptance-checklist.md](./track-0-acceptance-checklist.md).
+**Track 1 — Platform Core** (033–055) закрыт чеклистом [track-1-acceptance-checklist.md](./track-1-acceptance-checklist.md). Следующий шаг — **Track 2 — Auth and Identity**, **Step 057** (database bootstrap) — см. [development-roadmap.md](./development-roadmap.md). Track 0 (001–032): [track-0-acceptance-checklist.md](./track-0-acceptance-checklist.md).

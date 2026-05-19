@@ -9,6 +9,7 @@ This repository is a fullstack practice track: NestJS API + TanStack Start + Nx.
 - [adr/README.md](./adr/README.md) — Architecture Decision Records (ADR)
 - [security/threat-model-stub.md](./security/threat-model-stub.md) — threat model stub (Track 7 precursor)
 - [track-0-acceptance-checklist.md](./track-0-acceptance-checklist.md) — Track 0 acceptance checklist
+- [track-1-acceptance-checklist.md](./track-1-acceptance-checklist.md) — Track 1 acceptance checklist
 - [LOCAL_SETUP.md](./LOCAL_SETUP.md)
 - [learning-path.md](./learning-path.md)
 - [release-policy.md](./release-policy.md)
@@ -80,6 +81,7 @@ npm run test:e2e
 - Step 052: [lesson-052-graceful-shutdown-hooks.md](./lessons/lesson-052-graceful-shutdown-hooks.md)
 - Step 053: [lesson-053-request-timeout-abort.md](./lessons/lesson-053-request-timeout-abort.md)
 - Step 054: [lesson-054-error-json-contract-tests.md](./lessons/lesson-054-error-json-contract-tests.md)
+- Step 055: [lesson-055-track-1-acceptance-checklist.md](./lessons/lesson-055-track-1-acceptance-checklist.md)
 
 Quality scripts from repo root (`build`, `test`, `lint`, `test:e2e`) run through Nx on the `api` app. The `web` app (TanStack Start) builds with `npx nx run web:build` or `npm run web:dev` for local dev. Full CI parity from root: `npm run ci` (see [lesson-019](./lessons/lesson-019-ci-pipeline-baseline.md)); GitHub Actions restores `.nx/cache` for repeated CI runs (see [lesson-020](./lessons/lesson-020-nx-cache-in-ci.md)); CI targets now run through `nx affected` range detection (see [lesson-021](./lessons/lesson-021-nx-affected-flow-in-ci.md)). Utility scripts:
 

@@ -10,7 +10,7 @@ import {
   API_ERROR_CODE_VALIDATION,
 } from './api-error.types.js';
 
-/** Base URI for `type` identifiers (RFC 7807). */
+/** Base URI for `type` identifiers (RFC 9457; obsoletes RFC 7807). */
 export const PROBLEM_TYPE_BASE_URI = 'https://blog.dev/problems' as const;
 
 export const PROBLEM_MEDIA_TYPE = 'application/problem+json' as const;
@@ -38,7 +38,7 @@ export const PROBLEM_TITLE_BY_CODE: Readonly<Record<string, string>> = {
 };
 
 /**
- * RFC 7807 Problem Details JSON body served as `application/problem+json`.
+ * RFC 9457 Problem Details JSON body served as `application/problem+json`.
  * Extension members: `code`, `details`.
  */
 export type ProblemDetailsBody = {

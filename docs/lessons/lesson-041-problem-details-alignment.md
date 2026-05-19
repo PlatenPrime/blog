@@ -2,7 +2,7 @@
 
 ## Learning Goal
 
-Выровнять JSON-ошибки API под [RFC 7807](https://www.rfc-editor.org/rfc/rfc7807): wire-формат `application/problem+json` с полями `type`, `title`, `status`, `detail`, extension-полями `code`/`details`, Zod-схемой в `shared-contracts` и contract-тестом.
+Выровнять JSON-ошибки API под [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457) (Problem Details for HTTP APIs): wire-формат `application/problem+json` с полями `type`, `title`, `status`, `detail`, extension-полями `code`/`details`, Zod-схемой в `shared-contracts` и contract-тестом.
 
 ## Implementation Scope
 
@@ -55,7 +55,11 @@ httpAdapter.reply(response, problemBody, status);
 
 ## Context
 
-После 040 клиенты получали `{ code, message, details? }` как обычный JSON. Шаг 041 делает ошибки совместимыми с RFC 7807: стабильные `type`/`title`, `status` в теле, `detail` вместо `message` на wire. Внутренний mapper по-прежнему использует `ApiErrorBody` с `message`.
+После 040 клиенты получали `{ code, message, details? }` как обычный JSON. Шаг 041 делает ошибки совместимыми с Problem Details (сейчас [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457)): стабильные `type`/`title`, `status` в теле, `detail` вместо `message` на wire. Внутренний mapper по-прежнему использует `ApiErrorBody` с `message`.
+
+## RFC 9457 vs RFC 7807
+
+[RFC 9457](https://www.rfc-editor.org/rfc/rfc9457) (июль 2023) **obsoletes** [RFC 7807](https://www.rfc-editor.org/rfc/rfc7807). Wire-формат в проекте **не менялся**: те же поля, тот же `application/problem+json`, те же extension `code`/`details`. Appendix D RFC 9457 добавляет уточнения (реестр общих `type` §4.2, несколько проблем §3, недереференцируемые URI §3.1.1) — наш `https://blog.dev/problems/*` остаётся валидным.
 
 ## Architecture Notes
 
@@ -79,6 +83,8 @@ httpAdapter.reply(response, problemBody, status);
 | `docs/api/dto-validation-conventions.md`                                 | секция ошибок  |
 | `docs/lessons/lesson-041-problem-details-alignment.md`                   | создан         |
 | `docs/development-roadmap.md`, `docs/learning-path.md`, `docs/README.md` | шаг 041        |
+
+**Документация RFC 9457** (без изменения wire): `problem-details.types.ts`, `api-error.types.ts`, `map-api-error-to-problem-details.spec.ts`, `lesson-041`, `storytelling.md`, `dto-validation-conventions.md`.
 
 ## Verification
 
@@ -104,7 +110,8 @@ npx nx run api:test:e2e
 
 ## What To Remember
 
-- Wire: `detail`, не `message`; `status` дублируется в body (RFC).
+- Wire: `detail`, не `message`; `status` дублируется в body (RFC 9457).
+- Каноническая ссылка на стандарт — RFC 9457; RFC 7807 obsolete, формат совместим.
 - `ApiErrorBody` — только для mapper внутри API.
 - Расширенные contract-тесты — [урок 054](./lesson-054-error-json-contract-tests.md); `instance` из request ID — 043–046.
 
