@@ -4,7 +4,7 @@ This repository is a fullstack practice track: NestJS API + TanStack Start + Nx.
 
 ## Documentation
 
-- [storytelling.md](./storytelling.md) — история проекта: что и зачем мы делаем (для новичков)
+- [storytelling.md](./storytelling.md) — история проекта по главам: зачем, затем что сделано (для новичков)
 - [development-roadmap.md](./development-roadmap.md)
 - [adr/README.md](./adr/README.md) — Architecture Decision Records (ADR)
 - [security/threat-model-stub.md](./security/threat-model-stub.md) — threat model stub (Track 7 precursor)

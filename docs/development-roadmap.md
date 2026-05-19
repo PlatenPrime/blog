@@ -83,7 +83,7 @@ Each `lesson-NNN-*.md` must include:
 6. Changed Files
 7. Architecture Notes
 8. Definition of Done
-9. **Storytelling sync** — обновить [`docs/storytelling.md`](./storytelling.md): блок `### Шаг NNN` (в сюжете / зачем / что унести), при необходимости «Где мы сейчас», «Сквозные принципы» и уточнения старых шагов. Без дублирования Verification и списков файлов из урока.
+9. **Storytelling sync** — обновить [`docs/storytelling.md`](./storytelling.md): строка в таблице соответствующей главы (I–IX или новая) + при необходимости 2–4 предложения в narrative главы; обновить «Где мы сейчас» / «Что дальше». Без отдельного `### Шаг NNN` на каждый спринт и без дублирования Verification и списков файлов из урока.
 
 ## Track Index
 

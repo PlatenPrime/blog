@@ -1,6 +1,6 @@
 ﻿# Learning Path
 
-For the **why** behind each step (plain-language narrative), read [storytelling.md](./storytelling.md).
+For the **why** behind each step (mentor narrative by chapter), read [storytelling.md](./storytelling.md) — сначала глава целиком, затем строка вашего шага в таблице главы.
 
 Use [development-roadmap.md](./development-roadmap.md) as the source of truth for exact order.
 
