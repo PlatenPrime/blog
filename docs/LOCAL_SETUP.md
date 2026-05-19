@@ -160,4 +160,4 @@ OTEL_EXPORTER_OTLP_ENDPOINT=http://127.0.0.1:4318/v1/traces
 
 ## Next roadmap step
 
-**Track 1 — Platform Core** (033–056) закрыт. Следующий шаг — **Track 2 — Auth and Identity**, **Step 057** (database bootstrap) — см. [development-roadmap.md](./development-roadmap.md). Track 0 (001–032): [track-0-acceptance-checklist.md](./track-0-acceptance-checklist.md).
+**Track 1 — Platform Core** (033–056) закрыт. **Track 2** начат: **Step 057** (TypeORM bootstrap) — [lesson-057](./lessons/lesson-057-database-module-postgres-orm-bootstrap.md). Следующий шаг — **058** (`DATABASE_URL` в validated env) — см. [development-roadmap.md](./development-roadmap.md). Track 0 (001–032): [track-0-acceptance-checklist.md](./track-0-acceptance-checklist.md).

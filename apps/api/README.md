@@ -53,7 +53,7 @@ npm run db:down      # остановить (volume сохраняется)
 npm run db:reset     # полный сброс (volume удаляется)
 ```
 
-Подключение драйвера БД из Nest ещё не настроено (последующие шаги Track 1). Переменные `POSTGRES_*` уже валидируются при старте API вместе с остальными ключами [`.env.example`](../../.env.example), чтобы dev-окружение не расходилось с compose.
+**TypeORM** подключается через [`DatabaseModule`](src/database/database.module.ts): опции из `POSTGRES_*` ([`create-typeorm-options.ts`](src/database/create-typeorm-options.ts)), `synchronize: false`, `autoLoadEntities: true`. Для старта API с реальным ORM нужен живой Postgres (`npm run db:up`). Readiness по-прежнему проверяет БД отдельным `pg` pool ([`health.module.ts`](src/health/health.module.ts)). `DATABASE_URL` и миграции — шаги 058–059 ([`lesson-057`](../../docs/lessons/lesson-057-database-module-postgres-orm-bootstrap.md)).
 
 ## Routing
 

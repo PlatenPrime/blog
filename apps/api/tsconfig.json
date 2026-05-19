@@ -3,6 +3,9 @@
   "include": ["src/**/*.ts", "test/**/*.ts"],
   "compilerOptions": {
     "outDir": "./dist",
-    "types": ["vitest/globals", "node"]
+    "types": ["vitest/globals", "node"],
+    "paths": {
+      "@nestjs/typeorm": ["../../node_modules/@nestjs/typeorm/index.d.ts"]
+    }
   }
 }

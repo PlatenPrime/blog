@@ -70,7 +70,9 @@ Steps 033-056.
 
 ## Phase 3: Auth and Identity (Track 2)
 
-Steps 057-104.
+- Step 057: [lesson-057-database-module-postgres-orm-bootstrap.md](./lessons/lesson-057-database-module-postgres-orm-bootstrap.md)
+
+Steps 058-104.
 
 ## Phase 4: CMS Backend (Track 3)
 

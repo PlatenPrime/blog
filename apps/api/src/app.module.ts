@@ -15,6 +15,7 @@ import {
   RequestContextModule,
   RequestIdMiddleware,
 } from './common/request-context';
+import { DatabaseModule } from './database';
 import { HealthModule } from './health/health.module';
 import { MetricsModule } from './metrics';
 import { validateRootEnv } from './config/env.schema';
@@ -34,6 +35,7 @@ import { ExamplesModule } from './examples/examples.module';
     LoggingModule,
     ShutdownModule,
     RequestLifecycleModule,
+    DatabaseModule,
     HealthModule,
     MetricsModule,
     ExamplesModule,

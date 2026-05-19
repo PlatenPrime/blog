@@ -1,5 +1,6 @@
 import { Controller, Get, INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import { DataSource } from 'typeorm';
 import request from 'supertest';
 import { App } from 'supertest/types';
 import {
@@ -14,6 +15,7 @@ import { configureApiHttp } from '../src/config/configure-api-http';
 import { configureApiShutdown } from '../src/config/configure-api-shutdown';
 import { enableApiCors } from '../src/config/enable-api-cors';
 import { PostgresHealthIndicator } from '../src/health/indicators/postgres.health-indicator';
+import { createTestDataSourceStub } from '../src/testing/create-test-data-source.stub';
 
 @Controller({ path: 'slow', version: '1' })
 class SlowTestController {
@@ -38,6 +40,8 @@ describe('Request timeout (e2e)', () => {
       .useValue({
         isHealthy: () => Promise.resolve({ database: { status: 'up' } }),
       })
+      .overrideProvider(DataSource)
+      .useValue(createTestDataSourceStub())
       .overrideProvider(REQUEST_TIMEOUT_MS)
       .useValue(E2E_REQUEST_TIMEOUT_MS)
       .compile();

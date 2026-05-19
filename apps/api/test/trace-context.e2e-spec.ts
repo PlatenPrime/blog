@@ -1,5 +1,6 @@
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import { DataSource } from 'typeorm';
 import {
   InMemorySpanExporter,
   SimpleSpanProcessor,
@@ -16,6 +17,7 @@ import {
   TRACEPARENT_HEADER,
 } from './../src/common/tracing';
 import { PostgresHealthIndicator } from './../src/health/indicators/postgres.health-indicator';
+import { createTestDataSourceStub } from './../src/testing/create-test-data-source.stub';
 
 const INCOMING_TRACEPARENT =
   '00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01';
@@ -36,6 +38,8 @@ describe('Trace context propagation (e2e)', () => {
       .useValue({
         isHealthy: () => Promise.resolve({ database: { status: 'up' } }),
       })
+      .overrideProvider(DataSource)
+      .useValue(createTestDataSourceStub())
       .compile();
 
     app = moduleFixture.createNestApplication();

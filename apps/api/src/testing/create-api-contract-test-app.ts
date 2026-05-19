@@ -1,6 +1,7 @@
 import { type Type } from '@nestjs/common';
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import { DataSource } from 'typeorm';
 import { App } from 'supertest/types';
 import { AppModule } from '../app.module';
 import { REQUEST_TIMEOUT_MS } from '../common/request-lifecycle/request-timeout.tokens';
@@ -8,6 +9,7 @@ import { configureApiHttp } from '../config/configure-api-http';
 import { configureApiShutdown } from '../config/configure-api-shutdown';
 import { enableApiCors } from '../config/enable-api-cors';
 import { PostgresHealthIndicator } from '../health/indicators/postgres.health-indicator';
+import { createTestDataSourceStub } from './create-test-data-source.stub';
 import { ErrorProbeController } from './error-probe.controller';
 import { SlowTestController } from './slow-test.controller';
 
@@ -35,7 +37,9 @@ export async function createApiContractTestApp(
     .overrideProvider(PostgresHealthIndicator)
     .useValue({
       isHealthy: () => Promise.resolve({ database: { status: 'up' } }),
-    });
+    })
+    .overrideProvider(DataSource)
+    .useValue(createTestDataSourceStub());
 
   if (options.requestTimeoutMs !== undefined) {
     moduleBuilder = moduleBuilder
