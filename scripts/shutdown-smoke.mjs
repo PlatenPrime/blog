@@ -20,7 +20,7 @@ const GRACEFUL_SHUTDOWN_IPC_MESSAGE = 'graceful-shutdown';
 const useIpcShutdown = process.platform === 'win32';
 const HEALTH_POLL_MS = 250;
 const HEALTH_TIMEOUT_MS = 15_000;
-const EXIT_TIMEOUT_MS = 10_000;
+const EXIT_TIMEOUT_MS = 25_000;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(__dirname, '..');

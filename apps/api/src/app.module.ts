@@ -5,6 +5,10 @@ import { createApiValidationPipe } from './config/create-api-validation-pipe';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { LoggingModule, RequestLoggingInterceptor } from './common/logging';
+import {
+  RequestLifecycleModule,
+  RequestTimeoutInterceptor,
+} from './common/request-lifecycle';
 import { ShutdownModule } from './common/shutdown';
 import { TraceContextMiddleware, TracingModule } from './common/tracing';
 import {
@@ -29,6 +33,7 @@ import { ExamplesModule } from './examples/examples.module';
     TracingModule,
     LoggingModule,
     ShutdownModule,
+    RequestLifecycleModule,
     HealthModule,
     MetricsModule,
     ExamplesModule,
@@ -43,6 +48,10 @@ import { ExamplesModule } from './examples/examples.module';
     {
       provide: APP_PIPE,
       useFactory: createApiValidationPipe,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: RequestTimeoutInterceptor,
     },
     {
       provide: APP_INTERCEPTOR,

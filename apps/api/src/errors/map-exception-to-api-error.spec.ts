@@ -5,6 +5,7 @@ import {
   HttpException,
   InternalServerErrorException,
   NotFoundException,
+  RequestTimeoutException,
   UnauthorizedException,
 } from '@nestjs/common';
 import {
@@ -13,6 +14,7 @@ import {
   API_ERROR_CODE_FORBIDDEN,
   API_ERROR_CODE_INTERNAL,
   API_ERROR_CODE_NOT_FOUND,
+  API_ERROR_CODE_REQUEST_TIMEOUT,
   API_ERROR_CODE_UNAUTHORIZED,
   API_ERROR_CODE_VALIDATION,
   API_INTERNAL_ERROR_MESSAGE,
@@ -64,6 +66,18 @@ describe('mapExceptionToApiError', () => {
       body: {
         code: API_ERROR_CODE_BAD_REQUEST,
         message: 'Invalid payload',
+      },
+    });
+  });
+
+  it('maps RequestTimeoutException to 408 REQUEST_TIMEOUT', () => {
+    const exception = new RequestTimeoutException();
+
+    expect(mapExceptionToApiError(exception)).toEqual({
+      status: 408,
+      body: {
+        code: API_ERROR_CODE_REQUEST_TIMEOUT,
+        message: exception.message,
       },
     });
   });

@@ -28,6 +28,25 @@ function postgresNonEmpty(fallback: string) {
     .pipe(z.string().min(1));
 }
 
+function envMilliseconds(
+  defaultWhenEmpty: number,
+  bounds: { readonly min: number; readonly max: number },
+) {
+  return z.preprocess((val: unknown) => {
+    if (val === undefined || val === '') {
+      return defaultWhenEmpty;
+    }
+    if (typeof val === 'number') {
+      return val;
+    }
+    if (typeof val === 'string') {
+      const s = val.trim();
+      return s.length === 0 ? defaultWhenEmpty : s;
+    }
+    return '__INVALID_ENV_MS__';
+  }, z.coerce.number().int().min(bounds.min).max(bounds.max));
+}
+
 /**
  * Environment keys mirrored by the root `.env.example`.
  * Validated once at Nest bootstrap via {@link ConfigModule}.
@@ -66,6 +85,11 @@ export const rootEnvSchema = z.object({
   POSTGRES_PASSWORD: postgresNonEmpty('blog'),
   POSTGRES_DB: postgresNonEmpty('blog_dev'),
   POSTGRES_PORT: envTcpPort(5432),
+  REQUEST_TIMEOUT_MS: envMilliseconds(30_000, { min: 1_000, max: 300_000 }),
+  SHUTDOWN_GRACE_PERIOD_MS: envMilliseconds(10_000, {
+    min: 1_000,
+    max: 120_000,
+  }),
 });
 
 export type RootEnv = z.infer<typeof rootEnvSchema>;
@@ -79,6 +103,8 @@ const ROOT_ENV_KEYS = [
   'POSTGRES_PASSWORD',
   'POSTGRES_DB',
   'POSTGRES_PORT',
+  'REQUEST_TIMEOUT_MS',
+  'SHUTDOWN_GRACE_PERIOD_MS',
 ] as const;
 
 function pickRootEnvKeys(

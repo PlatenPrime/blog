@@ -5,6 +5,7 @@ import {
   API_ERROR_CODE_FORBIDDEN,
   API_ERROR_CODE_INTERNAL,
   API_ERROR_CODE_NOT_FOUND,
+  API_ERROR_CODE_REQUEST_TIMEOUT,
   API_ERROR_CODE_UNAUTHORIZED,
   API_ERROR_CODE_VALIDATION,
 } from './api-error.types.js';
@@ -22,6 +23,7 @@ const PROBLEM_TYPE_SLUG_BY_CODE: Readonly<Record<string, string>> = {
   [API_ERROR_CODE_FORBIDDEN]: 'forbidden',
   [API_ERROR_CODE_CONFLICT]: 'conflict',
   [API_ERROR_CODE_BAD_REQUEST]: 'bad-request',
+  [API_ERROR_CODE_REQUEST_TIMEOUT]: 'request-timeout',
 };
 
 export const PROBLEM_TITLE_BY_CODE: Readonly<Record<string, string>> = {
@@ -32,6 +34,7 @@ export const PROBLEM_TITLE_BY_CODE: Readonly<Record<string, string>> = {
   [API_ERROR_CODE_FORBIDDEN]: 'Forbidden',
   [API_ERROR_CODE_CONFLICT]: 'Conflict',
   [API_ERROR_CODE_BAD_REQUEST]: 'Bad Request',
+  [API_ERROR_CODE_REQUEST_TIMEOUT]: 'Request Timeout',
 };
 
 /**

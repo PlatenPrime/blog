@@ -595,7 +595,17 @@ Track 1 — **как API ведёт себя как сервис**: конфиг
 
 → [lesson-052](./lessons/lesson-052-graceful-shutdown-hooks.md)
 
-**Итог Track 1 (пока):** API умеет стартовать с проверенным конфигом, отчитываться о здоровье, отвечать на сбои предсказуемо и безопасно, помечать запросы request/correlation id, писать структурированные логи, access-log, редактировать секреты в JSON, держать OTel tracer provider (noop export), продолжать W3C trace с входящего HTTP, отдавать Prometheus metrics stub на `/metrics`, обслуживать версионированный API на `/api/v1` и корректно завершаться по SIGTERM. Дальше — timeouts (053+), затем auth и CMS.
+### Шаг 053 — Request timeout / abort + shutdown grace
+
+**В сюжете:** `RequestTimeoutInterceptor` ограничивает handler (`REQUEST_TIMEOUT_MS`, по умолчанию 30s) → **408** + `REQUEST_TIMEOUT` в problem+json; `clientAbort$` отменяет работу при обрыве клиента. `InFlightRequestsService` + `ApiShutdownCoordinator`: по SIGTERM новые запросы → **503**, ожидание drain до `SHUTDOWN_GRACE_PERIOD_MS`, затем `app.close()` или `exit(1)`.
+
+**Зачем:** Не держать workers на «зависших» handler'ах; не писать в закрытый сокет; дать in-flight запросам завершиться перед остановкой pod.
+
+**Что унести с собой:** Timeout interceptor регистрируется **до** logging; `enableShutdownHooks([])` + coordinator на сигналах; e2e override токена `REQUEST_TIMEOUT_MS`.
+
+→ [lesson-053](./lessons/lesson-053-request-timeout-abort.md)
+
+**Итог Track 1 (пока):** API умеет стартовать с проверенным конфигом, отчитываться о здоровье, отвечать на сбои предсказуемо и безопасно, помечать запросы request/correlation id, писать структурированные логи, access-log, редактировать секреты в JSON, держать OTel tracer provider (noop export), продолжать W3C trace с входящего HTTP, отдавать Prometheus metrics stub на `/metrics`, обслуживать версионированный API на `/api/v1`, корректно завершаться по SIGTERM с grace period и ограничивать длительность HTTP-обработки. Дальше — contract tests (054+), затем auth и CMS.
 
 ---
 
@@ -613,8 +623,8 @@ Track 1 — **как API ведёт себя как сервис**: конфиг
 
 ## Где мы сейчас
 
-- **Завершено:** Track 0 (001–032) и начало Track 1 (033–052).
-- **Есть в коде:** монорепо (api + web + shared-contracts), CI, локальный Postgres, конфиг с Zod, health liveness/readiness, единый pipeline ошибок до безопасных 5xx, request/correlation ID middleware + ALS, structured JSON logging (pino) с redaction, HTTP access-log interceptor, OpenTelemetry noop tracer wiring (`TracingModule`, `API_TRACER`), W3C `traceparent` propagation (`TraceContextMiddleware`), Prometheus `/metrics` stub (`MetricsModule`, `prom-client`), публичный API под `/api/v1` (`configureApiHttp`, ops на корне), graceful shutdown (`configureApiShutdown`, `ShutdownModule`, `shutdown:smoke`).
+- **Завершено:** Track 0 (001–032) и начало Track 1 (033–053).
+- **Есть в коде:** монорепо (api + web + shared-contracts), CI, локальный Postgres, конфиг с Zod, health liveness/readiness, единый pipeline ошибок до безопасных 5xx, request/correlation ID middleware + ALS, structured JSON logging (pino) с redaction, HTTP access-log interceptor, OpenTelemetry noop tracer wiring (`TracingModule`, `API_TRACER`), W3C `traceparent` propagation (`TraceContextMiddleware`), Prometheus `/metrics` stub (`MetricsModule`, `prom-client`), публичный API под `/api/v1` (`configureApiHttp`, ops на корне), graceful shutdown (`configureApiShutdown`, `ShutdownModule`, `shutdown:smoke`), request timeout/abort interceptor + shutdown grace (`RequestLifecycleModule`, `ApiShutdownCoordinator`, `REQUEST_TIMEOUT_MS` / `SHUTDOWN_GRACE_PERIOD_MS`).
 - **Ещё нет в сюжете продукта:** пользователи, JWT, посты CMS, публичные страницы блога — это следующие треки roadmap.
 
 ---
@@ -623,7 +633,7 @@ Track 1 — **как API ведёт себя как сервис**: конфиг
 
 Следующие шаги Track 1 (см. [development-roadmap.md](./development-roadmap.md)):
 
-- **053–056:** timeouts, contract tests, чеклист приёмки Track 1.
+- **054–056:** contract tests, чеклист приёмки Track 1.
 
 Затем **Track 2 (auth)** — база данных, пользователи, регистрация, сессии — и дальше домен CMS и публичный сайт.
 

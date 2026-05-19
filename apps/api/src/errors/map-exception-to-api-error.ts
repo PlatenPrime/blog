@@ -4,6 +4,7 @@ import {
   API_ERROR_CODE_FORBIDDEN,
   API_ERROR_CODE_INTERNAL,
   API_ERROR_CODE_NOT_FOUND,
+  API_ERROR_CODE_REQUEST_TIMEOUT,
   API_ERROR_CODE_UNAUTHORIZED,
   API_ERROR_CODE_VALIDATION,
   API_INTERNAL_ERROR_MESSAGE,
@@ -17,6 +18,7 @@ import {
   ForbiddenException,
   HttpException,
   NotFoundException,
+  RequestTimeoutException,
   UnauthorizedException,
 } from '@nestjs/common';
 
@@ -177,6 +179,10 @@ function resolveApiErrorCode(
     return API_ERROR_CODE_CONFLICT;
   }
 
+  if (exception instanceof RequestTimeoutException) {
+    return API_ERROR_CODE_REQUEST_TIMEOUT;
+  }
+
   return resolveApiErrorCodeFromStatus(status);
 }
 
@@ -195,6 +201,10 @@ function resolveApiErrorCodeFromStatus(status: number): ApiErrorCode {
 
   if (status === 409) {
     return API_ERROR_CODE_CONFLICT;
+  }
+
+  if (status === 408) {
+    return API_ERROR_CODE_REQUEST_TIMEOUT;
   }
 
   if (status >= 500) {

@@ -15,7 +15,7 @@
 
 Намеренно **не** делаем:
 
-- `SHUTDOWN_GRACE_PERIOD_MS`, force-kill — [шаг 053](../development-roadmap.md).
+- `SHUTDOWN_GRACE_PERIOD_MS`, force-kill — реализовано в [шаг 053](./lesson-053-request-timeout-abort.md).
 - OTel SDK shutdown (сейчас noop provider).
 - Изменения Docker/K8s manifests.
 

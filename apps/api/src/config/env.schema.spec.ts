@@ -13,7 +13,39 @@ describe('parseRootEnv', () => {
       POSTGRES_PASSWORD: 'blog',
       POSTGRES_DB: 'blog_dev',
       POSTGRES_PORT: 5432,
+      REQUEST_TIMEOUT_MS: 30_000,
+      SHUTDOWN_GRACE_PERIOD_MS: 10_000,
     });
+  });
+
+  it('parses REQUEST_TIMEOUT_MS and SHUTDOWN_GRACE_PERIOD_MS', () => {
+    expect(
+      parseRootEnv({
+        REQUEST_TIMEOUT_MS: '5000',
+        SHUTDOWN_GRACE_PERIOD_MS: '15000',
+      }),
+    ).toMatchObject({
+      REQUEST_TIMEOUT_MS: 5000,
+      SHUTDOWN_GRACE_PERIOD_MS: 15_000,
+    });
+  });
+
+  it('treats empty REQUEST_TIMEOUT_MS as default 30000', () => {
+    expect(parseRootEnv({ REQUEST_TIMEOUT_MS: '' })).toMatchObject({
+      REQUEST_TIMEOUT_MS: 30_000,
+    });
+  });
+
+  it('rejects REQUEST_TIMEOUT_MS below minimum', () => {
+    expect(() => parseRootEnv({ REQUEST_TIMEOUT_MS: '500' })).toThrow(
+      /REQUEST_TIMEOUT_MS/,
+    );
+  });
+
+  it('rejects SHUTDOWN_GRACE_PERIOD_MS above maximum', () => {
+    expect(() => parseRootEnv({ SHUTDOWN_GRACE_PERIOD_MS: '999999' })).toThrow(
+      /SHUTDOWN_GRACE_PERIOD_MS/,
+    );
   });
 
   it('parses PORT and POSTGRES_PORT as integers', () => {

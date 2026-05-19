@@ -22,6 +22,9 @@ export const API_ERROR_CODE_CONFLICT = 'CONFLICT' as const;
 /** Malformed or semantically invalid client request. */
 export const API_ERROR_CODE_BAD_REQUEST = 'BAD_REQUEST' as const;
 
+/** Request handler exceeded configured time limit. */
+export const API_ERROR_CODE_REQUEST_TIMEOUT = 'REQUEST_TIMEOUT' as const;
+
 export type PlatformApiErrorCode =
   | typeof API_ERROR_CODE_INTERNAL
   | typeof API_ERROR_CODE_VALIDATION
@@ -29,7 +32,8 @@ export type PlatformApiErrorCode =
   | typeof API_ERROR_CODE_UNAUTHORIZED
   | typeof API_ERROR_CODE_FORBIDDEN
   | typeof API_ERROR_CODE_CONFLICT
-  | typeof API_ERROR_CODE_BAD_REQUEST;
+  | typeof API_ERROR_CODE_BAD_REQUEST
+  | typeof API_ERROR_CODE_REQUEST_TIMEOUT;
 
 /** Machine-readable error code (platform constants or domain-specific strings). */
 export type ApiErrorCode = PlatformApiErrorCode | (string & {});

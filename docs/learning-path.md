@@ -63,6 +63,7 @@ Steps 033-056.
 - Step 050: [lesson-050-metrics-endpoint-stub.md](./lessons/lesson-050-metrics-endpoint-stub.md)
 - Step 051: [lesson-051-api-prefix-and-versioning.md](./lessons/lesson-051-api-prefix-and-versioning.md)
 - Step 052: [lesson-052-graceful-shutdown-hooks.md](./lessons/lesson-052-graceful-shutdown-hooks.md)
+- Step 053: [lesson-053-request-timeout-abort.md](./lessons/lesson-053-request-timeout-abort.md)
 
 ## Phase 3: Auth and Identity (Track 2)
 
