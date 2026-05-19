@@ -1,5 +1,9 @@
 import { z } from 'zod';
 import {
+  buildDatabaseUrlFromPostgres,
+  isPostgresDatabaseUrl,
+} from './build-database-url';
+import {
   DEFAULT_OTEL_SERVICE_NAME,
   DEFAULT_OTEL_TRACES_EXPORTER,
   OTEL_TRACES_EXPORTER_VALUES,
@@ -91,6 +95,7 @@ export const rootEnvSchema = z
     POSTGRES_PASSWORD: postgresNonEmpty('blog'),
     POSTGRES_DB: postgresNonEmpty('blog_dev'),
     POSTGRES_PORT: envTcpPort(5432),
+    DATABASE_URL: z.union([z.string(), z.undefined()]).optional(),
     REQUEST_TIMEOUT_MS: envMilliseconds(30_000, { min: 1_000, max: 300_000 }),
     SHUTDOWN_GRACE_PERIOD_MS: envMilliseconds(10_000, {
       min: 1_000,
@@ -133,7 +138,29 @@ export const rootEnvSchema = z
         return trimmed.length === 0 ? undefined : trimmed;
       }),
   })
+  .transform((value) => {
+    const explicit =
+      value.DATABASE_URL === undefined ? '' : String(value.DATABASE_URL).trim();
+    const DATABASE_URL =
+      explicit.length > 0
+        ? explicit
+        : buildDatabaseUrlFromPostgres({
+            POSTGRES_HOST: value.POSTGRES_HOST,
+            POSTGRES_PORT: value.POSTGRES_PORT,
+            POSTGRES_USER: value.POSTGRES_USER,
+            POSTGRES_PASSWORD: value.POSTGRES_PASSWORD,
+            POSTGRES_DB: value.POSTGRES_DB,
+          });
+    return { ...value, DATABASE_URL };
+  })
   .superRefine((value, ctx) => {
+    if (!isPostgresDatabaseUrl(value.DATABASE_URL)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'DATABASE_URL must use postgresql:// or postgres:// scheme',
+        path: ['DATABASE_URL'],
+      });
+    }
     if (
       value.OTEL_TRACES_EXPORTER === 'otlp' &&
       !value.OTEL_EXPORTER_OTLP_ENDPOINT
@@ -158,6 +185,7 @@ const ROOT_ENV_KEYS = [
   'POSTGRES_PASSWORD',
   'POSTGRES_DB',
   'POSTGRES_PORT',
+  'DATABASE_URL',
   'REQUEST_TIMEOUT_MS',
   'SHUTDOWN_GRACE_PERIOD_MS',
   'OTEL_SERVICE_NAME',

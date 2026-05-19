@@ -132,12 +132,14 @@ npm run db:reset       # остановить и удалить volume (полн
 
 Переменные (дефолты прописаны прямо в [`docker-compose.yml`](../docker-compose.yml) через `${VAR:-default}` — `npm run db:up` работает «из коробки» без `.env`):
 
-| Variable            | Default    | Назначение                           |
-| ------------------- | ---------- | ------------------------------------ |
-| `POSTGRES_USER`     | `blog`     | Имя суперпользователя БД             |
-| `POSTGRES_PASSWORD` | `blog`     | Пароль суперпользователя (dev-only)  |
-| `POSTGRES_DB`       | `blog_dev` | База, создаваемая при первом запуске |
-| `POSTGRES_PORT`     | `5432`     | Host-side порт mapping'а             |
+| Variable            | Default                            | Назначение                                   |
+| ------------------- | ---------------------------------- | -------------------------------------------- |
+| `POSTGRES_USER`     | `blog`                             | Имя суперпользователя БД                     |
+| `POSTGRES_PASSWORD` | `blog`                             | Пароль суперпользователя (dev-only)          |
+| `POSTGRES_DB`       | `blog_dev`                         | База, создаваемая при первом запуске         |
+| `POSTGRES_PORT`     | `5432`                             | Host-side порт mapping'а                     |
+| `POSTGRES_HOST`     | `127.0.0.1`                        | Host для API readiness (loopback)            |
+| `DATABASE_URL`      | (built from `POSTGRES_*` if unset) | TypeORM connection string (`postgresql://…`) |
 
 Переопределить значения можно через переменные окружения сессии или через **корневой** `.env` (тот же файл, что подхватывает API) — Docker Compose автоматически читает `.env` из `cwd`. Канонический список ключей лежит в [`.env.example`](../.env.example).
 
@@ -168,4 +170,4 @@ OTEL_EXPORTER_OTLP_ENDPOINT=http://127.0.0.1:4318/v1/traces
 
 ## Next roadmap step
 
-**Track 1 — Platform Core** (033–056) закрыт. **Track 2** начат: **Step 057** (TypeORM bootstrap) — [lesson-057](./lessons/lesson-057-database-module-postgres-orm-bootstrap.md). Следующий шаг — **058** (`DATABASE_URL` в validated env) — см. [development-roadmap.md](./development-roadmap.md). Track 0 (001–032): [track-0-acceptance-checklist.md](./track-0-acceptance-checklist.md).
+**Track 1 — Platform Core** (033–056) закрыт. **Track 2:** **Step 057** (TypeORM bootstrap) — [lesson-057](./lessons/lesson-057-database-module-postgres-orm-bootstrap.md); **Step 058** (`DATABASE_URL`) — [lesson-058](./lessons/lesson-058-datasource-config-database-url.md). Следующий шаг — **059** (migration workflow) — см. [development-roadmap.md](./development-roadmap.md). Track 0 (001–032): [track-0-acceptance-checklist.md](./track-0-acceptance-checklist.md).

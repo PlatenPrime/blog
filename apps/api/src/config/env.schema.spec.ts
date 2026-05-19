@@ -13,6 +13,7 @@ describe('parseRootEnv', () => {
       POSTGRES_PASSWORD: 'blog',
       POSTGRES_DB: 'blog_dev',
       POSTGRES_PORT: 5432,
+      DATABASE_URL: 'postgresql://blog:blog@127.0.0.1:5432/blog_dev',
       REQUEST_TIMEOUT_MS: 30_000,
       SHUTDOWN_GRACE_PERIOD_MS: 10_000,
     });
@@ -91,6 +92,47 @@ describe('parseRootEnv', () => {
     ).toMatchObject({
       CORS_ORIGINS: 'http://localhost:3000,http://a.test',
     });
+  });
+
+  it('builds DATABASE_URL from POSTGRES_* when unset', () => {
+    expect(parseRootEnv({})).toMatchObject({
+      DATABASE_URL: 'postgresql://blog:blog@127.0.0.1:5432/blog_dev',
+    });
+  });
+
+  it('uses explicit DATABASE_URL over POSTGRES_* defaults', () => {
+    expect(
+      parseRootEnv({
+        DATABASE_URL: 'postgresql://app:secret@db.example:5433/app_db',
+        POSTGRES_HOST: 'ignored.local',
+      }),
+    ).toMatchObject({
+      DATABASE_URL: 'postgresql://app:secret@db.example:5433/app_db',
+    });
+  });
+
+  it('treats empty DATABASE_URL as built from POSTGRES_*', () => {
+    expect(parseRootEnv({ DATABASE_URL: '  ' })).toMatchObject({
+      DATABASE_URL: 'postgresql://blog:blog@127.0.0.1:5432/blog_dev',
+    });
+  });
+
+  it('accepts postgres:// scheme', () => {
+    expect(
+      parseRootEnv({
+        DATABASE_URL: 'postgres://blog:blog@127.0.0.1:5432/blog_dev',
+      }),
+    ).toMatchObject({
+      DATABASE_URL: 'postgres://blog:blog@127.0.0.1:5432/blog_dev',
+    });
+  });
+
+  it('rejects DATABASE_URL with non-postgres scheme', () => {
+    expect(() =>
+      parseRootEnv({
+        DATABASE_URL: 'mysql://blog:blog@127.0.0.1:5432/blog_dev',
+      }),
+    ).toThrow(/DATABASE_URL/);
   });
 });
 
