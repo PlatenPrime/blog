@@ -12,7 +12,7 @@ This repository is a fullstack practice track: NestJS API + TanStack Start + Nx.
 - [LOCAL_SETUP.md](./LOCAL_SETUP.md)
 - [learning-path.md](./learning-path.md)
 - [release-policy.md](./release-policy.md)
-- [lesson-authoring-guide.md](./lesson-authoring-guide.md)
+- [lesson-authoring-guide.md](./lesson-authoring-guide.md) — как писать уроки и **чеклист синхронизации docs + storytelling**
 - [lessons/lesson-template.md](./lessons/lesson-template.md)
 
 ## Quick Start
@@ -79,6 +79,7 @@ npm run test:e2e
 - Step 051: [lesson-051-api-prefix-and-versioning.md](./lessons/lesson-051-api-prefix-and-versioning.md)
 - Step 052: [lesson-052-graceful-shutdown-hooks.md](./lessons/lesson-052-graceful-shutdown-hooks.md)
 - Step 053: [lesson-053-request-timeout-abort.md](./lessons/lesson-053-request-timeout-abort.md)
+- Step 054: [lesson-054-error-json-contract-tests.md](./lessons/lesson-054-error-json-contract-tests.md)
 
 Quality scripts from repo root (`build`, `test`, `lint`, `test:e2e`) run through Nx on the `api` app. The `web` app (TanStack Start) builds with `npx nx run web:build` or `npm run web:dev` for local dev. Full CI parity from root: `npm run ci` (see [lesson-019](./lessons/lesson-019-ci-pipeline-baseline.md)); GitHub Actions restores `.nx/cache` for repeated CI runs (see [lesson-020](./lessons/lesson-020-nx-cache-in-ci.md)); CI targets now run through `nx affected` range detection (see [lesson-021](./lessons/lesson-021-nx-affected-flow-in-ci.md)). Utility scripts:
 

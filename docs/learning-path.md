@@ -64,6 +64,7 @@ Steps 033-056.
 - Step 051: [lesson-051-api-prefix-and-versioning.md](./lessons/lesson-051-api-prefix-and-versioning.md)
 - Step 052: [lesson-052-graceful-shutdown-hooks.md](./lessons/lesson-052-graceful-shutdown-hooks.md)
 - Step 053: [lesson-053-request-timeout-abort.md](./lessons/lesson-053-request-timeout-abort.md)
+- Step 054: [lesson-054-error-json-contract-tests.md](./lessons/lesson-054-error-json-contract-tests.md)
 
 ## Phase 3: Auth and Identity (Track 2)
 

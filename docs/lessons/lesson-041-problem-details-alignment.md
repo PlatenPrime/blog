@@ -18,7 +18,7 @@
 Намеренно **не** делаем:
 
 - `requestId` / `instance` из middleware — [шаги 043–046](../development-roadmap.md).
-- Расширенные contract-тесты всех кодов — [шаг 054](../development-roadmap.md).
+- Расширенные contract-тесты всех кодов — [шаг 054](./lesson-054-error-json-contract-tests.md) (done).
 - Content negotiation (`Accept`) — один формат для всех клиентов.
 - Health probes — Terminus JSON без изменений.
 
@@ -106,7 +106,7 @@ npx nx run api:test:e2e
 
 - Wire: `detail`, не `message`; `status` дублируется в body (RFC).
 - `ApiErrorBody` — только для mapper внутри API.
-- Расширенные contract-тесты — шаг 054; `instance` из request ID — 043–046.
+- Расширенные contract-тесты — [урок 054](./lesson-054-error-json-contract-tests.md); `instance` из request ID — 043–046.
 
 ## Verify
 

@@ -29,7 +29,7 @@
 2. Описать, что `NNN` всегда трехзначный, совпадает с шагом roadmap и не переиспользуется.
 3. Определить, что `topic` пишется в `kebab-case` и отражает цель шага, а не внутренние детали реализации.
 4. Закрепить обязательные разделы урока на основе Step Contract из roadmap.
-5. Указать, что после создания нового урока синхронно обновляются `docs/README.md`, `docs/learning-path.md` и `docs/LOCAL_SETUP.md` (если меняется next step).
+5. Указать, что после каждого шага синхронно обновляются **все** индексы и narrative — см. [Documentation sync checklist](../lesson-authoring-guide.md#documentation-sync-checklist): урок, `development-roadmap.md`, `docs/README.md`, `learning-path.md`, **`storytelling.md`**, `LOCAL_SETUP.md` при смене next step.
 
 ## Code Example
 
@@ -99,7 +99,7 @@ docs/lessons/
 
 - Номер урока всегда равен номеру шага в roadmap.
 - Именование файлов должно оставаться предсказуемым (`lesson-NNN-kebab-case.md`).
-- Любой новый урок требует синхронного обновления индексов документации.
+- Любой новый урок требует синхронного обновления индексов **и** [`storytelling.md`](../storytelling.md) (см. [lesson-authoring-guide](../lesson-authoring-guide.md#documentation-sync-checklist)).
 
 ## Verify
 

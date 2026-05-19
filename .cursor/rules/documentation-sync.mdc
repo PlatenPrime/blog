@@ -1,0 +1,34 @@
+---
+description: Sync all project docs and storytelling when completing roadmap steps
+alwaysApply: true
+---
+
+# Documentation sync (mandatory)
+
+Every roadmap step (sprint) **must** update documentation in the **same change set** as code. Do not mark a step done until indexes and narrative are current.
+
+**Source of truth:** [`docs/lesson-authoring-guide.md`](docs/lesson-authoring-guide.md#documentation-sync-checklist) and [`docs/development-roadmap.md`](docs/development-roadmap.md).
+
+## Minimum checklist
+
+| Surface | Action |
+| ------- | ------ |
+| `docs/lessons/lesson-NNN-*.md` | Create/update lesson; `Changed Files` lists all doc paths touched |
+| `docs/development-roadmap.md` | Step row → `done`; lesson index table at bottom |
+| `docs/README.md` | Completed Lessons entry |
+| `docs/learning-path.md` | Step link in phase list |
+| **`docs/storytelling.md`** | **Always for Track steps:** row in chapter table, narrative in «Как это выглядело», update «Где мы сейчас» / «Что дальше» / intro «после шага NNN» |
+| `docs/LOCAL_SETUP.md` | Update when next-step or setup commands change |
+| Related lessons | Back-links in Dependencies / «What To Remember» when scope shifts |
+
+## Storytelling (do not skip)
+
+Storytelling is **not optional** for completed roadmap steps. It answers *why* in the project story; the lesson answers *how*.
+
+After each step: find the chapter in storytelling TOC → add table row → extend chapter narrative (2–4 sentences) → refresh global status sections.
+
+## Agent behavior
+
+- Before finishing a roadmap task, run through the checklist explicitly.
+- If the user asks only for code, still propose doc/storytelling updates or apply them unless the user narrows scope.
+- When editing docs-only, keep storytelling consistent with roadmap baseline status.

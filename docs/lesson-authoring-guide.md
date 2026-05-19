@@ -81,9 +81,28 @@
 - Нумерация строго по [`development-roadmap.md`](./development-roadmap.md).
 - Новые уроки создаются **только для шагов из roadmap**; отклонения оформляются ADR и правкой индекса шагов.
 
+## Documentation sync checklist
+
+При **любом** завершённом шаге roadmap синхронизируйте все релевантные поверхности в **том же PR/коммите**, что и код. Не отмечайте шаг `done`, пока индексы и narrative не актуальны.
+
+| Документ                                             | Когда обновлять                                         |
+| ---------------------------------------------------- | ------------------------------------------------------- |
+| [`docs/lessons/lesson-NNN-*.md`](./lessons/)         | Всегда: новый или обновлённый урок по шаблону           |
+| [`development-roadmap.md`](./development-roadmap.md) | Строка шага (`done`) + таблица уроков в конце файла     |
+| [`README.md`](./README.md)                           | Секция Completed Lessons                                |
+| [`learning-path.md`](./learning-path.md)             | Ссылка на урок в фазе                                   |
+| [`storytelling.md`](./storytelling.md)               | **Обязательно** для шагов Track 1+ (см. ниже)           |
+| [`LOCAL_SETUP.md`](./LOCAL_SETUP.md)                 | Сменился «следующий шаг» или команды локального запуска |
+| Связанные уроки                                      | Обратные ссылки, если шаг закрывает отложенный scope    |
+| [`docs/README.md`](./README.md) runbook / API        | Только если шаг меняет операторские инструкции          |
+
+Правило для агентов Cursor: [`.cursor/rules/documentation-sync.mdc`](../.cursor/rules/documentation-sync.mdc).
+
 ## Storytelling sync
 
 Параллельно с уроком обновляйте [`storytelling.md`](./storytelling.md) — человеческий сюжет «зачем в большой истории», без команд, кода и списков файлов из урока.
+
+**Storytelling не опционален:** пропуск narrative-обновлений считается незавершённым шагом, даже если урок и roadmap уже обновлены.
 
 После каждого спринта:
 

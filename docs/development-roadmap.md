@@ -1,7 +1,7 @@
 ﻿# Development Roadmap: Fullstack Blog/CMS (NestJS + TanStack Start + Nx)
 
 This document is the master implementation roadmap for this repository.
-Every step is a sprint and must produce code changes + a lesson file in `docs/lessons/`.
+Every step is a sprint and must produce code changes + a lesson file in `docs/lessons/`, and **sync all documentation indexes** including [`docs/storytelling.md`](./storytelling.md) (see [lesson-authoring-guide.md](./lesson-authoring-guide.md#documentation-sync-checklist) and [`.cursor/rules/documentation-sync.mdc`](../.cursor/rules/documentation-sync.mdc)).
 
 ## Target System
 
@@ -163,7 +163,7 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 051  | Global API prefix + versioning strategy (URI or header) | docs review — done                |
 | 052  | Graceful shutdown hooks                                 | SIGTERM smoke — done              |
 | 053  | Request timeout / abort interceptor                     | unit/e2e — done                   |
-| 054  | Contract tests for error JSON shape                     | `nx run api:test`                 |
+| 054  | Contract tests for error JSON shape                     | `nx run api:test` — done          |
 | 055  | Track 1 acceptance checklist                            | all DoD items                     |
 | 056  | Reserve: platform observability follow-ups              | ADR or docs check                 |
 
@@ -523,5 +523,6 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 051  | [lesson-051-api-prefix-and-versioning.md](./lessons/lesson-051-api-prefix-and-versioning.md)                       |
 | 052  | [lesson-052-graceful-shutdown-hooks.md](./lessons/lesson-052-graceful-shutdown-hooks.md)                           |
 | 053  | [lesson-053-request-timeout-abort.md](./lessons/lesson-053-request-timeout-abort.md)                               |
+| 054  | [lesson-054-error-json-contract-tests.md](./lessons/lesson-054-error-json-contract-tests.md)                       |
 
 Entry point: [LOCAL_SETUP.md](./LOCAL_SETUP.md)
