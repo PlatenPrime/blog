@@ -17,7 +17,7 @@
 
 Намеренно **не** делаем:
 
-- `POST /auth/login`, JWT — [шаг 065](../development-roadmap.md).
+- `POST /auth/login` — [шаг 065](./lesson-065-auth-login.md); JWT — [шаг 066](../development-roadmap.md).
 - Миграция `UNIQUE (lower(email))` / CITEXT — application-level нормализация достаточна для Track 2.
 - Изменения `shared-contracts` — код `CONFLICT` уже есть с Track 1.
 
@@ -63,21 +63,21 @@
 
 ## Changed Files
 
-| File                                                                | Action                  |
-| ------------------------------------------------------------------- | ----------------------- |
-| `apps/api/src/users/normalize-user-email.ts`                        | created                 |
-| `apps/api/src/users/normalize-user-email.spec.ts`                   | created                 |
-| `apps/api/src/users/user-email.constants.ts`                        | created                 |
-| `apps/api/src/database/is-postgres-unique-violation.ts`             | created                 |
-| `apps/api/src/database/is-postgres-unique-violation.spec.ts`        | created                 |
-| `apps/api/src/users/user.service.ts`                                | changed                 |
-| `apps/api/src/users/user.service.spec.ts`                           | changed                 |
-| `apps/api/test/auth-register.e2e-spec.ts`                           | changed                 |
-| `docs/lessons/lesson-064-unique-email-friendly-conflict.md`         | created                 |
-| `docs/lessons/lesson-063-auth-register-dto.md`                      | changed — link to 064   |
-| `docs/development-roadmap.md`                                       | changed — шаг 064 done  |
-| `docs/README.md` / `docs/learning-path.md` / `docs/storytelling.md` | changed                 |
-| `docs/LOCAL_SETUP.md`                                               | changed — next step 065 |
+| File                                                                | Action                               |
+| ------------------------------------------------------------------- | ------------------------------------ |
+| `apps/api/src/users/normalize-user-email.ts`                        | created                              |
+| `apps/api/src/users/normalize-user-email.spec.ts`                   | created                              |
+| `apps/api/src/users/user-email.constants.ts`                        | created                              |
+| `apps/api/src/database/is-postgres-unique-violation.ts`             | created                              |
+| `apps/api/src/database/is-postgres-unique-violation.spec.ts`        | created                              |
+| `apps/api/src/users/user.service.ts`                                | changed                              |
+| `apps/api/src/users/user.service.spec.ts`                           | changed                              |
+| `apps/api/test/auth-register.e2e-spec.ts`                           | changed                              |
+| `docs/lessons/lesson-064-unique-email-friendly-conflict.md`         | created                              |
+| `docs/lessons/lesson-063-auth-register-dto.md`                      | changed — link to 064                |
+| `docs/development-roadmap.md`                                       | changed — шаг 064 done               |
+| `docs/README.md` / `docs/learning-path.md` / `docs/storytelling.md` | changed                              |
+| `docs/LOCAL_SETUP.md`                                               | changed — next step 065 (historical) |
 
 ## Verification
 
@@ -106,7 +106,7 @@
 - Уникальность на уровне БД (060) + дружелюбный ответ (064) — разные слои.
 - Нормализация в `UserService`, не в DTO — login использует тот же путь.
 - `isPostgresUniqueViolation` — общий хелпер для будущих unique constraints.
-- Следующий шаг 065 — `POST /auth/login`.
+- Следующий шаг 066 — JWT: [development-roadmap.md](../development-roadmap.md). Login: [lesson-065](./lesson-065-auth-login.md).
 
 ## Verify
 

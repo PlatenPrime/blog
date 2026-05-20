@@ -76,6 +76,7 @@ Every step is a sprint and must produce code changes + a lesson file in `docs/le
 | Migration workflow + baseline schema                    | Step 059 completed                         |
 | `User` entity + indexes (`users` table)                 | Step 060 completed                         |
 | Unique email + friendly CONFLICT on register            | Step 064 completed                         |
+| `POST /auth/login` with credential verification         | Step 065 completed                         |
 
 ## Step Contract (mandatory for every lesson)
 
@@ -187,7 +188,7 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 062  | `UserService` create/find by email                    | unit test — done                |
 | 063  | `POST /auth/register` + DTO                           | e2e — done                      |
 | 064  | Unique email constraint + friendly error mapping      | e2e — done                      |
-| 065  | `POST /auth/login`                                    | e2e                             |
+| 065  | `POST /auth/login`                                    | e2e — done                      |
 | 066  | JWT access token issuance + verify service            | unit test                       |
 | 067  | `JwtStrategy` + `AuthGuard`                           | e2e                             |
 | 068  | `@CurrentUser()` decorator                            | unit test                       |
@@ -542,5 +543,6 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 062  | [lesson-062-user-service-create-find-by-email.md](./lessons/lesson-062-user-service-create-find-by-email.md)           |
 | 063  | [lesson-063-auth-register-dto.md](./lessons/lesson-063-auth-register-dto.md)                                           |
 | 064  | [lesson-064-unique-email-friendly-conflict.md](./lessons/lesson-064-unique-email-friendly-conflict.md)                 |
+| 065  | [lesson-065-auth-login.md](./lessons/lesson-065-auth-login.md)                                                         |
 
 Entry point: [LOCAL_SETUP.md](./LOCAL_SETUP.md)

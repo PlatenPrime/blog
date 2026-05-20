@@ -78,8 +78,9 @@ Steps 033-056.
 - Step 062: [lesson-062-user-service-create-find-by-email.md](./lessons/lesson-062-user-service-create-find-by-email.md)
 - Step 063: [lesson-063-auth-register-dto.md](./lessons/lesson-063-auth-register-dto.md)
 - Step 064: [lesson-064-unique-email-friendly-conflict.md](./lessons/lesson-064-unique-email-friendly-conflict.md)
+- Step 065: [lesson-065-auth-login.md](./lessons/lesson-065-auth-login.md)
 
-Steps 065-104.
+Steps 066-104.
 
 ## Phase 4: CMS Backend (Track 3)
 
