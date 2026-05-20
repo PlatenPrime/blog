@@ -182,7 +182,7 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 058  | Datasource config from validated env (`DATABASE_URL`) | `nx run api:test` — done        |
 | 059  | Migration workflow + baseline schema                  | migrate up/down smoke — done    |
 | 060  | `User` entity + indexes                               | `nx run api:test` — done        |
-| 061  | Password hasher service (argon2 or bcrypt)            | unit test                       |
+| 061  | Password hasher service (argon2 or bcrypt)            | unit test — done                |
 | 062  | `UserService` create/find by email                    | unit test                       |
 | 063  | `POST /auth/register` + DTO                           | e2e                             |
 | 064  | Unique email constraint + friendly error mapping      | e2e                             |
@@ -537,5 +537,6 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 058  | [lesson-058-datasource-config-database-url.md](./lessons/lesson-058-datasource-config-database-url.md)                 |
 | 059  | [lesson-059-migration-workflow-baseline-schema.md](./lessons/lesson-059-migration-workflow-baseline-schema.md)         |
 | 060  | [lesson-060-user-entity-indexes.md](./lessons/lesson-060-user-entity-indexes.md)                                       |
+| 061  | [lesson-061-password-hasher-service.md](./lessons/lesson-061-password-hasher-service.md)                               |
 
 Entry point: [LOCAL_SETUP.md](./LOCAL_SETUP.md)

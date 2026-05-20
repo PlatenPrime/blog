@@ -74,8 +74,9 @@ Steps 033-056.
 - Step 058: [lesson-058-datasource-config-database-url.md](./lessons/lesson-058-datasource-config-database-url.md)
 - Step 059: [lesson-059-migration-workflow-baseline-schema.md](./lessons/lesson-059-migration-workflow-baseline-schema.md)
 - Step 060: [lesson-060-user-entity-indexes.md](./lessons/lesson-060-user-entity-indexes.md)
+- Step 061: [lesson-061-password-hasher-service.md](./lessons/lesson-061-password-hasher-service.md)
 
-Steps 061-104.
+Steps 062-104.
 
 ## Phase 4: CMS Backend (Track 3)
 
