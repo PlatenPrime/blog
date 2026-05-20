@@ -183,7 +183,7 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 059  | Migration workflow + baseline schema                  | migrate up/down smoke — done    |
 | 060  | `User` entity + indexes                               | `nx run api:test` — done        |
 | 061  | Password hasher service (argon2 or bcrypt)            | unit test — done                |
-| 062  | `UserService` create/find by email                    | unit test                       |
+| 062  | `UserService` create/find by email                    | unit test — done                |
 | 063  | `POST /auth/register` + DTO                           | e2e                             |
 | 064  | Unique email constraint + friendly error mapping      | e2e                             |
 | 065  | `POST /auth/login`                                    | e2e                             |
@@ -538,5 +538,6 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 059  | [lesson-059-migration-workflow-baseline-schema.md](./lessons/lesson-059-migration-workflow-baseline-schema.md)         |
 | 060  | [lesson-060-user-entity-indexes.md](./lessons/lesson-060-user-entity-indexes.md)                                       |
 | 061  | [lesson-061-password-hasher-service.md](./lessons/lesson-061-password-hasher-service.md)                               |
+| 062  | [lesson-062-user-service-create-find-by-email.md](./lessons/lesson-062-user-service-create-find-by-email.md)           |
 
 Entry point: [LOCAL_SETUP.md](./LOCAL_SETUP.md)

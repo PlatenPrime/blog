@@ -2,7 +2,7 @@
 
 ## Learning Goal
 
-Вынести **хэширование и проверку пароля** в отдельный Nest-сервис на базе **Argon2id**, чтобы `UserService` (062+) и HTTP-слой не дублировали криптологику и чтобы поведение было покрыто **unit-тестами** без Postgres.
+Вынести **хэширование и проверку пароля** в отдельный Nest-сервис на базе **Argon2id**, чтобы `UserService` и HTTP-слой не дублировали криптологику и чтобы поведение было покрыто **unit-тестами** без Postgres.
 
 ## Implementation Scope
 
@@ -16,12 +16,13 @@
 
 Намеренно **не** делаем:
 
-- `UserService`, регистрация/логин, DTO, JWT — [шаги 062+](../development-roadmap.md).
+- Регистрация/логин по HTTP, DTO, JWT — [шаги 063+](../development-roadmap.md).
 - Переменные окружения для cost-параметров (позже, при политике prod).
 
 ## Dependencies
 
 - [Шаг 060](./lesson-060-user-entity-indexes.md) — колонка `password_hash`, сущность `User`.
+- [Шаг 062](./lesson-062-user-service-create-find-by-email.md) — `UserService` вызывает этот сервис при создании пользователя.
 - Node из [`.nvmrc`](../../.nvmrc); пакет `@node-rs/argon2` (N-API, предсборки под Linux/Windows — важно для CI-матрицы).
 
 ## Step-by-Step Changes

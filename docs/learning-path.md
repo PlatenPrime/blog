@@ -75,8 +75,9 @@ Steps 033-056.
 - Step 059: [lesson-059-migration-workflow-baseline-schema.md](./lessons/lesson-059-migration-workflow-baseline-schema.md)
 - Step 060: [lesson-060-user-entity-indexes.md](./lessons/lesson-060-user-entity-indexes.md)
 - Step 061: [lesson-061-password-hasher-service.md](./lessons/lesson-061-password-hasher-service.md)
+- Step 062: [lesson-062-user-service-create-find-by-email.md](./lessons/lesson-062-user-service-create-find-by-email.md)
 
-Steps 062-104.
+Steps 063-104.
 
 ## Phase 4: CMS Backend (Track 3)
 
