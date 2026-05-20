@@ -80,8 +80,9 @@ Steps 033-056.
 - Step 064: [lesson-064-unique-email-friendly-conflict.md](./lessons/lesson-064-unique-email-friendly-conflict.md)
 - Step 065: [lesson-065-auth-login.md](./lessons/lesson-065-auth-login.md)
 - Step 066: [lesson-066-jwt-access-token-service.md](./lessons/lesson-066-jwt-access-token-service.md)
+- Step 067: [lesson-067-jwt-strategy-auth-guard.md](./lessons/lesson-067-jwt-strategy-auth-guard.md)
 
-Steps 067-104.
+Steps 068-104.
 
 ## Phase 4: CMS Backend (Track 3)
 

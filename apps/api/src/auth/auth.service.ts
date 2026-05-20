@@ -9,12 +9,14 @@ import { INVALID_LOGIN_CREDENTIALS_MESSAGE } from './auth-credentials.constants'
 import type { CreateLoginBodyDto } from './dto/create-login-body.dto';
 import type { CreateRegisterBodyDto } from './dto/create-register-body.dto';
 import type { User } from '../users/user.entity';
+import { JwtAccessTokenService } from './jwt-access-token.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly users: UserService,
     private readonly passwordHasher: PasswordHasherService,
+    private readonly accessTokens: JwtAccessTokenService,
   ) {}
 
   async register(dto: CreateRegisterBodyDto): Promise<RegisterUserResponse> {
@@ -41,7 +43,12 @@ export class AuthService {
       throw new UnauthorizedException(INVALID_LOGIN_CREDENTIALS_MESSAGE);
     }
 
-    return this.toPublicUserResponse(user);
+    const accessToken = await this.accessTokens.signForUser(user.id);
+
+    return {
+      ...this.toPublicUserResponse(user),
+      accessToken,
+    };
   }
 
   private toPublicUserResponse(user: User): RegisterUserResponse {

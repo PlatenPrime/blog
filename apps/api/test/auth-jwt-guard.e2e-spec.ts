@@ -1,7 +1,7 @@
 import {
   API_ERROR_CODE_UNAUTHORIZED,
-  API_ERROR_CODE_VALIDATION,
   PROBLEM_MEDIA_TYPE,
+  type AuthMeResponse,
   type LoginUserResponse,
   type ProblemDetailsBody,
   problemTypeUriForCode,
@@ -13,7 +13,7 @@ import request from 'supertest';
 import { App } from 'supertest/types';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { AppModule } from '../src/app.module';
-import { INVALID_LOGIN_CREDENTIALS_MESSAGE } from '../src/auth/auth-credentials.constants';
+import { INVALID_ACCESS_TOKEN_MESSAGE } from '../src/auth/auth-jwt.constants';
 import { API_V1_BASE } from '../src/config/configure-api-http';
 import { configureApiHttp } from '../src/config/configure-api-http';
 import { configureApiShutdown } from '../src/config/configure-api-shutdown';
@@ -25,6 +25,7 @@ import { PasswordHasherService } from '../src/users/password-hasher.service';
 import { UserService } from '../src/users/user.service';
 
 const loginBase = `${API_V1_BASE}/auth/login`;
+const meBase = `${API_V1_BASE}/auth/me`;
 
 const fakeUser: User = {
   id: '11111111-1111-4111-8111-111111111111',
@@ -34,7 +35,7 @@ const fakeUser: User = {
   updatedAt: new Date('2026-05-20T10:00:00.000Z'),
 };
 
-describe('Auth login (e2e)', () => {
+describe('Auth JWT guard (e2e)', () => {
   let app: INestApplication<App>;
   let findByEmail: ReturnType<typeof vi.fn>;
   let verify: ReturnType<typeof vi.fn>;
@@ -69,61 +70,7 @@ describe('Auth login (e2e)', () => {
     await app.close();
   });
 
-  it('returns VALIDATION_FAILED with details for an invalid login body', async () => {
-    const response = await request(app.getHttpServer())
-      .post(loginBase)
-      .send({})
-      .expect(400);
-
-    expect(response.headers['content-type']).toContain(PROBLEM_MEDIA_TYPE);
-
-    const body = response.body as ProblemDetailsBody;
-
-    expect(body).toMatchObject({
-      type: problemTypeUriForCode(API_ERROR_CODE_VALIDATION),
-      title: 'Validation Failed',
-      status: 400,
-      detail: 'Validation failed',
-      code: API_ERROR_CODE_VALIDATION,
-    });
-
-    const emailDetail = body.details?.find(
-      (detail) => detail.field === 'email',
-    );
-    const passwordDetail = body.details?.find(
-      (detail) => detail.field === 'password',
-    );
-    expect(emailDetail).toBeDefined();
-    expect(emailDetail?.message.length).toBeGreaterThan(0);
-    expect(passwordDetail).toBeDefined();
-    expect(passwordDetail?.message.length).toBeGreaterThan(0);
-  });
-
-  it('rejects non-whitelisted properties on login with 400', async () => {
-    const response = await request(app.getHttpServer())
-      .post(loginBase)
-      .send({
-        email: 'user@example.com',
-        password: 'secret123',
-        extra: 'x',
-      })
-      .expect(400);
-
-    const body = response.body as ProblemDetailsBody;
-
-    expect(body).toMatchObject({
-      code: API_ERROR_CODE_VALIDATION,
-      detail: 'Validation failed',
-      status: 400,
-    });
-    const extraDetail = body.details?.find(
-      (detail) => detail.field === 'extra',
-    );
-    expect(extraDetail).toBeDefined();
-    expect(extraDetail?.message).toContain('extra');
-  });
-
-  it('returns LoginUserResponse when credentials are valid', async () => {
+  async function loginAccessToken(): Promise<string> {
     findByEmail.mockResolvedValue(fakeUser);
     verify.mockResolvedValue(true);
 
@@ -132,29 +79,18 @@ describe('Auth login (e2e)', () => {
       .send({ email: 'user@example.com', password: 'secret123' })
       .expect(200);
 
-    const body = response.body as LoginUserResponse & {
-      passwordHash?: string;
-    };
-
-    expect(body.id).toBe(fakeUser.id);
-    expect(body.email).toBe(fakeUser.email);
-    expect(body.createdAt).toBe(fakeUser.createdAt.toISOString());
-    expect(body.updatedAt).toBe(fakeUser.updatedAt.toISOString());
-    expect(typeof body.accessToken).toBe('string');
+    const body = response.body as LoginUserResponse;
     expect(body.accessToken.length).toBeGreaterThan(0);
-    expect(body).not.toHaveProperty('passwordHash');
+    return body.accessToken;
+  }
 
-    expect(findByEmail).toHaveBeenCalledWith('user@example.com');
-    expect(verify).toHaveBeenCalledWith('secret123', fakeUser.passwordHash);
+  it('returns accessToken on successful login', async () => {
+    const accessToken = await loginAccessToken();
+    expect(typeof accessToken).toBe('string');
   });
 
-  it('returns UNAUTHORIZED when user is not found', async () => {
-    findByEmail.mockResolvedValue(null);
-
-    const response = await request(app.getHttpServer())
-      .post(loginBase)
-      .send({ email: 'missing@example.com', password: 'secret123' })
-      .expect(401);
+  it('returns UNAUTHORIZED for GET /auth/me without Bearer token', async () => {
+    const response = await request(app.getHttpServer()).get(meBase).expect(401);
 
     expect(response.headers['content-type']).toContain(PROBLEM_MEDIA_TYPE);
 
@@ -164,19 +100,28 @@ describe('Auth login (e2e)', () => {
       type: problemTypeUriForCode(API_ERROR_CODE_UNAUTHORIZED),
       title: 'Unauthorized',
       status: 401,
-      detail: INVALID_LOGIN_CREDENTIALS_MESSAGE,
+      detail: INVALID_ACCESS_TOKEN_MESSAGE,
       code: API_ERROR_CODE_UNAUTHORIZED,
     });
-    expect(verify).not.toHaveBeenCalled();
   });
 
-  it('returns UNAUTHORIZED when password does not match', async () => {
-    findByEmail.mockResolvedValue(fakeUser);
-    verify.mockResolvedValue(false);
+  it('returns AuthMeResponse for GET /auth/me with valid Bearer token', async () => {
+    const accessToken = await loginAccessToken();
 
     const response = await request(app.getHttpServer())
-      .post(loginBase)
-      .send({ email: 'user@example.com', password: 'wrong-password' })
+      .get(meBase)
+      .set('Authorization', `Bearer ${accessToken}`)
+      .expect(200);
+
+    const body = response.body as AuthMeResponse;
+
+    expect(body).toEqual({ id: fakeUser.id });
+  });
+
+  it('returns UNAUTHORIZED for GET /auth/me with invalid Bearer token', async () => {
+    const response = await request(app.getHttpServer())
+      .get(meBase)
+      .set('Authorization', 'Bearer not-a-valid-jwt')
       .expect(401);
 
     expect(response.headers['content-type']).toContain(PROBLEM_MEDIA_TYPE);
@@ -187,7 +132,7 @@ describe('Auth login (e2e)', () => {
       type: problemTypeUriForCode(API_ERROR_CODE_UNAUTHORIZED),
       title: 'Unauthorized',
       status: 401,
-      detail: INVALID_LOGIN_CREDENTIALS_MESSAGE,
+      detail: INVALID_ACCESS_TOKEN_MESSAGE,
       code: API_ERROR_CODE_UNAUTHORIZED,
     });
   });

@@ -5,6 +5,7 @@ import type { User } from '../users/user.entity';
 import { UserService } from '../users/user.service';
 import { INVALID_LOGIN_CREDENTIALS_MESSAGE } from './auth-credentials.constants';
 import { AuthService } from './auth.service';
+import { JwtAccessTokenService } from './jwt-access-token.service';
 import type { CreateLoginBodyDto } from './dto/create-login-body.dto';
 import type { CreateRegisterBodyDto } from './dto/create-register-body.dto';
 
@@ -13,8 +14,10 @@ describe('AuthService', () => {
   let create: ReturnType<typeof vi.fn>;
   let findByEmail: ReturnType<typeof vi.fn>;
   let verify: ReturnType<typeof vi.fn>;
+  let signForUser: ReturnType<typeof vi.fn>;
   let users: UserService;
   let passwordHasher: PasswordHasherService;
+  let accessTokens: JwtAccessTokenService;
 
   const savedUser: User = {
     id: '11111111-1111-4111-8111-111111111111',
@@ -28,9 +31,11 @@ describe('AuthService', () => {
     create = vi.fn();
     findByEmail = vi.fn();
     verify = vi.fn();
+    signForUser = vi.fn();
     users = { create, findByEmail } as unknown as UserService;
     passwordHasher = { verify } as unknown as PasswordHasherService;
-    service = new AuthService(users, passwordHasher);
+    accessTokens = { signForUser } as unknown as JwtAccessTokenService;
+    service = new AuthService(users, passwordHasher, accessTokens);
   });
 
   it('register delegates to UserService.create with email and plainPassword', async () => {
@@ -66,9 +71,10 @@ describe('AuthService', () => {
     expect(result).not.toHaveProperty('passwordHash');
   });
 
-  it('login returns LoginUserResponse when user exists and password matches', async () => {
+  it('login returns LoginUserResponse with accessToken when credentials are valid', async () => {
     findByEmail.mockResolvedValue(savedUser);
     verify.mockResolvedValue(true);
+    signForUser.mockResolvedValue('signed-access-token');
     const dto: CreateLoginBodyDto = {
       email: 'user@example.com',
       password: 'secret123',
@@ -78,11 +84,13 @@ describe('AuthService', () => {
 
     expect(findByEmail).toHaveBeenCalledWith('user@example.com');
     expect(verify).toHaveBeenCalledWith('secret123', savedUser.passwordHash);
+    expect(signForUser).toHaveBeenCalledWith(savedUser.id);
     expect(result).toEqual({
       id: savedUser.id,
       email: savedUser.email,
       createdAt: savedUser.createdAt.toISOString(),
       updatedAt: savedUser.updatedAt.toISOString(),
+      accessToken: 'signed-access-token',
     });
     expect(result).not.toHaveProperty('passwordHash');
   });

@@ -110,7 +110,7 @@ Guards и стратегии (067) должны опираться на один
 
 - Не класть `email` в access JWT до явного решения в 084.
 - Один neutral message для всех ошибок verify.
-- Следующий шаг 067 подключает Passport и возвращает токен клиенту.
+- Следующий шаг — [lesson-067](./lesson-067-jwt-strategy-auth-guard.md): Passport, guard, `accessToken` в login.
 
 ## Verify
 
