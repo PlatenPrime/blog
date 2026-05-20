@@ -144,7 +144,7 @@ npx nx run api:lint
 - ORM — `DATABASE_URL`; readiness/compose — `POSTGRES_*` (пока не объединяем pools).
 - Пустой `DATABASE_URL` → собирается из discrete fields — старые `.env` работают.
 - TypeORM принимает `url` нативно; отдельный парсер для runtime не нужен.
-- Builder с percent-encoding пригодится для migration CLI на шаге 059.
+- Builder с percent-encoding используется в migration CLI — [шаг 059](./lesson-059-migration-workflow-baseline-schema.md).
 - Fail-fast: неверная схема URL (`mysql://`) падает на старте Nest.
 
 ## Verify

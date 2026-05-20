@@ -18,7 +18,11 @@
     "test:watch": "vitest",
     "test:cov": "vitest run --coverage",
     "test:debug": "vitest --inspect-brk --no-file-parallelism --pool=forks",
-    "test:e2e": "vitest run -c vitest.config.e2e.ts"
+    "test:e2e": "vitest run -c vitest.config.e2e.ts",
+    "typeorm": "typeorm-ts-node-commonjs",
+    "migration:run": "npm run typeorm -- migration:run -d src/database/typeorm-data-source.ts",
+    "migration:revert": "npm run typeorm -- migration:revert -d src/database/typeorm-data-source.ts",
+    "migration:show": "npm run typeorm -- migration:show -d src/database/typeorm-data-source.ts"
   },
   "dependencies": {
     "@blog/shared-contracts": "file:../../libs/shared-contracts",
@@ -36,6 +40,7 @@
     "@opentelemetry/sdk-trace-base": "^2.0.0",
     "@opentelemetry/semantic-conventions": "^1.41.1",
     "class-transformer": "^0.5.1",
+    "dotenv": "^17.4.2",
     "class-validator": "^0.14.1",
     "nestjs-pino": "^4.6.1",
     "pg": "^8.16.0",

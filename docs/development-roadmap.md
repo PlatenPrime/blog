@@ -73,6 +73,7 @@ Every step is a sprint and must produce code changes + a lesson file in `docs/le
 | Platform observability follow-ups (OTLP, logs, metrics) | Step 056 completed                         |
 | Database module (Postgres + TypeORM bootstrap)          | Step 057 completed                         |
 | Datasource config from validated env (`DATABASE_URL`)   | Step 058 completed                         |
+| Migration workflow + baseline schema                    | Step 059 completed                         |
 
 ## Step Contract (mandatory for every lesson)
 
@@ -178,7 +179,7 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | ---- | ----------------------------------------------------- | ------------------------------- |
 | 057  | Database module: Postgres + ORM bootstrap             | `nx run api:build` — done       |
 | 058  | Datasource config from validated env (`DATABASE_URL`) | `nx run api:test` — done        |
-| 059  | Migration workflow + baseline schema                  | migrate up/down smoke           |
+| 059  | Migration workflow + baseline schema                  | migrate up/down smoke — done    |
 | 060  | `User` entity + indexes                               | migration applied               |
 | 061  | Password hasher service (argon2 or bcrypt)            | unit test                       |
 | 062  | `UserService` create/find by email                    | unit test                       |
@@ -533,5 +534,6 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 056  | [lesson-056-platform-observability-follow-ups.md](./lessons/lesson-056-platform-observability-follow-ups.md)           |
 | 057  | [lesson-057-database-module-postgres-orm-bootstrap.md](./lessons/lesson-057-database-module-postgres-orm-bootstrap.md) |
 | 058  | [lesson-058-datasource-config-database-url.md](./lessons/lesson-058-datasource-config-database-url.md)                 |
+| 059  | [lesson-059-migration-workflow-baseline-schema.md](./lessons/lesson-059-migration-workflow-baseline-schema.md)         |
 
 Entry point: [LOCAL_SETUP.md](./LOCAL_SETUP.md)

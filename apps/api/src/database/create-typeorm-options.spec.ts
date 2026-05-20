@@ -1,18 +1,20 @@
+import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { createTypeOrmOptions } from './create-typeorm-options';
+import {
+  createCliDataSourceOptions,
+  createTypeOrmOptions,
+} from './create-typeorm-options';
+
+const databaseUrl = 'postgresql://app:secret@db.local:5433/blog_test';
 
 describe('createTypeOrmOptions', () => {
   it('maps DATABASE_URL to postgres DataSource options with Nest extras', () => {
-    expect(
-      createTypeOrmOptions({
-        DATABASE_URL: 'postgresql://app:secret@db.local:5433/blog_test',
-      }),
-    ).toEqual({
+    expect(createTypeOrmOptions({ DATABASE_URL: databaseUrl })).toEqual({
       type: 'postgres',
-      url: 'postgresql://app:secret@db.local:5433/blog_test',
+      url: databaseUrl,
       synchronize: false,
-      autoLoadEntities: true,
       connectTimeoutMS: 3_000,
+      autoLoadEntities: true,
       retryAttempts: 3,
       retryDelay: 1_000,
     });
@@ -24,5 +26,25 @@ describe('createTypeOrmOptions', () => {
         DATABASE_URL: 'postgresql://blog:blog@127.0.0.1:5432/blog_dev',
       }).synchronize,
     ).toBe(false);
+  });
+});
+
+describe('createCliDataSourceOptions', () => {
+  it('maps DATABASE_URL with migrations glob and empty entities', () => {
+    expect(createCliDataSourceOptions({ DATABASE_URL: databaseUrl })).toEqual({
+      type: 'postgres',
+      url: databaseUrl,
+      synchronize: false,
+      connectTimeoutMS: 3_000,
+      entities: [],
+      migrations: [join(__dirname, 'migrations', '*.{ts,js}')],
+      migrationsTableName: 'typeorm_migrations',
+    });
+  });
+
+  it('does not enable autoLoadEntities for CLI', () => {
+    expect(
+      createCliDataSourceOptions({ DATABASE_URL: databaseUrl }),
+    ).not.toHaveProperty('autoLoadEntities');
   });
 });

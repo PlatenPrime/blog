@@ -53,7 +53,21 @@ npm run db:down      # остановить (volume сохраняется)
 npm run db:reset     # полный сброс (volume удаляется)
 ```
 
-**TypeORM** подключается через [`DatabaseModule`](src/database/database.module.ts): validated `DATABASE_URL` из env ([`create-typeorm-options.ts`](src/database/create-typeorm-options.ts); если URL не задан — собирается из `POSTGRES_*`), `synchronize: false`, `autoLoadEntities: true`. Для старта API с реальным ORM нужен живой Postgres (`npm run db:up`). Readiness по-прежнему проверяет БД отдельным `pg` pool на `POSTGRES_*` ([`health.module.ts`](src/health/health.module.ts)). Миграции — шаг 059 ([`lesson-058`](../../docs/lessons/lesson-058-datasource-config-database-url.md)).
+**TypeORM** подключается через [`DatabaseModule`](src/database/database.module.ts): validated `DATABASE_URL` из env ([`create-typeorm-options.ts`](src/database/create-typeorm-options.ts); если URL не задан — собирается из `POSTGRES_*`), `synchronize: false`, `autoLoadEntities: true`. Для старта API с реальным ORM нужен живой Postgres (`npm run db:up`). Readiness по-прежнему проверяет БД отдельным `pg` pool на `POSTGRES_*` ([`health.module.ts`](src/health/health.module.ts)).
+
+### Migrations (TypeORM CLI)
+
+Схема версионируется миграциями, не `synchronize`. CLI entry: [`typeorm-data-source.ts`](src/database/typeorm-data-source.ts); baseline: [`migrations/1747756800000-InitialBaseline.ts`](src/database/migrations/1747756800000-InitialBaseline.ts).
+
+```bash
+npm run db:up              # из корня репо
+npm run db:migrate         # apply
+npm run db:migrate:show    # status
+npm run db:migrate:revert  # undo last
+npm run db:migrate:smoke   # local up/down smoke
+```
+
+Урок: [`lesson-059`](../../docs/lessons/lesson-059-migration-workflow-baseline-schema.md). Nest **не** запускает миграции при старте.
 
 ## Routing
 

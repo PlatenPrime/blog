@@ -151,6 +151,20 @@ docker compose exec db pg_isready -U blog        # accepting connections
 npm run db:psql -- -c "select version();"        # PostgreSQL 16.x
 ```
 
+## Database migrations (step 059)
+
+TypeORM migrations run via CLI (not on Nest bootstrap). Same `DATABASE_URL` as runtime ORM ([lesson-059](./lessons/lesson-059-migration-workflow-baseline-schema.md)).
+
+```bash
+npm run db:up
+npm run db:migrate              # apply pending migrations
+npm run db:migrate:show         # list applied/pending
+npm run db:migrate:revert       # undo last migration
+npm run db:migrate:smoke        # up → show → revert → up (local smoke)
+```
+
+If smoke fails on a dirty DB: `npm run db:reset`, then `npm run db:up` again. Migrations are **not** part of `npm run ci` (no Postgres in GitHub Actions yet).
+
 ## Optional: OpenTelemetry OTLP export (step 056)
 
 По умолчанию API создаёт spans in-process (`OTEL_TRACES_EXPORTER=none`) — CI и локальный dev без collector. Чтобы отправлять traces в Jaeger:
@@ -170,4 +184,4 @@ OTEL_EXPORTER_OTLP_ENDPOINT=http://127.0.0.1:4318/v1/traces
 
 ## Next roadmap step
 
-**Track 1 — Platform Core** (033–056) закрыт. **Track 2:** **Step 057** (TypeORM bootstrap) — [lesson-057](./lessons/lesson-057-database-module-postgres-orm-bootstrap.md); **Step 058** (`DATABASE_URL`) — [lesson-058](./lessons/lesson-058-datasource-config-database-url.md). Следующий шаг — **059** (migration workflow) — см. [development-roadmap.md](./development-roadmap.md). Track 0 (001–032): [track-0-acceptance-checklist.md](./track-0-acceptance-checklist.md).
+**Track 1 — Platform Core** (033–056) закрыт. **Track 2:** **057** (TypeORM) — [lesson-057](./lessons/lesson-057-database-module-postgres-orm-bootstrap.md); **058** (`DATABASE_URL`) — [lesson-058](./lessons/lesson-058-datasource-config-database-url.md); **059** (migrations) — [lesson-059](./lessons/lesson-059-migration-workflow-baseline-schema.md). Следующий шаг — **060** (`User` entity) — см. [development-roadmap.md](./development-roadmap.md). Track 0 (001–032): [track-0-acceptance-checklist.md](./track-0-acceptance-checklist.md).

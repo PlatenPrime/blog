@@ -33,6 +33,10 @@
     "db:reset": "docker compose down -v",
     "db:logs": "docker compose logs -f db",
     "db:psql": "docker compose exec db psql -U blog -d blog_dev",
+    "db:migrate": "npm run migration:run -w api",
+    "db:migrate:revert": "npm run migration:revert -w api",
+    "db:migrate:show": "npm run migration:show -w api",
+    "db:migrate:smoke": "node scripts/migration-smoke.mjs",
     "health:smoke": "node scripts/health-smoke.mjs",
     "shutdown:smoke": "node scripts/shutdown-smoke.mjs"
   },
