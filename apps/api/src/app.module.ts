@@ -22,6 +22,7 @@ import { validateRootEnv } from './config/env.schema';
 import { resolveEnvFilePaths } from './config/env-file-paths';
 import { ApiExceptionFilter } from './errors/api-exception.filter';
 import { ExamplesModule } from './examples/examples.module';
+import { UsersModule } from './users';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { ExamplesModule } from './examples/examples.module';
     ShutdownModule,
     RequestLifecycleModule,
     DatabaseModule,
+    UsersModule,
     HealthModule,
     MetricsModule,
     ExamplesModule,

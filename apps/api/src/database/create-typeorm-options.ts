@@ -38,7 +38,7 @@ export function createCliDataSourceOptions(
 ): DataSourceOptions {
   return {
     ...createBasePostgresOptions(env),
-    entities: [],
+    entities: [join(__dirname, '..', '**', '*.entity.{ts,js}')],
     migrations: [join(__dirname, 'migrations', '*.{ts,js}')],
     migrationsTableName: 'typeorm_migrations',
   };

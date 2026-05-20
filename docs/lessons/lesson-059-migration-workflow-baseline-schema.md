@@ -79,7 +79,7 @@ Deploy и onboarding: один `DATABASE_URL`, одна команда `db:migra
 ## Architecture Notes
 
 - **Два потребителя одного URL:** Nest `DatabaseModule` и CLI `DataSource` — разные фабрики, общий `createBasePostgresOptions`.
-- **CLI `entities: []`:** на 059 сущностей нет; на 060+ в `createCliDataSourceOptions` добавят glob сущностей для `migration:generate`.
+- **CLI `entities` glob:** на 059 сущностей не было; на [060](./lesson-060-user-entity-indexes.md) в `createCliDataSourceOptions` добавлен glob `*.entity.{ts,js}` для `migration:generate`.
 - **Prod deploy:** позже запускать `migration:run` на скомпилированном `dist` с `*.js` migrations (glob `*.{ts,js}` уже учтён).
 - **Smoke вне CI:** как e2e с stub `DataSource` — CI без Docker Postgres.
 

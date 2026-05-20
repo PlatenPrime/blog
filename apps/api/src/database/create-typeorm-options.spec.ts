@@ -30,13 +30,13 @@ describe('createTypeOrmOptions', () => {
 });
 
 describe('createCliDataSourceOptions', () => {
-  it('maps DATABASE_URL with migrations glob and empty entities', () => {
+  it('maps DATABASE_URL with migrations glob and entity glob for CLI', () => {
     expect(createCliDataSourceOptions({ DATABASE_URL: databaseUrl })).toEqual({
       type: 'postgres',
       url: databaseUrl,
       synchronize: false,
       connectTimeoutMS: 3_000,
-      entities: [],
+      entities: [join(__dirname, '..', '**', '*.entity.{ts,js}')],
       migrations: [join(__dirname, 'migrations', '*.{ts,js}')],
       migrationsTableName: 'typeorm_migrations',
     });
