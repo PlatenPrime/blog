@@ -1,0 +1,57 @@
+---
+description: Mandatory unit tests when changing apps/api production code (husky tests-first gate)
+alwaysApply: true
+---
+
+# Tests-first for `apps/api` (mandatory)
+
+This repo enforces **tests-first** via [`scripts/validate-tests-first.mjs`](scripts/validate-tests-first.mjs) on **pre-commit** and **CI**. If you change production code under `apps/api/src/` without staging at least one `*.spec.ts` / `*.test.ts` under `apps/api/`, the commit **fails**.
+
+**E2E does not satisfy the gate.** `apps/api/test/*.e2e-spec.ts` counts as tests for CI runtime, but the gate only looks for `apps/api/**/*.spec.ts` (or `.test.ts`). Always add **unit** specs in the same change set as `apps/api/src/` changes.
+
+## When this applies
+
+| Change | Required in same commit |
+| ------ | ------------------------ |
+| New/edited file in `apps/api/src/` (not `*.spec.ts`) | Matching or related `*.spec.ts` next to the feature |
+| Roadmap step with new Nest service/controller/DTO | Unit spec for testable behavior (usually `*Service`) |
+| Only `apps/api/test/*.e2e-spec.ts` | OK if **no** `apps/api/src/` production files changed |
+
+`app.module.ts` wiring-only changes still trigger the gate — include a spec for the feature you register, or extend an existing spec.
+
+## Agent workflow (do not skip)
+
+1. **Before** marking a roadmap/API task done, plan the unit spec(s).
+2. Prefer **red → green**: add/update `*.spec.ts` first when doing TDD; otherwise add spec **in the same PR/commit** as production code.
+3. **Colocate** specs: `auth.service.ts` → `auth.service.spec.ts` (same folder as production file).
+4. **Default target:** services and pure functions (mock dependencies with `vi.fn()`, same style as [`user.service.spec.ts`](apps/api/src/users/user.service.spec.ts)). Controllers: optional thin `TestingModule` spec if the controller only delegates.
+5. **Do not finish** implementation checklists without: `nx run api:test` green **and** staged unit test files when staging `apps/api/src/`.
+6. In lesson **Changed Files** and **Definition of Done**, list every `*.spec.ts` created/updated.
+
+## Minimal spec pattern (Vitest)
+
+```typescript
+// apps/api/src/<feature>/<feature>.service.spec.ts
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+describe('FeatureService', () => {
+  let service: FeatureService;
+  let dependency: Dependency;
+
+  beforeEach(() => {
+    dependency = { method: vi.fn() } as unknown as Dependency;
+    service = new FeatureService(dependency);
+  });
+
+  it('does the one thing callers rely on', async () => {
+    // arrange → act → assert
+  });
+});
+```
+
+## Roadmap + docs
+
+- [`docs/lesson-authoring-guide.md`](docs/lesson-authoring-guide.md) — TDD in Code Change Rules and lesson checklist.
+- [`docs/lessons/lesson-022-optional-husky-lint-staged-policy.md`](docs/lessons/lesson-022-optional-husky-lint-staged-policy.md) — why the gate exists.
+
+When completing a step, cross-check [documentation-sync](.cursor/rules/documentation-sync.mdc) **and** this rule.

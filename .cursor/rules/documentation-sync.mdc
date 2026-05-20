@@ -20,6 +20,7 @@ Every roadmap step (sprint) **must** update documentation in the **same change s
 | **`docs/storytelling.md`** | **Always for Track steps:** row in chapter table, narrative in «Как это выглядело», update «Где мы сейчас» / «Что дальше» / intro «после шага NNN» |
 | `docs/LOCAL_SETUP.md` | Update when next-step or setup commands change |
 | Related lessons | Back-links in Dependencies / «What To Remember» when scope shifts |
+| `apps/api/src/**/*.spec.ts` | **Required** with any `apps/api/src/` production change — see [tests-first-api](.cursor/rules/tests-first-api.mdc) |
 
 ## Storytelling (do not skip)
 
@@ -29,6 +30,6 @@ After each step: find the chapter in storytelling TOC → add table row → exte
 
 ## Agent behavior
 
-- Before finishing a roadmap task, run through the checklist explicitly.
+- Before finishing a roadmap task, run through the checklist explicitly (including unit tests for `apps/api` production code).
 - If the user asks only for code, still propose doc/storytelling updates or apply them unless the user narrows scope.
 - When editing docs-only, keep storytelling consistent with roadmap baseline status.

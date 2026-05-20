@@ -33,9 +33,10 @@
 3. Реализовать `AuthService.register` → `UserService.create` → map в `RegisterUserResponse`.
 4. `AuthController`: `@Post('register')`, `@HttpCode(201)`.
 5. `AuthModule` + импорт в `AppModule`.
-6. E2e: override `UserService`, сценарии validation + 201 happy path.
-7. **Verify:** `nx run api:test`, `api:test:e2e`, `api:build`, `shared-contracts:build`.
-8. Синхронизировать roadmap, storytelling, README, learning-path, LOCAL_SETUP.
+6. **Unit:** `auth.service.spec.ts` — делегирование в `UserService` и маппинг ответа (tests-first gate).
+7. E2e: override `UserService`, сценарии validation + 201 happy path.
+8. **Verify:** `nx run api:test`, `api:test:e2e`, `api:build`, `shared-contracts:build`.
+9. Синхронизировать roadmap, storytelling, README, learning-path, LOCAL_SETUP.
 
 ## Context
 
@@ -85,12 +86,19 @@
 - `npx nx run api:test:e2e` — `auth-register.e2e-spec.ts` зелёный.
 - `npx nx run api:lint` / `api:build` — без ошибок.
 
+## TDD Sequence
+
+- **Red/Green:** `auth.service.spec.ts` — мок `UserService`, проверка `create` и `RegisterUserResponse` без `passwordHash`.
+- **Green:** production `AuthService` / controller / module.
+- **Refactor:** e2e остаётся на моке `UserService` (Postgres не нужен); unit spec — обязательный барьер pre-commit ([`validate-tests-first.mjs`](../../scripts/validate-tests-first.mjs)).
+
 ## Definition of Done
 
 - [x] `POST /api/v1/auth/register` → `201` + `RegisterUserResponse`.
 - [x] Невалидное тело → `VALIDATION_FAILED` (400, problem+json).
 - [x] `passwordHash` не в HTTP-ответе.
 - [x] E2e без Postgres (мок `UserService`).
+- [x] Unit-тест `auth.service.spec.ts` в том же коммите, что production-код.
 - [x] Документация синхронизирована.
 
 ## What To Remember
@@ -98,6 +106,7 @@
 - DTO поле `password` → `plainPassword` только в `AuthService` при вызове `UserService`.
 - Ответные типы — в `shared-contracts`; валидаторы — только в API DTO.
 - Следующий шаг 064 — дружелюбный `CONFLICT` при дубликате email.
+- E2e не проходит tests-first gate — нужен `*.spec.ts` рядом с `apps/api/src`.
 
 ## Verify
 

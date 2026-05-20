@@ -71,6 +71,7 @@
 - Есть шаги валидации результата?
 - Есть секция "что запомнить"?
 - В блоках `Verification` и/или `Step-by-Step Changes` явно описан тест-first (TDD) порядок: сначала тест, затем минимальный код, затем рефакторинг (если применяется).
+- Для шагов с кодом в `apps/api/src`: есть `*.spec.ts` в том же change set (иначе pre-commit упадёт).
 - Есть **Definition of Done** и воспроизводимые команды проверки?
 - Обновлён блок шага в [`storytelling.md`](./storytelling.md)?
 
@@ -85,18 +86,30 @@
 
 При **любом** завершённом шаге roadmap синхронизируйте все релевантные поверхности в **том же PR/коммите**, что и код. Не отмечайте шаг `done`, пока индексы и narrative не актуальны.
 
-| Документ                                             | Когда обновлять                                         |
-| ---------------------------------------------------- | ------------------------------------------------------- |
-| [`docs/lessons/lesson-NNN-*.md`](./lessons/)         | Всегда: новый или обновлённый урок по шаблону           |
-| [`development-roadmap.md`](./development-roadmap.md) | Строка шага (`done`) + таблица уроков в конце файла     |
-| [`README.md`](./README.md)                           | Секция Completed Lessons                                |
-| [`learning-path.md`](./learning-path.md)             | Ссылка на урок в фазе                                   |
-| [`storytelling.md`](./storytelling.md)               | **Обязательно** для шагов Track 1+ (см. ниже)           |
-| [`LOCAL_SETUP.md`](./LOCAL_SETUP.md)                 | Сменился «следующий шаг» или команды локального запуска |
-| Связанные уроки                                      | Обратные ссылки, если шаг закрывает отложенный scope    |
-| [`docs/README.md`](./README.md) runbook / API        | Только если шаг меняет операторские инструкции          |
+| Документ                                             | Когда обновлять                                                       |
+| ---------------------------------------------------- | --------------------------------------------------------------------- |
+| [`docs/lessons/lesson-NNN-*.md`](./lessons/)         | Всегда: новый или обновлённый урок по шаблону                         |
+| [`development-roadmap.md`](./development-roadmap.md) | Строка шага (`done`) + таблица уроков в конце файла                   |
+| [`README.md`](./README.md)                           | Секция Completed Lessons                                              |
+| [`learning-path.md`](./learning-path.md)             | Ссылка на урок в фазе                                                 |
+| [`storytelling.md`](./storytelling.md)               | **Обязательно** для шагов Track 1+ (см. ниже)                         |
+| [`LOCAL_SETUP.md`](./LOCAL_SETUP.md)                 | Сменился «следующий шаг» или команды локального запуска               |
+| Связанные уроки                                      | Обратные ссылки, если шаг закрывает отложенный scope                  |
+| [`docs/README.md`](./README.md) runbook / API        | Только если шаг меняет операторские инструкции                        |
+| `apps/api/src/**/*.spec.ts`                          | **Обязательно** в том же коммите, что и production-код API — см. ниже |
 
-Правило для агентов Cursor: [`.cursor/rules/documentation-sync.mdc`](../.cursor/rules/documentation-sync.mdc).
+Правила для агентов Cursor:
+
+- [`.cursor/rules/documentation-sync.mdc`](../.cursor/rules/documentation-sync.mdc)
+- [`.cursor/rules/tests-first-api.mdc`](../.cursor/rules/tests-first-api.mdc) — pre-commit/CI gate; e2e **не** заменяет unit-тесты
+
+## Tests-first gate (API)
+
+При любом изменении `apps/api/src/**` (кроме `*.spec.ts`) в **том же коммите** должны быть unit-тесты `apps/api/**/*.spec.ts`. Проверка: [`scripts/validate-tests-first.mjs`](../scripts/validate-tests-first.mjs) (husky pre-commit, CI).
+
+- Колокация: `feature.service.ts` → `feature.service.spec.ts`.
+- Обычно тестируем сервис/чистые функции; e2e — дополнение, не замена для gate.
+- В уроке: секция **TDD Sequence**, строки в **Changed Files** и **Definition of Done** для каждого `*.spec.ts`.
 
 ## Storytelling sync
 
