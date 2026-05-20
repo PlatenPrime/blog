@@ -1,11 +1,12 @@
 import {
+  API_ERROR_CODE_CONFLICT,
   API_ERROR_CODE_VALIDATION,
   PROBLEM_MEDIA_TYPE,
   type ProblemDetailsBody,
   type RegisterUserResponse,
   problemTypeUriForCode,
 } from '@blog/shared-contracts';
-import { INestApplication } from '@nestjs/common';
+import { ConflictException, INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DataSource } from 'typeorm';
 import request from 'supertest';
@@ -19,6 +20,7 @@ import { enableApiCors } from '../src/config/enable-api-cors';
 import { PostgresHealthIndicator } from '../src/health/indicators/postgres.health-indicator';
 import { createTestDataSourceStub } from '../src/testing/create-test-data-source.stub';
 import type { User } from '../src/users/user.entity';
+import { USER_EMAIL_ALREADY_REGISTERED_MESSAGE } from '../src/users/user-email.constants';
 import { UserService } from '../src/users/user.service';
 
 const registerBase = `${API_V1_BASE}/auth/register`;
@@ -139,6 +141,29 @@ describe('Auth register (e2e)', () => {
     expect(create).toHaveBeenCalledWith({
       email: 'user@example.com',
       plainPassword: 'secret123',
+    });
+  });
+
+  it('returns CONFLICT when UserService rejects duplicate email', async () => {
+    create.mockRejectedValue(
+      new ConflictException(USER_EMAIL_ALREADY_REGISTERED_MESSAGE),
+    );
+
+    const response = await request(app.getHttpServer())
+      .post(registerBase)
+      .send({ email: 'user@example.com', password: 'secret123' })
+      .expect(409);
+
+    expect(response.headers['content-type']).toContain(PROBLEM_MEDIA_TYPE);
+
+    const body = response.body as ProblemDetailsBody;
+
+    expect(body).toMatchObject({
+      type: problemTypeUriForCode(API_ERROR_CODE_CONFLICT),
+      title: 'Conflict',
+      status: 409,
+      detail: USER_EMAIL_ALREADY_REGISTERED_MESSAGE,
+      code: API_ERROR_CODE_CONFLICT,
     });
   });
 });

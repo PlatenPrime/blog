@@ -75,6 +75,7 @@ Every step is a sprint and must produce code changes + a lesson file in `docs/le
 | Datasource config from validated env (`DATABASE_URL`)   | Step 058 completed                         |
 | Migration workflow + baseline schema                    | Step 059 completed                         |
 | `User` entity + indexes (`users` table)                 | Step 060 completed                         |
+| Unique email + friendly CONFLICT on register            | Step 064 completed                         |
 
 ## Step Contract (mandatory for every lesson)
 
@@ -185,7 +186,7 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 061  | Password hasher service (argon2 or bcrypt)            | unit test — done                |
 | 062  | `UserService` create/find by email                    | unit test — done                |
 | 063  | `POST /auth/register` + DTO                           | e2e — done                      |
-| 064  | Unique email constraint + friendly error mapping      | e2e                             |
+| 064  | Unique email constraint + friendly error mapping      | e2e — done                      |
 | 065  | `POST /auth/login`                                    | e2e                             |
 | 066  | JWT access token issuance + verify service            | unit test                       |
 | 067  | `JwtStrategy` + `AuthGuard`                           | e2e                             |
@@ -540,5 +541,6 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 061  | [lesson-061-password-hasher-service.md](./lessons/lesson-061-password-hasher-service.md)                               |
 | 062  | [lesson-062-user-service-create-find-by-email.md](./lessons/lesson-062-user-service-create-find-by-email.md)           |
 | 063  | [lesson-063-auth-register-dto.md](./lessons/lesson-063-auth-register-dto.md)                                           |
+| 064  | [lesson-064-unique-email-friendly-conflict.md](./lessons/lesson-064-unique-email-friendly-conflict.md)                 |
 
 Entry point: [LOCAL_SETUP.md](./LOCAL_SETUP.md)

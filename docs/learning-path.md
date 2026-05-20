@@ -77,8 +77,9 @@ Steps 033-056.
 - Step 061: [lesson-061-password-hasher-service.md](./lessons/lesson-061-password-hasher-service.md)
 - Step 062: [lesson-062-user-service-create-find-by-email.md](./lessons/lesson-062-user-service-create-find-by-email.md)
 - Step 063: [lesson-063-auth-register-dto.md](./lessons/lesson-063-auth-register-dto.md)
+- Step 064: [lesson-064-unique-email-friendly-conflict.md](./lessons/lesson-064-unique-email-friendly-conflict.md)
 
-Steps 064-104.
+Steps 065-104.
 
 ## Phase 4: CMS Backend (Track 3)
 

@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { Repository } from 'typeorm';
+import { QueryFailedError, type Repository } from 'typeorm';
 import { PasswordHasherService } from './password-hasher.service';
+import { USER_EMAIL_ALREADY_REGISTERED_MESSAGE } from './user-email.constants';
 import type { User } from './user.entity';
 import { UserService } from './user.service';
 
@@ -32,13 +33,14 @@ describe('UserService', () => {
     service = new UserService(usersRepo, passwordHasher);
   });
 
-  it('findByEmail delegates to repository findOne with email', async () => {
+  it('findByEmail normalizes email before repository lookup', async () => {
     findOne.mockResolvedValue(null);
 
-    const result = await service.findByEmail('a@b.com');
+    await service.findByEmail('  User@Example.COM  ');
 
-    expect(findOne).toHaveBeenCalledWith({ where: { email: 'a@b.com' } });
-    expect(result).toBeNull();
+    expect(findOne).toHaveBeenCalledWith({
+      where: { email: 'user@example.com' },
+    });
   });
 
   it('findByEmail returns user when repository finds one', async () => {
@@ -50,7 +52,8 @@ describe('UserService', () => {
     expect(result).toBe(user);
   });
 
-  it('create hashes password, saves user with hash, returns saved entity', async () => {
+  it('create normalizes email, hashes password, saves user with hash', async () => {
+    findOne.mockResolvedValue(null);
     hash.mockResolvedValue('$argon2id$stub');
     const draft = { email: 'x@y.com', passwordHash: '$argon2id$stub' };
     const saved: User = {
@@ -63,7 +66,7 @@ describe('UserService', () => {
     save.mockResolvedValue(saved);
 
     const result = await service.create({
-      email: 'x@y.com',
+      email: '  X@Y.COM  ',
       plainPassword: 'secret',
     });
 
@@ -74,5 +77,52 @@ describe('UserService', () => {
     });
     expect(save).toHaveBeenCalledWith(draft);
     expect(result).toBe(saved);
+  });
+
+  it('create throws ConflictException when email already exists', async () => {
+    findOne.mockResolvedValue({ id: 'existing', email: 'user@example.com' });
+
+    await expect(
+      service.create({
+        email: 'User@Example.com',
+        plainPassword: 'secret',
+      }),
+    ).rejects.toMatchObject({
+      response: {
+        message: USER_EMAIL_ALREADY_REGISTERED_MESSAGE,
+        statusCode: 409,
+      },
+    });
+
+    expect(hash).not.toHaveBeenCalled();
+    expect(save).not.toHaveBeenCalled();
+  });
+
+  it('create maps unique violation on save to ConflictException', async () => {
+    findOne.mockResolvedValue(null);
+    hash.mockResolvedValue('$argon2id$stub');
+    create.mockReturnValue({
+      email: 'x@y.com',
+      passwordHash: '$argon2id$stub',
+    });
+    save.mockRejectedValue(
+      new QueryFailedError(
+        'INSERT',
+        [],
+        Object.assign(new Error('unique violation'), {
+          code: '23505',
+          constraint: 'UQ_users_email',
+        }),
+      ),
+    );
+
+    await expect(
+      service.create({ email: 'x@y.com', plainPassword: 'secret' }),
+    ).rejects.toMatchObject({
+      response: {
+        message: USER_EMAIL_ALREADY_REGISTERED_MESSAGE,
+        statusCode: 409,
+      },
+    });
   });
 });

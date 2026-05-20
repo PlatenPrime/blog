@@ -16,7 +16,7 @@
 
 Намеренно **не** делаем:
 
-- Дубликат email → `CONFLICT` — [шаг 064](../development-roadmap.md).
+- Дубликат email → `CONFLICT` — реализовано в [шаге 064](./lesson-064-unique-email-friendly-conflict.md).
 - `POST /auth/login`, JWT, guards — [шаги 065+](../development-roadmap.md).
 - Нормализация регистра email — 064+.
 
@@ -105,7 +105,7 @@
 
 - DTO поле `password` → `plainPassword` только в `AuthService` при вызове `UserService`.
 - Ответные типы — в `shared-contracts`; валидаторы — только в API DTO.
-- Следующий шаг 064 — дружелюбный `CONFLICT` при дубликате email.
+- Шаг 064 — дружелюбный `CONFLICT` при дубликате email: [lesson-064](./lesson-064-unique-email-friendly-conflict.md).
 - E2e не проходит tests-first gate — нужен `*.spec.ts` рядом с `apps/api/src`.
 
 ## Verify
