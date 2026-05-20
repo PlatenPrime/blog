@@ -189,7 +189,7 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 063  | `POST /auth/register` + DTO                           | e2e — done                      |
 | 064  | Unique email constraint + friendly error mapping      | e2e — done                      |
 | 065  | `POST /auth/login`                                    | e2e — done                      |
-| 066  | JWT access token issuance + verify service            | unit test                       |
+| 066  | JWT access token issuance + verify service            | unit test — done                |
 | 067  | `JwtStrategy` + `AuthGuard`                           | e2e                             |
 | 068  | `@CurrentUser()` decorator                            | unit test                       |
 | 069  | Refresh token entity + persistence                    | migration                       |
@@ -544,5 +544,6 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 063  | [lesson-063-auth-register-dto.md](./lessons/lesson-063-auth-register-dto.md)                                           |
 | 064  | [lesson-064-unique-email-friendly-conflict.md](./lessons/lesson-064-unique-email-friendly-conflict.md)                 |
 | 065  | [lesson-065-auth-login.md](./lessons/lesson-065-auth-login.md)                                                         |
+| 066  | [lesson-066-jwt-access-token-service.md](./lessons/lesson-066-jwt-access-token-service.md)                             |
 
 Entry point: [LOCAL_SETUP.md](./LOCAL_SETUP.md)

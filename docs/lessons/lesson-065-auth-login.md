@@ -107,7 +107,7 @@
 
 - Не раскрывать, существует ли email — одна константа для обоих 401.
 - `PasswordHasherService` уже экспортируется из `UsersModule` — `AuthModule` менять не нужно.
-- Следующий шаг 066 — JWT access token: [development-roadmap.md](../development-roadmap.md).
+- Следующий шаг — JWT access token: [lesson-066](./lesson-066-jwt-access-token-service.md); затем guards: [development-roadmap.md](../development-roadmap.md) шаг 067.
 
 ## Verify
 

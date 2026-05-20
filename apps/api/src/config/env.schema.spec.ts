@@ -16,6 +16,36 @@ describe('parseRootEnv', () => {
       DATABASE_URL: 'postgresql://blog:blog@127.0.0.1:5432/blog_dev',
       REQUEST_TIMEOUT_MS: 30_000,
       SHUTDOWN_GRACE_PERIOD_MS: 10_000,
+      JWT_SECRET: 'dev-only-jwt-secret-change-before-production-32chars',
+      JWT_ACCESS_EXPIRES_IN: '15m',
+    });
+  });
+
+  it('parses JWT_ACCESS_EXPIRES_IN override', () => {
+    expect(parseRootEnv({ JWT_ACCESS_EXPIRES_IN: '1h' })).toMatchObject({
+      JWT_ACCESS_EXPIRES_IN: '1h',
+    });
+  });
+
+  it('treats empty JWT_ACCESS_EXPIRES_IN as default 15m', () => {
+    expect(parseRootEnv({ JWT_ACCESS_EXPIRES_IN: '' })).toMatchObject({
+      JWT_ACCESS_EXPIRES_IN: '15m',
+    });
+  });
+
+  it('rejects JWT_SECRET shorter than 32 characters', () => {
+    expect(() => parseRootEnv({ JWT_SECRET: 'too-short' })).toThrow(
+      /JWT_SECRET/,
+    );
+  });
+
+  it('trims JWT_SECRET before length check', () => {
+    expect(
+      parseRootEnv({
+        JWT_SECRET: '  custom-jwt-secret-with-enough-characters-32  ',
+      }),
+    ).toMatchObject({
+      JWT_SECRET: 'custom-jwt-secret-with-enough-characters-32',
     });
   });
 

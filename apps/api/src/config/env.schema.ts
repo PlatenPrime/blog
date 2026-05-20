@@ -37,6 +37,36 @@ function postgresNonEmpty(fallback: string) {
     .pipe(z.string().min(1));
 }
 
+/** Safe dev default; override via `.env` in any shared environment. */
+const DEFAULT_JWT_SECRET =
+  'dev-only-jwt-secret-change-before-production-32chars';
+
+function jwtSecret() {
+  return z
+    .union([z.string(), z.undefined()])
+    .transform((raw) => {
+      if (raw === undefined || raw === '') {
+        return DEFAULT_JWT_SECRET;
+      }
+      const s = String(raw).trim();
+      return s.length === 0 ? DEFAULT_JWT_SECRET : s;
+    })
+    .pipe(z.string().min(32));
+}
+
+function jwtAccessExpiresIn() {
+  return z
+    .union([z.string(), z.undefined()])
+    .transform((raw) => {
+      if (raw === undefined || raw === '') {
+        return '15m';
+      }
+      const s = String(raw).trim();
+      return s.length === 0 ? '15m' : s;
+    })
+    .pipe(z.string().min(1));
+}
+
 function envMilliseconds(
   defaultWhenEmpty: number,
   bounds: { readonly min: number; readonly max: number },
@@ -137,6 +167,8 @@ export const rootEnvSchema = z
         const trimmed = raw.trim();
         return trimmed.length === 0 ? undefined : trimmed;
       }),
+    JWT_SECRET: jwtSecret(),
+    JWT_ACCESS_EXPIRES_IN: jwtAccessExpiresIn(),
   })
   .transform((value) => {
     const explicit =
@@ -191,6 +223,8 @@ const ROOT_ENV_KEYS = [
   'OTEL_SERVICE_NAME',
   'OTEL_TRACES_EXPORTER',
   'OTEL_EXPORTER_OTLP_ENDPOINT',
+  'JWT_SECRET',
+  'JWT_ACCESS_EXPIRES_IN',
 ] as const;
 
 function pickRootEnvKeys(

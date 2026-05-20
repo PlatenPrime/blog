@@ -106,7 +106,7 @@
 - Уникальность на уровне БД (060) + дружелюбный ответ (064) — разные слои.
 - Нормализация в `UserService`, не в DTO — login использует тот же путь.
 - `isPostgresUniqueViolation` — общий хелпер для будущих unique constraints.
-- Следующий шаг 066 — JWT: [development-roadmap.md](../development-roadmap.md). Login: [lesson-065](./lesson-065-auth-login.md).
+- Login: [lesson-065](./lesson-065-auth-login.md). JWT: [lesson-066](./lesson-066-jwt-access-token-service.md).
 
 ## Verify
 
