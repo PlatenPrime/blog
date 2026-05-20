@@ -21,6 +21,7 @@ import { MetricsModule } from './metrics';
 import { validateRootEnv } from './config/env.schema';
 import { resolveEnvFilePaths } from './config/env-file-paths';
 import { ApiExceptionFilter } from './errors/api-exception.filter';
+import { AuthModule } from './auth/auth.module';
 import { ExamplesModule } from './examples/examples.module';
 import { UsersModule } from './users';
 
@@ -38,6 +39,7 @@ import { UsersModule } from './users';
     RequestLifecycleModule,
     DatabaseModule,
     UsersModule,
+    AuthModule,
     HealthModule,
     MetricsModule,
     ExamplesModule,

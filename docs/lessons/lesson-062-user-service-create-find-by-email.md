@@ -15,7 +15,7 @@
 
 Намеренно **не** делаем:
 
-- `POST /auth/register`, DTO, валидация на границе HTTP — [шаг 063](../development-roadmap.md).
+- `POST /auth/register`, DTO, валидация на границе HTTP — [шаг 063](./lesson-063-auth-register-dto.md).
 - Дружелюбный маппинг нарушения уникальности `email` — [шаг 064](../development-roadmap.md); при дубликате пока полагаемся на БД без обёртки в сервисе.
 
 ## Dependencies
@@ -57,17 +57,19 @@
 
 ## Changed Files
 
-| File                                                                | Action                       |
-| ------------------------------------------------------------------- | ---------------------------- |
-| `apps/api/src/users/user.service.ts`                                | created                      |
-| `apps/api/src/users/user.service.spec.ts`                           | created                      |
-| `apps/api/src/users/users.module.ts`                                | changed — UserService DI     |
-| `apps/api/src/users/index.ts`                                       | changed — export UserService |
-| `docs/lessons/lesson-062-user-service-create-find-by-email.md`      | created                      |
-| `docs/lessons/lesson-061-password-hasher-service.md`                | changed — link to 062        |
-| `docs/development-roadmap.md`                                       | changed — шаг 062 done       |
-| `docs/README.md` / `docs/learning-path.md` / `docs/storytelling.md` | changed                      |
-| `docs/LOCAL_SETUP.md`                                               | changed — next step 063      |
+| File                                                                | Action                               |
+| ------------------------------------------------------------------- | ------------------------------------ |
+| `apps/api/src/users/user.service.ts`                                | created                              |
+| `apps/api/src/users/user.service.spec.ts`                           | created                              |
+| `apps/api/src/users/users.module.ts`                                | changed — UserService DI             |
+| `apps/api/src/users/index.ts`                                       | changed — export UserService         |
+| `docs/lessons/lesson-062-user-service-create-find-by-email.md`      | created                              |
+| `docs/lessons/lesson-061-password-hasher-service.md`                | changed — link to 062                |
+| `docs/development-roadmap.md`                                       | changed — шаг 062 done               |
+| `docs/README.md` / `docs/learning-path.md` / `docs/storytelling.md` | changed                              |
+| `docs/LOCAL_SETUP.md`                                               | changed — next step 063 (historical) |
+
+Следующий урок: [063 — HTTP-регистрация](./lesson-063-auth-register-dto.md).
 
 ## Verification
 
@@ -97,4 +99,4 @@ npx nx run api:build
 
 ## Homework
 
-Проследить в коде 063, как `UserService.create` вызывается из контроллера и как DTO отделяет вход HTTP от домена.
+См. [lesson-063](./lesson-063-auth-register-dto.md): как `UserService.create` вызывается из `AuthService` и как DTO отделяет вход HTTP от домена.

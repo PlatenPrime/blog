@@ -37,6 +37,8 @@ export {
 } from './errors/problem-details.schema.js';
 export type { ProblemDetailsBodySchema } from './errors/problem-details.schema.js';
 
+export type { RegisterUserResponse } from './auth/register.types.js';
+
 export type {
   ExampleItem,
   ListExamplesResponse,

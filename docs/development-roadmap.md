@@ -184,7 +184,7 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 060  | `User` entity + indexes                               | `nx run api:test` — done        |
 | 061  | Password hasher service (argon2 or bcrypt)            | unit test — done                |
 | 062  | `UserService` create/find by email                    | unit test — done                |
-| 063  | `POST /auth/register` + DTO                           | e2e                             |
+| 063  | `POST /auth/register` + DTO                           | e2e — done                      |
 | 064  | Unique email constraint + friendly error mapping      | e2e                             |
 | 065  | `POST /auth/login`                                    | e2e                             |
 | 066  | JWT access token issuance + verify service            | unit test                       |
@@ -539,5 +539,6 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 060  | [lesson-060-user-entity-indexes.md](./lessons/lesson-060-user-entity-indexes.md)                                       |
 | 061  | [lesson-061-password-hasher-service.md](./lessons/lesson-061-password-hasher-service.md)                               |
 | 062  | [lesson-062-user-service-create-find-by-email.md](./lessons/lesson-062-user-service-create-find-by-email.md)           |
+| 063  | [lesson-063-auth-register-dto.md](./lessons/lesson-063-auth-register-dto.md)                                           |
 
 Entry point: [LOCAL_SETUP.md](./LOCAL_SETUP.md)

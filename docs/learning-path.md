@@ -76,8 +76,9 @@ Steps 033-056.
 - Step 060: [lesson-060-user-entity-indexes.md](./lessons/lesson-060-user-entity-indexes.md)
 - Step 061: [lesson-061-password-hasher-service.md](./lessons/lesson-061-password-hasher-service.md)
 - Step 062: [lesson-062-user-service-create-find-by-email.md](./lessons/lesson-062-user-service-create-find-by-email.md)
+- Step 063: [lesson-063-auth-register-dto.md](./lessons/lesson-063-auth-register-dto.md)
 
-Steps 063-104.
+Steps 064-104.
 
 ## Phase 4: CMS Backend (Track 3)
 
