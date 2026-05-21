@@ -11,7 +11,9 @@ import { UserService } from '../users/user.service';
 import {
   INVALID_EMAIL_VERIFICATION_TOKEN_MESSAGE,
   INVALID_LOGIN_CREDENTIALS_MESSAGE,
+  INVALID_PASSWORD_RESET_TOKEN_MESSAGE,
   INVALID_REFRESH_TOKEN_MESSAGE,
+  PASSWORD_RESET_COMPLETED_MESSAGE,
   PASSWORD_RESET_REQUEST_ACCEPTED_MESSAGE,
 } from './auth-credentials.constants';
 import type { EmailVerificationToken } from './email-verification-token.entity';
@@ -21,7 +23,9 @@ import type { CreateLoginBodyDto } from './dto/create-login-body.dto';
 import type { CreateRefreshBodyDto } from './dto/create-refresh-body.dto';
 import type { CreateRegisterBodyDto } from './dto/create-register-body.dto';
 import type { CreateRequestPasswordResetBodyDto } from './dto/create-request-password-reset-body.dto';
+import type { CreateResetPasswordBodyDto } from './dto/create-reset-password-body.dto';
 import type { CreateVerifyEmailBodyDto } from './dto/create-verify-email-body.dto';
+import type { PasswordResetToken } from './password-reset-token.entity';
 import { PasswordResetTokenService } from './password-reset-token.service';
 import type { RefreshToken } from './refresh-token.entity';
 import { JwtAccessTokenService } from './jwt-access-token.service';
@@ -44,8 +48,12 @@ describe('AuthService', () => {
   let evPersistForUser: ReturnType<typeof vi.fn>;
   let evFindActiveByRawToken: ReturnType<typeof vi.fn>;
   let evConsume: ReturnType<typeof vi.fn>;
+  let prFindActiveByRawToken: ReturnType<typeof vi.fn>;
+  let prConsume: ReturnType<typeof vi.fn>;
   let prInvalidateActiveForUser: ReturnType<typeof vi.fn>;
   let prPersistForUser: ReturnType<typeof vi.fn>;
+  let revokeAllActiveForUser: ReturnType<typeof vi.fn>;
+  let updatePassword: ReturnType<typeof vi.fn>;
   let markEmailVerified: ReturnType<typeof vi.fn>;
   let users: UserService;
   let passwordHasher: PasswordHasherService;
@@ -83,13 +91,18 @@ describe('AuthService', () => {
     evPersistForUser = vi.fn();
     evFindActiveByRawToken = vi.fn();
     evConsume = vi.fn();
+    prFindActiveByRawToken = vi.fn();
+    prConsume = vi.fn();
     prInvalidateActiveForUser = vi.fn();
     prPersistForUser = vi.fn();
+    revokeAllActiveForUser = vi.fn();
+    updatePassword = vi.fn();
     markEmailVerified = vi.fn();
     users = {
       create,
       findByEmail,
       markEmailVerified,
+      updatePassword,
     } as unknown as UserService;
     passwordHasher = { verify } as unknown as PasswordHasherService;
     accessTokens = { signForUser } as unknown as JwtAccessTokenService;
@@ -98,6 +111,7 @@ describe('AuthService', () => {
       findActiveByRawToken,
       findByRawToken,
       revoke,
+      revokeAllActiveForUser,
       revokeTokenFamily,
       markReplaced,
     } as unknown as RefreshTokenService;
@@ -107,6 +121,8 @@ describe('AuthService', () => {
       consume: evConsume,
     } as unknown as EmailVerificationTokenService;
     passwordResetTokens = {
+      findActiveByRawToken: prFindActiveByRawToken,
+      consume: prConsume,
       invalidateActiveForUser: prInvalidateActiveForUser,
       persistForUser: prPersistForUser,
     } as unknown as PasswordResetTokenService;
@@ -224,6 +240,46 @@ describe('AuthService', () => {
       updatedAt: savedUser.updatedAt.toISOString(),
     });
     expect(result).not.toHaveProperty('passwordHash');
+  });
+
+  it('resetPassword consumes token, updates password, revokes refresh, and invalidates reset tokens', async () => {
+    const row = {
+      id: 'prt-1',
+      userId: savedUser.id,
+    } as PasswordResetToken;
+    prFindActiveByRawToken.mockResolvedValue(row);
+    updatePassword.mockResolvedValue(savedUser);
+    const dto: CreateResetPasswordBodyDto = {
+      passwordResetToken: 'opaque-password-reset-secret',
+      password: 'new-secret123',
+    };
+
+    const result = await service.resetPassword(dto);
+
+    expect(prFindActiveByRawToken).toHaveBeenCalledWith(dto.passwordResetToken);
+    expect(prConsume).toHaveBeenCalledWith('prt-1');
+    expect(updatePassword).toHaveBeenCalledWith(savedUser.id, 'new-secret123');
+    expect(revokeAllActiveForUser).toHaveBeenCalledWith(savedUser.id);
+    expect(prInvalidateActiveForUser).toHaveBeenCalledWith(savedUser.id);
+    expect(result).toEqual({
+      message: PASSWORD_RESET_COMPLETED_MESSAGE,
+    });
+  });
+
+  it('resetPassword throws UnauthorizedException when token is not active', async () => {
+    prFindActiveByRawToken.mockResolvedValue(null);
+    const dto: CreateResetPasswordBodyDto = {
+      passwordResetToken: 'invalid-or-expired-token',
+      password: 'new-secret123',
+    };
+
+    await expect(service.resetPassword(dto)).rejects.toThrow(
+      new UnauthorizedException(INVALID_PASSWORD_RESET_TOKEN_MESSAGE),
+    );
+    expect(prConsume).not.toHaveBeenCalled();
+    expect(updatePassword).not.toHaveBeenCalled();
+    expect(revokeAllActiveForUser).not.toHaveBeenCalled();
+    expect(prInvalidateActiveForUser).not.toHaveBeenCalled();
   });
 
   it('verifyEmail consumes token, marks user verified, and returns emailVerifiedAt', async () => {

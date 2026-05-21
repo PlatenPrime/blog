@@ -130,6 +130,45 @@ describe('UserService', () => {
     });
   });
 
+  it('updatePassword hashes password and updates passwordHash', async () => {
+    const user: User = {
+      id: 'u1',
+      email: 'a@b.com',
+      passwordHash: 'old-hash',
+      emailVerifiedAt: null,
+      createdAt: new Date('2026-05-20T10:00:00.000Z'),
+      updatedAt: new Date('2026-05-20T10:00:00.000Z'),
+    };
+    findOne.mockResolvedValue(user);
+    hash.mockResolvedValue('$argon2id$new');
+    update.mockResolvedValue({ affected: 1 });
+
+    const result = await service.updatePassword('u1', 'new-secret');
+
+    expect(hash).toHaveBeenCalledWith('new-secret');
+    const updateCall = update.mock.calls[0] as [
+      { id: string },
+      { passwordHash: string; updatedAt: Date },
+    ];
+    expect(updateCall[0]).toEqual({ id: 'u1' });
+    expect(updateCall[1].passwordHash).toBe('$argon2id$new');
+    expect(updateCall[1].updatedAt).toBeInstanceOf(Date);
+    expect(result.passwordHash).toBe('$argon2id$new');
+    expect(result.updatedAt).toBeInstanceOf(Date);
+  });
+
+  it('updatePassword throws NotFoundException when user does not exist', async () => {
+    findOne.mockResolvedValue(null);
+
+    await expect(
+      service.updatePassword('missing', 'new-secret'),
+    ).rejects.toMatchObject({
+      status: 404,
+    });
+    expect(hash).not.toHaveBeenCalled();
+    expect(update).not.toHaveBeenCalled();
+  });
+
   it('markEmailVerified sets emailVerifiedAt when user is not yet verified', async () => {
     const user: User = {
       id: 'u1',

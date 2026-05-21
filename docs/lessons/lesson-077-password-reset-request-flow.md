@@ -26,8 +26,7 @@
 
 Намеренно **не** делаем:
 
-- `POST /auth/reset-password` — [шаг 078](../development-roadmap.md).
-- `UserService.updatePassword`, revoke refresh при сбросе — **078**.
+- `POST /auth/reset-password`, `UserService.updatePassword`, revoke refresh — [шаг 078](./lesson-078-password-reset-completion.md) (done).
 - Отправка email / rate-limit на request — позже (ADR в Architecture Notes).
 - Env `PASSWORD_RESET_EXPIRES_MS` — константа 1h.
 
@@ -125,7 +124,7 @@ npx nx run api:build
 2. Одинаковый `message` для known/unknown email; **200** всегда на request.
 3. Повторный request инвалидирует предыдущие активные reset-токены пользователя.
 4. Unit spec обязателен при изменении `apps/api/src/` (pre-commit gate).
-5. Следующий слой — password reset completion (**078**).
+5. Следующий слой — [password reset completion (078)](./lesson-078-password-reset-completion.md).
 
 ## Definition of Done
 

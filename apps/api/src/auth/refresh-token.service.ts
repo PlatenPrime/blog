@@ -42,6 +42,13 @@ export class RefreshTokenService {
     });
   }
 
+  async revokeAllActiveForUser(userId: string): Promise<void> {
+    await this.refreshTokens.update(
+      { userId, revokedAt: IsNull() },
+      { revokedAt: new Date() },
+    );
+  }
+
   async revoke(id: string): Promise<void> {
     await this.refreshTokens.update(
       { id, revokedAt: IsNull() },

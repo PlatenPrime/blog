@@ -82,6 +82,22 @@ describe('RefreshTokenService', () => {
     expect(where.where.expiresAt.type).toBe('moreThan');
   });
 
+  it('revokeAllActiveForUser revokes all non-revoked tokens for user', async () => {
+    update.mockResolvedValue({ affected: 3 });
+
+    await service.revokeAllActiveForUser('user-1');
+
+    expect(update).toHaveBeenCalledOnce();
+    const criteria = update.mock.calls[0]?.[0] as {
+      userId: string;
+      revokedAt: { type: string };
+    };
+    expect(criteria.userId).toBe('user-1');
+    expect(criteria.revokedAt.type).toBe('isNull');
+    const patch = update.mock.calls[0]?.[1] as { revokedAt: Date };
+    expect(patch.revokedAt).toBeInstanceOf(Date);
+  });
+
   it('revoke sets revokedAt for non-revoked row', async () => {
     update.mockResolvedValue({ affected: 1 });
 

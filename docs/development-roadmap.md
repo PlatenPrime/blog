@@ -201,7 +201,7 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 075  | Email verification token model (optional minimal)     | unit test — done                |
 | 076  | `POST /auth/verify-email`                             | e2e — done                      |
 | 077  | Password reset request flow                           | e2e — done                      |
-| 078  | Password reset completion                             | e2e                             |
+| 078  | Password reset completion                             | e2e — done                      |
 | 079  | Roles + permissions schema (tables/enums)             | migration                       |
 | 080  | Seed default roles (admin, editor, viewer)            | seed script                     |
 | 081  | `RolesGuard` + `@Roles()`                             | e2e                             |
@@ -556,5 +556,6 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 075  | [lesson-075-email-verification-token-model.md](./lessons/lesson-075-email-verification-token-model.md)                 |
 | 076  | [lesson-076-auth-verify-email.md](./lessons/lesson-076-auth-verify-email.md)                                           |
 | 077  | [lesson-077-password-reset-request-flow.md](./lessons/lesson-077-password-reset-request-flow.md)                       |
+| 078  | [lesson-078-password-reset-completion.md](./lessons/lesson-078-password-reset-completion.md)                           |
 
 Entry point: [LOCAL_SETUP.md](./LOCAL_SETUP.md)

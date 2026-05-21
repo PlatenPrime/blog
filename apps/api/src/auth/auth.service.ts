@@ -3,6 +3,7 @@ import type {
   RefreshSessionResponse,
   RegisterUserResponse,
   RequestPasswordResetResponse,
+  ResetPasswordResponse,
   VerifyEmailResponse,
 } from '@blog/shared-contracts';
 import {
@@ -16,13 +17,16 @@ import { UserService } from '../users/user.service';
 import {
   INVALID_EMAIL_VERIFICATION_TOKEN_MESSAGE,
   INVALID_LOGIN_CREDENTIALS_MESSAGE,
+  INVALID_PASSWORD_RESET_TOKEN_MESSAGE,
   INVALID_REFRESH_TOKEN_MESSAGE,
+  PASSWORD_RESET_COMPLETED_MESSAGE,
   PASSWORD_RESET_REQUEST_ACCEPTED_MESSAGE,
 } from './auth-credentials.constants';
 import type { CreateLoginBodyDto } from './dto/create-login-body.dto';
 import type { CreateRefreshBodyDto } from './dto/create-refresh-body.dto';
 import type { CreateRegisterBodyDto } from './dto/create-register-body.dto';
 import type { CreateRequestPasswordResetBodyDto } from './dto/create-request-password-reset-body.dto';
+import type { CreateResetPasswordBodyDto } from './dto/create-reset-password-body.dto';
 import type { CreateVerifyEmailBodyDto } from './dto/create-verify-email-body.dto';
 import { emailVerificationExpiresAt } from './email-verification-expires-at';
 import { passwordResetExpiresAt } from './password-reset-expires-at';
@@ -77,6 +81,25 @@ export class AuthService {
       message: PASSWORD_RESET_REQUEST_ACCEPTED_MESSAGE,
       passwordResetToken,
     };
+  }
+
+  async resetPassword(
+    dto: CreateResetPasswordBodyDto,
+  ): Promise<ResetPasswordResponse> {
+    const row = await this.passwordResetTokens.findActiveByRawToken(
+      dto.passwordResetToken,
+    );
+
+    if (row === null) {
+      throw new UnauthorizedException(INVALID_PASSWORD_RESET_TOKEN_MESSAGE);
+    }
+
+    await this.passwordResetTokens.consume(row.id);
+    await this.users.updatePassword(row.userId, dto.password);
+    await this.refreshTokens.revokeAllActiveForUser(row.userId);
+    await this.passwordResetTokens.invalidateActiveForUser(row.userId);
+
+    return { message: PASSWORD_RESET_COMPLETED_MESSAGE };
   }
 
   async verifyEmail(

@@ -13,3 +13,11 @@ export const INVALID_EMAIL_VERIFICATION_TOKEN_MESSAGE =
 /** Neutral message for password reset request (same whether email is registered or not). */
 export const PASSWORD_RESET_REQUEST_ACCEPTED_MESSAGE =
   'If this email is registered, password reset instructions have been sent' as const;
+
+/** Generic message for invalid, expired, or consumed password reset tokens. */
+export const INVALID_PASSWORD_RESET_TOKEN_MESSAGE =
+  'Invalid or expired password reset token' as const;
+
+/** Success message after password reset completion. */
+export const PASSWORD_RESET_COMPLETED_MESSAGE =
+  'Password has been reset' as const;

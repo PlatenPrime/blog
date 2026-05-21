@@ -55,6 +55,20 @@ export class UserService {
     }
   }
 
+  async updatePassword(userId: string, plainPassword: string): Promise<User> {
+    const existing = await this.users.findOne({ where: { id: userId } });
+
+    if (existing === null) {
+      throw new NotFoundException();
+    }
+
+    const passwordHash = await this.passwordHasher.hash(plainPassword);
+    const updatedAt = new Date();
+    await this.users.update({ id: userId }, { passwordHash, updatedAt });
+
+    return { ...existing, passwordHash, updatedAt };
+  }
+
   async markEmailVerified(userId: string): Promise<User> {
     const existing = await this.users.findOne({ where: { id: userId } });
 
