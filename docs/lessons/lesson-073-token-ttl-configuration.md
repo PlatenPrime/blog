@@ -20,7 +20,7 @@
 
 - Zod-валидацию формата `JWT_ACCESS_EXPIRES_IN` (jsonwebtoken валидирует при старте).
 - `expiresIn` в ответах API / `shared-contracts` — [шаг 084](../development-roadmap.md).
-- Brute-force / lockout — [шаг 074](../development-roadmap.md).
+- Brute-force / lockout — [шаг 074](./lesson-074-login-brute-force-lockout.md) (done).
 - Auth module README — [шаг 101](../development-roadmap.md).
 
 ## Dependencies

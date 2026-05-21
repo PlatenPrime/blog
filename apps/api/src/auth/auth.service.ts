@@ -3,7 +3,11 @@ import type {
   RefreshSessionResponse,
   RegisterUserResponse,
 } from '@blog/shared-contracts';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  HttpException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PasswordHasherService } from '../users/password-hasher.service';
 import { UserService } from '../users/user.service';
@@ -19,6 +23,7 @@ import { generateOpaqueToken } from './generate-opaque-token';
 import { JwtAccessTokenService } from './jwt-access-token.service';
 import { refreshExpiresAt } from './refresh-expires-at';
 import { isRotatedReuse } from './refresh-token-reuse';
+import { LoginLockoutService } from './login-lockout.service';
 import { RefreshTokenService } from './refresh-token.service';
 
 @Injectable()
@@ -29,6 +34,7 @@ export class AuthService {
     private readonly accessTokens: JwtAccessTokenService,
     private readonly refreshTokens: RefreshTokenService,
     private readonly config: ConfigService,
+    private readonly loginLockout: LoginLockoutService,
   ) {}
 
   async register(dto: CreateRegisterBodyDto): Promise<RegisterUserResponse> {
@@ -40,15 +46,33 @@ export class AuthService {
   }
 
   async login(dto: CreateLoginBodyDto): Promise<LoginUserResponse> {
-    const user = await this.requireUserForCredentials(dto.email, dto.password);
-    const accessToken = await this.accessTokens.signForUser(user.id);
-    const refreshToken = await this.issueRefreshForUser(user.id);
+    this.loginLockout.assertNotLocked(dto.email);
 
-    return {
-      ...this.toPublicUserResponse(user),
-      accessToken,
-      refreshToken,
-    };
+    try {
+      const user = await this.requireUserForCredentials(
+        dto.email,
+        dto.password,
+      );
+      this.loginLockout.clear(dto.email);
+      const accessToken = await this.accessTokens.signForUser(user.id);
+      const refreshToken = await this.issueRefreshForUser(user.id);
+
+      return {
+        ...this.toPublicUserResponse(user),
+        accessToken,
+        refreshToken,
+      };
+    } catch (error) {
+      if (error instanceof HttpException && error.getStatus() === 429) {
+        throw error;
+      }
+
+      if (error instanceof UnauthorizedException) {
+        this.loginLockout.recordFailure(dto.email);
+      }
+
+      throw error;
+    }
   }
 
   async refresh(dto: CreateRefreshBodyDto): Promise<RefreshSessionResponse> {

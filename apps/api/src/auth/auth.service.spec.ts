@@ -1,4 +1,8 @@
-import { UnauthorizedException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { PasswordHasherService } from '../users/password-hasher.service';
@@ -14,6 +18,8 @@ import type { CreateRefreshBodyDto } from './dto/create-refresh-body.dto';
 import type { CreateRegisterBodyDto } from './dto/create-register-body.dto';
 import type { RefreshToken } from './refresh-token.entity';
 import { JwtAccessTokenService } from './jwt-access-token.service';
+import { LOGIN_LOCKOUT_MESSAGE } from './login-lockout.constants';
+import { LoginLockoutService } from './login-lockout.service';
 import { RefreshTokenService } from './refresh-token.service';
 
 describe('AuthService', () => {
@@ -33,6 +39,10 @@ describe('AuthService', () => {
   let accessTokens: JwtAccessTokenService;
   let refreshTokens: RefreshTokenService;
   let config: ConfigService;
+  let assertNotLocked: ReturnType<typeof vi.fn>;
+  let recordFailure: ReturnType<typeof vi.fn>;
+  let clear: ReturnType<typeof vi.fn>;
+  let loginLockout: LoginLockoutService;
   const refreshTtlMs = 60_000;
 
   const savedUser: User = {
@@ -73,12 +83,21 @@ describe('AuthService', () => {
         throw new Error(`unexpected config key: ${key}`);
       }),
     } as unknown as ConfigService;
+    assertNotLocked = vi.fn();
+    recordFailure = vi.fn();
+    clear = vi.fn();
+    loginLockout = {
+      assertNotLocked,
+      recordFailure,
+      clear,
+    } as unknown as LoginLockoutService;
     service = new AuthService(
       users,
       passwordHasher,
       accessTokens,
       refreshTokens,
       config,
+      loginLockout,
     );
   });
 
@@ -152,6 +171,28 @@ describe('AuthService', () => {
     expect(typeof result.refreshToken).toBe('string');
     expect(result.refreshToken.length).toBeGreaterThan(0);
     expect(result).not.toHaveProperty('passwordHash');
+    expect(assertNotLocked).toHaveBeenCalledWith('user@example.com');
+    expect(clear).toHaveBeenCalledWith('user@example.com');
+    expect(recordFailure).not.toHaveBeenCalled();
+  });
+
+  it('login throws 429 when account is locked without calling UserService', async () => {
+    assertNotLocked.mockImplementation(() => {
+      throw new HttpException(
+        LOGIN_LOCKOUT_MESSAGE,
+        HttpStatus.TOO_MANY_REQUESTS,
+      );
+    });
+    const dto: CreateLoginBodyDto = {
+      email: 'user@example.com',
+      password: 'secret123',
+    };
+
+    await expect(service.login(dto)).rejects.toThrow(
+      new HttpException(LOGIN_LOCKOUT_MESSAGE, HttpStatus.TOO_MANY_REQUESTS),
+    );
+    expect(findByEmail).not.toHaveBeenCalled();
+    expect(recordFailure).not.toHaveBeenCalled();
   });
 
   it('login throws UnauthorizedException when user is not found', async () => {
@@ -166,6 +207,7 @@ describe('AuthService', () => {
     );
     expect(verify).not.toHaveBeenCalled();
     expect(persistForUser).not.toHaveBeenCalled();
+    expect(recordFailure).toHaveBeenCalledWith('missing@example.com');
   });
 
   it('login throws UnauthorizedException when password does not match', async () => {
@@ -180,6 +222,7 @@ describe('AuthService', () => {
       new UnauthorizedException(INVALID_LOGIN_CREDENTIALS_MESSAGE),
     );
     expect(persistForUser).not.toHaveBeenCalled();
+    expect(recordFailure).toHaveBeenCalledWith('user@example.com');
   });
 
   it('refresh rotates token and returns new access and refresh tokens', async () => {

@@ -19,7 +19,7 @@
 Намеренно **не** делаем:
 
 - JWT, `JwtStrategy`, guards — [шаг 066](../development-roadmap.md).
-- Rate limiting / lockout — [шаг 074](../development-roadmap.md).
+- Rate limiting / lockout — [шаг 074](./lesson-074-login-brute-force-lockout.md) (done).
 - Refresh / logout — [шаги 069–071](../development-roadmap.md).
 
 ## Dependencies

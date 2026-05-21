@@ -15,6 +15,7 @@ import {
   API_ERROR_CODE_INTERNAL,
   API_ERROR_CODE_NOT_FOUND,
   API_ERROR_CODE_REQUEST_TIMEOUT,
+  API_ERROR_CODE_TOO_MANY_REQUESTS,
   API_ERROR_CODE_UNAUTHORIZED,
   API_ERROR_CODE_VALIDATION,
   API_INTERNAL_ERROR_MESSAGE,
@@ -145,6 +146,18 @@ describe('mapExceptionToApiError', () => {
       body: {
         code: API_ERROR_CODE_BAD_REQUEST,
         message: 'I am a teapot',
+      },
+    });
+  });
+
+  it('maps HttpException 429 to TOO_MANY_REQUESTS', () => {
+    const exception = new HttpException('Too many login attempts', 429);
+
+    expect(mapExceptionToApiError(exception)).toEqual({
+      status: 429,
+      body: {
+        code: API_ERROR_CODE_TOO_MANY_REQUESTS,
+        message: 'Too many login attempts',
       },
     });
   });

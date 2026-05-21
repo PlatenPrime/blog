@@ -10,6 +10,7 @@ import { JwtAccessTokenService } from './jwt-access-token.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { JwtStrategy } from './jwt.strategy';
 import { RefreshToken } from './refresh-token.entity';
+import { LoginLockoutService } from './login-lockout.service';
 import { RefreshTokenService } from './refresh-token.service';
 
 @Module({
@@ -34,6 +35,7 @@ import { RefreshTokenService } from './refresh-token.service';
   controllers: [AuthController],
   providers: [
     AuthService,
+    LoginLockoutService,
     JwtAccessTokenService,
     RefreshTokenService,
     JwtStrategy,

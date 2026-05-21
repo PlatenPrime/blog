@@ -25,6 +25,9 @@ export const API_ERROR_CODE_BAD_REQUEST = 'BAD_REQUEST' as const;
 /** Request handler exceeded configured time limit. */
 export const API_ERROR_CODE_REQUEST_TIMEOUT = 'REQUEST_TIMEOUT' as const;
 
+/** Client exceeded rate or attempt limits (e.g. login lockout). */
+export const API_ERROR_CODE_TOO_MANY_REQUESTS = 'TOO_MANY_REQUESTS' as const;
+
 export type PlatformApiErrorCode =
   | typeof API_ERROR_CODE_INTERNAL
   | typeof API_ERROR_CODE_VALIDATION
@@ -33,7 +36,8 @@ export type PlatformApiErrorCode =
   | typeof API_ERROR_CODE_FORBIDDEN
   | typeof API_ERROR_CODE_CONFLICT
   | typeof API_ERROR_CODE_BAD_REQUEST
-  | typeof API_ERROR_CODE_REQUEST_TIMEOUT;
+  | typeof API_ERROR_CODE_REQUEST_TIMEOUT
+  | typeof API_ERROR_CODE_TOO_MANY_REQUESTS;
 
 /** Machine-readable error code (platform constants or domain-specific strings). */
 export type ApiErrorCode = PlatformApiErrorCode | (string & {});

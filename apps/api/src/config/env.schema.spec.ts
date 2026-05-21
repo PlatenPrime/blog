@@ -1,4 +1,9 @@
 import { describe, expect, it } from 'vitest';
+import {
+  DEFAULT_LOGIN_LOCKOUT_DURATION_MS,
+  DEFAULT_LOGIN_LOCKOUT_MAX_ATTEMPTS,
+  DEFAULT_LOGIN_LOCKOUT_WINDOW_MS,
+} from '../auth/login-lockout.constants';
 import { DEFAULT_REFRESH_TOKEN_TTL_MS } from '../auth/refresh-token.constants';
 import { parseRootEnv, validateRootEnv } from './env.schema';
 
@@ -20,7 +25,30 @@ describe('parseRootEnv', () => {
       JWT_SECRET: 'dev-only-jwt-secret-change-before-production-32chars',
       JWT_ACCESS_EXPIRES_IN: '15m',
       JWT_REFRESH_EXPIRES_MS: DEFAULT_REFRESH_TOKEN_TTL_MS,
+      LOGIN_LOCKOUT_MAX_ATTEMPTS: DEFAULT_LOGIN_LOCKOUT_MAX_ATTEMPTS,
+      LOGIN_LOCKOUT_WINDOW_MS: DEFAULT_LOGIN_LOCKOUT_WINDOW_MS,
+      LOGIN_LOCKOUT_DURATION_MS: DEFAULT_LOGIN_LOCKOUT_DURATION_MS,
     });
+  });
+
+  it('parses LOGIN_LOCKOUT env overrides', () => {
+    expect(
+      parseRootEnv({
+        LOGIN_LOCKOUT_MAX_ATTEMPTS: '3',
+        LOGIN_LOCKOUT_WINDOW_MS: '120000',
+        LOGIN_LOCKOUT_DURATION_MS: '180000',
+      }),
+    ).toMatchObject({
+      LOGIN_LOCKOUT_MAX_ATTEMPTS: 3,
+      LOGIN_LOCKOUT_WINDOW_MS: 120_000,
+      LOGIN_LOCKOUT_DURATION_MS: 180_000,
+    });
+  });
+
+  it('rejects LOGIN_LOCKOUT_MAX_ATTEMPTS below minimum', () => {
+    expect(() => parseRootEnv({ LOGIN_LOCKOUT_MAX_ATTEMPTS: '0' })).toThrow(
+      /LOGIN_LOCKOUT_MAX_ATTEMPTS/,
+    );
   });
 
   it('parses JWT_ACCESS_EXPIRES_IN override', () => {

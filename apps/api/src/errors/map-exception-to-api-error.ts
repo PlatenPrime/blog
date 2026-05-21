@@ -5,6 +5,7 @@ import {
   API_ERROR_CODE_INTERNAL,
   API_ERROR_CODE_NOT_FOUND,
   API_ERROR_CODE_REQUEST_TIMEOUT,
+  API_ERROR_CODE_TOO_MANY_REQUESTS,
   API_ERROR_CODE_UNAUTHORIZED,
   API_ERROR_CODE_VALIDATION,
   API_INTERNAL_ERROR_MESSAGE,
@@ -205,6 +206,10 @@ function resolveApiErrorCodeFromStatus(status: number): ApiErrorCode {
 
   if (status === 408) {
     return API_ERROR_CODE_REQUEST_TIMEOUT;
+  }
+
+  if (status === 429) {
+    return API_ERROR_CODE_TOO_MANY_REQUESTS;
   }
 
   if (status >= 500) {

@@ -1,4 +1,9 @@
 import { z } from 'zod';
+import {
+  DEFAULT_LOGIN_LOCKOUT_DURATION_MS,
+  DEFAULT_LOGIN_LOCKOUT_MAX_ATTEMPTS,
+  DEFAULT_LOGIN_LOCKOUT_WINDOW_MS,
+} from '../auth/login-lockout.constants';
 import { DEFAULT_REFRESH_TOKEN_TTL_MS } from '../auth/refresh-token.constants';
 import {
   buildDatabaseUrlFromPostgres,
@@ -174,6 +179,27 @@ export const rootEnvSchema = z
       min: 3_600_000,
       max: 7_776_000_000,
     }),
+    LOGIN_LOCKOUT_MAX_ATTEMPTS: z.preprocess((val: unknown) => {
+      if (val === undefined || val === '') {
+        return DEFAULT_LOGIN_LOCKOUT_MAX_ATTEMPTS;
+      }
+      if (typeof val === 'number') {
+        return val;
+      }
+      if (typeof val === 'string') {
+        const s = val.trim();
+        return s.length === 0 ? DEFAULT_LOGIN_LOCKOUT_MAX_ATTEMPTS : s;
+      }
+      return '__INVALID_LOGIN_LOCKOUT_MAX_ATTEMPTS__';
+    }, z.coerce.number().int().min(1).max(100)),
+    LOGIN_LOCKOUT_WINDOW_MS: envMilliseconds(DEFAULT_LOGIN_LOCKOUT_WINDOW_MS, {
+      min: 60_000,
+      max: 86_400_000,
+    }),
+    LOGIN_LOCKOUT_DURATION_MS: envMilliseconds(
+      DEFAULT_LOGIN_LOCKOUT_DURATION_MS,
+      { min: 60_000, max: 86_400_000 },
+    ),
   })
   .transform((value) => {
     const explicit =
@@ -231,6 +257,9 @@ const ROOT_ENV_KEYS = [
   'JWT_SECRET',
   'JWT_ACCESS_EXPIRES_IN',
   'JWT_REFRESH_EXPIRES_MS',
+  'LOGIN_LOCKOUT_MAX_ATTEMPTS',
+  'LOGIN_LOCKOUT_WINDOW_MS',
+  'LOGIN_LOCKOUT_DURATION_MS',
 ] as const;
 
 function pickRootEnvKeys(
