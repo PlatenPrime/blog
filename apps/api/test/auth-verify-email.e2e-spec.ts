@@ -1,18 +1,20 @@
 import {
-  API_ERROR_CODE_CONFLICT,
+  API_ERROR_CODE_UNAUTHORIZED,
   API_ERROR_CODE_VALIDATION,
   PROBLEM_MEDIA_TYPE,
   type ProblemDetailsBody,
-  type RegisterUserResponse,
+  type VerifyEmailResponse,
   problemTypeUriForCode,
 } from '@blog/shared-contracts';
-import { ConflictException, INestApplication } from '@nestjs/common';
+import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DataSource } from 'typeorm';
 import request from 'supertest';
 import { App } from 'supertest/types';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { AppModule } from '../src/app.module';
+import { INVALID_EMAIL_VERIFICATION_TOKEN_MESSAGE } from '../src/auth/auth-credentials.constants';
+import type { EmailVerificationToken } from '../src/auth/email-verification-token.entity';
 import { EmailVerificationTokenService } from '../src/auth/email-verification-token.service';
 import { API_V1_BASE } from '../src/config/configure-api-http';
 import { configureApiHttp } from '../src/config/configure-api-http';
@@ -21,10 +23,11 @@ import { enableApiCors } from '../src/config/enable-api-cors';
 import { PostgresHealthIndicator } from '../src/health/indicators/postgres.health-indicator';
 import { createTestDataSourceStub } from '../src/testing/create-test-data-source.stub';
 import type { User } from '../src/users/user.entity';
-import { USER_EMAIL_ALREADY_REGISTERED_MESSAGE } from '../src/users/user-email.constants';
 import { UserService } from '../src/users/user.service';
 
-const registerBase = `${API_V1_BASE}/auth/register`;
+const verifyEmailBase = `${API_V1_BASE}/auth/verify-email`;
+
+const activeEmailVerificationToken = 'opaque-email-verification-secret';
 
 const fakeUser: User = {
   id: '11111111-1111-4111-8111-111111111111',
@@ -35,16 +38,16 @@ const fakeUser: User = {
   updatedAt: new Date('2026-05-20T10:00:00.000Z'),
 };
 
-describe('Auth register (e2e)', () => {
+describe('Auth verify-email (e2e)', () => {
   let app: INestApplication<App>;
-  let create: ReturnType<typeof vi.fn>;
-  let findByEmail: ReturnType<typeof vi.fn>;
-  let evPersistForUser: ReturnType<typeof vi.fn>;
+  let findActiveByRawToken: ReturnType<typeof vi.fn>;
+  let consume: ReturnType<typeof vi.fn>;
+  let markEmailVerified: ReturnType<typeof vi.fn>;
 
   beforeEach(async () => {
-    create = vi.fn().mockResolvedValue(fakeUser);
-    findByEmail = vi.fn();
-    evPersistForUser = vi.fn().mockResolvedValue({ id: 'evt-1' });
+    findActiveByRawToken = vi.fn();
+    consume = vi.fn();
+    markEmailVerified = vi.fn();
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
@@ -56,13 +59,17 @@ describe('Auth register (e2e)', () => {
       .overrideProvider(DataSource)
       .useValue(createTestDataSourceStub())
       .overrideProvider(UserService)
-      .useValue({ create, findByEmail })
+      .useValue({
+        create: vi.fn(),
+        findByEmail: vi.fn(),
+        markEmailVerified,
+      })
       .overrideProvider(EmailVerificationTokenService)
       .useValue({
-        persistForUser: evPersistForUser,
-        findActiveByRawToken: vi.fn(),
+        persistForUser: vi.fn(),
+        findActiveByRawToken,
         findByRawToken: vi.fn(),
-        consume: vi.fn(),
+        consume,
       })
       .compile();
 
@@ -77,9 +84,9 @@ describe('Auth register (e2e)', () => {
     await app.close();
   });
 
-  it('returns VALIDATION_FAILED with details for an invalid register body', async () => {
+  it('returns VALIDATION_FAILED for an invalid verify-email body', async () => {
     const response = await request(app.getHttpServer())
-      .post(registerBase)
+      .post(verifyEmailBase)
       .send({})
       .expect(400);
 
@@ -95,24 +102,18 @@ describe('Auth register (e2e)', () => {
       code: API_ERROR_CODE_VALIDATION,
     });
 
-    const emailDetail = body.details?.find(
-      (detail) => detail.field === 'email',
+    const tokenDetail = body.details?.find(
+      (detail) => detail.field === 'emailVerificationToken',
     );
-    const passwordDetail = body.details?.find(
-      (detail) => detail.field === 'password',
-    );
-    expect(emailDetail).toBeDefined();
-    expect(emailDetail?.message.length).toBeGreaterThan(0);
-    expect(passwordDetail).toBeDefined();
-    expect(passwordDetail?.message.length).toBeGreaterThan(0);
+    expect(tokenDetail).toBeDefined();
+    expect(tokenDetail?.message.length).toBeGreaterThan(0);
   });
 
-  it('rejects non-whitelisted properties on register with 400', async () => {
+  it('rejects non-whitelisted properties on verify-email with 400', async () => {
     const response = await request(app.getHttpServer())
-      .post(registerBase)
+      .post(verifyEmailBase)
       .send({
-        email: 'user@example.com',
-        password: 'secret123',
+        emailVerificationToken: activeEmailVerificationToken,
         extra: 'x',
       })
       .expect(400);
@@ -131,62 +132,55 @@ describe('Auth register (e2e)', () => {
     expect(extraDetail?.message).toContain('extra');
   });
 
-  it('creates a user and returns RegisterUserResponse with emailVerificationToken', async () => {
+  it('returns VerifyEmailResponse when email verification token is active', async () => {
+    const verifiedAt = new Date('2026-05-21T12:00:00.000Z');
+    const row = {
+      id: 'evt-1',
+      userId: fakeUser.id,
+    } as EmailVerificationToken;
+    findActiveByRawToken.mockResolvedValue(row);
+    markEmailVerified.mockResolvedValue({
+      ...fakeUser,
+      emailVerifiedAt: verifiedAt,
+    });
+
     const response = await request(app.getHttpServer())
-      .post(registerBase)
-      .send({ email: 'user@example.com', password: 'secret123' })
-      .expect(201);
+      .post(verifyEmailBase)
+      .send({ emailVerificationToken: activeEmailVerificationToken })
+      .expect(200);
 
-    const body = response.body as RegisterUserResponse & {
-      passwordHash?: string;
-    };
-
-    expect(evPersistForUser).toHaveBeenCalledOnce();
-    const persistArgs = evPersistForUser.mock.calls[0]?.[0] as {
-      userId: string;
-      rawToken: string;
-      expiresAt: Date;
-    };
-    expect(persistArgs.userId).toBe(fakeUser.id);
-    expect(typeof persistArgs.rawToken).toBe('string');
-    expect(persistArgs.rawToken.length).toBeGreaterThan(0);
+    const body = response.body as VerifyEmailResponse;
 
     expect(body).toEqual({
-      id: fakeUser.id,
-      email: fakeUser.email,
-      emailVerificationToken: persistArgs.rawToken,
-      emailVerifiedAt: null,
-      createdAt: fakeUser.createdAt.toISOString(),
-      updatedAt: fakeUser.updatedAt.toISOString(),
+      emailVerifiedAt: verifiedAt.toISOString(),
     });
-    expect(body).not.toHaveProperty('passwordHash');
-
-    expect(create).toHaveBeenCalledWith({
-      email: 'user@example.com',
-      plainPassword: 'secret123',
-    });
+    expect(findActiveByRawToken).toHaveBeenCalledWith(
+      activeEmailVerificationToken,
+    );
+    expect(consume).toHaveBeenCalledWith('evt-1');
+    expect(markEmailVerified).toHaveBeenCalledWith(fakeUser.id);
   });
 
-  it('returns CONFLICT when UserService rejects duplicate email', async () => {
-    create.mockRejectedValue(
-      new ConflictException(USER_EMAIL_ALREADY_REGISTERED_MESSAGE),
-    );
+  it('returns UNAUTHORIZED when email verification token is not active', async () => {
+    findActiveByRawToken.mockResolvedValue(null);
 
     const response = await request(app.getHttpServer())
-      .post(registerBase)
-      .send({ email: 'user@example.com', password: 'secret123' })
-      .expect(409);
+      .post(verifyEmailBase)
+      .send({ emailVerificationToken: activeEmailVerificationToken })
+      .expect(401);
 
     expect(response.headers['content-type']).toContain(PROBLEM_MEDIA_TYPE);
 
     const body = response.body as ProblemDetailsBody;
 
     expect(body).toMatchObject({
-      type: problemTypeUriForCode(API_ERROR_CODE_CONFLICT),
-      title: 'Conflict',
-      status: 409,
-      detail: USER_EMAIL_ALREADY_REGISTERED_MESSAGE,
-      code: API_ERROR_CODE_CONFLICT,
+      type: problemTypeUriForCode(API_ERROR_CODE_UNAUTHORIZED),
+      title: 'Unauthorized',
+      status: 401,
+      detail: INVALID_EMAIL_VERIFICATION_TOKEN_MESSAGE,
+      code: API_ERROR_CODE_UNAUTHORIZED,
     });
+    expect(consume).not.toHaveBeenCalled();
+    expect(markEmailVerified).not.toHaveBeenCalled();
   });
 });

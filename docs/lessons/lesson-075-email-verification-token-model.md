@@ -126,4 +126,4 @@ npx nx run api:build
 ## Homework
 
 - Прогнать `db:migrate` локально и проверить `\d email_verification_tokens` в `psql`.
-- На 076: спроектировать `POST /auth/verify-email` и колонку `email_verified_at`.
+- Следующий шаг: [076 — `POST /auth/verify-email`](./lesson-076-auth-verify-email.md).

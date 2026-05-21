@@ -9,13 +9,17 @@ import { PasswordHasherService } from '../users/password-hasher.service';
 import type { User } from '../users/user.entity';
 import { UserService } from '../users/user.service';
 import {
+  INVALID_EMAIL_VERIFICATION_TOKEN_MESSAGE,
   INVALID_LOGIN_CREDENTIALS_MESSAGE,
   INVALID_REFRESH_TOKEN_MESSAGE,
 } from './auth-credentials.constants';
+import type { EmailVerificationToken } from './email-verification-token.entity';
+import { EmailVerificationTokenService } from './email-verification-token.service';
 import { AuthService } from './auth.service';
 import type { CreateLoginBodyDto } from './dto/create-login-body.dto';
 import type { CreateRefreshBodyDto } from './dto/create-refresh-body.dto';
 import type { CreateRegisterBodyDto } from './dto/create-register-body.dto';
+import type { CreateVerifyEmailBodyDto } from './dto/create-verify-email-body.dto';
 import type { RefreshToken } from './refresh-token.entity';
 import { JwtAccessTokenService } from './jwt-access-token.service';
 import { LOGIN_LOCKOUT_MESSAGE } from './login-lockout.constants';
@@ -34,6 +38,10 @@ describe('AuthService', () => {
   let revoke: ReturnType<typeof vi.fn>;
   let revokeTokenFamily: ReturnType<typeof vi.fn>;
   let markReplaced: ReturnType<typeof vi.fn>;
+  let evPersistForUser: ReturnType<typeof vi.fn>;
+  let evFindActiveByRawToken: ReturnType<typeof vi.fn>;
+  let evConsume: ReturnType<typeof vi.fn>;
+  let markEmailVerified: ReturnType<typeof vi.fn>;
   let users: UserService;
   let passwordHasher: PasswordHasherService;
   let accessTokens: JwtAccessTokenService;
@@ -43,12 +51,14 @@ describe('AuthService', () => {
   let recordFailure: ReturnType<typeof vi.fn>;
   let clear: ReturnType<typeof vi.fn>;
   let loginLockout: LoginLockoutService;
+  let emailVerificationTokens: EmailVerificationTokenService;
   const refreshTtlMs = 60_000;
 
   const savedUser: User = {
     id: '11111111-1111-4111-8111-111111111111',
     email: 'user@example.com',
     passwordHash: 'argon2id$v=19$m=65536,t=3,p=4$hash',
+    emailVerifiedAt: null,
     createdAt: new Date('2026-05-20T10:00:00.000Z'),
     updatedAt: new Date('2026-05-20T10:00:00.000Z'),
   };
@@ -64,7 +74,15 @@ describe('AuthService', () => {
     revoke = vi.fn();
     revokeTokenFamily = vi.fn();
     markReplaced = vi.fn();
-    users = { create, findByEmail } as unknown as UserService;
+    evPersistForUser = vi.fn();
+    evFindActiveByRawToken = vi.fn();
+    evConsume = vi.fn();
+    markEmailVerified = vi.fn();
+    users = {
+      create,
+      findByEmail,
+      markEmailVerified,
+    } as unknown as UserService;
     passwordHasher = { verify } as unknown as PasswordHasherService;
     accessTokens = { signForUser } as unknown as JwtAccessTokenService;
     refreshTokens = {
@@ -75,6 +93,11 @@ describe('AuthService', () => {
       revokeTokenFamily,
       markReplaced,
     } as unknown as RefreshTokenService;
+    emailVerificationTokens = {
+      persistForUser: evPersistForUser,
+      findActiveByRawToken: evFindActiveByRawToken,
+      consume: evConsume,
+    } as unknown as EmailVerificationTokenService;
     config = {
       getOrThrow: vi.fn((key: string) => {
         if (key === 'JWT_REFRESH_EXPIRES_MS') {
@@ -96,6 +119,7 @@ describe('AuthService', () => {
       passwordHasher,
       accessTokens,
       refreshTokens,
+      emailVerificationTokens,
       config,
       loginLockout,
     );
@@ -116,8 +140,9 @@ describe('AuthService', () => {
     });
   });
 
-  it('register returns RegisterUserResponse without passwordHash', async () => {
+  it('register persists email verification token and returns RegisterUserResponse', async () => {
     create.mockResolvedValue(savedUser);
+    evPersistForUser.mockResolvedValue({ id: 'evt-1' });
     const dto: CreateRegisterBodyDto = {
       email: 'user@example.com',
       password: 'secret123',
@@ -125,13 +150,87 @@ describe('AuthService', () => {
 
     const result = await service.register(dto);
 
+    expect(evPersistForUser).toHaveBeenCalledOnce();
+    const persistArgs = evPersistForUser.mock.calls[0]?.[0] as {
+      userId: string;
+      rawToken: string;
+      expiresAt: Date;
+    };
+    expect(persistArgs.userId).toBe(savedUser.id);
+    expect(typeof persistArgs.rawToken).toBe('string');
+    expect(persistArgs.rawToken.length).toBeGreaterThan(0);
+    expect(persistArgs.expiresAt).toBeInstanceOf(Date);
     expect(result).toEqual({
       id: savedUser.id,
       email: savedUser.email,
+      emailVerificationToken: persistArgs.rawToken,
+      emailVerifiedAt: null,
       createdAt: savedUser.createdAt.toISOString(),
       updatedAt: savedUser.updatedAt.toISOString(),
     });
     expect(result).not.toHaveProperty('passwordHash');
+  });
+
+  it('verifyEmail consumes token, marks user verified, and returns emailVerifiedAt', async () => {
+    const verifiedAt = new Date('2026-05-21T12:00:00.000Z');
+    const row = {
+      id: 'evt-1',
+      userId: savedUser.id,
+    } as EmailVerificationToken;
+    evFindActiveByRawToken.mockResolvedValue(row);
+    markEmailVerified.mockResolvedValue({
+      ...savedUser,
+      emailVerifiedAt: verifiedAt,
+    });
+    const dto: CreateVerifyEmailBodyDto = {
+      emailVerificationToken: 'opaque-email-verification-secret',
+    };
+
+    const result = await service.verifyEmail(dto);
+
+    expect(evFindActiveByRawToken).toHaveBeenCalledWith(
+      dto.emailVerificationToken,
+    );
+    expect(evConsume).toHaveBeenCalledWith('evt-1');
+    expect(markEmailVerified).toHaveBeenCalledWith(savedUser.id);
+    expect(result).toEqual({
+      emailVerifiedAt: verifiedAt.toISOString(),
+    });
+  });
+
+  it('verifyEmail is idempotent when user is already verified', async () => {
+    const existingVerifiedAt = new Date('2026-05-19T08:00:00.000Z');
+    const row = {
+      id: 'evt-2',
+      userId: savedUser.id,
+    } as EmailVerificationToken;
+    evFindActiveByRawToken.mockResolvedValue(row);
+    markEmailVerified.mockResolvedValue({
+      ...savedUser,
+      emailVerifiedAt: existingVerifiedAt,
+    });
+    const dto: CreateVerifyEmailBodyDto = {
+      emailVerificationToken: 'opaque-email-verification-secret',
+    };
+
+    const result = await service.verifyEmail(dto);
+
+    expect(evConsume).toHaveBeenCalledWith('evt-2');
+    expect(markEmailVerified).toHaveBeenCalledWith(savedUser.id);
+    expect(result.emailVerifiedAt).toBe(existingVerifiedAt.toISOString());
+  });
+
+  it('verifyEmail throws UnauthorizedException when token is not active', async () => {
+    evFindActiveByRawToken.mockResolvedValue(null);
+    const dto: CreateVerifyEmailBodyDto = {
+      emailVerificationToken: 'invalid-or-expired-token',
+    };
+
+    await expect(service.verifyEmail(dto)).rejects.toThrow(
+      new UnauthorizedException(INVALID_EMAIL_VERIFICATION_TOKEN_MESSAGE),
+    );
+    expect(evConsume).not.toHaveBeenCalled();
+    expect(markEmailVerified).not.toHaveBeenCalled();
   });
 
   it('login returns LoginUserResponse with accessToken and refreshToken when credentials are valid', async () => {

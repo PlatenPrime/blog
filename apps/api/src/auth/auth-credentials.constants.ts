@@ -5,3 +5,7 @@ export const INVALID_LOGIN_CREDENTIALS_MESSAGE =
 /** Generic message for invalid, expired, revoked, or reused refresh tokens. */
 export const INVALID_REFRESH_TOKEN_MESSAGE =
   'Invalid or expired refresh token' as const;
+
+/** Generic message for invalid, expired, or consumed email verification tokens. */
+export const INVALID_EMAIL_VERIFICATION_TOKEN_MESSAGE =
+  'Invalid or expired email verification token' as const;

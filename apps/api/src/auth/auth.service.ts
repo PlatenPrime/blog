@@ -2,6 +2,7 @@ import type {
   LoginUserResponse,
   RefreshSessionResponse,
   RegisterUserResponse,
+  VerifyEmailResponse,
 } from '@blog/shared-contracts';
 import {
   HttpException,
@@ -12,12 +13,17 @@ import { ConfigService } from '@nestjs/config';
 import { PasswordHasherService } from '../users/password-hasher.service';
 import { UserService } from '../users/user.service';
 import {
+  INVALID_EMAIL_VERIFICATION_TOKEN_MESSAGE,
   INVALID_LOGIN_CREDENTIALS_MESSAGE,
   INVALID_REFRESH_TOKEN_MESSAGE,
 } from './auth-credentials.constants';
 import type { CreateLoginBodyDto } from './dto/create-login-body.dto';
 import type { CreateRefreshBodyDto } from './dto/create-refresh-body.dto';
 import type { CreateRegisterBodyDto } from './dto/create-register-body.dto';
+import type { CreateVerifyEmailBodyDto } from './dto/create-verify-email-body.dto';
+import { emailVerificationExpiresAt } from './email-verification-expires-at';
+import { DEFAULT_EMAIL_VERIFICATION_TTL_MS } from './email-verification-token.constants';
+import { EmailVerificationTokenService } from './email-verification-token.service';
 import type { User } from '../users/user.entity';
 import { generateOpaqueToken } from './generate-opaque-token';
 import { JwtAccessTokenService } from './jwt-access-token.service';
@@ -33,6 +39,7 @@ export class AuthService {
     private readonly passwordHasher: PasswordHasherService,
     private readonly accessTokens: JwtAccessTokenService,
     private readonly refreshTokens: RefreshTokenService,
+    private readonly emailVerificationTokens: EmailVerificationTokenService,
     private readonly config: ConfigService,
     private readonly loginLockout: LoginLockoutService,
   ) {}
@@ -42,7 +49,29 @@ export class AuthService {
       email: dto.email,
       plainPassword: dto.password,
     });
-    return this.toPublicUserResponse(user);
+    const emailVerificationToken = await this.issueEmailVerificationForUser(
+      user.id,
+    );
+    return this.toRegisterUserResponse(user, emailVerificationToken);
+  }
+
+  async verifyEmail(
+    dto: CreateVerifyEmailBodyDto,
+  ): Promise<VerifyEmailResponse> {
+    const row = await this.emailVerificationTokens.findActiveByRawToken(
+      dto.emailVerificationToken,
+    );
+
+    if (row === null) {
+      throw new UnauthorizedException(INVALID_EMAIL_VERIFICATION_TOKEN_MESSAGE);
+    }
+
+    await this.emailVerificationTokens.consume(row.id);
+    const user = await this.users.markEmailVerified(row.userId);
+
+    return {
+      emailVerifiedAt: user.emailVerifiedAt!.toISOString(),
+    };
   }
 
   async login(dto: CreateLoginBodyDto): Promise<LoginUserResponse> {
@@ -58,7 +87,7 @@ export class AuthService {
       const refreshToken = await this.issueRefreshForUser(user.id);
 
       return {
-        ...this.toPublicUserResponse(user),
+        ...this.toLoginUserResponse(user),
         accessToken,
         refreshToken,
       };
@@ -134,6 +163,19 @@ export class AuthService {
     return user;
   }
 
+  private async issueEmailVerificationForUser(userId: string): Promise<string> {
+    const rawToken = generateOpaqueToken();
+    await this.emailVerificationTokens.persistForUser({
+      userId,
+      rawToken,
+      expiresAt: emailVerificationExpiresAt(
+        Date.now(),
+        DEFAULT_EMAIL_VERIFICATION_TTL_MS,
+      ),
+    });
+    return rawToken;
+  }
+
   private async issueRefreshForUser(userId: string): Promise<string> {
     const rawToken = generateOpaqueToken();
     await this.refreshTokens.persistForUser({
@@ -149,7 +191,23 @@ export class AuthService {
     return refreshExpiresAt(Date.now(), ttlMs);
   }
 
-  private toPublicUserResponse(user: User): RegisterUserResponse {
+  private toRegisterUserResponse(
+    user: User,
+    emailVerificationToken: string,
+  ): RegisterUserResponse {
+    return {
+      id: user.id,
+      email: user.email,
+      emailVerificationToken,
+      emailVerifiedAt: user.emailVerifiedAt?.toISOString() ?? null,
+      createdAt: user.createdAt.toISOString(),
+      updatedAt: user.updatedAt.toISOString(),
+    };
+  }
+
+  private toLoginUserResponse(
+    user: User,
+  ): Pick<LoginUserResponse, 'id' | 'email' | 'createdAt' | 'updatedAt'> {
     return {
       id: user.id,
       email: user.email,

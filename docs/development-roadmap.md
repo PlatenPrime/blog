@@ -199,7 +199,7 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 073  | Token TTL configuration + documentation               | docs check — done               |
 | 074  | Login brute-force throttle / basic lockout            | e2e — done                      |
 | 075  | Email verification token model (optional minimal)     | unit test — done                |
-| 076  | `POST /auth/verify-email`                             | e2e                             |
+| 076  | `POST /auth/verify-email`                             | e2e — done                      |
 | 077  | Password reset request flow                           | e2e                             |
 | 078  | Password reset completion                             | e2e                             |
 | 079  | Roles + permissions schema (tables/enums)             | migration                       |
@@ -554,5 +554,6 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 073  | [lesson-073-token-ttl-configuration.md](./lessons/lesson-073-token-ttl-configuration.md)                               |
 | 074  | [lesson-074-login-brute-force-lockout.md](./lessons/lesson-074-login-brute-force-lockout.md)                           |
 | 075  | [lesson-075-email-verification-token-model.md](./lessons/lesson-075-email-verification-token-model.md)                 |
+| 076  | [lesson-076-auth-verify-email.md](./lessons/lesson-076-auth-verify-email.md)                                           |
 
 Entry point: [LOCAL_SETUP.md](./LOCAL_SETUP.md)

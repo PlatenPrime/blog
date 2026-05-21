@@ -3,6 +3,7 @@ import type {
   LoginUserResponse,
   RefreshSessionResponse,
   RegisterUserResponse,
+  VerifyEmailResponse,
 } from '@blog/shared-contracts';
 import {
   Body,
@@ -19,6 +20,7 @@ import { CurrentUser } from './current-user.decorator';
 import { CreateLoginBodyDto } from './dto/create-login-body.dto';
 import { CreateRefreshBodyDto } from './dto/create-refresh-body.dto';
 import { CreateRegisterBodyDto } from './dto/create-register-body.dto';
+import { CreateVerifyEmailBodyDto } from './dto/create-verify-email-body.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
 
 @Controller('auth')
@@ -47,6 +49,14 @@ export class AuthController {
   @HttpCode(HttpStatus.NO_CONTENT)
   logout(@Body() body: CreateRefreshBodyDto): Promise<void> {
     return this.auth.logout(body);
+  }
+
+  @Post('verify-email')
+  @HttpCode(HttpStatus.OK)
+  verifyEmail(
+    @Body() body: CreateVerifyEmailBodyDto,
+  ): Promise<VerifyEmailResponse> {
+    return this.auth.verifyEmail(body);
   }
 
   @Get('me')

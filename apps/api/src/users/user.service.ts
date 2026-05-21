@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { isPostgresUniqueViolation } from '../database/is-postgres-unique-violation';
@@ -49,5 +53,22 @@ export class UserService {
 
       throw error;
     }
+  }
+
+  async markEmailVerified(userId: string): Promise<User> {
+    const existing = await this.users.findOne({ where: { id: userId } });
+
+    if (existing === null) {
+      throw new NotFoundException();
+    }
+
+    if (existing.emailVerifiedAt !== null) {
+      return existing;
+    }
+
+    const verifiedAt = new Date();
+    await this.users.update({ id: userId }, { emailVerifiedAt: verifiedAt });
+
+    return { ...existing, emailVerifiedAt: verifiedAt };
   }
 }

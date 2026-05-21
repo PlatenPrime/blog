@@ -32,6 +32,7 @@ const fakeUser: User = {
   id: '11111111-1111-4111-8111-111111111111',
   email: 'user@example.com',
   passwordHash: 'argon2id$v=19$m=65536,t=3,p=4$hash',
+  emailVerifiedAt: null,
   createdAt: new Date('2026-05-20T10:00:00.000Z'),
   updatedAt: new Date('2026-05-20T10:00:00.000Z'),
 };

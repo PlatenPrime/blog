@@ -89,8 +89,9 @@ Steps 033-056.
 - Step 073: [lesson-073-token-ttl-configuration.md](./lessons/lesson-073-token-ttl-configuration.md)
 - Step 074: [lesson-074-login-brute-force-lockout.md](./lessons/lesson-074-login-brute-force-lockout.md)
 - Step 075: [lesson-075-email-verification-token-model.md](./lessons/lesson-075-email-verification-token-model.md)
+- Step 076: [lesson-076-auth-verify-email.md](./lessons/lesson-076-auth-verify-email.md)
 
-Steps 076-104.
+Steps 077-104.
 
 ## Phase 4: CMS Backend (Track 3)
 

@@ -10,6 +10,7 @@ describe('UserService', () => {
   let findOne: ReturnType<typeof vi.fn>;
   let create: ReturnType<typeof vi.fn>;
   let save: ReturnType<typeof vi.fn>;
+  let update: ReturnType<typeof vi.fn>;
   let hash: ReturnType<typeof vi.fn>;
   let usersRepo: Repository<User>;
   let passwordHasher: PasswordHasherService;
@@ -18,12 +19,14 @@ describe('UserService', () => {
     findOne = vi.fn();
     create = vi.fn();
     save = vi.fn();
+    update = vi.fn();
     hash = vi.fn();
 
     usersRepo = {
       findOne,
       create,
       save,
+      update,
     } as unknown as Repository<User>;
 
     passwordHasher = {
@@ -59,6 +62,7 @@ describe('UserService', () => {
     const saved: User = {
       ...draft,
       id: 'new-id',
+      emailVerifiedAt: null,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -124,5 +128,55 @@ describe('UserService', () => {
         statusCode: 409,
       },
     });
+  });
+
+  it('markEmailVerified sets emailVerifiedAt when user is not yet verified', async () => {
+    const user: User = {
+      id: 'u1',
+      email: 'a@b.com',
+      passwordHash: 'hash',
+      emailVerifiedAt: null,
+      createdAt: new Date('2026-05-20T10:00:00.000Z'),
+      updatedAt: new Date('2026-05-20T10:00:00.000Z'),
+    };
+    findOne.mockResolvedValue(user);
+    update.mockResolvedValue({ affected: 1 });
+
+    const result = await service.markEmailVerified('u1');
+
+    const updateCall = update.mock.calls[0] as [
+      { id: string },
+      { emailVerifiedAt: Date },
+    ];
+    expect(updateCall[0]).toEqual({ id: 'u1' });
+    expect(updateCall[1].emailVerifiedAt).toBeInstanceOf(Date);
+    expect(result.emailVerifiedAt).toBeInstanceOf(Date);
+  });
+
+  it('markEmailVerified is idempotent when email is already verified', async () => {
+    const verifiedAt = new Date('2026-05-19T08:00:00.000Z');
+    const user: User = {
+      id: 'u1',
+      email: 'a@b.com',
+      passwordHash: 'hash',
+      emailVerifiedAt: verifiedAt,
+      createdAt: new Date('2026-05-20T10:00:00.000Z'),
+      updatedAt: new Date('2026-05-20T10:00:00.000Z'),
+    };
+    findOne.mockResolvedValue(user);
+
+    const result = await service.markEmailVerified('u1');
+
+    expect(result.emailVerifiedAt).toBe(verifiedAt);
+    expect(update).not.toHaveBeenCalled();
+  });
+
+  it('markEmailVerified throws NotFoundException when user does not exist', async () => {
+    findOne.mockResolvedValue(null);
+
+    await expect(service.markEmailVerified('missing')).rejects.toMatchObject({
+      status: 404,
+    });
+    expect(update).not.toHaveBeenCalled();
   });
 });
