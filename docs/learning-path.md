@@ -92,8 +92,9 @@ Steps 033-056.
 - Step 076: [lesson-076-auth-verify-email.md](./lessons/lesson-076-auth-verify-email.md)
 - Step 077: [lesson-077-password-reset-request-flow.md](./lessons/lesson-077-password-reset-request-flow.md)
 - Step 078: [lesson-078-password-reset-completion.md](./lessons/lesson-078-password-reset-completion.md)
+- Step 079: [lesson-079-roles-permissions-schema.md](./lessons/lesson-079-roles-permissions-schema.md)
 
-Steps 079-104.
+Steps 080-104.
 
 ## Phase 4: CMS Backend (Track 3)
 

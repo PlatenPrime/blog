@@ -202,7 +202,7 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 076  | `POST /auth/verify-email`                             | e2e — done                      |
 | 077  | Password reset request flow                           | e2e — done                      |
 | 078  | Password reset completion                             | e2e — done                      |
-| 079  | Roles + permissions schema (tables/enums)             | migration                       |
+| 079  | Roles + permissions schema (tables/enums)             | migration — done                |
 | 080  | Seed default roles (admin, editor, viewer)            | seed script                     |
 | 081  | `RolesGuard` + `@Roles()`                             | e2e                             |
 | 082  | Fine-grained `PermissionsGuard` + constants           | e2e                             |
@@ -557,5 +557,6 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 076  | [lesson-076-auth-verify-email.md](./lessons/lesson-076-auth-verify-email.md)                                           |
 | 077  | [lesson-077-password-reset-request-flow.md](./lessons/lesson-077-password-reset-request-flow.md)                       |
 | 078  | [lesson-078-password-reset-completion.md](./lessons/lesson-078-password-reset-completion.md)                           |
+| 079  | [lesson-079-roles-permissions-schema.md](./lessons/lesson-079-roles-permissions-schema.md)                             |
 
 Entry point: [LOCAL_SETUP.md](./LOCAL_SETUP.md)

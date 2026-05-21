@@ -113,7 +113,7 @@ npx nx run api:build
 2. После успеха все refresh пользователя отозваны — старый refresh → **401** на `/auth/refresh`.
 3. Остальные активные reset-токены пользователя инвалидируются (`invalidateActiveForUser`).
 4. Unit spec обязателен при изменении `apps/api/src/` (pre-commit gate).
-5. Следующий слой Track 2 — RBAC (**079+**).
+5. Следующий слой Track 2 — RBAC schema (**079**), seed + guards (**080+**): [lesson-079](./lesson-079-roles-permissions-schema.md).
 
 ## Definition of Done
 

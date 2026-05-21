@@ -23,6 +23,7 @@ import { resolveEnvFilePaths } from './config/env-file-paths';
 import { ApiExceptionFilter } from './errors/api-exception.filter';
 import { AuthModule } from './auth/auth.module';
 import { ExamplesModule } from './examples/examples.module';
+import { RbacModule } from './rbac';
 import { UsersModule } from './users';
 
 @Module({
@@ -39,6 +40,7 @@ import { UsersModule } from './users';
     RequestLifecycleModule,
     DatabaseModule,
     UsersModule,
+    RbacModule,
     AuthModule,
     HealthModule,
     MetricsModule,
