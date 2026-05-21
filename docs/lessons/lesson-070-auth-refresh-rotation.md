@@ -25,7 +25,7 @@
 
 Намеренно **не** делаем:
 
-- `POST /auth/logout` — [шаг 071](../development-roadmap.md).
+- `POST /auth/logout` — [шаг 071](./lesson-071-auth-logout-revoke-refresh.md) (done).
 - Reuse detection / revoke family — [шаг 072](../development-roadmap.md).
 - `JWT_REFRESH_EXPIRES_IN` env — [шаг 073](../development-roadmap.md).
 - HttpOnly cookies — отложено (см. `cors.config.ts`).

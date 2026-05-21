@@ -71,6 +71,14 @@ export class AuthService {
     return { accessToken, refreshToken: rawToken };
   }
 
+  async logout(dto: CreateRefreshBodyDto): Promise<void> {
+    const row = await this.refreshTokens.findByRawToken(dto.refreshToken);
+
+    if (row !== null && row.revokedAt === null) {
+      await this.refreshTokens.revoke(row.id);
+    }
+  }
+
   private async requireUserForCredentials(
     email: string,
     password: string,

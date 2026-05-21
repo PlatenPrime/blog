@@ -84,8 +84,9 @@ Steps 033-056.
 - Step 068: [lesson-068-current-user-decorator.md](./lessons/lesson-068-current-user-decorator.md)
 - Step 069: [lesson-069-refresh-token-entity-persistence.md](./lessons/lesson-069-refresh-token-entity-persistence.md)
 - Step 070: [lesson-070-auth-refresh-rotation.md](./lessons/lesson-070-auth-refresh-rotation.md)
+- Step 071: [lesson-071-auth-logout-revoke-refresh.md](./lessons/lesson-071-auth-logout-revoke-refresh.md)
 
-Steps 071-104.
+Steps 072-104.
 
 ## Phase 4: CMS Backend (Track 3)
 

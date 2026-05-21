@@ -43,6 +43,12 @@ export class AuthController {
     return this.auth.refresh(body);
   }
 
+  @Post('logout')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  logout(@Body() body: CreateRefreshBodyDto): Promise<void> {
+    return this.auth.logout(body);
+  }
+
   @Get('me')
   @UseGuards(JwtAuthGuard)
   me(@CurrentUser() user: AuthRequestUser): AuthMeResponse {

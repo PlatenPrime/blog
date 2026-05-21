@@ -19,7 +19,7 @@
 Намеренно **не** делаем:
 
 - `POST /auth/refresh`, выдача refresh при login — [шаг 070](../development-roadmap.md).
-- Logout / массовый revoke — [шаг 071](../development-roadmap.md).
+- Logout — [шаг 071](./lesson-071-auth-logout-revoke-refresh.md) (done); массовый revoke-all — отложено.
 - Reuse detection policy — [шаг 072](../development-roadmap.md).
 - `JWT_REFRESH_*` env и документация TTL — [шаг 073](../development-roadmap.md).
 - Изменения `LoginUserResponse` / `shared-contracts`.
@@ -109,7 +109,7 @@
 
 - В БД только **хэш** refresh; сырой токен — секрет клиента.
 - `markReplaced` + `revoked_at` — фундамент rotation (**070**) и reuse (**072**).
-- Следующий шаг — [lesson-070](./lesson-070-auth-refresh-rotation.md): `POST /auth/refresh` + rotation.
+- Следующий шаг после 070 — [lesson-071](./lesson-071-auth-logout-revoke-refresh.md): `POST /auth/logout` + revoke.
 
 ## Verify
 

@@ -23,6 +23,8 @@ describe('AuthService', () => {
   let signForUser: ReturnType<typeof vi.fn>;
   let persistForUser: ReturnType<typeof vi.fn>;
   let findActiveByRawToken: ReturnType<typeof vi.fn>;
+  let findByRawToken: ReturnType<typeof vi.fn>;
+  let revoke: ReturnType<typeof vi.fn>;
   let markReplaced: ReturnType<typeof vi.fn>;
   let users: UserService;
   let passwordHasher: PasswordHasherService;
@@ -44,6 +46,8 @@ describe('AuthService', () => {
     signForUser = vi.fn();
     persistForUser = vi.fn();
     findActiveByRawToken = vi.fn();
+    findByRawToken = vi.fn();
+    revoke = vi.fn();
     markReplaced = vi.fn();
     users = { create, findByEmail } as unknown as UserService;
     passwordHasher = { verify } as unknown as PasswordHasherService;
@@ -51,6 +55,8 @@ describe('AuthService', () => {
     refreshTokens = {
       persistForUser,
       findActiveByRawToken,
+      findByRawToken,
+      revoke,
       markReplaced,
     } as unknown as RefreshTokenService;
     service = new AuthService(
@@ -202,5 +208,46 @@ describe('AuthService', () => {
     );
     expect(persistForUser).not.toHaveBeenCalled();
     expect(markReplaced).not.toHaveBeenCalled();
+  });
+
+  it('logout revokes row when refresh token exists and is not revoked', async () => {
+    const row = {
+      id: 'rt-1',
+      revokedAt: null,
+    } as RefreshToken;
+    findByRawToken.mockResolvedValue(row);
+    revoke.mockResolvedValue(undefined);
+    const dto: CreateRefreshBodyDto = {
+      refreshToken: 'opaque-refresh-secret-value',
+    };
+
+    await service.logout(dto);
+
+    expect(findByRawToken).toHaveBeenCalledWith(dto.refreshToken);
+    expect(revoke).toHaveBeenCalledWith('rt-1');
+  });
+
+  it('logout does not revoke when row is already revoked', async () => {
+    findByRawToken.mockResolvedValue({
+      id: 'rt-1',
+      revokedAt: new Date('2026-05-20T12:00:00.000Z'),
+    });
+    const dto: CreateRefreshBodyDto = {
+      refreshToken: 'opaque-refresh-secret-value',
+    };
+
+    await service.logout(dto);
+
+    expect(revoke).not.toHaveBeenCalled();
+  });
+
+  it('logout resolves without revoking when token is unknown', async () => {
+    findByRawToken.mockResolvedValue(null);
+    const dto: CreateRefreshBodyDto = {
+      refreshToken: 'unknown-refresh-token',
+    };
+
+    await expect(service.logout(dto)).resolves.toBeUndefined();
+    expect(revoke).not.toHaveBeenCalled();
   });
 });
