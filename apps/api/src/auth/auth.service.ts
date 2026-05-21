@@ -17,6 +17,7 @@ import type { User } from '../users/user.entity';
 import { generateOpaqueToken } from './generate-opaque-token';
 import { JwtAccessTokenService } from './jwt-access-token.service';
 import { DEFAULT_REFRESH_TOKEN_TTL_MS } from './refresh-token.constants';
+import { isRotatedReuse } from './refresh-token-reuse';
 import { RefreshTokenService } from './refresh-token.service';
 
 @Injectable()
@@ -54,6 +55,12 @@ export class AuthService {
     );
 
     if (existing === null) {
+      const row = await this.refreshTokens.findByRawToken(dto.refreshToken);
+
+      if (row !== null && isRotatedReuse(row)) {
+        await this.refreshTokens.revokeTokenFamily(row.id);
+      }
+
       throw new UnauthorizedException(INVALID_REFRESH_TOKEN_MESSAGE);
     }
 

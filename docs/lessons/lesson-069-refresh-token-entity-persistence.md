@@ -20,7 +20,7 @@
 
 - `POST /auth/refresh`, выдача refresh при login — [шаг 070](../development-roadmap.md).
 - Logout — [шаг 071](./lesson-071-auth-logout-revoke-refresh.md) (done); массовый revoke-all — отложено.
-- Reuse detection policy — [шаг 072](../development-roadmap.md).
+- Reuse detection policy — [шаг 072](./lesson-072-auth-refresh-reuse-detection.md) (done).
 - `JWT_REFRESH_*` env и документация TTL — [шаг 073](../development-roadmap.md).
 - Изменения `LoginUserResponse` / `shared-contracts`.
 

@@ -17,7 +17,7 @@
 Намеренно **не** делаем:
 
 - Revoke-all по `user_id` — отдельное расширение (индекс на 069).
-- Reuse detection — [шаг 072](../development-roadmap.md).
+- Reuse detection — [шаг 072](./lesson-072-auth-refresh-reuse-detection.md) (done).
 - JWT / Bearer на logout — refresh достаточно для stateful сессии.
 - HttpOnly cookies — отложено.
 - Полная e2e-матрица register→login→refresh→logout — [шаг 086](../development-roadmap.md).

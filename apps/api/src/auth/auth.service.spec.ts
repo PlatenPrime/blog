@@ -25,6 +25,7 @@ describe('AuthService', () => {
   let findActiveByRawToken: ReturnType<typeof vi.fn>;
   let findByRawToken: ReturnType<typeof vi.fn>;
   let revoke: ReturnType<typeof vi.fn>;
+  let revokeTokenFamily: ReturnType<typeof vi.fn>;
   let markReplaced: ReturnType<typeof vi.fn>;
   let users: UserService;
   let passwordHasher: PasswordHasherService;
@@ -48,6 +49,7 @@ describe('AuthService', () => {
     findActiveByRawToken = vi.fn();
     findByRawToken = vi.fn();
     revoke = vi.fn();
+    revokeTokenFamily = vi.fn();
     markReplaced = vi.fn();
     users = { create, findByEmail } as unknown as UserService;
     passwordHasher = { verify } as unknown as PasswordHasherService;
@@ -57,6 +59,7 @@ describe('AuthService', () => {
       findActiveByRawToken,
       findByRawToken,
       revoke,
+      revokeTokenFamily,
       markReplaced,
     } as unknown as RefreshTokenService;
     service = new AuthService(
@@ -199,6 +202,7 @@ describe('AuthService', () => {
 
   it('refresh throws UnauthorizedException when token is not active', async () => {
     findActiveByRawToken.mockResolvedValue(null);
+    findByRawToken.mockResolvedValue(null);
     const dto: CreateRefreshBodyDto = {
       refreshToken: 'unknown-or-revoked-token',
     };
@@ -206,8 +210,47 @@ describe('AuthService', () => {
     await expect(service.refresh(dto)).rejects.toThrow(
       new UnauthorizedException(INVALID_REFRESH_TOKEN_MESSAGE),
     );
+    expect(findByRawToken).toHaveBeenCalledWith(dto.refreshToken);
     expect(persistForUser).not.toHaveBeenCalled();
     expect(markReplaced).not.toHaveBeenCalled();
+    expect(revokeTokenFamily).not.toHaveBeenCalled();
+  });
+
+  it('refresh revokes token family and throws when rotated token is reused', async () => {
+    findActiveByRawToken.mockResolvedValue(null);
+    findByRawToken.mockResolvedValue({
+      id: 'rt-old',
+      revokedAt: new Date('2026-05-20T12:00:00.000Z'),
+      replacedByTokenId: 'rt-new',
+    });
+    revokeTokenFamily.mockResolvedValue(undefined);
+    const dto: CreateRefreshBodyDto = {
+      refreshToken: 'reused-rotated-token',
+    };
+
+    await expect(service.refresh(dto)).rejects.toThrow(
+      new UnauthorizedException(INVALID_REFRESH_TOKEN_MESSAGE),
+    );
+    expect(revokeTokenFamily).toHaveBeenCalledWith('rt-old');
+    expect(persistForUser).not.toHaveBeenCalled();
+    expect(markReplaced).not.toHaveBeenCalled();
+  });
+
+  it('refresh does not revoke family when token was logout-revoked only', async () => {
+    findActiveByRawToken.mockResolvedValue(null);
+    findByRawToken.mockResolvedValue({
+      id: 'rt-1',
+      revokedAt: new Date('2026-05-20T12:00:00.000Z'),
+      replacedByTokenId: null,
+    });
+    const dto: CreateRefreshBodyDto = {
+      refreshToken: 'logout-revoked-token',
+    };
+
+    await expect(service.refresh(dto)).rejects.toThrow(
+      new UnauthorizedException(INVALID_REFRESH_TOKEN_MESSAGE),
+    );
+    expect(revokeTokenFamily).not.toHaveBeenCalled();
   });
 
   it('logout revokes row when refresh token exists and is not revoked', async () => {

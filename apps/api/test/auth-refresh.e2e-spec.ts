@@ -32,13 +32,17 @@ const activeRefreshToken = 'opaque-refresh-secret-value';
 describe('Auth refresh (e2e)', () => {
   let app: INestApplication<App>;
   let findActiveByRawToken: ReturnType<typeof vi.fn>;
+  let findByRawToken: ReturnType<typeof vi.fn>;
   let persistForUser: ReturnType<typeof vi.fn>;
   let markReplaced: ReturnType<typeof vi.fn>;
+  let revokeTokenFamily: ReturnType<typeof vi.fn>;
 
   beforeEach(async () => {
     findActiveByRawToken = vi.fn();
+    findByRawToken = vi.fn();
     persistForUser = vi.fn();
     markReplaced = vi.fn();
+    revokeTokenFamily = vi.fn();
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
@@ -57,9 +61,10 @@ describe('Auth refresh (e2e)', () => {
       .useValue({
         persistForUser,
         findActiveByRawToken,
+        findByRawToken,
         markReplaced,
         revoke: vi.fn(),
-        findByRawToken: vi.fn(),
+        revokeTokenFamily,
       })
       .compile();
 
@@ -151,6 +156,7 @@ describe('Auth refresh (e2e)', () => {
 
   it('returns UNAUTHORIZED when refresh token is not active', async () => {
     findActiveByRawToken.mockResolvedValue(null);
+    findByRawToken.mockResolvedValue(null);
 
     const response = await request(app.getHttpServer())
       .post(refreshBase)
@@ -168,6 +174,33 @@ describe('Auth refresh (e2e)', () => {
       detail: INVALID_REFRESH_TOKEN_MESSAGE,
       code: API_ERROR_CODE_UNAUTHORIZED,
     });
+    expect(findByRawToken).toHaveBeenCalledWith(activeRefreshToken);
+    expect(persistForUser).not.toHaveBeenCalled();
+    expect(markReplaced).not.toHaveBeenCalled();
+    expect(revokeTokenFamily).not.toHaveBeenCalled();
+  });
+
+  it('returns UNAUTHORIZED and revokes family when rotated refresh token is reused', async () => {
+    findActiveByRawToken.mockResolvedValue(null);
+    findByRawToken.mockResolvedValue({
+      id: 'rt-old',
+      revokedAt: new Date('2026-05-20T12:00:00.000Z'),
+      replacedByTokenId: 'rt-new',
+    });
+
+    const response = await request(app.getHttpServer())
+      .post(refreshBase)
+      .send({ refreshToken: activeRefreshToken })
+      .expect(401);
+
+    const body = response.body as ProblemDetailsBody;
+
+    expect(body).toMatchObject({
+      status: 401,
+      detail: INVALID_REFRESH_TOKEN_MESSAGE,
+      code: API_ERROR_CODE_UNAUTHORIZED,
+    });
+    expect(revokeTokenFamily).toHaveBeenCalledWith('rt-old');
     expect(persistForUser).not.toHaveBeenCalled();
     expect(markReplaced).not.toHaveBeenCalled();
   });

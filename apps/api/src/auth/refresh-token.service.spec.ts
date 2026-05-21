@@ -111,4 +111,35 @@ describe('RefreshTokenService', () => {
     expect(patch.replacedByTokenId).toBe('rt-new');
     expect(patch.revokedAt).toBeInstanceOf(Date);
   });
+
+  it('collectFamilyTokenIds walks forward and backward along replaced_by chain', async () => {
+    findOne
+      .mockResolvedValueOnce({ id: 'rt-2', replacedByTokenId: 'rt-3' })
+      .mockResolvedValueOnce({ id: 'rt-3', replacedByTokenId: null })
+      .mockResolvedValueOnce({ id: 'rt-1', replacedByTokenId: 'rt-2' })
+      .mockResolvedValueOnce(null);
+
+    const ids = await service.collectFamilyTokenIds('rt-2');
+
+    expect(ids).toEqual(['rt-2', 'rt-3', 'rt-1']);
+  });
+
+  it('revokeTokenFamily revokes only non-revoked rows in the family', async () => {
+    findOne
+      .mockResolvedValueOnce({ id: 'rt-2', replacedByTokenId: null })
+      .mockResolvedValueOnce(null);
+    update.mockResolvedValue({ affected: 1 });
+
+    await service.revokeTokenFamily('rt-2');
+
+    expect(update).toHaveBeenCalledOnce();
+    const criteria = update.mock.calls[0]?.[0] as {
+      id: { type: string; value: string[] };
+      revokedAt: { type: string };
+    };
+    expect(criteria.id.value).toEqual(['rt-2']);
+    expect(criteria.revokedAt.type).toBe('isNull');
+    const patch = update.mock.calls[0]?.[1] as { revokedAt: Date };
+    expect(patch.revokedAt).toBeInstanceOf(Date);
+  });
 });

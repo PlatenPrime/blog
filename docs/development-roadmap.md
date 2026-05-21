@@ -195,7 +195,7 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 069  | Refresh token entity + persistence                    | migration — done                |
 | 070  | `POST /auth/refresh` + rotation semantics             | e2e — done                      |
 | 071  | `POST /auth/logout` + revoke refresh                  | e2e — done                      |
-| 072  | Refresh token reuse detection policy                  | unit/e2e                        |
+| 072  | Refresh token reuse detection policy                  | unit/e2e — done                 |
 | 073  | Token TTL configuration + documentation               | docs check                      |
 | 074  | Login brute-force throttle / basic lockout            | e2e                             |
 | 075  | Email verification token model (optional minimal)     | unit test                       |
@@ -550,5 +550,6 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 069  | [lesson-069-refresh-token-entity-persistence.md](./lessons/lesson-069-refresh-token-entity-persistence.md)             |
 | 070  | [lesson-070-auth-refresh-rotation.md](./lessons/lesson-070-auth-refresh-rotation.md)                                   |
 | 071  | [lesson-071-auth-logout-revoke-refresh.md](./lessons/lesson-071-auth-logout-revoke-refresh.md)                         |
+| 072  | [lesson-072-auth-refresh-reuse-detection.md](./lessons/lesson-072-auth-refresh-reuse-detection.md)                     |
 
 Entry point: [LOCAL_SETUP.md](./LOCAL_SETUP.md)

@@ -85,8 +85,9 @@ Steps 033-056.
 - Step 069: [lesson-069-refresh-token-entity-persistence.md](./lessons/lesson-069-refresh-token-entity-persistence.md)
 - Step 070: [lesson-070-auth-refresh-rotation.md](./lessons/lesson-070-auth-refresh-rotation.md)
 - Step 071: [lesson-071-auth-logout-revoke-refresh.md](./lessons/lesson-071-auth-logout-revoke-refresh.md)
+- Step 072: [lesson-072-auth-refresh-reuse-detection.md](./lessons/lesson-072-auth-refresh-reuse-detection.md)
 
-Steps 072-104.
+Steps 073-104.
 
 ## Phase 4: CMS Backend (Track 3)
 
