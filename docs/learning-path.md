@@ -82,8 +82,9 @@ Steps 033-056.
 - Step 066: [lesson-066-jwt-access-token-service.md](./lessons/lesson-066-jwt-access-token-service.md)
 - Step 067: [lesson-067-jwt-strategy-auth-guard.md](./lessons/lesson-067-jwt-strategy-auth-guard.md)
 - Step 068: [lesson-068-current-user-decorator.md](./lessons/lesson-068-current-user-decorator.md)
+- Step 069: [lesson-069-refresh-token-entity-persistence.md](./lessons/lesson-069-refresh-token-entity-persistence.md)
 
-Steps 068-104.
+Steps 070-104.
 
 ## Phase 4: CMS Backend (Track 3)
 
