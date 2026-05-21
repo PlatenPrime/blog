@@ -122,8 +122,8 @@
 ## What To Remember
 
 - Не подключать `passport-jwt` для verify — дублирует сервис 066.
-- `@CurrentUser()` — отдельный шаг 068; в 067 достаточно `req.user`.
-- Следующий шаг — декоратор `@CurrentUser()` (068).
+- В 067 `/me` использовал `@Req() req`; декоратор — [lesson-068](./lesson-068-current-user-decorator.md).
+- Следующий шаг — refresh token entity (069).
 
 ## Verify
 

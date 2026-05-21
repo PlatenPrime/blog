@@ -191,7 +191,7 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 065  | `POST /auth/login`                                    | e2e — done                      |
 | 066  | JWT access token issuance + verify service            | unit test — done                |
 | 067  | `JwtStrategy` + `AuthGuard`                           | e2e — done                      |
-| 068  | `@CurrentUser()` decorator                            | unit test                       |
+| 068  | `@CurrentUser()` decorator                            | unit test — done                |
 | 069  | Refresh token entity + persistence                    | migration                       |
 | 070  | `POST /auth/refresh` + rotation semantics             | e2e                             |
 | 071  | `POST /auth/logout` + revoke refresh                  | e2e                             |
@@ -546,5 +546,6 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 065  | [lesson-065-auth-login.md](./lessons/lesson-065-auth-login.md)                                                         |
 | 066  | [lesson-066-jwt-access-token-service.md](./lessons/lesson-066-jwt-access-token-service.md)                             |
 | 067  | [lesson-067-jwt-strategy-auth-guard.md](./lessons/lesson-067-jwt-strategy-auth-guard.md)                               |
+| 068  | [lesson-068-current-user-decorator.md](./lessons/lesson-068-current-user-decorator.md)                                 |
 
 Entry point: [LOCAL_SETUP.md](./LOCAL_SETUP.md)

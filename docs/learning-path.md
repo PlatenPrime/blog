@@ -81,6 +81,7 @@ Steps 033-056.
 - Step 065: [lesson-065-auth-login.md](./lessons/lesson-065-auth-login.md)
 - Step 066: [lesson-066-jwt-access-token-service.md](./lessons/lesson-066-jwt-access-token-service.md)
 - Step 067: [lesson-067-jwt-strategy-auth-guard.md](./lessons/lesson-067-jwt-strategy-auth-guard.md)
+- Step 068: [lesson-068-current-user-decorator.md](./lessons/lesson-068-current-user-decorator.md)
 
 Steps 068-104.
 

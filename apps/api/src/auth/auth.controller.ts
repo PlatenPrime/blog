@@ -10,12 +10,11 @@ import {
   HttpCode,
   HttpStatus,
   Post,
-  Req,
   UseGuards,
 } from '@nestjs/common';
-import type { Request } from 'express';
 import type { AuthRequestUser } from './auth-request-user.types';
 import { AuthService } from './auth.service';
+import { CurrentUser } from './current-user.decorator';
 import { CreateLoginBodyDto } from './dto/create-login-body.dto';
 import { CreateRegisterBodyDto } from './dto/create-register-body.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
@@ -38,7 +37,7 @@ export class AuthController {
 
   @Get('me')
   @UseGuards(JwtAuthGuard)
-  me(@Req() req: Request & { user: AuthRequestUser }): AuthMeResponse {
-    return { id: req.user.sub };
+  me(@CurrentUser() user: AuthRequestUser): AuthMeResponse {
+    return { id: user.sub };
   }
 }
