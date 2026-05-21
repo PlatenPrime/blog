@@ -2,6 +2,7 @@ import type {
   LoginUserResponse,
   RefreshSessionResponse,
   RegisterUserResponse,
+  RequestPasswordResetResponse,
   VerifyEmailResponse,
 } from '@blog/shared-contracts';
 import {
@@ -16,12 +17,17 @@ import {
   INVALID_EMAIL_VERIFICATION_TOKEN_MESSAGE,
   INVALID_LOGIN_CREDENTIALS_MESSAGE,
   INVALID_REFRESH_TOKEN_MESSAGE,
+  PASSWORD_RESET_REQUEST_ACCEPTED_MESSAGE,
 } from './auth-credentials.constants';
 import type { CreateLoginBodyDto } from './dto/create-login-body.dto';
 import type { CreateRefreshBodyDto } from './dto/create-refresh-body.dto';
 import type { CreateRegisterBodyDto } from './dto/create-register-body.dto';
+import type { CreateRequestPasswordResetBodyDto } from './dto/create-request-password-reset-body.dto';
 import type { CreateVerifyEmailBodyDto } from './dto/create-verify-email-body.dto';
 import { emailVerificationExpiresAt } from './email-verification-expires-at';
+import { passwordResetExpiresAt } from './password-reset-expires-at';
+import { DEFAULT_PASSWORD_RESET_TTL_MS } from './password-reset-token.constants';
+import { PasswordResetTokenService } from './password-reset-token.service';
 import { DEFAULT_EMAIL_VERIFICATION_TTL_MS } from './email-verification-token.constants';
 import { EmailVerificationTokenService } from './email-verification-token.service';
 import type { User } from '../users/user.entity';
@@ -40,6 +46,7 @@ export class AuthService {
     private readonly accessTokens: JwtAccessTokenService,
     private readonly refreshTokens: RefreshTokenService,
     private readonly emailVerificationTokens: EmailVerificationTokenService,
+    private readonly passwordResetTokens: PasswordResetTokenService,
     private readonly config: ConfigService,
     private readonly loginLockout: LoginLockoutService,
   ) {}
@@ -53,6 +60,23 @@ export class AuthService {
       user.id,
     );
     return this.toRegisterUserResponse(user, emailVerificationToken);
+  }
+
+  async requestPasswordReset(
+    dto: CreateRequestPasswordResetBodyDto,
+  ): Promise<RequestPasswordResetResponse> {
+    const user = await this.users.findByEmail(dto.email);
+
+    if (user === null) {
+      return { message: PASSWORD_RESET_REQUEST_ACCEPTED_MESSAGE };
+    }
+
+    const passwordResetToken = await this.issuePasswordResetForUser(user.id);
+
+    return {
+      message: PASSWORD_RESET_REQUEST_ACCEPTED_MESSAGE,
+      passwordResetToken,
+    };
   }
 
   async verifyEmail(
@@ -161,6 +185,20 @@ export class AuthService {
     }
 
     return user;
+  }
+
+  private async issuePasswordResetForUser(userId: string): Promise<string> {
+    await this.passwordResetTokens.invalidateActiveForUser(userId);
+    const rawToken = generateOpaqueToken();
+    await this.passwordResetTokens.persistForUser({
+      userId,
+      rawToken,
+      expiresAt: passwordResetExpiresAt(
+        Date.now(),
+        DEFAULT_PASSWORD_RESET_TTL_MS,
+      ),
+    });
+    return rawToken;
   }
 
   private async issueEmailVerificationForUser(userId: string): Promise<string> {

@@ -90,8 +90,9 @@ Steps 033-056.
 - Step 074: [lesson-074-login-brute-force-lockout.md](./lessons/lesson-074-login-brute-force-lockout.md)
 - Step 075: [lesson-075-email-verification-token-model.md](./lessons/lesson-075-email-verification-token-model.md)
 - Step 076: [lesson-076-auth-verify-email.md](./lessons/lesson-076-auth-verify-email.md)
+- Step 077: [lesson-077-password-reset-request-flow.md](./lessons/lesson-077-password-reset-request-flow.md)
 
-Steps 077-104.
+Steps 078-104.
 
 ## Phase 4: CMS Backend (Track 3)
 

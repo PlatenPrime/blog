@@ -120,7 +120,7 @@ npx nx run api:build
 2. Одно сообщение **401** для всех неактивных токенов.
 3. `markEmailVerified` идемпотентен — не затирает первую дату verify.
 4. Unit spec обязателен при любом изменении `apps/api/src/` (pre-commit gate).
-5. Следующий слой — password reset request (077).
+5. Password reset request — [077](./lesson-077-password-reset-request-flow.md); completion — шаг 078 в [roadmap](../development-roadmap.md).
 
 ## Definition of Done
 

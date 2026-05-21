@@ -9,3 +9,7 @@ export const INVALID_REFRESH_TOKEN_MESSAGE =
 /** Generic message for invalid, expired, or consumed email verification tokens. */
 export const INVALID_EMAIL_VERIFICATION_TOKEN_MESSAGE =
   'Invalid or expired email verification token' as const;
+
+/** Neutral message for password reset request (same whether email is registered or not). */
+export const PASSWORD_RESET_REQUEST_ACCEPTED_MESSAGE =
+  'If this email is registered, password reset instructions have been sent' as const;

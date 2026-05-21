@@ -3,6 +3,7 @@ import type {
   LoginUserResponse,
   RefreshSessionResponse,
   RegisterUserResponse,
+  RequestPasswordResetResponse,
   VerifyEmailResponse,
 } from '@blog/shared-contracts';
 import {
@@ -20,6 +21,7 @@ import { CurrentUser } from './current-user.decorator';
 import { CreateLoginBodyDto } from './dto/create-login-body.dto';
 import { CreateRefreshBodyDto } from './dto/create-refresh-body.dto';
 import { CreateRegisterBodyDto } from './dto/create-register-body.dto';
+import { CreateRequestPasswordResetBodyDto } from './dto/create-request-password-reset-body.dto';
 import { CreateVerifyEmailBodyDto } from './dto/create-verify-email-body.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
 
@@ -49,6 +51,14 @@ export class AuthController {
   @HttpCode(HttpStatus.NO_CONTENT)
   logout(@Body() body: CreateRefreshBodyDto): Promise<void> {
     return this.auth.logout(body);
+  }
+
+  @Post('request-password-reset')
+  @HttpCode(HttpStatus.OK)
+  requestPasswordReset(
+    @Body() body: CreateRequestPasswordResetBodyDto,
+  ): Promise<RequestPasswordResetResponse> {
+    return this.auth.requestPasswordReset(body);
   }
 
   @Post('verify-email')
