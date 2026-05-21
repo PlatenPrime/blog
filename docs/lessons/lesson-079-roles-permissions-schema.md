@@ -122,7 +122,7 @@ Guards и seed без таблиц — моки, которые расходят
 1. **079 = схема only** — данные и guards на 080+.
 2. **M2M `user_roles`** — несколько ролей на пользователя.
 3. **Slug/key в varchar**, не PG enum — гибче для seed.
-4. Следующий шаг — [080](../development-roadmap.md): seed `admin`, `editor`, `viewer`.
+4. Следующий шаг — [081](../development-roadmap.md): `RolesGuard` + `@Roles()` (seed — [080](./lesson-080-seed-default-roles.md)).
 
 ## Verify
 

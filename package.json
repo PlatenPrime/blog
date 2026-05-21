@@ -37,6 +37,7 @@
     "db:migrate:revert": "npm run migration:revert -w api",
     "db:migrate:show": "npm run migration:show -w api",
     "db:migrate:smoke": "node scripts/migration-smoke.mjs",
+    "db:seed:roles": "npm run seed:roles -w api",
     "health:smoke": "node scripts/health-smoke.mjs",
     "shutdown:smoke": "node scripts/shutdown-smoke.mjs"
   },

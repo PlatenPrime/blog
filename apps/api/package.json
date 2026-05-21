@@ -22,7 +22,8 @@
     "typeorm": "typeorm-ts-node-commonjs",
     "migration:run": "npm run typeorm -- migration:run -d src/database/typeorm-data-source.ts",
     "migration:revert": "npm run typeorm -- migration:revert -d src/database/typeorm-data-source.ts",
-    "migration:show": "npm run typeorm -- migration:show -d src/database/typeorm-data-source.ts"
+    "migration:show": "npm run typeorm -- migration:show -d src/database/typeorm-data-source.ts",
+    "seed:roles": "ts-node --transpile-only -r tsconfig-paths/register src/database/seeds/run-seed-default-roles.ts"
   },
   "dependencies": {
     "@blog/shared-contracts": "file:../../libs/shared-contracts",
