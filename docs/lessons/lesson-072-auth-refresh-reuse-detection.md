@@ -21,7 +21,7 @@
 - Revoke **всех** refresh пользователя (только цепочка одного login).
 - Отдельный код/сообщение для reuse (enumeration).
 - Audit log события reuse — [шаг 088](../development-roadmap.md).
-- `JWT_REFRESH_EXPIRES_IN` env — [шаг 073](../development-roadmap.md).
+- `JWT_REFRESH_EXPIRES_MS` env — [шаг 073](./lesson-073-token-ttl-configuration.md) (done).
 - Полная Postgres e2e register→refresh→reuse — [шаг 086](../development-roadmap.md).
 
 ## Dependencies
@@ -65,21 +65,21 @@ Rotation alone не останавливает атаку «два владел�
 
 ## Changed Files
 
-| File                                                                | Action                              |
-| ------------------------------------------------------------------- | ----------------------------------- |
-| `apps/api/src/auth/refresh-token-reuse.ts`                          | created                             |
-| `apps/api/src/auth/refresh-token-reuse.spec.ts`                     | created                             |
-| `apps/api/src/auth/refresh-token.service.ts`                        | changed — family collect + revoke   |
-| `apps/api/src/auth/refresh-token.service.spec.ts`                   | changed                             |
-| `apps/api/src/auth/auth.service.ts`                                 | changed — reuse branch in `refresh` |
-| `apps/api/src/auth/auth.service.spec.ts`                            | changed                             |
-| `apps/api/test/auth-refresh.e2e-spec.ts`                            | changed                             |
-| `docs/lessons/lesson-072-auth-refresh-reuse-detection.md`           | created                             |
-| `docs/lessons/lesson-070-auth-refresh-rotation.md`                  | changed — link to 072               |
-| `docs/lessons/lesson-071-auth-logout-revoke-refresh.md`             | changed — link to 072               |
-| `docs/development-roadmap.md`                                       | changed — шаг 072 done              |
-| `docs/README.md` / `docs/learning-path.md` / `docs/storytelling.md` | changed                             |
-| `docs/LOCAL_SETUP.md`                                               | changed — next step 073             |
+| File                                                                | Action                               |
+| ------------------------------------------------------------------- | ------------------------------------ |
+| `apps/api/src/auth/refresh-token-reuse.ts`                          | created                              |
+| `apps/api/src/auth/refresh-token-reuse.spec.ts`                     | created                              |
+| `apps/api/src/auth/refresh-token.service.ts`                        | changed — family collect + revoke    |
+| `apps/api/src/auth/refresh-token.service.spec.ts`                   | changed                              |
+| `apps/api/src/auth/auth.service.ts`                                 | changed — reuse branch in `refresh`  |
+| `apps/api/src/auth/auth.service.spec.ts`                            | changed                              |
+| `apps/api/test/auth-refresh.e2e-spec.ts`                            | changed                              |
+| `docs/lessons/lesson-072-auth-refresh-reuse-detection.md`           | created                              |
+| `docs/lessons/lesson-070-auth-refresh-rotation.md`                  | changed — link to 072                |
+| `docs/lessons/lesson-071-auth-logout-revoke-refresh.md`             | changed — link to 072                |
+| `docs/development-roadmap.md`                                       | changed — шаг 072 done               |
+| `docs/README.md` / `docs/learning-path.md` / `docs/storytelling.md` | changed                              |
+| `docs/LOCAL_SETUP.md`                                               | changed — next step 073 (historical) |
 
 ## Verification
 

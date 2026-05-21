@@ -1,4 +1,5 @@
 import { UnauthorizedException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { PasswordHasherService } from '../users/password-hasher.service';
 import type { User } from '../users/user.entity';
@@ -31,6 +32,8 @@ describe('AuthService', () => {
   let passwordHasher: PasswordHasherService;
   let accessTokens: JwtAccessTokenService;
   let refreshTokens: RefreshTokenService;
+  let config: ConfigService;
+  const refreshTtlMs = 60_000;
 
   const savedUser: User = {
     id: '11111111-1111-4111-8111-111111111111',
@@ -62,11 +65,20 @@ describe('AuthService', () => {
       revokeTokenFamily,
       markReplaced,
     } as unknown as RefreshTokenService;
+    config = {
+      getOrThrow: vi.fn((key: string) => {
+        if (key === 'JWT_REFRESH_EXPIRES_MS') {
+          return refreshTtlMs;
+        }
+        throw new Error(`unexpected config key: ${key}`);
+      }),
+    } as unknown as ConfigService;
     service = new AuthService(
       users,
       passwordHasher,
       accessTokens,
       refreshTokens,
+      config,
     );
   });
 
@@ -127,6 +139,9 @@ describe('AuthService', () => {
     expect(persistArgs.userId).toBe(savedUser.id);
     expect(typeof persistArgs.rawToken).toBe('string');
     expect(persistArgs.expiresAt).toBeInstanceOf(Date);
+    const expiresDeltaMs =
+      persistArgs.expiresAt.getTime() - Date.now() - refreshTtlMs;
+    expect(Math.abs(expiresDeltaMs)).toBeLessThan(2_000);
     expect(result).toMatchObject({
       id: savedUser.id,
       email: savedUser.email,
@@ -193,6 +208,9 @@ describe('AuthService', () => {
     expect(rotatePersistArgs.userId).toBe(savedUser.id);
     expect(typeof rotatePersistArgs.rawToken).toBe('string');
     expect(rotatePersistArgs.expiresAt).toBeInstanceOf(Date);
+    const rotateExpiresDeltaMs =
+      rotatePersistArgs.expiresAt.getTime() - Date.now() - refreshTtlMs;
+    expect(Math.abs(rotateExpiresDeltaMs)).toBeLessThan(2_000);
     expect(markReplaced).toHaveBeenCalledWith('rt-old', 'rt-new');
     expect(signForUser).toHaveBeenCalledWith(savedUser.id);
     expect(result.accessToken).toBe('new-access-token');

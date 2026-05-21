@@ -86,8 +86,9 @@ Steps 033-056.
 - Step 070: [lesson-070-auth-refresh-rotation.md](./lessons/lesson-070-auth-refresh-rotation.md)
 - Step 071: [lesson-071-auth-logout-revoke-refresh.md](./lessons/lesson-071-auth-logout-revoke-refresh.md)
 - Step 072: [lesson-072-auth-refresh-reuse-detection.md](./lessons/lesson-072-auth-refresh-reuse-detection.md)
+- Step 073: [lesson-073-token-ttl-configuration.md](./lessons/lesson-073-token-ttl-configuration.md)
 
-Steps 073-104.
+Steps 074-104.
 
 ## Phase 4: CMS Backend (Track 3)
 

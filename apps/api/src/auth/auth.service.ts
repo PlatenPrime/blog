@@ -4,6 +4,7 @@ import type {
   RegisterUserResponse,
 } from '@blog/shared-contracts';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { PasswordHasherService } from '../users/password-hasher.service';
 import { UserService } from '../users/user.service';
 import {
@@ -16,7 +17,7 @@ import type { CreateRegisterBodyDto } from './dto/create-register-body.dto';
 import type { User } from '../users/user.entity';
 import { generateOpaqueToken } from './generate-opaque-token';
 import { JwtAccessTokenService } from './jwt-access-token.service';
-import { DEFAULT_REFRESH_TOKEN_TTL_MS } from './refresh-token.constants';
+import { refreshExpiresAt } from './refresh-expires-at';
 import { isRotatedReuse } from './refresh-token-reuse';
 import { RefreshTokenService } from './refresh-token.service';
 
@@ -27,6 +28,7 @@ export class AuthService {
     private readonly passwordHasher: PasswordHasherService,
     private readonly accessTokens: JwtAccessTokenService,
     private readonly refreshTokens: RefreshTokenService,
+    private readonly config: ConfigService,
   ) {}
 
   async register(dto: CreateRegisterBodyDto): Promise<RegisterUserResponse> {
@@ -119,7 +121,8 @@ export class AuthService {
   }
 
   private refreshExpiresAt(): Date {
-    return new Date(Date.now() + DEFAULT_REFRESH_TOKEN_TTL_MS);
+    const ttlMs = this.config.getOrThrow<number>('JWT_REFRESH_EXPIRES_MS');
+    return refreshExpiresAt(Date.now(), ttlMs);
   }
 
   private toPublicUserResponse(user: User): RegisterUserResponse {

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { DEFAULT_REFRESH_TOKEN_TTL_MS } from '../auth/refresh-token.constants';
 import {
   buildDatabaseUrlFromPostgres,
   isPostgresDatabaseUrl,
@@ -169,6 +170,10 @@ export const rootEnvSchema = z
       }),
     JWT_SECRET: jwtSecret(),
     JWT_ACCESS_EXPIRES_IN: jwtAccessExpiresIn(),
+    JWT_REFRESH_EXPIRES_MS: envMilliseconds(DEFAULT_REFRESH_TOKEN_TTL_MS, {
+      min: 3_600_000,
+      max: 7_776_000_000,
+    }),
   })
   .transform((value) => {
     const explicit =
@@ -225,6 +230,7 @@ const ROOT_ENV_KEYS = [
   'OTEL_EXPORTER_OTLP_ENDPOINT',
   'JWT_SECRET',
   'JWT_ACCESS_EXPIRES_IN',
+  'JWT_REFRESH_EXPIRES_MS',
 ] as const;
 
 function pickRootEnvKeys(

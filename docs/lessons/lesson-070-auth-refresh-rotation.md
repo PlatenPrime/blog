@@ -13,7 +13,7 @@
 - [`libs/shared-contracts/src/index.ts`](../../libs/shared-contracts/src/index.ts) — экспорт типов.
 - [`apps/api/src/auth/generate-opaque-token.ts`](../../apps/api/src/auth/generate-opaque-token.ts) — `crypto.randomBytes(32).toString('base64url')`.
 - [`apps/api/src/auth/generate-opaque-token.spec.ts`](../../apps/api/src/auth/generate-opaque-token.spec.ts) — unit.
-- [`apps/api/src/auth/refresh-token.constants.ts`](../../apps/api/src/auth/refresh-token.constants.ts) — `DEFAULT_REFRESH_TOKEN_TTL_MS` (30 дней до env на 073).
+- [`apps/api/src/auth/refresh-token.constants.ts`](../../apps/api/src/auth/refresh-token.constants.ts) — `DEFAULT_REFRESH_TOKEN_TTL_MS` (default для `JWT_REFRESH_EXPIRES_MS`).
 - [`apps/api/src/auth/auth-credentials.constants.ts`](../../apps/api/src/auth/auth-credentials.constants.ts) — `INVALID_REFRESH_TOKEN_MESSAGE`.
 - [`apps/api/src/auth/dto/create-refresh-body.dto.ts`](../../apps/api/src/auth/dto/create-refresh-body.dto.ts) — `{ refreshToken }`.
 - [`apps/api/src/auth/auth.service.ts`](../../apps/api/src/auth/auth.service.ts) — `issueRefreshForUser`, `login` + refresh, `refresh()`.
@@ -27,7 +27,7 @@
 
 - `POST /auth/logout` — [шаг 071](./lesson-071-auth-logout-revoke-refresh.md) (done).
 - Reuse detection / revoke family — [шаг 072](./lesson-072-auth-refresh-reuse-detection.md) (done).
-- `JWT_REFRESH_EXPIRES_IN` env — [шаг 073](../development-roadmap.md).
+- `JWT_REFRESH_EXPIRES_MS` env — [шаг 073](./lesson-073-token-ttl-configuration.md) (done).
 - HttpOnly cookies — отложено (см. `cors.config.ts`).
 - Полная e2e-матрица register→login→refresh — [шаг 086](../development-roadmap.md).
 
@@ -69,7 +69,7 @@
 ## Architecture Notes
 
 - **Порядок:** `persistForUser` (successor) → `markReplaced` (predecessor).
-- **TTL:** `DEFAULT_REFRESH_TOKEN_TTL_MS` в коде; env — шаг 073.
+- **TTL:** `JWT_REFRESH_EXPIRES_MS` в env (default из `DEFAULT_REFRESH_TOKEN_TTL_MS`) — [073](./lesson-073-token-ttl-configuration.md).
 - **Ошибки refresh:** одно нейтральное сообщение, без утечки «expired vs revoked».
 - **E2e:** мок `RefreshTokenService`, как `UserService` на 063 — без Postgres.
 

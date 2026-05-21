@@ -23,7 +23,7 @@
 - `JwtStrategy`, `AuthGuard`, `accessToken` в login — [шаг 067](../development-roadmap.md).
 - Refresh / logout — [шаги 069–071](../development-roadmap.md).
 - Публичный тип payload в `shared-contracts` — [шаг 084](../development-roadmap.md).
-- Полная narrative TTL-политики — [шаг 073](../development-roadmap.md).
+- Полная narrative TTL-политики — [шаг 073](./lesson-073-token-ttl-configuration.md) (done).
 
 ## Dependencies
 

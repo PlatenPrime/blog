@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { DEFAULT_REFRESH_TOKEN_TTL_MS } from '../auth/refresh-token.constants';
 import { parseRootEnv, validateRootEnv } from './env.schema';
 
 describe('parseRootEnv', () => {
@@ -18,6 +19,7 @@ describe('parseRootEnv', () => {
       SHUTDOWN_GRACE_PERIOD_MS: 10_000,
       JWT_SECRET: 'dev-only-jwt-secret-change-before-production-32chars',
       JWT_ACCESS_EXPIRES_IN: '15m',
+      JWT_REFRESH_EXPIRES_MS: DEFAULT_REFRESH_TOKEN_TTL_MS,
     });
   });
 
@@ -31,6 +33,30 @@ describe('parseRootEnv', () => {
     expect(parseRootEnv({ JWT_ACCESS_EXPIRES_IN: '' })).toMatchObject({
       JWT_ACCESS_EXPIRES_IN: '15m',
     });
+  });
+
+  it('parses JWT_REFRESH_EXPIRES_MS override', () => {
+    expect(parseRootEnv({ JWT_REFRESH_EXPIRES_MS: '86400000' })).toMatchObject({
+      JWT_REFRESH_EXPIRES_MS: 86_400_000,
+    });
+  });
+
+  it('treats empty JWT_REFRESH_EXPIRES_MS as default 30 days', () => {
+    expect(parseRootEnv({ JWT_REFRESH_EXPIRES_MS: '' })).toMatchObject({
+      JWT_REFRESH_EXPIRES_MS: DEFAULT_REFRESH_TOKEN_TTL_MS,
+    });
+  });
+
+  it('rejects JWT_REFRESH_EXPIRES_MS below minimum', () => {
+    expect(() => parseRootEnv({ JWT_REFRESH_EXPIRES_MS: '1000' })).toThrow(
+      /JWT_REFRESH_EXPIRES_MS/,
+    );
+  });
+
+  it('rejects JWT_REFRESH_EXPIRES_MS above maximum', () => {
+    expect(() =>
+      parseRootEnv({ JWT_REFRESH_EXPIRES_MS: '99999999999' }),
+    ).toThrow(/JWT_REFRESH_EXPIRES_MS/);
   });
 
   it('rejects JWT_SECRET shorter than 32 characters', () => {
