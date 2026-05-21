@@ -88,8 +88,9 @@ Steps 033-056.
 - Step 072: [lesson-072-auth-refresh-reuse-detection.md](./lessons/lesson-072-auth-refresh-reuse-detection.md)
 - Step 073: [lesson-073-token-ttl-configuration.md](./lessons/lesson-073-token-ttl-configuration.md)
 - Step 074: [lesson-074-login-brute-force-lockout.md](./lessons/lesson-074-login-brute-force-lockout.md)
+- Step 075: [lesson-075-email-verification-token-model.md](./lessons/lesson-075-email-verification-token-model.md)
 
-Steps 075-104.
+Steps 076-104.
 
 ## Phase 4: CMS Backend (Track 3)
 

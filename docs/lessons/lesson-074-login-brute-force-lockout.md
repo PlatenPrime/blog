@@ -136,3 +136,5 @@ npx nx run api:build
 ## Homework
 
 В `.env` поставить `LOGIN_LOCKOUT_MAX_ATTEMPTS=3`, перезапустить API, трижды отправить неверный пароль на один email — убедиться в 429 problem+json; успешный login после одной-двух неудач сбрасывает счётчик.
+
+**Следующий шаг:** [075 — email verification token model](./lesson-075-email-verification-token-model.md).

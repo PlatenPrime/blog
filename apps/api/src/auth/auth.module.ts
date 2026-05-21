@@ -9,13 +9,15 @@ import { AuthService } from './auth.service';
 import { JwtAccessTokenService } from './jwt-access-token.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { JwtStrategy } from './jwt.strategy';
+import { EmailVerificationToken } from './email-verification-token.entity';
+import { EmailVerificationTokenService } from './email-verification-token.service';
 import { RefreshToken } from './refresh-token.entity';
 import { LoginLockoutService } from './login-lockout.service';
 import { RefreshTokenService } from './refresh-token.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([RefreshToken]),
+    TypeOrmModule.forFeature([RefreshToken, EmailVerificationToken]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     UsersModule,
     JwtModule.registerAsync({
@@ -38,9 +40,15 @@ import { RefreshTokenService } from './refresh-token.service';
     LoginLockoutService,
     JwtAccessTokenService,
     RefreshTokenService,
+    EmailVerificationTokenService,
     JwtStrategy,
     JwtAuthGuard,
   ],
-  exports: [JwtAccessTokenService, JwtAuthGuard, RefreshTokenService],
+  exports: [
+    JwtAccessTokenService,
+    JwtAuthGuard,
+    RefreshTokenService,
+    EmailVerificationTokenService,
+  ],
 })
 export class AuthModule {}

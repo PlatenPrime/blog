@@ -1,0 +1,99 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { MoreThan, type Repository } from 'typeorm';
+import { hashEmailVerificationToken } from './email-verification-token-hash';
+import type { EmailVerificationToken } from './email-verification-token.entity';
+import { EmailVerificationTokenService } from './email-verification-token.service';
+
+describe('EmailVerificationTokenService', () => {
+  let service: EmailVerificationTokenService;
+  let findOne: ReturnType<typeof vi.fn>;
+  let create: ReturnType<typeof vi.fn>;
+  let save: ReturnType<typeof vi.fn>;
+  let update: ReturnType<typeof vi.fn>;
+  let emailVerificationTokensRepo: Repository<EmailVerificationToken>;
+
+  beforeEach(() => {
+    findOne = vi.fn();
+    create = vi.fn();
+    save = vi.fn();
+    update = vi.fn();
+
+    emailVerificationTokensRepo = {
+      findOne,
+      create,
+      save,
+      update,
+    } as unknown as Repository<EmailVerificationToken>;
+
+    service = new EmailVerificationTokenService(emailVerificationTokensRepo);
+  });
+
+  it('persistForUser hashes raw token and saves entity', async () => {
+    const rawToken = 'opaque-email-verification-secret';
+    const expiresAt = new Date('2030-01-01T00:00:00.000Z');
+    const created = { id: 'evt-1' } as EmailVerificationToken;
+    create.mockReturnValue(created);
+    save.mockResolvedValue(created);
+
+    const result = await service.persistForUser({
+      userId: 'user-1',
+      rawToken,
+      expiresAt,
+    });
+
+    expect(create).toHaveBeenCalledWith({
+      userId: 'user-1',
+      tokenHash: hashEmailVerificationToken(rawToken),
+      expiresAt,
+      consumedAt: null,
+    });
+    expect(save).toHaveBeenCalledWith(created);
+    expect(result).toBe(created);
+  });
+
+  it('findByRawToken looks up by hashed token', async () => {
+    const rawToken = 'lookup-token';
+    findOne.mockResolvedValue(null);
+
+    await service.findByRawToken(rawToken);
+
+    expect(findOne).toHaveBeenCalledWith({
+      where: { tokenHash: hashEmailVerificationToken(rawToken) },
+    });
+  });
+
+  it('findActiveByRawToken filters consumed and expired tokens', async () => {
+    const rawToken = 'active-token';
+    findOne.mockResolvedValue(null);
+
+    await service.findActiveByRawToken(rawToken);
+
+    expect(findOne).toHaveBeenCalledOnce();
+    const where = findOne.mock.calls[0]?.[0] as {
+      where: {
+        tokenHash: string;
+        consumedAt: { type: string };
+        expiresAt: ReturnType<typeof MoreThan>;
+      };
+    };
+    expect(where.where.tokenHash).toBe(hashEmailVerificationToken(rawToken));
+    expect(where.where.consumedAt.type).toBe('isNull');
+    expect(where.where.expiresAt.type).toBe('moreThan');
+  });
+
+  it('consume sets consumedAt for non-consumed row', async () => {
+    update.mockResolvedValue({ affected: 1 });
+
+    await service.consume('evt-1');
+
+    expect(update).toHaveBeenCalledOnce();
+    const criteria = update.mock.calls[0]?.[0] as {
+      id: string;
+      consumedAt: { type: string };
+    };
+    expect(criteria.id).toBe('evt-1');
+    expect(criteria.consumedAt.type).toBe('isNull');
+    const patch = update.mock.calls[0]?.[1] as { consumedAt: Date };
+    expect(patch.consumedAt).toBeInstanceOf(Date);
+  });
+});
