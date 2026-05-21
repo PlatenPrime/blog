@@ -109,7 +109,7 @@
 
 - В БД только **хэш** refresh; сырой токен — секрет клиента.
 - `markReplaced` + `revoked_at` — фундамент rotation (**070**) и reuse (**072**).
-- Следующий шаг — [шаг 070](../development-roadmap.md): `POST /auth/refresh` + rotation.
+- Следующий шаг — [lesson-070](./lesson-070-auth-refresh-rotation.md): `POST /auth/refresh` + rotation.
 
 ## Verify
 

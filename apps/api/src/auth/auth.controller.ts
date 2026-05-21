@@ -1,6 +1,7 @@
 import type {
   AuthMeResponse,
   LoginUserResponse,
+  RefreshSessionResponse,
   RegisterUserResponse,
 } from '@blog/shared-contracts';
 import {
@@ -16,6 +17,7 @@ import type { AuthRequestUser } from './auth-request-user.types';
 import { AuthService } from './auth.service';
 import { CurrentUser } from './current-user.decorator';
 import { CreateLoginBodyDto } from './dto/create-login-body.dto';
+import { CreateRefreshBodyDto } from './dto/create-refresh-body.dto';
 import { CreateRegisterBodyDto } from './dto/create-register-body.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
 
@@ -33,6 +35,12 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   login(@Body() body: CreateLoginBodyDto): Promise<LoginUserResponse> {
     return this.auth.login(body);
+  }
+
+  @Post('refresh')
+  @HttpCode(HttpStatus.OK)
+  refresh(@Body() body: CreateRefreshBodyDto): Promise<RefreshSessionResponse> {
+    return this.auth.refresh(body);
   }
 
   @Get('me')

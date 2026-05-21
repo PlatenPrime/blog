@@ -14,6 +14,7 @@ import { App } from 'supertest/types';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { AppModule } from '../src/app.module';
 import { INVALID_ACCESS_TOKEN_MESSAGE } from '../src/auth/auth-jwt.constants';
+import { RefreshTokenService } from '../src/auth/refresh-token.service';
 import { API_V1_BASE } from '../src/config/configure-api-http';
 import { configureApiHttp } from '../src/config/configure-api-http';
 import { configureApiShutdown } from '../src/config/configure-api-shutdown';
@@ -57,6 +58,14 @@ describe('Auth JWT guard (e2e)', () => {
       .useValue({ create: vi.fn(), findByEmail })
       .overrideProvider(PasswordHasherService)
       .useValue({ hash: vi.fn(), verify })
+      .overrideProvider(RefreshTokenService)
+      .useValue({
+        persistForUser: vi.fn().mockResolvedValue({ id: 'rt-1' }),
+        findActiveByRawToken: vi.fn(),
+        markReplaced: vi.fn(),
+        revoke: vi.fn(),
+        findByRawToken: vi.fn(),
+      })
       .compile();
 
     app = moduleFixture.createNestApplication();

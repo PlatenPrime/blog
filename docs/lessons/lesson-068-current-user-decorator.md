@@ -94,7 +94,7 @@
 
 - Декоратор не заменяет guard — всегда `@UseGuards(JwtAuthGuard)` на защищённых маршрутах.
 - Тестируйте `getAuthRequestUser`, не весь Nest pipeline.
-- Следующий шаг — [шаг 070](../development-roadmap.md): `POST /auth/refresh` + rotation (persistence — [lesson-069](./lesson-069-refresh-token-entity-persistence.md)).
+- Следующий шаг — [lesson-070](./lesson-070-auth-refresh-rotation.md): `POST /auth/refresh` + rotation (persistence — [lesson-069](./lesson-069-refresh-token-entity-persistence.md)).
 
 ## Verify
 

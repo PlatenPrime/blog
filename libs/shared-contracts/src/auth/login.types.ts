@@ -4,4 +4,5 @@ export type LoginUserResponse = {
   readonly createdAt: string;
   readonly updatedAt: string;
   readonly accessToken: string;
+  readonly refreshToken: string;
 };

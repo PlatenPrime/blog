@@ -39,6 +39,7 @@ export type { ProblemDetailsBodySchema } from './errors/problem-details.schema.j
 
 export type { AuthMeResponse } from './auth/me.types.js';
 export type { LoginUserResponse } from './auth/login.types.js';
+export type { RefreshSessionResponse } from './auth/refresh.types.js';
 export type { RegisterUserResponse } from './auth/register.types.js';
 
 export type {
