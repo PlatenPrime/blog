@@ -39,16 +39,10 @@ describe('Auth register → login → CMS RBAC flow (e2e)', () => {
   let inMemoryPermissions: ReturnType<
     typeof createInMemoryUserPermissionsServiceOverride
   >;
-  let findPermissionKeysByUserId: ReturnType<typeof vi.fn>;
-
   beforeEach(async () => {
     const passwordHasher = new PasswordHasherService();
     const inMemoryUsers = createInMemoryUserServiceOverride(passwordHasher);
     inMemoryPermissions = createInMemoryUserPermissionsServiceOverride();
-    findPermissionKeysByUserId = vi.fn(
-      inMemoryPermissions.findPermissionKeysByUserId.bind(inMemoryPermissions),
-    );
-    inMemoryPermissions.findPermissionKeysByUserId = findPermissionKeysByUserId;
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
@@ -134,7 +128,9 @@ describe('Auth register → login → CMS RBAC flow (e2e)', () => {
       code: API_ERROR_CODE_FORBIDDEN,
     });
 
-    expect(findPermissionKeysByUserId).toHaveBeenCalledWith(registerBody.id);
+    expect(
+      inMemoryPermissions.findPermissionKeysByUserIdMock,
+    ).toHaveBeenCalledWith(registerBody.id);
   });
 
   it('returns FORBIDDEN for cms posts when user has only posts:write', async () => {

@@ -1,3 +1,4 @@
+import { vi, type Mock } from 'vitest';
 import type { PermissionKey } from '../../src/rbac/permission-key';
 
 /** In-memory UserPermissionsService shape for auth flow e2e (RBAC lookup by registered user id). */
@@ -7,15 +8,23 @@ export type InMemoryUserPermissionsServiceOverride = {
     userId: string,
     keys: readonly PermissionKey[],
   ) => void;
+  /** Spy for assertions (same calls as `findPermissionKeysByUserId`). */
+  findPermissionKeysByUserIdMock: Mock<
+    InMemoryUserPermissionsServiceOverride['findPermissionKeysByUserId']
+  >;
 };
 
 export function createInMemoryUserPermissionsServiceOverride(): InMemoryUserPermissionsServiceOverride {
   const keysByUserId = new Map<string, PermissionKey[]>();
 
+  const findPermissionKeysByUserIdMock = vi.fn(
+    (userId: string): Promise<PermissionKey[]> =>
+      Promise.resolve(keysByUserId.get(userId) ?? []),
+  );
+
   return {
-    findPermissionKeysByUserId(userId: string): Promise<PermissionKey[]> {
-      return Promise.resolve(keysByUserId.get(userId) ?? []);
-    },
+    findPermissionKeysByUserId: (userId: string) =>
+      findPermissionKeysByUserIdMock(userId),
 
     setPermissionKeysForUser(
       userId: string,
@@ -23,5 +32,7 @@ export function createInMemoryUserPermissionsServiceOverride(): InMemoryUserPerm
     ): void {
       keysByUserId.set(userId, [...keys]);
     },
+
+    findPermissionKeysByUserIdMock,
   };
 }
