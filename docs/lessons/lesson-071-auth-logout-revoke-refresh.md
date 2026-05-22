@@ -20,7 +20,7 @@
 - Reuse detection — [шаг 072](./lesson-072-auth-refresh-reuse-detection.md) (done).
 - JWT / Bearer на logout — refresh достаточно для stateful сессии.
 - HttpOnly cookies — отложено.
-- Полная e2e-матрица register→login→refresh→logout — [шаг 086](../development-roadmap.md).
+- Полная e2e-матрица register→login→refresh→logout — [шаг 098](../development-roadmap.md) (refresh flow — [086](./lesson-086-auth-refresh-rotation-e2e-flow.md)).
 
 ## Dependencies
 

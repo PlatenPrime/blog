@@ -29,7 +29,7 @@
 - Reuse detection / revoke family — [шаг 072](./lesson-072-auth-refresh-reuse-detection.md) (done).
 - `JWT_REFRESH_EXPIRES_MS` env — [шаг 073](./lesson-073-token-ttl-configuration.md) (done).
 - HttpOnly cookies — отложено (см. `cors.config.ts`).
-- Полная e2e-матрица register→login→refresh — [шаг 086](../development-roadmap.md).
+- Полная e2e-матрица register→login→refresh — [шаг 086](./lesson-086-auth-refresh-rotation-e2e-flow.md) (in-memory flow, без Postgres).
 
 ## Dependencies
 

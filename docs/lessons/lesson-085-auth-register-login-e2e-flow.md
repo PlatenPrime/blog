@@ -14,7 +14,7 @@
 Намеренно **не** делаем:
 
 - Реальный Postgres в e2e (как в остальных auth e2e — `DataSource` stub).
-- verify-email → login, refresh rotation, RBAC 403 — шаги **086–087**, **098**.
+- verify-email → login, RBAC 403 — шаги **087**, **098** (refresh rotation — [086](./lesson-086-auth-refresh-rotation-e2e-flow.md)).
 - Изменения `apps/api/src/` (только `test/`).
 
 ## Dependencies
@@ -122,7 +122,7 @@ npx nx run api:test:e2e -- auth-register-login-flow.e2e-spec.ts
 2. **Stateful store** — ключевое отличие от `fakeUser`.
 3. **Не мокать hasher/JWT** в happy path — иначе тест бессмысленен.
 4. Postgres в CI для auth e2e пока не нужен.
-5. Следующий шаг — [086](../development-roadmap.md): auth e2e refresh rotation.
+5. Следующий шаг — [087](../development-roadmap.md): auth e2e RBAC forbidden (refresh flow — [086](./lesson-086-auth-refresh-rotation-e2e-flow.md)).
 
 ## Verify
 
