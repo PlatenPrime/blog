@@ -204,7 +204,7 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 078  | Password reset completion                             | e2e — done                      |
 | 079  | Roles + permissions schema (tables/enums)             | migration — done                |
 | 080  | Seed default roles (admin, editor, viewer)            | seed script — done              |
-| 081  | `RolesGuard` + `@Roles()`                             | e2e                             |
+| 081  | `RolesGuard` + `@Roles()`                             | e2e — done                      |
 | 082  | Fine-grained `PermissionsGuard` + constants           | e2e                             |
 | 083  | Sample CMS route protected by RBAC                    | e2e forbidden case              |
 | 084  | JWT payload shape documented in `shared-contracts`    | `nx run shared-contracts:build` |
@@ -559,5 +559,6 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 078  | [lesson-078-password-reset-completion.md](./lessons/lesson-078-password-reset-completion.md)                           |
 | 079  | [lesson-079-roles-permissions-schema.md](./lessons/lesson-079-roles-permissions-schema.md)                             |
 | 080  | [lesson-080-seed-default-roles.md](./lessons/lesson-080-seed-default-roles.md)                                         |
+| 081  | [lesson-081-roles-guard.md](./lessons/lesson-081-roles-guard.md)                                                       |
 
 Entry point: [LOCAL_SETUP.md](./LOCAL_SETUP.md)

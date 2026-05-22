@@ -11,7 +11,7 @@ describe('RbacModule', () => {
   it('registers RBAC entities via forFeature', async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [
-        ConfigModule.forRoot({ validate: validateRootEnv }),
+        ConfigModule.forRoot({ isGlobal: true, validate: validateRootEnv }),
         DatabaseModule,
         RbacModule,
       ],

@@ -94,8 +94,9 @@ Steps 033-056.
 - Step 078: [lesson-078-password-reset-completion.md](./lessons/lesson-078-password-reset-completion.md)
 - Step 079: [lesson-079-roles-permissions-schema.md](./lessons/lesson-079-roles-permissions-schema.md)
 - Step 080: [lesson-080-seed-default-roles.md](./lessons/lesson-080-seed-default-roles.md)
+- Step 081: [lesson-081-roles-guard.md](./lessons/lesson-081-roles-guard.md)
 
-Steps 081-104.
+Steps 082-104.
 
 ## Phase 4: CMS Backend (Track 3)
 
