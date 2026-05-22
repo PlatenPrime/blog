@@ -20,7 +20,7 @@
 
 - Revoke **всех** refresh пользователя (только цепочка одного login).
 - Отдельный код/сообщение для reuse (enumeration).
-- Audit log события reuse — [шаг 088](../development-roadmap.md).
+- Audit log события reuse — [шаг 089](../development-roadmap.md) (таблица — [088](./lesson-088-security-audit-log-table.md)).
 - `JWT_REFRESH_EXPIRES_MS` env — [шаг 073](./lesson-073-token-ttl-configuration.md) (done).
 - Полный flow e2e register→login→refresh→reuse — [шаг 086](./lesson-086-auth-refresh-rotation-e2e-flow.md) (in-memory store, не Postgres в CI).
 

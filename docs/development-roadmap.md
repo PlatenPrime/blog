@@ -211,7 +211,7 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 085  | Auth e2e: register → login happy path                 | e2e — done                             |
 | 086  | Auth e2e: refresh rotation                            | e2e — done                             |
 | 087  | Auth e2e: RBAC forbidden cases                        | e2e — done                             |
-| 088  | Security audit log table                              | migration                              |
+| 088  | Security audit log table                              | migration — done                       |
 | 089  | Audit events for auth mutations                       | unit test                              |
 | 090  | Session/device metadata (optional minimal)            | docs + unit                            |
 | 091  | Map auth failures to API error envelope               | contract test                          |
@@ -566,5 +566,6 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 085  | [lesson-085-auth-register-login-e2e-flow.md](./lessons/lesson-085-auth-register-login-e2e-flow.md)                     |
 | 086  | [lesson-086-auth-refresh-rotation-e2e-flow.md](./lessons/lesson-086-auth-refresh-rotation-e2e-flow.md)                 |
 | 087  | [lesson-087-auth-rbac-forbidden-e2e-flow.md](./lessons/lesson-087-auth-rbac-forbidden-e2e-flow.md)                     |
+| 088  | [lesson-088-security-audit-log-table.md](./lessons/lesson-088-security-audit-log-table.md)                             |
 
 Entry point: [LOCAL_SETUP.md](./LOCAL_SETUP.md)

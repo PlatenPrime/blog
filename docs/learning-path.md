@@ -101,8 +101,9 @@ Steps 033-056.
 - Step 085: [lesson-085-auth-register-login-e2e-flow.md](./lessons/lesson-085-auth-register-login-e2e-flow.md)
 - Step 086: [lesson-086-auth-refresh-rotation-e2e-flow.md](./lessons/lesson-086-auth-refresh-rotation-e2e-flow.md)
 - Step 087: [lesson-087-auth-rbac-forbidden-e2e-flow.md](./lessons/lesson-087-auth-rbac-forbidden-e2e-flow.md)
+- Step 088: [lesson-088-security-audit-log-table.md](./lessons/lesson-088-security-audit-log-table.md)
 
-Steps 088-104.
+Steps 089-104.
 
 ## Phase 4: CMS Backend (Track 3)
 

@@ -25,6 +25,7 @@ import { AuthModule } from './auth/auth.module';
 import { CmsModule } from './cms';
 import { ExamplesModule } from './examples/examples.module';
 import { RbacModule } from './rbac';
+import { SecurityAuditModule } from './security-audit';
 import { UsersModule } from './users';
 
 @Module({
@@ -42,6 +43,7 @@ import { UsersModule } from './users';
     DatabaseModule,
     UsersModule,
     RbacModule,
+    SecurityAuditModule,
     AuthModule,
     CmsModule,
     HealthModule,
