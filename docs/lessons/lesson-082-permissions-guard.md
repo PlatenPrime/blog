@@ -30,7 +30,7 @@
 
 Намеренно **не** делаем:
 
-- CMS-маршруты — [шаг 083](../development-roadmap.md).
+- CMS-маршруты — [шаг 083](./lesson-083-sample-cms-route-rbac.md) (выполнен).
 - Permissions/roles в JWT payload — [шаг 084](../development-roadmap.md).
 - CLI seed `user_roles` / assign role при register.
 - Комбинация `@Roles()` + `@Permissions()` на одном handler — не обязательна для 082.
@@ -151,7 +151,7 @@ CMS-эндпоинты (Track 3) будут требовать `posts:write`, а
 2. **Guard после JWT** — `req.user.sub` для lookup через `user_roles` → roles → permissions.
 3. **E2E мокает permission lookup** — не требует seed `user_roles`.
 4. **Seed order:** `db:seed:roles` → `db:seed:permissions`.
-5. Следующий шаг — [083](../development-roadmap.md): sample CMS route protected by RBAC.
+5. Следующий шаг — [084](../development-roadmap.md): JWT payload shape в `shared-contracts` ([083](./lesson-083-sample-cms-route-rbac.md) — sample CMS route).
 
 ## Verify
 

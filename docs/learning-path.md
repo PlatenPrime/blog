@@ -96,8 +96,9 @@ Steps 033-056.
 - Step 080: [lesson-080-seed-default-roles.md](./lessons/lesson-080-seed-default-roles.md)
 - Step 081: [lesson-081-roles-guard.md](./lessons/lesson-081-roles-guard.md)
 - Step 082: [lesson-082-permissions-guard.md](./lessons/lesson-082-permissions-guard.md)
+- Step 083: [lesson-083-sample-cms-route-rbac.md](./lessons/lesson-083-sample-cms-route-rbac.md)
 
-Steps 083-104.
+Steps 084-104.
 
 ## Phase 4: CMS Backend (Track 3)
 

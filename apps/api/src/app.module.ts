@@ -22,6 +22,7 @@ import { validateRootEnv } from './config/env.schema';
 import { resolveEnvFilePaths } from './config/env-file-paths';
 import { ApiExceptionFilter } from './errors/api-exception.filter';
 import { AuthModule } from './auth/auth.module';
+import { CmsModule } from './cms';
 import { ExamplesModule } from './examples/examples.module';
 import { RbacModule } from './rbac';
 import { UsersModule } from './users';
@@ -42,6 +43,7 @@ import { UsersModule } from './users';
     UsersModule,
     RbacModule,
     AuthModule,
+    CmsModule,
     HealthModule,
     MetricsModule,
     ExamplesModule,
