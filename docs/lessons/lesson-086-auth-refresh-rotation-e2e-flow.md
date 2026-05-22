@@ -130,7 +130,7 @@ npx nx run api:test:e2e -- auth-register-login-refresh-flow.e2e-spec.ts
 1. **Flow e2e refresh** дополняет `auth-refresh.e2e-spec.ts`, не заменяет.
 2. **Reuse в flow** — осознанный scope: склейка 072, не Postgres.
 3. **Opaque refresh** — главный assert rotation; access JWT может не меняться в fast e2e.
-4. Следующий шаг — [087](../development-roadmap.md): auth e2e RBAC forbidden.
+4. Следующий шаг — [088](../development-roadmap.md): security audit log (RBAC flow e2e — [087](./lesson-087-auth-rbac-forbidden-e2e-flow.md)).
 
 ## Verify
 

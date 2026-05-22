@@ -100,8 +100,9 @@ Steps 033-056.
 - Step 084: [lesson-084-jwt-payload-shared-contracts.md](./lessons/lesson-084-jwt-payload-shared-contracts.md)
 - Step 085: [lesson-085-auth-register-login-e2e-flow.md](./lessons/lesson-085-auth-register-login-e2e-flow.md)
 - Step 086: [lesson-086-auth-refresh-rotation-e2e-flow.md](./lessons/lesson-086-auth-refresh-rotation-e2e-flow.md)
+- Step 087: [lesson-087-auth-rbac-forbidden-e2e-flow.md](./lessons/lesson-087-auth-rbac-forbidden-e2e-flow.md)
 
-Steps 087-104.
+Steps 088-104.
 
 ## Phase 4: CMS Backend (Track 3)
 

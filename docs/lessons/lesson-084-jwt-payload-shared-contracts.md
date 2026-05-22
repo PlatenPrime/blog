@@ -118,7 +118,7 @@ Track 2 закрывает «один язык» для auth DTO и для JWT. 
 2. **`sub` = user id** — guards и RBAC lookup строятся на нём.
 3. **Права из БД** — как в 082–083, до явного ADR не кладём claims в токен.
 4. **Web** может импортировать тот же тип при decode JWT.
-5. Следующий шаг — [087](../development-roadmap.md): auth e2e RBAC forbidden (refresh flow — [086](./lesson-086-auth-refresh-rotation-e2e-flow.md)).
+5. Auth e2e матрица 085–087 закрыта; следующий шаг — [088](../development-roadmap.md) (audit log).
 
 ## Verify
 
