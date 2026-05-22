@@ -11,7 +11,7 @@
 - [`apps/api/package.json`](../../apps/api/package.json) — `@nestjs/jwt`.
 - [`apps/api/src/config/env.schema.ts`](../../apps/api/src/config/env.schema.ts) — `JWT_SECRET`, `JWT_ACCESS_EXPIRES_IN`.
 - [`.env.example`](../../.env.example) — документированные ключи JWT.
-- [`apps/api/src/auth/jwt-access-token.payload.ts`](../../apps/api/src/auth/jwt-access-token.payload.ts) — внутренний тип payload (`sub`).
+- [`libs/shared-contracts/src/auth/jwt-access-token.types.ts`](../../libs/shared-contracts/src/auth/jwt-access-token.types.ts) — тип payload перенесён в шаге [084](./lesson-084-jwt-payload-shared-contracts.md).
 - [`apps/api/src/auth/auth-jwt.constants.ts`](../../apps/api/src/auth/auth-jwt.constants.ts) — `INVALID_ACCESS_TOKEN_MESSAGE`.
 - [`apps/api/src/auth/jwt-access-token.service.ts`](../../apps/api/src/auth/jwt-access-token.service.ts) — `signForUser` / `verify`.
 - [`apps/api/src/auth/auth.module.ts`](../../apps/api/src/auth/auth.module.ts) — `JwtModule.registerAsync`, export `JwtAccessTokenService`.
@@ -22,7 +22,7 @@
 
 - `JwtStrategy`, `AuthGuard`, `accessToken` в login — [шаг 067](../development-roadmap.md).
 - Refresh / logout — [шаги 069–071](../development-roadmap.md).
-- Публичный тип payload в `shared-contracts` — [шаг 084](../development-roadmap.md).
+- Публичный тип payload в `shared-contracts` — [шаг 084](./lesson-084-jwt-payload-shared-contracts.md) (done).
 - Полная narrative TTL-политики — [шаг 073](./lesson-073-token-ttl-configuration.md) (done).
 
 ## Dependencies
@@ -67,23 +67,23 @@ Guards и стратегии (067) должны опираться на один
 
 ## Changed Files
 
-| File                                                                | Action                       |
-| ------------------------------------------------------------------- | ---------------------------- |
-| `apps/api/package.json`                                             | changed — `@nestjs/jwt`      |
-| `package-lock.json` (корень)                                        | changed — lock после install |
-| `.env.example`                                                      | changed — JWT\_\*            |
-| `apps/api/src/config/env.schema.ts`                                 | changed — JWT keys           |
-| `apps/api/src/config/env.schema.spec.ts`                            | changed — JWT tests          |
-| `apps/api/src/auth/auth-jwt.constants.ts`                           | created                      |
-| `apps/api/src/auth/jwt-access-token.payload.ts`                     | created                      |
-| `apps/api/src/auth/jwt-access-token.service.ts`                     | created                      |
-| `apps/api/src/auth/jwt-access-token.service.spec.ts`                | created                      |
-| `apps/api/src/auth/auth.module.ts`                                  | changed — JwtModule + export |
-| `docs/lessons/lesson-066-jwt-access-token-service.md`               | created                      |
-| `docs/lessons/lesson-065-auth-login.md`                             | changed — link to 066        |
-| `docs/development-roadmap.md`                                       | changed — шаг 066 done       |
-| `docs/README.md` / `docs/learning-path.md` / `docs/storytelling.md` | changed                      |
-| `docs/LOCAL_SETUP.md`                                               | changed — next step 067      |
+| File                                                                | Action                                                                   |
+| ------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| `apps/api/package.json`                                             | changed — `@nestjs/jwt`                                                  |
+| `package-lock.json` (корень)                                        | changed — lock после install                                             |
+| `.env.example`                                                      | changed — JWT\_\*                                                        |
+| `apps/api/src/config/env.schema.ts`                                 | changed — JWT keys                                                       |
+| `apps/api/src/config/env.schema.spec.ts`                            | changed — JWT tests                                                      |
+| `apps/api/src/auth/auth-jwt.constants.ts`                           | created                                                                  |
+| `apps/api/src/auth/jwt-access-token.payload.ts`                     | created (removed in [084](./lesson-084-jwt-payload-shared-contracts.md)) |
+| `apps/api/src/auth/jwt-access-token.service.ts`                     | created                                                                  |
+| `apps/api/src/auth/jwt-access-token.service.spec.ts`                | created                                                                  |
+| `apps/api/src/auth/auth.module.ts`                                  | changed — JwtModule + export                                             |
+| `docs/lessons/lesson-066-jwt-access-token-service.md`               | created                                                                  |
+| `docs/lessons/lesson-065-auth-login.md`                             | changed — link to 066                                                    |
+| `docs/development-roadmap.md`                                       | changed — шаг 066 done                                                   |
+| `docs/README.md` / `docs/learning-path.md` / `docs/storytelling.md` | changed                                                                  |
+| `docs/LOCAL_SETUP.md`                                               | changed — next step 067                                                  |
 
 ## Verification
 

@@ -178,56 +178,56 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 
 ## Track 2 Detailed Steps (057-104)
 
-| Step | Title                                                 | Verify                          |
-| ---- | ----------------------------------------------------- | ------------------------------- |
-| 057  | Database module: Postgres + ORM bootstrap             | `nx run api:build` — done       |
-| 058  | Datasource config from validated env (`DATABASE_URL`) | `nx run api:test` — done        |
-| 059  | Migration workflow + baseline schema                  | migrate up/down smoke — done    |
-| 060  | `User` entity + indexes                               | `nx run api:test` — done        |
-| 061  | Password hasher service (argon2 or bcrypt)            | unit test — done                |
-| 062  | `UserService` create/find by email                    | unit test — done                |
-| 063  | `POST /auth/register` + DTO                           | e2e — done                      |
-| 064  | Unique email constraint + friendly error mapping      | e2e — done                      |
-| 065  | `POST /auth/login`                                    | e2e — done                      |
-| 066  | JWT access token issuance + verify service            | unit test — done                |
-| 067  | `JwtStrategy` + `AuthGuard`                           | e2e — done                      |
-| 068  | `@CurrentUser()` decorator                            | unit test — done                |
-| 069  | Refresh token entity + persistence                    | migration — done                |
-| 070  | `POST /auth/refresh` + rotation semantics             | e2e — done                      |
-| 071  | `POST /auth/logout` + revoke refresh                  | e2e — done                      |
-| 072  | Refresh token reuse detection policy                  | unit/e2e — done                 |
-| 073  | Token TTL configuration + documentation               | docs check — done               |
-| 074  | Login brute-force throttle / basic lockout            | e2e — done                      |
-| 075  | Email verification token model (optional minimal)     | unit test — done                |
-| 076  | `POST /auth/verify-email`                             | e2e — done                      |
-| 077  | Password reset request flow                           | e2e — done                      |
-| 078  | Password reset completion                             | e2e — done                      |
-| 079  | Roles + permissions schema (tables/enums)             | migration — done                |
-| 080  | Seed default roles (admin, editor, viewer)            | seed script — done              |
-| 081  | `RolesGuard` + `@Roles()`                             | e2e — done                      |
-| 082  | Fine-grained `PermissionsGuard` + constants           | e2e — done                      |
-| 083  | Sample CMS route protected by RBAC                    | e2e forbidden case — done       |
-| 084  | JWT payload shape documented in `shared-contracts`    | `nx run shared-contracts:build` |
-| 085  | Auth e2e: register → login happy path                 | e2e                             |
-| 086  | Auth e2e: refresh rotation                            | e2e                             |
-| 087  | Auth e2e: RBAC forbidden cases                        | e2e                             |
-| 088  | Security audit log table                              | migration                       |
-| 089  | Audit events for auth mutations                       | unit test                       |
-| 090  | Session/device metadata (optional minimal)            | docs + unit                     |
-| 091  | Map auth failures to API error envelope               | contract test                   |
-| 092  | Service/API key auth stub (optional)                  | unit test                       |
-| 093  | OAuth/social login deferred ADR                       | ADR file                        |
-| 094  | MFA roadmap note + threat model touch-up              | markdown review                 |
-| 095  | Account recovery edge-case tests                      | `nx run api:test`               |
-| 096  | Password rotation policy (optional)                   | policy doc                      |
-| 097  | User soft-delete / anonymization stub                 | migration + unit                |
-| 098  | Auth integration test matrix doc                      | docs check                      |
-| 099  | Cross-service auth header conventions                 | ADR snippet                     |
-| 100  | Token rotation observability hook (counter/log)       | manual verify                   |
-| 101  | Auth module README + operator runbook                 | review                          |
-| 102  | Track 2 acceptance checklist                          | all DoD items                   |
-| 103  | Reserve: OIDC / SSO integration spike                 | spike doc                       |
-| 104  | Reserve: WebAuthn / passkeys spike                    | spike doc                       |
+| Step | Title                                                 | Verify                                 |
+| ---- | ----------------------------------------------------- | -------------------------------------- |
+| 057  | Database module: Postgres + ORM bootstrap             | `nx run api:build` — done              |
+| 058  | Datasource config from validated env (`DATABASE_URL`) | `nx run api:test` — done               |
+| 059  | Migration workflow + baseline schema                  | migrate up/down smoke — done           |
+| 060  | `User` entity + indexes                               | `nx run api:test` — done               |
+| 061  | Password hasher service (argon2 or bcrypt)            | unit test — done                       |
+| 062  | `UserService` create/find by email                    | unit test — done                       |
+| 063  | `POST /auth/register` + DTO                           | e2e — done                             |
+| 064  | Unique email constraint + friendly error mapping      | e2e — done                             |
+| 065  | `POST /auth/login`                                    | e2e — done                             |
+| 066  | JWT access token issuance + verify service            | unit test — done                       |
+| 067  | `JwtStrategy` + `AuthGuard`                           | e2e — done                             |
+| 068  | `@CurrentUser()` decorator                            | unit test — done                       |
+| 069  | Refresh token entity + persistence                    | migration — done                       |
+| 070  | `POST /auth/refresh` + rotation semantics             | e2e — done                             |
+| 071  | `POST /auth/logout` + revoke refresh                  | e2e — done                             |
+| 072  | Refresh token reuse detection policy                  | unit/e2e — done                        |
+| 073  | Token TTL configuration + documentation               | docs check — done                      |
+| 074  | Login brute-force throttle / basic lockout            | e2e — done                             |
+| 075  | Email verification token model (optional minimal)     | unit test — done                       |
+| 076  | `POST /auth/verify-email`                             | e2e — done                             |
+| 077  | Password reset request flow                           | e2e — done                             |
+| 078  | Password reset completion                             | e2e — done                             |
+| 079  | Roles + permissions schema (tables/enums)             | migration — done                       |
+| 080  | Seed default roles (admin, editor, viewer)            | seed script — done                     |
+| 081  | `RolesGuard` + `@Roles()`                             | e2e — done                             |
+| 082  | Fine-grained `PermissionsGuard` + constants           | e2e — done                             |
+| 083  | Sample CMS route protected by RBAC                    | e2e forbidden case — done              |
+| 084  | JWT payload shape documented in `shared-contracts`    | `nx run shared-contracts:build` — done |
+| 085  | Auth e2e: register → login happy path                 | e2e                                    |
+| 086  | Auth e2e: refresh rotation                            | e2e                                    |
+| 087  | Auth e2e: RBAC forbidden cases                        | e2e                                    |
+| 088  | Security audit log table                              | migration                              |
+| 089  | Audit events for auth mutations                       | unit test                              |
+| 090  | Session/device metadata (optional minimal)            | docs + unit                            |
+| 091  | Map auth failures to API error envelope               | contract test                          |
+| 092  | Service/API key auth stub (optional)                  | unit test                              |
+| 093  | OAuth/social login deferred ADR                       | ADR file                               |
+| 094  | MFA roadmap note + threat model touch-up              | markdown review                        |
+| 095  | Account recovery edge-case tests                      | `nx run api:test`                      |
+| 096  | Password rotation policy (optional)                   | policy doc                             |
+| 097  | User soft-delete / anonymization stub                 | migration + unit                       |
+| 098  | Auth integration test matrix doc                      | docs check                             |
+| 099  | Cross-service auth header conventions                 | ADR snippet                            |
+| 100  | Token rotation observability hook (counter/log)       | manual verify                          |
+| 101  | Auth module README + operator runbook                 | review                                 |
+| 102  | Track 2 acceptance checklist                          | all DoD items                          |
+| 103  | Reserve: OIDC / SSO integration spike                 | spike doc                              |
+| 104  | Reserve: WebAuthn / passkeys spike                    | spike doc                              |
 
 ## Track 3 Detailed Steps (105-164)
 
@@ -562,5 +562,6 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 081  | [lesson-081-roles-guard.md](./lessons/lesson-081-roles-guard.md)                                                       |
 | 082  | [lesson-082-permissions-guard.md](./lessons/lesson-082-permissions-guard.md)                                           |
 | 083  | [lesson-083-sample-cms-route-rbac.md](./lessons/lesson-083-sample-cms-route-rbac.md)                                   |
+| 084  | [lesson-084-jwt-payload-shared-contracts.md](./lessons/lesson-084-jwt-payload-shared-contracts.md)                     |
 
 Entry point: [LOCAL_SETUP.md](./LOCAL_SETUP.md)

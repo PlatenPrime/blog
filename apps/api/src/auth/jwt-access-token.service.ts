@@ -1,7 +1,7 @@
+import type { JwtAccessTokenPayload } from '@blog/shared-contracts';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { INVALID_ACCESS_TOKEN_MESSAGE } from './auth-jwt.constants';
-import type { JwtAccessTokenPayload } from './jwt-access-token.payload';
 
 @Injectable()
 export class JwtAccessTokenService {

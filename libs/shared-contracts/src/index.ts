@@ -38,6 +38,7 @@ export {
 } from './errors/problem-details.schema.js';
 export type { ProblemDetailsBodySchema } from './errors/problem-details.schema.js';
 
+export type { JwtAccessTokenPayload } from './auth/jwt-access-token.types.js';
 export type { AuthMeResponse } from './auth/me.types.js';
 export type { LoginUserResponse } from './auth/login.types.js';
 export type { RefreshSessionResponse } from './auth/refresh.types.js';

@@ -111,6 +111,7 @@ npm run test:e2e
 - Step 081: [lesson-081-roles-guard.md](./lessons/lesson-081-roles-guard.md)
 - Step 082: [lesson-082-permissions-guard.md](./lessons/lesson-082-permissions-guard.md)
 - Step 083: [lesson-083-sample-cms-route-rbac.md](./lessons/lesson-083-sample-cms-route-rbac.md)
+- Step 084: [lesson-084-jwt-payload-shared-contracts.md](./lessons/lesson-084-jwt-payload-shared-contracts.md)
 
 Quality scripts from repo root (`build`, `test`, `lint`, `test:e2e`) run through Nx on the `api` app. The `web` app (TanStack Start) builds with `npx nx run web:build` or `npm run web:dev` for local dev. Full CI parity from root: `npm run ci` (see [lesson-019](./lessons/lesson-019-ci-pipeline-baseline.md)); GitHub Actions restores `.nx/cache` for repeated CI runs (see [lesson-020](./lessons/lesson-020-nx-cache-in-ci.md)); CI targets now run through `nx affected` range detection (see [lesson-021](./lessons/lesson-021-nx-affected-flow-in-ci.md)). Utility scripts:
 

@@ -1,3 +1,4 @@
+import type { JwtAccessTokenPayload } from '@blog/shared-contracts';
 import { UnauthorizedException } from '@nestjs/common';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
@@ -28,10 +29,11 @@ describe('JwtAccessTokenService', () => {
     jwtService = moduleRef.get(JwtService);
   });
 
-  it('signForUser and verify round-trip with sub claim', async () => {
+  it('signForUser and verify round-trip with shared-contracts JwtAccessTokenPayload', async () => {
     const token = await service.signForUser(userId);
 
-    await expect(service.verify(token)).resolves.toEqual({ sub: userId });
+    const payload: JwtAccessTokenPayload = await service.verify(token);
+    expect(payload).toEqual({ sub: userId });
   });
 
   it('verify throws UnauthorizedException when token is expired', async () => {
