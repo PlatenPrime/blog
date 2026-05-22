@@ -208,7 +208,7 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 082  | Fine-grained `PermissionsGuard` + constants           | e2e — done                             |
 | 083  | Sample CMS route protected by RBAC                    | e2e forbidden case — done              |
 | 084  | JWT payload shape documented in `shared-contracts`    | `nx run shared-contracts:build` — done |
-| 085  | Auth e2e: register → login happy path                 | e2e                                    |
+| 085  | Auth e2e: register → login happy path                 | e2e — done                             |
 | 086  | Auth e2e: refresh rotation                            | e2e                                    |
 | 087  | Auth e2e: RBAC forbidden cases                        | e2e                                    |
 | 088  | Security audit log table                              | migration                              |
@@ -563,5 +563,6 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 082  | [lesson-082-permissions-guard.md](./lessons/lesson-082-permissions-guard.md)                                           |
 | 083  | [lesson-083-sample-cms-route-rbac.md](./lessons/lesson-083-sample-cms-route-rbac.md)                                   |
 | 084  | [lesson-084-jwt-payload-shared-contracts.md](./lessons/lesson-084-jwt-payload-shared-contracts.md)                     |
+| 085  | [lesson-085-auth-register-login-e2e-flow.md](./lessons/lesson-085-auth-register-login-e2e-flow.md)                     |
 
 Entry point: [LOCAL_SETUP.md](./LOCAL_SETUP.md)

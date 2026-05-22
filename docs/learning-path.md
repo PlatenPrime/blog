@@ -98,8 +98,9 @@ Steps 033-056.
 - Step 082: [lesson-082-permissions-guard.md](./lessons/lesson-082-permissions-guard.md)
 - Step 083: [lesson-083-sample-cms-route-rbac.md](./lessons/lesson-083-sample-cms-route-rbac.md)
 - Step 084: [lesson-084-jwt-payload-shared-contracts.md](./lessons/lesson-084-jwt-payload-shared-contracts.md)
+- Step 085: [lesson-085-auth-register-login-e2e-flow.md](./lessons/lesson-085-auth-register-login-e2e-flow.md)
 
-Steps 085-104.
+Steps 086-104.
 
 ## Phase 4: CMS Backend (Track 3)
 
