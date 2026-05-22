@@ -38,6 +38,7 @@
     "db:migrate:show": "npm run migration:show -w api",
     "db:migrate:smoke": "node scripts/migration-smoke.mjs",
     "db:seed:roles": "npm run seed:roles -w api",
+    "db:seed:permissions": "npm run seed:permissions -w api",
     "health:smoke": "node scripts/health-smoke.mjs",
     "shutdown:smoke": "node scripts/shutdown-smoke.mjs"
   },

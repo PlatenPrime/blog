@@ -128,7 +128,7 @@ npx nx run api:test
 1. **081 = coarse roles only** — permissions на 082.
 2. **Guard после JWT** — `req.user.sub` для lookup в `user_roles`.
 3. **E2E мокает role lookup** — не требует seed `user_roles`.
-4. Следующий шаг — [082](../development-roadmap.md): `PermissionsGuard` + constants.
+4. Следующий шаг — [083](../development-roadmap.md): sample CMS route protected by RBAC ([082](./lesson-082-permissions-guard.md) — `PermissionsGuard`).
 
 ## Verify
 

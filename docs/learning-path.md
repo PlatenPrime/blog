@@ -95,8 +95,9 @@ Steps 033-056.
 - Step 079: [lesson-079-roles-permissions-schema.md](./lessons/lesson-079-roles-permissions-schema.md)
 - Step 080: [lesson-080-seed-default-roles.md](./lessons/lesson-080-seed-default-roles.md)
 - Step 081: [lesson-081-roles-guard.md](./lessons/lesson-081-roles-guard.md)
+- Step 082: [lesson-082-permissions-guard.md](./lessons/lesson-082-permissions-guard.md)
 
-Steps 082-104.
+Steps 083-104.
 
 ## Phase 4: CMS Backend (Track 3)
 
