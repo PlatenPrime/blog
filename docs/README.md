@@ -14,6 +14,7 @@ This repository is a fullstack practice track: NestJS API + TanStack Start + Nx.
 - [learning-path.md](./learning-path.md)
 - [release-policy.md](./release-policy.md)
 - [lesson-authoring-guide.md](./lesson-authoring-guide.md) — как писать уроки и **чеклист синхронизации docs + storytelling**
+- Правило Cursor: [`.cursor/rules/storytelling.mdc`](../.cursor/rules/storytelling.mdc) — обязательный формат narrative в storytelling
 - [lessons/lesson-template.md](./lessons/lesson-template.md)
 
 ## Quick Start

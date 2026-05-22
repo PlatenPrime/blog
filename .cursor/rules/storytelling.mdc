@@ -1,0 +1,91 @@
+---
+description: How to write docs/storytelling.md — narrative for beginners, not a lesson changelog
+alwaysApply: true
+---
+
+# Storytelling authoring (mandatory)
+
+[`docs/storytelling.md`](docs/storytelling.md) is a **mentor conversation** for an inexperienced developer: *why* we build the blog/CMS this way and how decisions connect. It is **not** a second roadmap, not a lesson, not a file list.
+
+**Canonical example:** current structure in `docs/storytelling.md` (chapters I–XIII, Track 2 split into X–XIII). **Do not regress** to a single chapter with `NNN — service — HTTP` chains.
+
+## Role of each doc
+
+| Document | Answers |
+| -------- | ------- |
+| **storytelling** | Why? How does this fit the story? What links to earlier chapters? |
+| **learning-path** | In what order? |
+| **lesson-NNN** | What to run, which files, verification |
+| **development-roadmap** | Step done / next (source of truth for status) |
+
+## Chapter template
+
+Every chapter (including new ones for Track 3+) uses this skeleton. **Do not** add `### Шаг NNN` per sprint.
+
+| Section | Purpose |
+| ------- | ------- |
+| **Сцена** | Metaphor / situation a beginner recognizes |
+| **Что болит** | Cost of skipping this chapter |
+| **Намерение** | One intent for the whole chapter |
+| **Как это сложилось у нас** / **Как это выглядело в нашем проекте** | 3–6 paragraphs, **story arcs** — not step-by-step |
+| **Связь с прошлым** | 3–5 bullets: «поэтому…» links to earlier chapters (required Track 2+) |
+| **Что стоит унести** | Takeaways for the reader |
+| **Уроки этой главы** | One table only: step \| one-line gist \| lesson link |
+
+Track 0–1 chapters (I–IX) may use «Как это выглядело» instead of «Как это сложилось»; same rules apply.
+
+## After each roadmap step
+
+1. Pick the **right chapter** from storytelling TOC (I–XIII today). New track arc → **new chapter**, never append a changelog to the bottom of one chapter.
+2. Add **one row** to «Уроки этой главы» for that step.
+3. Add **2–4 sentences** to the chapter **arc** (integrate into existing narrative; do not start a new paragraph that lists step numbers).
+4. Update **«Связь с прошлым»** only if the link is new and non-obvious.
+5. Refresh **«Где мы сейчас»** and **«Что дальше»** as a short **checkpoint** (~3 paragraphs + link to roadmap) — no endpoint lists, no service/class names.
+
+## Forbidden in storytelling prose
+
+- Chains like `**057** — TypeORM … **058** — DATABASE_URL …`
+- Blocks «После NNN …» after the chapter table
+- Copying lesson Verification, Changed Files, commands, env var names, HTTP paths
+- Duplicating roadmap «done» lists in «Где мы сейчас»
+- Extra tables that repeat lesson indexes
+- `### Шаг` / one H3 per roadmap step inside a chapter
+
+## Allowed and encouraged
+
+- Metaphors (редакция, ресторан, рейс — same tone as chapters I–IX)
+- Plain language; minimal identifiers (say «единый формат ошибок», not `ProblemDetailsFilter`)
+- Explicit **connections** across tracks (e.g. redaction before auth; problem+json → friendly 409)
+- One **Уроки этой главы** table at chapter end — index only
+
+## Anti-pattern vs good arc
+
+**Bad (changelog):**
+
+> **063** — AuthModule register … **064** — unique email 409 … **065** — login …
+
+**Good (arc + connection):**
+
+> Регистрация и вход стали продуктовыми маршрутами с ответами из общих контрактов. Дубликат email и неверный пароль не раскрывают внутренности БД — тот же Problem Details, что мы настроили в главе VI. Refresh живёт отдельно от access: украденный долгий токен не переживает ротацию.
+
+## Splitting chapters (Track 2+ model)
+
+When a track grows beyond one **intent**, split into multiple TOC chapters (example: X memory, XI sessions, XII account lifecycle, XIII permissions). Each chapter = one reader question, not «everything in auth».
+
+## Global sections
+
+| Section | Style |
+| ------- | ----- |
+| **Большая цель** | Product picture + 3–4 sentences «where we are now» for a newcomer |
+| **Где мы сейчас** | Editorial metaphor + one paragraph per completed track + «not in product yet» + link to roadmap |
+| **Что дальше** | 2–3 sentences + roadmap link; no duplicate «stub table» of done features |
+| **Сквозные принципы** | Timeless rules; principle 8: storytelling is history, not changelog |
+
+## Agent checklist before marking a sprint done
+
+- [ ] Correct chapter (or new chapter) updated, not a growing blob at end of file
+- [ ] Table row added; arc extended by 2–4 sentences only
+- [ ] No forbidden patterns in diff
+- [ ] «Где мы сейчас» / «Что дальше» still readable by a non-coder
+
+See also: [documentation-sync](.cursor/rules/documentation-sync.mdc), [lesson-authoring-guide § Storytelling](docs/lesson-authoring-guide.md#storytelling-sync).

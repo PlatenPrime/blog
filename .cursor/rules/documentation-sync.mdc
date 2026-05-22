@@ -17,7 +17,7 @@ Every roadmap step (sprint) **must** update documentation in the **same change s
 | `docs/development-roadmap.md` | Step row → `done`; lesson index table at bottom |
 | `docs/README.md` | Completed Lessons entry |
 | `docs/learning-path.md` | Step link in phase list |
-| **`docs/storytelling.md`** | **Always for Track steps:** row in chapter table, narrative in «Как это выглядело», update «Где мы сейчас» / «Что дальше» / intro «после шага NNN» |
+| **`docs/storytelling.md`** | **Always for Track steps:** row in «Уроки этой главы», +2–4 sentences to the chapter **arc** (not a per-step changelog); update «Где мы сейчас» / «Что дальше» as short checkpoint |
 | `docs/LOCAL_SETUP.md` | Update when next-step or setup commands change |
 | Related lessons | Back-links in Dependencies / «What To Remember» when scope shifts |
 | `apps/api/src/**/*.spec.ts` | **Required** with any `apps/api/src/` production change — see [tests-first-api](.cursor/rules/tests-first-api.mdc) |
@@ -26,7 +26,9 @@ Every roadmap step (sprint) **must** update documentation in the **same change s
 
 Storytelling is **not optional** for completed roadmap steps. It answers *why* in the project story; the lesson answers *how*.
 
-After each step: find the chapter in storytelling TOC → add table row → extend chapter narrative (2–4 sentences) → refresh global status sections.
+**Style and anti-patterns:** follow [storytelling.mdc](.cursor/rules/storytelling.mdc) exactly (chapter template, forbidden changelog prose, checkpoint sections).
+
+After each step: find the chapter in storytelling TOC → add one table row → extend the chapter **arc** (2–4 sentences in «Как это сложилось» / «Как это выглядело»; never append `NNN — service — HTTP` chains) → refresh global status sections briefly.
 
 ## Agent behavior
 
