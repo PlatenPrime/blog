@@ -51,6 +51,16 @@ describe('parseRootEnv', () => {
       SMTP_FROM: 'noreply@blog.local',
       APP_PUBLIC_BASE_URL: '',
       EMAIL_RETURN_TOKEN_IN_RESPONSE: false,
+      REQUIRE_EMAIL_VERIFIED: false,
+    });
+  });
+
+  it('parses REQUIRE_EMAIL_VERIFIED boolean', () => {
+    expect(parseRootEnv({ REQUIRE_EMAIL_VERIFIED: 'true' })).toMatchObject({
+      REQUIRE_EMAIL_VERIFIED: true,
+    });
+    expect(parseRootEnv({ REQUIRE_EMAIL_VERIFIED: '0' })).toMatchObject({
+      REQUIRE_EMAIL_VERIFIED: false,
     });
   });
 

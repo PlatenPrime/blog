@@ -25,3 +25,7 @@ export const INVALID_PASSWORD_RESET_TOKEN_MESSAGE =
 /** Success message after password reset completion. */
 export const PASSWORD_RESET_COMPLETED_MESSAGE =
   'Password has been reset' as const;
+
+/** Returned when REQUIRE_EMAIL_VERIFIED is on and email_verified_at is null. */
+export const EMAIL_NOT_VERIFIED_MESSAGE =
+  'Email address must be verified before signing in' as const;

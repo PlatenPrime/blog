@@ -1,4 +1,5 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
+import { EmailVerifiedGuard } from '../auth/email-verified.guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { PermissionKey } from '../rbac/permission-key';
 import { Permissions } from '../rbac/permissions.decorator';
@@ -14,7 +15,7 @@ export class CmsPostsController {
   constructor(private readonly cmsPosts: CmsPostsService) {}
 
   @Get()
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @UseGuards(JwtAuthGuard, EmailVerifiedGuard, PermissionsGuard)
   @Permissions(PermissionKey.PostsRead)
   listPosts(): CmsPostsListResponse {
     return this.cmsPosts.listPosts();

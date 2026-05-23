@@ -55,6 +55,16 @@ describe('UserService', () => {
     expect(result).toBe(user);
   });
 
+  it('findById looks up user by primary key', async () => {
+    const user = { id: 'u1', email: 'a@b.com' } as User;
+    findOne.mockResolvedValue(user);
+
+    const result = await service.findById('u1');
+
+    expect(findOne).toHaveBeenCalledWith({ where: { id: 'u1' } });
+    expect(result).toBe(user);
+  });
+
   it('create normalizes email, hashes password, saves user with hash', async () => {
     findOne.mockResolvedValue(null);
     hash.mockResolvedValue('$argon2id$stub');

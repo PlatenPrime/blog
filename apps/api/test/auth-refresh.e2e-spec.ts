@@ -22,12 +22,22 @@ import { configureApiShutdown } from '../src/config/configure-api-shutdown';
 import { enableApiCors } from '../src/config/enable-api-cors';
 import { PostgresHealthIndicator } from '../src/health/indicators/postgres.health-indicator';
 import { createTestDataSourceStub } from '../src/testing/create-test-data-source.stub';
+import type { User } from '../src/users/user.entity';
 import { PasswordHasherService } from '../src/users/password-hasher.service';
 import { UserService } from '../src/users/user.service';
 
 const refreshBase = `${API_V1_BASE}/auth/refresh`;
 
 const activeRefreshToken = 'opaque-refresh-secret-value';
+
+const refreshUser: User = {
+  id: '11111111-1111-4111-8111-111111111111',
+  email: 'user@example.com',
+  passwordHash: 'argon2id$hash',
+  emailVerifiedAt: null,
+  createdAt: new Date('2026-05-20T10:00:00.000Z'),
+  updatedAt: new Date('2026-05-20T10:00:00.000Z'),
+};
 
 describe('Auth refresh (e2e)', () => {
   let app: INestApplication<App>;
@@ -54,7 +64,11 @@ describe('Auth refresh (e2e)', () => {
       .overrideProvider(DataSource)
       .useValue(createTestDataSourceStub())
       .overrideProvider(UserService)
-      .useValue({ create: vi.fn(), findByEmail: vi.fn() })
+      .useValue({
+        create: vi.fn(),
+        findByEmail: vi.fn(),
+        findById: vi.fn().mockResolvedValue(refreshUser),
+      })
       .overrideProvider(PasswordHasherService)
       .useValue({ hash: vi.fn(), verify: vi.fn() })
       .overrideProvider(RefreshTokenService)

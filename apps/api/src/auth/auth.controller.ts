@@ -30,6 +30,7 @@ import { CreateRequestPasswordResetBodyDto } from './dto/create-request-password
 import { CreateResendVerificationBodyDto } from './dto/create-resend-verification-body.dto';
 import { CreateResetPasswordBodyDto } from './dto/create-reset-password-body.dto';
 import { CreateVerifyEmailBodyDto } from './dto/create-verify-email-body.dto';
+import { EmailVerifiedGuard } from './email-verified.guard';
 import { JwtAuthGuard } from './jwt-auth.guard';
 
 @Controller('auth')
@@ -95,7 +96,7 @@ export class AuthController {
   }
 
   @Get('me')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, EmailVerifiedGuard)
   me(@CurrentUser() user: AuthRequestUser): AuthMeResponse {
     return { id: user.sub };
   }

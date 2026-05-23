@@ -1,4 +1,5 @@
 import {
+  ForbiddenException,
   HttpException,
   HttpStatus,
   UnauthorizedException,
@@ -13,6 +14,7 @@ import { PasswordHasherService } from '../users/password-hasher.service';
 import type { User } from '../users/user.entity';
 import { UserService } from '../users/user.service';
 import {
+  EMAIL_NOT_VERIFIED_MESSAGE,
   INVALID_EMAIL_VERIFICATION_TOKEN_MESSAGE,
   INVALID_LOGIN_CREDENTIALS_MESSAGE,
   INVALID_PASSWORD_RESET_TOKEN_MESSAGE,
@@ -21,6 +23,7 @@ import {
   PASSWORD_RESET_REQUEST_ACCEPTED_MESSAGE,
   RESEND_VERIFICATION_ACCEPTED_MESSAGE,
 } from './auth-credentials.constants';
+import { EmailVerifiedPolicyService } from './email-verified-policy.service';
 import { AUTH_SENSITIVE_RATE_LIMIT_MESSAGE } from './auth-sensitive-rate-limit.constants';
 import { AuthSensitiveRateLimitService } from './auth-sensitive-rate-limit.service';
 import type { EmailVerificationToken } from './email-verification-token.entity';
@@ -46,6 +49,7 @@ describe('AuthService', () => {
   let service: AuthService;
   let create: ReturnType<typeof vi.fn>;
   let findByEmail: ReturnType<typeof vi.fn>;
+  let findById: ReturnType<typeof vi.fn>;
   let verify: ReturnType<typeof vi.fn>;
   let signForUser: ReturnType<typeof vi.fn>;
   let persistForUser: ReturnType<typeof vi.fn>;
@@ -86,6 +90,8 @@ describe('AuthService', () => {
   let sendPasswordResetEmail: ReturnType<typeof vi.fn>;
   let shouldReturnTokenInResponse: boolean;
   let email: EmailService;
+  let assertUserMayAuthenticate: ReturnType<typeof vi.fn>;
+  let emailVerifiedPolicy: EmailVerifiedPolicyService;
   const refreshTtlMs = 60_000;
   const clientIp = '203.0.113.1';
 
@@ -101,6 +107,7 @@ describe('AuthService', () => {
   beforeEach(() => {
     create = vi.fn();
     findByEmail = vi.fn();
+    findById = vi.fn();
     verify = vi.fn();
     signForUser = vi.fn();
     persistForUser = vi.fn();
@@ -123,6 +130,7 @@ describe('AuthService', () => {
     users = {
       create,
       findByEmail,
+      findById,
       markEmailVerified,
       updatePassword,
     } as unknown as UserService;
@@ -189,6 +197,10 @@ describe('AuthService', () => {
       sendPasswordResetEmail,
       logSendFailure: vi.fn(),
     } as unknown as EmailService;
+    assertUserMayAuthenticate = vi.fn();
+    emailVerifiedPolicy = {
+      assertUserMayAuthenticate,
+    } as unknown as EmailVerifiedPolicyService;
     service = new AuthService(
       users,
       passwordHasher,
@@ -201,6 +213,7 @@ describe('AuthService', () => {
       sensitiveRateLimit,
       securityAudit,
       email,
+      emailVerifiedPolicy,
     );
   });
 
@@ -658,6 +671,30 @@ describe('AuthService', () => {
     });
   });
 
+  it('login throws ForbiddenException when email is not verified and policy requires it', async () => {
+    findByEmail.mockResolvedValue(savedUser);
+    verify.mockResolvedValue(true);
+    assertUserMayAuthenticate.mockImplementation(() => {
+      throw new ForbiddenException(EMAIL_NOT_VERIFIED_MESSAGE);
+    });
+    const dto: CreateLoginBodyDto = {
+      email: 'user@example.com',
+      password: 'secret123',
+    };
+
+    await expect(service.login(dto)).rejects.toThrow(
+      new ForbiddenException(EMAIL_NOT_VERIFIED_MESSAGE),
+    );
+    expect(signForUser).not.toHaveBeenCalled();
+    expect(persistForUser).not.toHaveBeenCalled();
+    expect(recordFailure).not.toHaveBeenCalled();
+    expect(recordAudit).toHaveBeenCalledWith({
+      eventType: SecurityAuditEventType.AuthLoginBlockedUnverified,
+      actorUserId: savedUser.id,
+      subjectUserId: savedUser.id,
+    });
+  });
+
   it('refresh rotates token and returns new access and refresh tokens', async () => {
     const existing = {
       id: 'rt-old',
@@ -665,6 +702,7 @@ describe('AuthService', () => {
     } as RefreshToken;
     const successor = { id: 'rt-new' } as RefreshToken;
     findActiveByRawToken.mockResolvedValue(existing);
+    findById.mockResolvedValue(savedUser);
     persistForUser.mockResolvedValue(successor);
     signForUser.mockResolvedValue('new-access-token');
 
@@ -675,6 +713,8 @@ describe('AuthService', () => {
     const result = await service.refresh(dto);
 
     expect(findActiveByRawToken).toHaveBeenCalledWith(dto.refreshToken);
+    expect(findById).toHaveBeenCalledWith(savedUser.id);
+    expect(assertUserMayAuthenticate).toHaveBeenCalledWith(savedUser);
     expect(persistForUser).toHaveBeenCalledOnce();
     const rotatePersistArgs = persistForUser.mock.calls[0]?.[0] as {
       userId: string;
@@ -697,6 +737,27 @@ describe('AuthService', () => {
       actorUserId: savedUser.id,
       subjectUserId: savedUser.id,
     });
+  });
+
+  it('refresh throws ForbiddenException when email is not verified and policy requires it', async () => {
+    const existing = {
+      id: 'rt-old',
+      userId: savedUser.id,
+    } as RefreshToken;
+    findActiveByRawToken.mockResolvedValue(existing);
+    findById.mockResolvedValue(savedUser);
+    assertUserMayAuthenticate.mockImplementation(() => {
+      throw new ForbiddenException(EMAIL_NOT_VERIFIED_MESSAGE);
+    });
+    const dto: CreateRefreshBodyDto = {
+      refreshToken: 'opaque-refresh-secret-value',
+    };
+
+    await expect(service.refresh(dto)).rejects.toThrow(
+      new ForbiddenException(EMAIL_NOT_VERIFIED_MESSAGE),
+    );
+    expect(persistForUser).not.toHaveBeenCalled();
+    expect(markReplaced).not.toHaveBeenCalled();
   });
 
   it('refresh throws UnauthorizedException when token is not active', async () => {

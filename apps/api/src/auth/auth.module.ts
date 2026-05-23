@@ -19,6 +19,8 @@ import { RefreshToken } from './refresh-token.entity';
 import { AuthSensitiveRateLimitService } from './auth-sensitive-rate-limit.service';
 import { LoginLockoutService } from './login-lockout.service';
 import { RefreshTokenService } from './refresh-token.service';
+import { EmailVerifiedGuard } from './email-verified.guard';
+import { EmailVerifiedPolicyService } from './email-verified-policy.service';
 
 @Module({
   imports: [
@@ -56,10 +58,15 @@ import { RefreshTokenService } from './refresh-token.service';
     PasswordResetTokenService,
     JwtStrategy,
     JwtAuthGuard,
+    EmailVerifiedPolicyService,
+    EmailVerifiedGuard,
   ],
   exports: [
     JwtAccessTokenService,
     JwtAuthGuard,
+    EmailVerifiedPolicyService,
+    EmailVerifiedGuard,
+    UsersModule,
     RefreshTokenService,
     EmailVerificationTokenService,
     PasswordResetTokenService,

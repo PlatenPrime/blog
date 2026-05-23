@@ -298,6 +298,7 @@ export const rootEnvSchema = z
       .pipe(z.string().min(1)),
     APP_PUBLIC_BASE_URL: optionalTrimmedString(),
     EMAIL_RETURN_TOKEN_IN_RESPONSE: envBoolean(false),
+    REQUIRE_EMAIL_VERIFIED: envBoolean(false),
   })
   .transform((value) => {
     const explicit =
@@ -381,6 +382,7 @@ const ROOT_ENV_KEYS = [
   'SMTP_FROM',
   'APP_PUBLIC_BASE_URL',
   'EMAIL_RETURN_TOKEN_IN_RESPONSE',
+  'REQUIRE_EMAIL_VERIFIED',
 ] as const;
 
 function pickRootEnvKeys(

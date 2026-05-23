@@ -27,6 +27,10 @@ export class UserService {
     return this.users.findOne({ where: { email: normalizedEmail } });
   }
 
+  findById(userId: string): Promise<User | null> {
+    return this.users.findOne({ where: { id: userId } });
+  }
+
   async create(params: {
     email: string;
     plainPassword: string;

@@ -9,6 +9,7 @@ import type { User } from '../../src/users/user.entity';
 export type InMemoryUserServiceOverride = {
   create: (params: { email: string; plainPassword: string }) => Promise<User>;
   findByEmail: (email: string) => Promise<User | null>;
+  findById: (userId: string) => Promise<User | null>;
 };
 
 export function createInMemoryUserServiceOverride(
@@ -46,6 +47,15 @@ export function createInMemoryUserServiceOverride(
     findByEmail(email: string): Promise<User | null> {
       const normalizedEmail = normalizeUserEmail(email);
       return Promise.resolve(usersByEmail.get(normalizedEmail) ?? null);
+    },
+
+    findById(userId: string): Promise<User | null> {
+      for (const user of usersByEmail.values()) {
+        if (user.id === userId) {
+          return Promise.resolve(user);
+        }
+      }
+      return Promise.resolve(null);
     },
   };
 }

@@ -45,7 +45,7 @@ Browser (untrusted)
 | Repudiation            | “Who published / logged in?”                 | Structured logs + request/correlation IDs (**043–046**); `security_audit_events` for auth mutations (**088–089**); IP/UA in audit (**095** planned)                                                                                                           |
 | Information disclosure | Account enumeration, JWT PII, error oracle   | Login/reset neutral messages (**065**, **077**); no email in access JWT (**066**, **084**); log redaction (**047**); friendly 409 on duplicate email (**064**)                                                                                                |
 | DoS                    | Login/reset spam, expensive queries          | Per-email login lockout (**074**); reset/resend rate limits per email + IP (**091**); global throttler baseline (**092**); prod tuning (**292–293**); request timeout (**053**)                                                                               |
-| Elevation              | Viewer → editor, cross-user data             | RBAC schema + seeds (**079–080**); `RolesGuard` / `PermissionsGuard` (**081–082**); CMS route requires `posts:read` (**083**); e2e forbidden cases (**087**)                                                                                                  |
+| Elevation              | Viewer → editor, cross-user data             | RBAC schema + seeds (**079–080**); `RolesGuard` / `PermissionsGuard` (**081–082**); CMS route requires `posts:read` (**083**); e2e forbidden cases (**087**); verified-email gate on login/sensitive routes when `REQUIRE_EMAIL_VERIFIED` (**093**)           |
 
 ## Out of scope for this stub
 

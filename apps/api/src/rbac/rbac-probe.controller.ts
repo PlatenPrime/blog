@@ -1,4 +1,5 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
+import { EmailVerifiedGuard } from '../auth/email-verified.guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { PermissionKey } from './permission-key';
 import { Permissions } from './permissions.decorator';
@@ -18,14 +19,14 @@ export type RbacPostsWriteProbeResponse = {
 @Controller('rbac')
 export class RbacProbeController {
   @Get('_probe/admin')
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, EmailVerifiedGuard, RolesGuard)
   @Roles(RoleSlug.Admin)
   adminProbe(): RbacAdminProbeResponse {
     return { ok: true };
   }
 
   @Get('_probe/posts-write')
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @UseGuards(JwtAuthGuard, EmailVerifiedGuard, PermissionsGuard)
   @Permissions(PermissionKey.PostsWrite)
   postsWriteProbe(): RbacPostsWriteProbeResponse {
     return { ok: true };

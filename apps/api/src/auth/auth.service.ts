@@ -8,6 +8,7 @@ import type {
   VerifyEmailResponse,
 } from '@blog/shared-contracts';
 import {
+  ForbiddenException,
   HttpException,
   Injectable,
   UnauthorizedException,
@@ -55,6 +56,7 @@ import { normalizeLockoutKey } from './login-lockout-state';
 import { LoginLockoutService } from './login-lockout.service';
 import { RefreshTokenService } from './refresh-token.service';
 import { EmailService } from '../email/email.service';
+import { EmailVerifiedPolicyService } from './email-verified-policy.service';
 
 @Injectable()
 export class AuthService {
@@ -70,6 +72,7 @@ export class AuthService {
     private readonly sensitiveRateLimit: AuthSensitiveRateLimitService,
     private readonly securityAudit: SecurityAuditService,
     private readonly email: EmailService,
+    private readonly emailVerifiedPolicy: EmailVerifiedPolicyService,
   ) {}
 
   async register(dto: CreateRegisterBodyDto): Promise<RegisterUserResponse> {
@@ -225,6 +228,18 @@ export class AuthService {
         dto.email,
         dto.password,
       );
+      try {
+        this.emailVerifiedPolicy.assertUserMayAuthenticate(user);
+      } catch (error) {
+        if (error instanceof ForbiddenException) {
+          await this.recordAuthAudit({
+            eventType: SecurityAuditEventType.AuthLoginBlockedUnverified,
+            actorUserId: user.id,
+            subjectUserId: user.id,
+          });
+        }
+        throw error;
+      }
       this.loginLockout.clear(dto.email);
       const accessToken = await this.accessTokens.signForUser(user.id);
       const refreshToken = await this.issueRefreshForUser(user.id);
@@ -281,6 +296,14 @@ export class AuthService {
 
       throw new UnauthorizedException(INVALID_REFRESH_TOKEN_MESSAGE);
     }
+
+    const user = await this.users.findById(existing.userId);
+
+    if (user === null) {
+      throw new UnauthorizedException(INVALID_REFRESH_TOKEN_MESSAGE);
+    }
+
+    this.emailVerifiedPolicy.assertUserMayAuthenticate(user);
 
     const rawToken = generateOpaqueToken();
     const expiresAt = this.refreshExpiresAt();
