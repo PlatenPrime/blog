@@ -67,7 +67,7 @@ OTEL_EXPORTER_OTLP_ENDPOINT=http://127.0.0.1:4318/v1/traces
 - **Два момента чтения env:** `parseOtelEnv(process.env)` в `instrumentation.ts` (до Nest) и те же ключи в `rootEnvSchema` (fail-fast при старте приложения).
 - **OTLP версии:** `@opentelemetry/exporter-trace-otlp-http@0.218+` согласован с `@opentelemetry/sdk-trace-base@2.x`.
 - **Ops routes:** один источник правды для `setGlobalPrefix` exclude и access-log skip.
-- **Deferred map:** compose stack (312), cost dashboard (320), auth token metrics (100) — в ADR-002.
+- **Deferred map:** compose stack (327), cost dashboard (334), auth token metrics (105) — в ADR-002 ([renumber ADR-003](../adr/003-roadmap-renumber-090-plus.md)).
 
 ## Changed Files
 

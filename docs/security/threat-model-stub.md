@@ -1,20 +1,21 @@
 # Threat model (stub)
 
-**Status:** stub — Track 0 placeholder. Detailed threat modeling (abuse cases, data-flow diagrams, control mapping) is scheduled with **Track 7: Reliability and Security** in [`development-roadmap.md`](../development-roadmap.md).
+**Status:** living stub — auth controls mapped after step **089**; full expansion in Track 7 step **305** and capstone **328**.
 
-This document anchors **scope and vocabulary** so later lessons do not start from a blank page.
+This document anchors **scope and vocabulary**. Step numbers refer to the **2026-05 roadmap renumber** ([ADR-003](../adr/003-roadmap-renumber-090-plus.md)).
 
 ## System in scope (high level)
 
-| Asset / surface        | Location / notes                                        |
-| ---------------------- | ------------------------------------------------------- |
-| Public HTTP API        | `apps/api` (NestJS), future auth/CMS/moderation         |
-| Public SSR site        | `apps/web` (TanStack Start), SEO and user-facing pages  |
-| Admin / editor UI      | Same `apps/web` app, privileged routes (future)         |
-| PostgreSQL             | Local compose; future production DB                     |
-| Secrets / env          | `.env` (gitignored), `VITE_PUBLIC_*` vs server-only web |
-| CI / repository        | GitHub Actions, cache keys, `GITHUB_TOKEN` permissions  |
-| Developer workstations | Node, Docker, editor configs                            |
+| Asset / surface        | Location / notes                                               |
+| ---------------------- | -------------------------------------------------------------- |
+| Public HTTP API        | `apps/api` — auth, RBAC probe CMS, health/metrics              |
+| Public SSR site        | `apps/web` (TanStack Start) — scaffold; product routes planned |
+| Admin / editor UI      | Same `apps/web` app, privileged routes (Track 5)               |
+| PostgreSQL             | Local compose; users, roles, refresh tokens, audit log         |
+| Email (dev)            | MailDev in compose + `EmailService` (step **090**)             |
+| Secrets / env          | `.env` (gitignored), validated Zod schema in API               |
+| CI / repository        | GitHub Actions, Nx affected, tests-first gate                  |
+| Developer workstations | Node, Docker, editor configs                                   |
 
 ## Trust boundaries (initial)
 
@@ -24,34 +25,37 @@ Browser (untrusted)
     --> apps/web (SSR + client)
     --> HTTP --> apps/api
     --> TCP --> PostgreSQL
+    --> SMTP --> MailDev (local) / provider (production, future)
 ```
 
 ## Adversaries (stub list)
 
-- Anonymous Internet client (scraping, injection, abuse of public endpoints).
-- Authenticated user with least privilege (horizontal/vertical privilege escalation — future once auth exists).
+- Anonymous Internet client (scraping, injection, brute-force, comment spam — CMS later).
+- Authenticated user with least privilege (horizontal/vertical privilege escalation).
+- Session thief with stolen refresh token (mitigated by rotation + reuse detection).
 - Insider / compromised developer credential (supply chain, secret leakage).
 - Third-party dependency compromise (npm supply chain).
 
-## STRIDE-oriented prompts (fill in later)
+## STRIDE (auth + platform baseline)
 
-Use these as section headers when the model is expanded; keep one-line notes for now.
-
-| Category               | Question we will answer in Track 7                         | Stub note |
-| ---------------------- | ---------------------------------------------------------- | --------- |
-| Spoofing               | Who can impersonate whom (sessions, API keys, web origin)? | TBD       |
-| Tampering              | What can be altered in transit or at rest?                 | TBD       |
-| Repudiation            | What must be logged for moderation and audits?             | TBD       |
-| Information disclosure | What data leaves each trust zone?                          | TBD       |
-| DoS                    | What endpoints are amplification or expensive-query risks? | TBD       |
-| Elevation              | How are roles enforced across API and web?                 | TBD       |
+| Category               | Risk (blog/CMS)                              | Current / planned controls                                                                                                                                                                                                                                    |
+| ---------------------- | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Spoofing               | Stolen refresh, forged JWT, session fixation | Short-lived access JWT; opaque refresh hashed at rest; rotation + reuse revokes family (**070–072**); `@CurrentUser()` from verified JWT (**067–068**); email verify flow (**075–076**); verify/reset tokens via SMTP/MailDev (**090**); production ESP later |
+| Tampering              | MITM on API, mass assignment on DTOs         | HTTPS assumed in prod; global `ValidationPipe` whitelist (**039**); Problem Details without stack leak (**042**)                                                                                                                                              |
+| Repudiation            | “Who published / logged in?”                 | Structured logs + request/correlation IDs (**043–046**); `security_audit_events` for auth mutations (**088–089**); IP/UA in audit (**095** planned)                                                                                                           |
+| Information disclosure | Account enumeration, JWT PII, error oracle   | Login/reset neutral messages (**065**, **077**); no email in access JWT (**066**, **084**); log redaction (**047**); friendly 409 on duplicate email (**064**)                                                                                                |
+| DoS                    | Login/reset spam, expensive queries          | Per-email login lockout (**074**); global throttler baseline (**092** planned); prod tuning (**292–293**); request timeout (**053**)                                                                                                                          |
+| Elevation              | Viewer → editor, cross-user data             | RBAC schema + seeds (**079–080**); `RolesGuard` / `PermissionsGuard` (**081–082**); CMS route requires `posts:read` (**083**); e2e forbidden cases (**087**)                                                                                                  |
 
 ## Out of scope for this stub
 
 - Numeric risk scores, formal DREAD tables, penetration-test findings.
 - Production network topology and cloud IAM — not selected yet.
+- CMS XSS, SSRF on media URLs, CSP for `web` — Track 3 (**146**, **159**) and Track 7 (**296**, **298**).
 
 ## References
 
-- [`docs/adr/000-nx-and-tanstack-start.md`](../adr/000-nx-and-tanstack-start.md) — baseline stack decision.
-- [`docs/LOCAL_SETUP.md`](../LOCAL_SETUP.md) — local ports and env contracts.
+- [`docs/adr/000-nx-and-tanstack-start.md`](../adr/000-nx-and-tanstack-start.md)
+- [`docs/adr/003-roadmap-renumber-090-plus.md`](../adr/003-roadmap-renumber-090-plus.md)
+- [`docs/development-roadmap.md`](../development-roadmap.md)
+- [`docs/LOCAL_SETUP.md`](../LOCAL_SETUP.md)

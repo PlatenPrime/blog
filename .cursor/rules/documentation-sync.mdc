@@ -13,7 +13,7 @@ Every roadmap step (sprint) **must** update documentation in the **same change s
 
 | Surface | Action |
 | ------- | ------ |
-| `docs/lessons/lesson-NNN-*.md` | Create/update lesson; `Changed Files` lists all doc paths touched |
+| `docs/lessons/lesson-NNN-*.md` | Create/update lesson; include **External operations (outside the repo)**; `Changed Files` lists all doc paths touched |
 | `docs/development-roadmap.md` | **Baseline Status** row at top + Track step row → `done`; lesson index table at bottom |
 | `docs/README.md` | Completed Lessons entry |
 | `docs/learning-path.md` | Step link in phase list |

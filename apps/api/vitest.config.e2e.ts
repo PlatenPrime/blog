@@ -12,6 +12,10 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   resolve: { tsconfigPaths: true },
   test: {
+    env: {
+      SMTP_HOST: '',
+      EMAIL_RETURN_TOKEN_IN_RESPONSE: 'true',
+    },
     globals: true,
     environment: 'node',
     include: ['test/**/*.e2e-spec.ts'],

@@ -39,9 +39,9 @@ Several items were intentionally deferred to avoid requiring a collector in CI a
    - **Do not** add business/CMS counters here; those belong to domain tracks.
 
 6. **Explicitly deferred**
-   - Docker Compose observability stack — roadmap step **312**
-   - Cost/usage dashboards — step **320**
-   - Auth token rotation counters — step **100**
+   - Docker Compose observability stack — roadmap step **327**
+   - Cost/usage dashboards — step **334**
+   - Auth token rotation counters — step **105**
    - Scraper network policy / auth for `/metrics`
    - `@opentelemetry/instrumentation-http` auto-instrumentation (we already use `TraceContextMiddleware`)
 
@@ -57,4 +57,4 @@ Several items were intentionally deferred to avoid requiring a collector in CI a
 - [lesson-049](../lessons/lesson-049-trace-context-propagation.md) — W3C propagation
 - [lesson-050](../lessons/lesson-050-metrics-endpoint-stub.md) — Prometheus stub
 - [lesson-056](../lessons/lesson-056-platform-observability-follow-ups.md) — follow-ups implementation
-- [development-roadmap.md](../development-roadmap.md) — steps 312, 320, 100
+- [development-roadmap.md](../development-roadmap.md) — steps 327, 334, 105 ([ADR-003](./003-roadmap-renumber-090-plus.md))

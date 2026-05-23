@@ -17,7 +17,7 @@
 
 Намеренно **не** делаем:
 
-- IP / User-Agent в audit — [шаг 090](../development-roadmap.md).
+- IP / User-Agent в audit — [шаг 095](../development-roadmap.md).
 - E2E с реальными строками в Postgres после login.
 - Audit на RBAC/CMS (не auth mutations).
 
@@ -101,7 +101,7 @@ await this.recordAuthAudit({
 ## Architecture Notes
 
 - `SecurityAuditModule` импортирует `RequestContextModule` — DI в изолированных module specs (Rbac → Auth).
-- `ip_address` / `user_agent` остаются `null` до 090.
+- `ip_address` / `user_agent` остаются `null` до 095.
 - Неуспешный verify/reset — без audit (как и отсутствие reset audit для unknown email).
 
 ## Changed Files
@@ -148,7 +148,7 @@ await this.recordAuthAudit({
 1. **Audit не блокирует auth** — fail-open + log.
 2. **Нет секретов в metadata** — только ids и reason codes.
 3. **Password reset unknown email** — без audit (anti-enumeration).
-4. IP/UA — [090](../development-roadmap.md).
+4. IP/UA — [095](../development-roadmap.md); email channel — [090](./lesson-090-email-channel.md).
 
 ## Verify
 

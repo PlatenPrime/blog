@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule, type JwtSignOptions } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { EmailModule } from '../email';
 import { SecurityAuditModule } from '../security-audit';
 import { UsersModule } from '../users';
 import { AuthController } from './auth.controller';
@@ -26,6 +27,7 @@ import { RefreshTokenService } from './refresh-token.service';
       PasswordResetToken,
     ]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
+    EmailModule,
     SecurityAuditModule,
     UsersModule,
     JwtModule.registerAsync({

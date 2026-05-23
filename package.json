@@ -29,6 +29,7 @@
     "nx:graph": "nx graph",
     "web:dev": "npm run dev -w web",
     "db:up": "docker compose up -d db",
+    "compose:up": "docker compose up -d",
     "db:down": "docker compose down",
     "db:reset": "docker compose down -v",
     "db:logs": "docker compose logs -f db",

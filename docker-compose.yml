@@ -10,7 +10,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-blog}
       POSTGRES_DB: ${POSTGRES_DB:-blog_dev}
     ports:
-      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+      - '127.0.0.1:${POSTGRES_PORT:-5432}:5432'
     volumes:
       - blog_pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -21,6 +21,14 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
+
+  maildev:
+    image: maildev/maildev:2.1.0
+    container_name: blog-maildev
+    restart: unless-stopped
+    ports:
+      - '127.0.0.1:1025:1025'
+      - '127.0.0.1:1080:1080'
 
 volumes:
   blog_pgdata:

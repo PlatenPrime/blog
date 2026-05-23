@@ -7,7 +7,8 @@ This repository is a fullstack practice track: NestJS API + TanStack Start + Nx.
 - [storytelling.md](./storytelling.md) — история проекта по главам: зачем, затем что сделано (для новичков)
 - [development-roadmap.md](./development-roadmap.md)
 - [adr/README.md](./adr/README.md) — Architecture Decision Records (ADR)
-- [security/threat-model-stub.md](./security/threat-model-stub.md) — threat model stub (Track 7 precursor)
+- [security/threat-model-stub.md](./security/threat-model-stub.md) — threat model stub (auth controls mapped; expanded in Track 7)
+- [adr/003-roadmap-renumber-090-plus.md](./adr/003-roadmap-renumber-090-plus.md) — step renumber after 089 (090+ → 334)
 - [track-0-acceptance-checklist.md](./track-0-acceptance-checklist.md) — Track 0 acceptance checklist
 - [track-1-acceptance-checklist.md](./track-1-acceptance-checklist.md) — Track 1 acceptance checklist
 - [LOCAL_SETUP.md](./LOCAL_SETUP.md)
@@ -117,6 +118,7 @@ npm run test:e2e
 - Step 087: [lesson-087-auth-rbac-forbidden-e2e-flow.md](./lessons/lesson-087-auth-rbac-forbidden-e2e-flow.md)
 - Step 088: [lesson-088-security-audit-log-table.md](./lessons/lesson-088-security-audit-log-table.md)
 - Step 089: [lesson-089-audit-events-auth-mutations.md](./lessons/lesson-089-audit-events-auth-mutations.md)
+- Step 090: [lesson-090-email-channel.md](./lessons/lesson-090-email-channel.md)
 
 Quality scripts from repo root (`build`, `test`, `lint`, `test:e2e`) run through Nx on the `api` app. The `web` app (TanStack Start) builds with `npx nx run web:build` or `npm run web:dev` for local dev. Full CI parity from root: `npm run ci` (see [lesson-019](./lessons/lesson-019-ci-pipeline-baseline.md)); GitHub Actions restores `.nx/cache` for repeated CI runs (see [lesson-020](./lessons/lesson-020-nx-cache-in-ci.md)); CI targets now run through `nx affected` range detection (see [lesson-021](./lessons/lesson-021-nx-affected-flow-in-ci.md)). Utility scripts:
 

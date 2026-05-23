@@ -20,7 +20,7 @@
 
 Намеренно **не** делаем:
 
-- Lockout по IP, `@nestjs/throttler`, Redis/DB — [шаги 279–280](../development-roadmap.md).
+- Lockout по IP, `@nestjs/throttler`, Redis/DB — baseline [092](../development-roadmap.md), prod tuning [292–293](../development-roadmap.md).
 - `Retry-After` header — note в Architecture Notes.
 - Register / refresh / logout — без изменений.
 
@@ -42,7 +42,7 @@
 
 ## Context
 
-После 073 login принимает неограниченное число неверных паролей. 074 добавляет **базовую** защиту аккаунта до RBAC (081+) и глобального rate limit (279+).
+После 073 login принимает неограниченное число неверных паролей. 074 добавляет **базовую** защиту аккаунта до RBAC (081+) и глобального rate limit (092+, см. [ADR-003](../adr/003-roadmap-renumber-090-plus.md)).
 
 ## Concept
 
@@ -65,7 +65,7 @@
 
 ## Architecture Notes
 
-- **In-memory** `Map`: один процесс API; multi-instance → шаги 279+ / Redis позже.
+- **In-memory** `Map`: один процесс API; multi-instance → **292+** / Redis позже.
 - **Неудача до `findByEmail`:** `recordFailure` на любом `401` login — иначе lockout выдаёт существующие emails.
 - **429 vs 401:** отдельный platform code `TOO_MANY_REQUESTS`; mapper по HTTP status 429.
 - **E2E:** `overrideProvider(LoginLockoutService).useValue(instance)` — не `.useFactory(() => new ...)`, иначе Nest может не подменить singleton.

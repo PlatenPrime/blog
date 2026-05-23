@@ -17,7 +17,7 @@
 Намеренно **не** делаем:
 
 - OpenAPI/Swagger для ошибок.
-- Production-роуты для auth-кодов (Track 2, шаг 091).
+- Production-роуты для auth-кодов (Track 2, шаг 096).
 - Ужесточение Zod `code` до enum (domain-коды позже).
 
 ## Dependencies

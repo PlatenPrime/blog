@@ -36,6 +36,7 @@ import { JwtAccessTokenService } from './jwt-access-token.service';
 import { LOGIN_LOCKOUT_MESSAGE } from './login-lockout.constants';
 import { LoginLockoutService } from './login-lockout.service';
 import { RefreshTokenService } from './refresh-token.service';
+import { EmailService } from '../email/email.service';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -72,6 +73,11 @@ describe('AuthService', () => {
   let securityAudit: SecurityAuditService;
   let emailVerificationTokens: EmailVerificationTokenService;
   let passwordResetTokens: PasswordResetTokenService;
+  let isEmailEnabled: ReturnType<typeof vi.fn>;
+  let sendVerificationEmail: ReturnType<typeof vi.fn>;
+  let sendPasswordResetEmail: ReturnType<typeof vi.fn>;
+  let shouldReturnTokenInResponse: boolean;
+  let email: EmailService;
   const refreshTtlMs = 60_000;
 
   const savedUser: User = {
@@ -132,7 +138,14 @@ describe('AuthService', () => {
       invalidateActiveForUser: prInvalidateActiveForUser,
       persistForUser: prPersistForUser,
     } as unknown as PasswordResetTokenService;
+    shouldReturnTokenInResponse = false;
     config = {
+      get: vi.fn((key: string) => {
+        if (key === 'EMAIL_RETURN_TOKEN_IN_RESPONSE') {
+          return shouldReturnTokenInResponse;
+        }
+        return undefined;
+      }),
       getOrThrow: vi.fn((key: string) => {
         if (key === 'JWT_REFRESH_EXPIRES_MS') {
           return refreshTtlMs;
@@ -150,6 +163,15 @@ describe('AuthService', () => {
     } as unknown as LoginLockoutService;
     recordAudit = vi.fn().mockResolvedValue(undefined);
     securityAudit = { record: recordAudit } as unknown as SecurityAuditService;
+    isEmailEnabled = vi.fn().mockReturnValue(false);
+    sendVerificationEmail = vi.fn().mockResolvedValue(undefined);
+    sendPasswordResetEmail = vi.fn().mockResolvedValue(undefined);
+    email = {
+      isEnabled: isEmailEnabled,
+      sendVerificationEmail,
+      sendPasswordResetEmail,
+      logSendFailure: vi.fn(),
+    } as unknown as EmailService;
     service = new AuthService(
       users,
       passwordHasher,
@@ -160,6 +182,7 @@ describe('AuthService', () => {
       config,
       loginLockout,
       securityAudit,
+      email,
     );
   });
 
@@ -178,6 +201,36 @@ describe('AuthService', () => {
     expect(prInvalidateActiveForUser).not.toHaveBeenCalled();
     expect(prPersistForUser).not.toHaveBeenCalled();
     expect(recordAudit).not.toHaveBeenCalled();
+  });
+
+  it('requestPasswordReset omits passwordResetToken when SMTP sends successfully', async () => {
+    isEmailEnabled.mockReturnValue(true);
+    findByEmail.mockResolvedValue(savedUser);
+    prPersistForUser.mockResolvedValue({ id: 'prt-1' });
+
+    const result = await service.requestPasswordReset({
+      email: 'user@example.com',
+    });
+
+    expect(sendPasswordResetEmail).toHaveBeenCalledOnce();
+    expect(result).toEqual({
+      message: PASSWORD_RESET_REQUEST_ACCEPTED_MESSAGE,
+    });
+    expect(result).not.toHaveProperty('passwordResetToken');
+  });
+
+  it('requestPasswordReset returns passwordResetToken when EMAIL_RETURN_TOKEN_IN_RESPONSE is true', async () => {
+    isEmailEnabled.mockReturnValue(true);
+    shouldReturnTokenInResponse = true;
+    findByEmail.mockResolvedValue(savedUser);
+    prPersistForUser.mockResolvedValue({ id: 'prt-1' });
+
+    const result = await service.requestPasswordReset({
+      email: 'user@example.com',
+    });
+
+    expect(typeof result.passwordResetToken).toBe('string');
+    expect(result.passwordResetToken!.length).toBeGreaterThan(0);
   });
 
   it('requestPasswordReset invalidates prior tokens, persists new token, and returns passwordResetToken', async () => {
@@ -229,6 +282,27 @@ describe('AuthService', () => {
       actorUserId: savedUser.id,
       subjectUserId: savedUser.id,
     });
+  });
+
+  it('register omits emailVerificationToken when SMTP sends successfully', async () => {
+    isEmailEnabled.mockReturnValue(true);
+    create.mockResolvedValue(savedUser);
+    evPersistForUser.mockResolvedValue({ id: 'evt-1' });
+
+    const result = await service.register({
+      email: 'user@example.com',
+      password: 'secret123',
+    });
+
+    expect(sendVerificationEmail).toHaveBeenCalledOnce();
+    const sendArgs = sendVerificationEmail.mock.calls[0]?.[0] as {
+      to: string;
+      token: string;
+    };
+    expect(sendArgs.to).toBe(savedUser.email);
+    expect(typeof sendArgs.token).toBe('string');
+    expect(sendArgs.token.length).toBeGreaterThan(0);
+    expect(result).not.toHaveProperty('emailVerificationToken');
   });
 
   it('register persists email verification token and returns RegisterUserResponse', async () => {

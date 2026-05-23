@@ -46,6 +46,7 @@ import { isRotatedReuse } from './refresh-token-reuse';
 import { normalizeLockoutKey } from './login-lockout-state';
 import { LoginLockoutService } from './login-lockout.service';
 import { RefreshTokenService } from './refresh-token.service';
+import { EmailService } from '../email/email.service';
 
 @Injectable()
 export class AuthService {
@@ -59,6 +60,7 @@ export class AuthService {
     private readonly config: ConfigService,
     private readonly loginLockout: LoginLockoutService,
     private readonly securityAudit: SecurityAuditService,
+    private readonly email: EmailService,
   ) {}
 
   async register(dto: CreateRegisterBodyDto): Promise<RegisterUserResponse> {
@@ -74,7 +76,11 @@ export class AuthService {
     const emailVerificationToken = await this.issueEmailVerificationForUser(
       user.id,
     );
-    return this.toRegisterUserResponse(user, emailVerificationToken);
+    const tokenInResponse = await this.deliverEmailVerification(
+      user.email,
+      emailVerificationToken,
+    );
+    return this.toRegisterUserResponse(user, tokenInResponse);
   }
 
   async requestPasswordReset(
@@ -92,10 +98,16 @@ export class AuthService {
       actorUserId: user.id,
       subjectUserId: user.id,
     });
+    const tokenInResponse = await this.deliverPasswordReset(
+      user.email,
+      passwordResetToken,
+    );
 
     return {
       message: PASSWORD_RESET_REQUEST_ACCEPTED_MESSAGE,
-      passwordResetToken,
+      ...(tokenInResponse !== undefined
+        ? { passwordResetToken: tokenInResponse }
+        : {}),
     };
   }
 
@@ -317,14 +329,54 @@ export class AuthService {
     return refreshExpiresAt(Date.now(), ttlMs);
   }
 
+  private async deliverEmailVerification(
+    email: string,
+    token: string,
+  ): Promise<string | undefined> {
+    if (!this.email.isEnabled()) {
+      return token;
+    }
+
+    try {
+      await this.email.sendVerificationEmail({ to: email, token });
+      return this.shouldReturnTokenInResponse() ? token : undefined;
+    } catch (error) {
+      this.email.logSendFailure('verification', error);
+      return this.shouldReturnTokenInResponse() ? token : undefined;
+    }
+  }
+
+  private async deliverPasswordReset(
+    email: string,
+    token: string,
+  ): Promise<string | undefined> {
+    if (!this.email.isEnabled()) {
+      return token;
+    }
+
+    try {
+      await this.email.sendPasswordResetEmail({ to: email, token });
+      return this.shouldReturnTokenInResponse() ? token : undefined;
+    } catch (error) {
+      this.email.logSendFailure('password reset', error);
+      return undefined;
+    }
+  }
+
+  private shouldReturnTokenInResponse(): boolean {
+    return this.config.get<boolean>('EMAIL_RETURN_TOKEN_IN_RESPONSE') === true;
+  }
+
   private toRegisterUserResponse(
     user: User,
-    emailVerificationToken: string,
+    emailVerificationToken: string | undefined,
   ): RegisterUserResponse {
     return {
       id: user.id,
       email: user.email,
-      emailVerificationToken,
+      ...(emailVerificationToken !== undefined
+        ? { emailVerificationToken }
+        : {}),
       emailVerifiedAt: user.emailVerifiedAt?.toISOString() ?? null,
       createdAt: user.createdAt.toISOString(),
       updatedAt: user.updatedAt.toISOString(),

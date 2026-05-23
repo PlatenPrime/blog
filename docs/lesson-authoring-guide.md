@@ -20,8 +20,57 @@
 6. **Changed Files** — таблица или список путей.
 7. **Architecture Notes** — решения и trade-offs.
 8. **Definition of Done** — чеклист приёмки шага.
+9. **External operations (outside the repo)** — что делать **вне** редактора кода (см. ниже); обязательно даже если ответ «ничего не нужно».
 
 Секции **Context**, **Concept**, **Code Changes**, **Why This Matters**, **What To Remember**, **Verify**, **Homework** из шаблона **не удалять**; дублирование с _Verification_ допустимо, если _Verify_ даёт краткую выжимку для быстрого прогона.
+
+## External operations (вне репозитория)
+
+Курс рассчитан на разработчика, который **осваивает архитектуру**: не только TypeScript в monorepo, но и Docker, облачные панели, DNS, managed-сервисы. Если шаг требует действия снаружи репозитория — урок **обязан** это проговорить явно, с подсказками «где нажать» и «зачем в системе».
+
+### Обязательная секция в каждом уроке
+
+Заголовок: **`## External operations (outside the repo)`** (можно по-русски: «Вне репозитория» — но единообразно в новых уроках предпочтителен английский заголовок из шаблона).
+
+**Состав секции:**
+
+1. **Таблица «что / где / зачем»** (минимум 1 строка или явная фраза «внешних действий нет»).
+
+   | Действие                 | Где (инструмент)                             | Нужно на этом шаге? | Зачем в архитектуре (1 фраза)                  |
+   | ------------------------ | -------------------------------------------- | ------------------- | ---------------------------------------------- |
+   | Поднять Postgres         | `docker compose up` в корне, см. LOCAL_SETUP | Да                  | API и миграции живут в контейнере, не на хосте |
+   | Создать проект на Vercel | vercel.com dashboard                         | Нет (шаг 3xx)       | SSR `apps/web` задеплоим позже                 |
+
+2. **Architecture sketch** — короткий абзац (3–6 предложений): что выполняется на ноутбуке, что в Docker, что останется для production (Railway / Vercel / Supabase и т.д., если релевантно). Без маркетинга — как для напарника: «браузер → web → api → postgres».
+
+3. **Отложено** — если в шаге только задел (stub, env без реального провайдера), написать **номер будущего шага** из roadmap и что студенту **не нужно** регистрироваться прямо сейчас.
+
+### Категории, которые нельзя «промолчать»
+
+- **Docker / Compose** — какой сервис, порт, URL UI (MailDev, Adminer, Jaeger).
+- **Локальные бинарники** — Node версия, `npm ci`, если неочевидно из Track 0.
+- **Облако приложений** — Railway, Render, Fly.io: сервис, переменные, связь с `apps/api` / `apps/web`.
+- **Хостинг фронта** — Vercel, Netlify: root directory, build command, env `VITE_*` vs server secrets.
+- **Managed БД / BaaS** — Supabase, Neon: connection string, отличие от `docker compose` Postgres в dev.
+- **Почта / OAuth SaaS** — Resend, SendGrid, Clerk: ключи, redirect URLs (когда появятся в roadmap).
+- **CI / секреты** — GitHub Actions: какие secrets добавить вручную в Settings.
+- **DNS / TLS / CDN** — домен, CNAME, сертификаты (Track 7–8).
+
+### Если внешних действий нет
+
+Явная формулировка, например:
+
+> **Вне репозитория на этом шаге ничего не требуется:** достаточно monorepo и уже описанного local compose (Postgres). Аккаунты Railway, Vercel, Supabase не создаём.
+
+Не оставлять секцию пустой без такой фразы.
+
+### Связь с другими документами
+
+- Повторяющиеся команды и порты — в [`LOCAL_SETUP.md`](./LOCAL_SETUP.md); в уроке — **ссылка** + только то, что новое для шага.
+- **Storytelling** — метафора и «зачем», без кликов по dashboard (см. [storytelling.mdc](../.cursor/rules/storytelling.mdc)).
+- **Architecture Notes** — trade-offs кода; **External operations** — где физически крутится система.
+
+Правило для агентов: [`.cursor/rules/external-operations-lessons.mdc`](../.cursor/rules/external-operations-lessons.mdc).
 
 ## Core Principles
 
@@ -58,7 +107,7 @@
 - Перед введением новой техники проверять, что базовый сценарий работает.
 - При необходимости использовать TDD/test-first ритм: сначала добавляем/обновляем тест (ожидаемо падающий/красный), затем минимальный код чтобы тест стал зелёным, и только после этого рефакторинг без изменения поведения.
 - Каждый урок должен содержать команды проверки (`npm run start:dev`, `npm run test`, HTTP checks).
-- Если добавляется инфраструктура (DB, cache, queue), в уроке указывать локальный запуск.
+- Если добавляется инфраструктура (DB, cache, queue), в уроке указывать локальный запуск **и** секцию **External operations** (Docker UI, порты, что не нужно в облаке на этом шаге).
 
 ## Lesson Quality Checklist
 
@@ -73,6 +122,7 @@
 - В блоках `Verification` и/или `Step-by-Step Changes` явно описан тест-first (TDD) порядок: сначала тест, затем минимальный код, затем рефакторинг (если применяется).
 - Для шагов с кодом в `apps/api/src`: есть `*.spec.ts` в том же change set (иначе pre-commit упадёт).
 - Есть **Definition of Done** и воспроизводимые команды проверки?
+- Есть секция **External operations** (таблица + architecture sketch или явное «внешних действий нет»)?
 - Обновлён блок шага в [`storytelling.md`](./storytelling.md)?
 
 ## Folder and Naming Convention
@@ -103,6 +153,7 @@
 - [`.cursor/rules/documentation-sync.mdc`](../.cursor/rules/documentation-sync.mdc)
 - [`.cursor/rules/storytelling.mdc`](../.cursor/rules/storytelling.mdc) — как писать `docs/storytelling.md` (история, не changelog)
 - [`.cursor/rules/tests-first-api.mdc`](../.cursor/rules/tests-first-api.mdc) — pre-commit/CI gate; e2e **не** заменяет unit-тесты
+- [`.cursor/rules/external-operations-lessons.mdc`](../.cursor/rules/external-operations-lessons.mdc) — Docker, облако, dashboard: явно в уроке
 
 ## Tests-first gate (API)
 

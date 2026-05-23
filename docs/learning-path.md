@@ -104,27 +104,31 @@ Steps 033-056.
 - Step 088: [lesson-088-security-audit-log-table.md](./lessons/lesson-088-security-audit-log-table.md)
 - Step 089: [lesson-089-audit-events-auth-mutations.md](./lessons/lesson-089-audit-events-auth-mutations.md)
 
-Steps 090-104.
+- Step 090: [lesson-090-email-channel.md](./lessons/lesson-090-email-channel.md) — MailDev + `EmailService`
+
+- Step 091 (next): rate limits on sensitive auth routes — [development-roadmap.md](./development-roadmap.md)
+
+Steps 092-109 (see [development-roadmap.md](./development-roadmap.md)).
 
 ## Phase 4: CMS Backend (Track 3)
 
-Steps 105-164.
+Steps 110-174.
 
 ## Phase 5: Public Web (Track 4)
 
-Steps 165-200.
+Steps 175-212.
 
 ## Phase 6: Admin Studio (Track 5)
 
-Steps 201-252.
+Steps 213-264.
 
 ## Phase 7: Data and Performance (Track 6)
 
-Steps 253-278.
+Steps 265-291.
 
 ## Phase 8: Reliability and Delivery (Tracks 7-8)
 
-Steps 279-320.
+Steps 292-334.
 
 ## Authoring references
 

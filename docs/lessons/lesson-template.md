@@ -14,6 +14,19 @@
 
 Пакеты, версии Node, внешние сервисы (Docker, БД), переменные окружения.
 
+## External operations (outside the repo)
+
+Что нужно сделать **вне** IDE: Docker, dashboard облака, DNS, аккаунты. Если ничего — напишите явно.
+
+| Action                     | Where (tool / URL)                                        | Required this step?       | Why in the architecture                   |
+| -------------------------- | --------------------------------------------------------- | ------------------------- | ----------------------------------------- |
+| _(example)_ Start Postgres | `docker compose up -d` — [LOCAL_SETUP](../LOCAL_SETUP.md) | Yes                       | API talks to DB in container, not on host |
+| _(example)_ Vercel project | vercel.com                                                | No — deferred to step NNN | SSR deploy comes later                    |
+
+**Architecture sketch:** 3–6 sentences — laptop vs Docker vs future cloud (Railway / Vercel / Supabase only if relevant). What trust boundary we cross (browser → web → api → db).
+
+**Deferred:** list cloud/SaaS work with future roadmap step numbers so the reader does not sign up prematurely.
+
 ## Step-by-Step Changes
 
 1. Шаг с ожидаемым результатом.
@@ -69,6 +82,7 @@
 - [ ] Критерий 1 (измеримый).
 - [ ] Критерий 2.
 - [ ] Критерий 3.
+- [ ] **External operations** заполнены; LOCAL_SETUP обновлён, если новые порты/сервисы.
 
 ## What To Remember
 

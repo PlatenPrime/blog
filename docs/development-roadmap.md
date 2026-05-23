@@ -12,99 +12,99 @@ Every step is a sprint and must produce code changes + a lesson file in `docs/le
 
 ## Baseline Status
 
-| Area                                                    | Status                                     |
-| ------------------------------------------------------- | ------------------------------------------ |
-| Track 2 (Auth and identity)                             | Steps 057–089 completed; next: 090         |
-| NestJS app                                              | Exists in `apps/api/` (package name `api`) |
-| Root workspace                                          | Step 001 completed                         |
-| Node/npm policy                                         | Step 002 completed                         |
-| Nx init                                                 | Step 003 completed                         |
-| Nx target defaults                                      | Step 004 completed                         |
-| Nest in apps/api                                        | Step 005 completed                         |
-| Root tsconfig base + paths                              | Step 006 completed                         |
-| Root ESLint flat config                                 | Step 007 completed                         |
-| Root Prettier + EditorConfig                            | Step 008 completed                         |
-| Root scripts via Nx (build/test/lint)                   | Step 009 completed                         |
-| TanStack Start app in `apps/web`                        | Step 010 completed                         |
-| `web:typecheck` Nx target                               | Step 011 completed                         |
-| `libs/shared-contracts`                                 | Step 012 completed                         |
-| Wire shared-contracts into API                          | Step 013 completed                         |
-| Wire shared-contracts into web                          | Step 014 completed                         |
-| CORS + dev origins                                      | Step 015 completed                         |
-| Local infra: Postgres compose                           | Step 016 completed                         |
-| `.env.example` files                                    | Step 017 completed                         |
-| Root README + API/web runbook                           | Step 018 completed                         |
-| CI pipeline baseline (GitHub Actions)                   | Step 019 completed                         |
-| Nx cache in CI                                          | Step 020 completed                         |
-| Nx affected flow in CI                                  | Step 021 completed                         |
-| Optional husky/lint-staged policy                       | Step 022 completed                         |
-| Lessons folder structure conventions                    | Step 023 completed                         |
-| Release stub and changelog policy                       | Step 024 completed                         |
-| Normalize `.gitignore`                                  | Step 025 completed                         |
-| Optional VS Code recommendations                        | Step 026 completed                         |
-| ADR-000 (Nx + TanStack Start)                           | Step 027 completed                         |
-| Threat model stub                                       | Step 028 completed                         |
-| Health smoke script                                     | Step 029 completed                         |
-| Track 0 acceptance checklist                            | Step 030 completed                         |
-| CI matrix improvements (reserve)                        | Step 031 completed                         |
-| ADR process for deviations (reserve)                    | Step 032 completed                         |
-| Config module + env validation (Zod)                    | Step 033 completed                         |
-| Terminus `/health` liveness                             | Step 034 completed                         |
-| Readiness probe `/health/ready`                         | Step 035 completed                         |
-| Health response DTOs (shared-contracts)                 | Step 036 completed                         |
-| API error envelope types (shared-contracts)             | Step 037 completed                         |
-| Global exception filter + HTTP error mapping            | Step 038 completed                         |
-| Global ValidationPipe (whitelist, transform)            | Step 039 completed                         |
-| DTO validation conventions + sample resource            | Step 040 completed                         |
-| Problem Details (`problem+json`) alignment              | Step 041 completed                         |
-| Safe unknown errors (no stack leak)                     | Step 042 completed                         |
-| Request ID middleware + ALS context                     | Step 043 completed                         |
-| Structured logging (nestjs-pino)                        | Step 044 completed                         |
-| Request logging interceptor                             | Step 045 completed                         |
-| Correlation ID in response headers                      | Step 046 completed                         |
-| Redact sensitive fields in logs                         | Step 047 completed                         |
-| OpenTelemetry noop tracer provider                      | Step 048 completed                         |
-| Trace context propagation (W3C)                         | Step 049 completed                         |
-| Prometheus `/metrics` stub                              | Step 050 completed                         |
-| Global API prefix + URI versioning (`/api/v1`)          | Step 051 completed                         |
-| Graceful shutdown hooks (SIGTERM)                       | Step 052 completed                         |
-| Request timeout / abort + shutdown grace                | Step 053 completed                         |
-| Contract tests for error JSON shape                     | Step 054 completed                         |
-| Track 1 acceptance checklist                            | Step 055 completed                         |
-| Platform observability follow-ups (OTLP, logs, metrics) | Step 056 completed                         |
-| Database module (Postgres + TypeORM bootstrap)          | Step 057 completed                         |
-| Datasource config from validated env (`DATABASE_URL`)   | Step 058 completed                         |
-| Migration workflow + baseline schema                    | Step 059 completed                         |
-| `User` entity + indexes (`users` table)                 | Step 060 completed                         |
-| Password hasher service (Argon2id)                      | Step 061 completed                         |
-| `UserService` create/find by email                      | Step 062 completed                         |
-| `POST /auth/register` + DTO                             | Step 063 completed                         |
-| Unique email + friendly CONFLICT on register            | Step 064 completed                         |
-| `POST /auth/login` with credential verification         | Step 065 completed                         |
-| JWT access token issuance + verify service              | Step 066 completed                         |
-| `JwtStrategy` + `AuthGuard`                             | Step 067 completed                         |
-| `@CurrentUser()` decorator                              | Step 068 completed                         |
-| Refresh token entity + persistence                      | Step 069 completed                         |
-| `POST /auth/refresh` + rotation semantics               | Step 070 completed                         |
-| `POST /auth/logout` + revoke refresh                    | Step 071 completed                         |
-| Refresh token reuse detection policy                    | Step 072 completed                         |
-| Token TTL configuration + documentation                 | Step 073 completed                         |
-| Login brute-force throttle / basic lockout              | Step 074 completed                         |
-| Email verification token model                          | Step 075 completed                         |
-| `POST /auth/verify-email`                               | Step 076 completed                         |
-| Password reset request flow                             | Step 077 completed                         |
-| Password reset completion                               | Step 078 completed                         |
-| Roles + permissions schema (tables/enums)               | Step 079 completed                         |
-| Seed default roles (admin, editor, viewer)              | Step 080 completed                         |
-| `RolesGuard` + `@Roles()`                               | Step 081 completed                         |
-| Fine-grained `PermissionsGuard` + constants             | Step 082 completed                         |
-| Sample CMS route protected by RBAC                      | Step 083 completed                         |
-| JWT payload shape in `shared-contracts`                 | Step 084 completed                         |
-| Auth e2e: register → login happy path                   | Step 085 completed                         |
-| Auth e2e: refresh rotation                              | Step 086 completed                         |
-| Auth e2e: RBAC forbidden cases                          | Step 087 completed                         |
-| Security audit log table                                | Step 088 completed                         |
-| Audit events for auth mutations                         | Step 089 completed                         |
+| Area                                                    | Status                                                    |
+| ------------------------------------------------------- | --------------------------------------------------------- |
+| Track 2 (Auth and identity)                             | Steps 057–090 completed; next: **091** (auth rate limits) |
+| NestJS app                                              | Exists in `apps/api/` (package name `api`)                |
+| Root workspace                                          | Step 001 completed                                        |
+| Node/npm policy                                         | Step 002 completed                                        |
+| Nx init                                                 | Step 003 completed                                        |
+| Nx target defaults                                      | Step 004 completed                                        |
+| Nest in apps/api                                        | Step 005 completed                                        |
+| Root tsconfig base + paths                              | Step 006 completed                                        |
+| Root ESLint flat config                                 | Step 007 completed                                        |
+| Root Prettier + EditorConfig                            | Step 008 completed                                        |
+| Root scripts via Nx (build/test/lint)                   | Step 009 completed                                        |
+| TanStack Start app in `apps/web`                        | Step 010 completed                                        |
+| `web:typecheck` Nx target                               | Step 011 completed                                        |
+| `libs/shared-contracts`                                 | Step 012 completed                                        |
+| Wire shared-contracts into API                          | Step 013 completed                                        |
+| Wire shared-contracts into web                          | Step 014 completed                                        |
+| CORS + dev origins                                      | Step 015 completed                                        |
+| Local infra: Postgres compose                           | Step 016 completed                                        |
+| `.env.example` files                                    | Step 017 completed                                        |
+| Root README + API/web runbook                           | Step 018 completed                                        |
+| CI pipeline baseline (GitHub Actions)                   | Step 019 completed                                        |
+| Nx cache in CI                                          | Step 020 completed                                        |
+| Nx affected flow in CI                                  | Step 021 completed                                        |
+| Optional husky/lint-staged policy                       | Step 022 completed                                        |
+| Lessons folder structure conventions                    | Step 023 completed                                        |
+| Release stub and changelog policy                       | Step 024 completed                                        |
+| Normalize `.gitignore`                                  | Step 025 completed                                        |
+| Optional VS Code recommendations                        | Step 026 completed                                        |
+| ADR-000 (Nx + TanStack Start)                           | Step 027 completed                                        |
+| Threat model stub                                       | Step 028 completed                                        |
+| Health smoke script                                     | Step 029 completed                                        |
+| Track 0 acceptance checklist                            | Step 030 completed                                        |
+| CI matrix improvements (reserve)                        | Step 031 completed                                        |
+| ADR process for deviations (reserve)                    | Step 032 completed                                        |
+| Config module + env validation (Zod)                    | Step 033 completed                                        |
+| Terminus `/health` liveness                             | Step 034 completed                                        |
+| Readiness probe `/health/ready`                         | Step 035 completed                                        |
+| Health response DTOs (shared-contracts)                 | Step 036 completed                                        |
+| API error envelope types (shared-contracts)             | Step 037 completed                                        |
+| Global exception filter + HTTP error mapping            | Step 038 completed                                        |
+| Global ValidationPipe (whitelist, transform)            | Step 039 completed                                        |
+| DTO validation conventions + sample resource            | Step 040 completed                                        |
+| Problem Details (`problem+json`) alignment              | Step 041 completed                                        |
+| Safe unknown errors (no stack leak)                     | Step 042 completed                                        |
+| Request ID middleware + ALS context                     | Step 043 completed                                        |
+| Structured logging (nestjs-pino)                        | Step 044 completed                                        |
+| Request logging interceptor                             | Step 045 completed                                        |
+| Correlation ID in response headers                      | Step 046 completed                                        |
+| Redact sensitive fields in logs                         | Step 047 completed                                        |
+| OpenTelemetry noop tracer provider                      | Step 048 completed                                        |
+| Trace context propagation (W3C)                         | Step 049 completed                                        |
+| Prometheus `/metrics` stub                              | Step 050 completed                                        |
+| Global API prefix + URI versioning (`/api/v1`)          | Step 051 completed                                        |
+| Graceful shutdown hooks (SIGTERM)                       | Step 052 completed                                        |
+| Request timeout / abort + shutdown grace                | Step 053 completed                                        |
+| Contract tests for error JSON shape                     | Step 054 completed                                        |
+| Track 1 acceptance checklist                            | Step 055 completed                                        |
+| Platform observability follow-ups (OTLP, logs, metrics) | Step 056 completed                                        |
+| Database module (Postgres + TypeORM bootstrap)          | Step 057 completed                                        |
+| Datasource config from validated env (`DATABASE_URL`)   | Step 058 completed                                        |
+| Migration workflow + baseline schema                    | Step 059 completed                                        |
+| `User` entity + indexes (`users` table)                 | Step 060 completed                                        |
+| Password hasher service (Argon2id)                      | Step 061 completed                                        |
+| `UserService` create/find by email                      | Step 062 completed                                        |
+| `POST /auth/register` + DTO                             | Step 063 completed                                        |
+| Unique email + friendly CONFLICT on register            | Step 064 completed                                        |
+| `POST /auth/login` with credential verification         | Step 065 completed                                        |
+| JWT access token issuance + verify service              | Step 066 completed                                        |
+| `JwtStrategy` + `AuthGuard`                             | Step 067 completed                                        |
+| `@CurrentUser()` decorator                              | Step 068 completed                                        |
+| Refresh token entity + persistence                      | Step 069 completed                                        |
+| `POST /auth/refresh` + rotation semantics               | Step 070 completed                                        |
+| `POST /auth/logout` + revoke refresh                    | Step 071 completed                                        |
+| Refresh token reuse detection policy                    | Step 072 completed                                        |
+| Token TTL configuration + documentation                 | Step 073 completed                                        |
+| Login brute-force throttle / basic lockout              | Step 074 completed                                        |
+| Email verification token model                          | Step 075 completed                                        |
+| `POST /auth/verify-email`                               | Step 076 completed                                        |
+| Password reset request flow                             | Step 077 completed                                        |
+| Password reset completion                               | Step 078 completed                                        |
+| Roles + permissions schema (tables/enums)               | Step 079 completed                                        |
+| Seed default roles (admin, editor, viewer)              | Step 080 completed                                        |
+| `RolesGuard` + `@Roles()`                               | Step 081 completed                                        |
+| Fine-grained `PermissionsGuard` + constants             | Step 082 completed                                        |
+| Sample CMS route protected by RBAC                      | Step 083 completed                                        |
+| JWT payload shape in `shared-contracts`                 | Step 084 completed                                        |
+| Auth e2e: register → login happy path                   | Step 085 completed                                        |
+| Auth e2e: refresh rotation                              | Step 086 completed                                        |
+| Auth e2e: RBAC forbidden cases                          | Step 087 completed                                        |
+| Security audit log table                                | Step 088 completed                                        |
+| Audit events for auth mutations                         | Step 089 completed                                        |
 
 ## Step Contract (mandatory for every lesson)
 
@@ -121,6 +121,7 @@ Each `lesson-NNN-*.md` must include:
 7. Architecture Notes
 8. Definition of Done
 9. **Storytelling sync** — по [`.cursor/rules/storytelling.mdc`](../.cursor/rules/storytelling.mdc): строка в «Уроки этой главы» (I–XIII или новая глава) + 2–4 предложения к **арке** (не changelog `NNN — …`); «Где мы сейчас» / «Что дальше» кратко. Без `### Шаг NNN`, без списков из урока.
+10. **External operations (outside the repo)** — по [lesson-authoring-guide § External operations](./lesson-authoring-guide.md#external-operations-вне-репозитория) и [`.cursor/rules/external-operations-lessons.mdc`](../.cursor/rules/external-operations-lessons.mdc): таблица действий вне IDE (Docker, Railway, Vercel, Supabase, DNS, dashboards) + короткий architecture sketch; если внешних шагов нет — явная фраза об этом. Облачный deploy не смешивать с локальным compose без пояснения.
 
 ## Track Index
 
@@ -128,13 +129,13 @@ Each `lesson-NNN-*.md` must include:
 | ----- | ----------------------------- | ---------- |
 | 0     | Workspace Foundation          | 001-032    |
 | 1     | Platform Core                 | 033-056    |
-| 2     | Auth and Identity             | 057-104    |
-| 3     | CMS Domain and Editor Backend | 105-164    |
-| 4     | Public Site (TanStack Start)  | 165-200    |
-| 5     | Admin Studio and Editor UX    | 201-252    |
-| 6     | Data and Performance          | 253-278    |
-| 7     | Reliability and Security      | 279-302    |
-| 8     | Delivery and Productization   | 303-320    |
+| 2     | Auth and Identity             | 057-109    |
+| 3     | CMS Domain and Editor Backend | 110-174    |
+| 4     | Public Site (TanStack Start)  | 175-212    |
+| 5     | Admin Studio and Editor UX    | 213-264    |
+| 6     | Data and Performance          | 265-291    |
+| 7     | Reliability and Security      | 292-315    |
+| 8     | Delivery and Productization   | 316-334    |
 
 ## Track 0 Detailed Steps
 
@@ -204,304 +205,558 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 055  | Track 1 acceptance checklist                            | all DoD items — done              |
 | 056  | Reserve: platform observability follow-ups              | ADR or docs check — done          |
 
-## Track 2 Detailed Steps (057-104)
+## Track 2 Detailed Steps (057-109)
 
-| Step | Title                                                 | Verify                                 |
-| ---- | ----------------------------------------------------- | -------------------------------------- |
-| 057  | Database module: Postgres + ORM bootstrap             | `nx run api:build` — done              |
-| 058  | Datasource config from validated env (`DATABASE_URL`) | `nx run api:test` — done               |
-| 059  | Migration workflow + baseline schema                  | migrate up/down smoke — done           |
-| 060  | `User` entity + indexes                               | `nx run api:test` — done               |
-| 061  | Password hasher service (argon2 or bcrypt)            | unit test — done                       |
-| 062  | `UserService` create/find by email                    | unit test — done                       |
-| 063  | `POST /auth/register` + DTO                           | e2e — done                             |
-| 064  | Unique email constraint + friendly error mapping      | e2e — done                             |
-| 065  | `POST /auth/login`                                    | e2e — done                             |
-| 066  | JWT access token issuance + verify service            | unit test — done                       |
-| 067  | `JwtStrategy` + `AuthGuard`                           | e2e — done                             |
-| 068  | `@CurrentUser()` decorator                            | unit test — done                       |
-| 069  | Refresh token entity + persistence                    | migration — done                       |
-| 070  | `POST /auth/refresh` + rotation semantics             | e2e — done                             |
-| 071  | `POST /auth/logout` + revoke refresh                  | e2e — done                             |
-| 072  | Refresh token reuse detection policy                  | unit/e2e — done                        |
-| 073  | Token TTL configuration + documentation               | docs check — done                      |
-| 074  | Login brute-force throttle / basic lockout            | e2e — done                             |
-| 075  | Email verification token model (optional minimal)     | unit test — done                       |
-| 076  | `POST /auth/verify-email`                             | e2e — done                             |
-| 077  | Password reset request flow                           | e2e — done                             |
-| 078  | Password reset completion                             | e2e — done                             |
-| 079  | Roles + permissions schema (tables/enums)             | migration — done                       |
-| 080  | Seed default roles (admin, editor, viewer)            | seed script — done                     |
-| 081  | `RolesGuard` + `@Roles()`                             | e2e — done                             |
-| 082  | Fine-grained `PermissionsGuard` + constants           | e2e — done                             |
-| 083  | Sample CMS route protected by RBAC                    | e2e forbidden case — done              |
-| 084  | JWT payload shape documented in `shared-contracts`    | `nx run shared-contracts:build` — done |
-| 085  | Auth e2e: register → login happy path                 | e2e — done                             |
-| 086  | Auth e2e: refresh rotation                            | e2e — done                             |
-| 087  | Auth e2e: RBAC forbidden cases                        | e2e — done                             |
-| 088  | Security audit log table                              | migration — done                       |
-| 089  | Audit events for auth mutations                       | unit test — done                       |
-| 090  | Session/device metadata (optional minimal)            | docs + unit                            |
-| 091  | Map auth failures to API error envelope               | contract test                          |
-| 092  | Service/API key auth stub (optional)                  | unit test                              |
-| 093  | OAuth/social login deferred ADR                       | ADR file                               |
-| 094  | MFA roadmap note + threat model touch-up              | markdown review                        |
-| 095  | Account recovery edge-case tests                      | `nx run api:test`                      |
-| 096  | Password rotation policy (optional)                   | policy doc                             |
-| 097  | User soft-delete / anonymization stub                 | migration + unit                       |
-| 098  | Auth integration test matrix doc                      | docs check                             |
-| 099  | Cross-service auth header conventions                 | ADR snippet                            |
-| 100  | Token rotation observability hook (counter/log)       | manual verify                          |
-| 101  | Auth module README + operator runbook                 | review                                 |
-| 102  | Track 2 acceptance checklist                          | all DoD items                          |
-| 103  | Reserve: OIDC / SSO integration spike                 | spike doc                              |
-| 104  | Reserve: WebAuthn / passkeys spike                    | spike doc                              |
+| Step | Title                                                                       | Verify                                 |
+| ---- | --------------------------------------------------------------------------- | -------------------------------------- |
+| 057  | Database module: Postgres + ORM bootstrap                                   | `nx run api:build` — done              |
+| 058  | Datasource config from validated env (`DATABASE_URL`)                       | `nx run api:test` — done               |
+| 059  | Migration workflow + baseline schema                                        | migrate up/down smoke — done           |
+| 060  | `User` entity + indexes                                                     | `nx run api:test` — done               |
+| 061  | Password hasher service (argon2 or bcrypt)                                  | unit test — done                       |
+| 062  | `UserService` create/find by email                                          | unit test — done                       |
+| 063  | `POST /auth/register` + DTO                                                 | e2e — done                             |
+| 064  | Unique email constraint + friendly error mapping                            | e2e — done                             |
+| 065  | `POST /auth/login`                                                          | e2e — done                             |
+| 066  | JWT access token issuance + verify service                                  | unit test — done                       |
+| 067  | `JwtStrategy` + `AuthGuard`                                                 | e2e — done                             |
+| 068  | `@CurrentUser()` decorator                                                  | unit test — done                       |
+| 069  | Refresh token entity + persistence                                          | migration — done                       |
+| 070  | `POST /auth/refresh` + rotation semantics                                   | e2e — done                             |
+| 071  | `POST /auth/logout` + revoke refresh                                        | e2e — done                             |
+| 072  | Refresh token reuse detection policy                                        | unit/e2e — done                        |
+| 073  | Token TTL configuration + documentation                                     | docs check — done                      |
+| 074  | Login brute-force throttle / basic lockout                                  | e2e — done                             |
+| 075  | Email verification token model (optional minimal)                           | unit test — done                       |
+| 076  | `POST /auth/verify-email`                                                   | e2e — done                             |
+| 077  | Password reset request flow                                                 | e2e — done                             |
+| 078  | Password reset completion                                                   | e2e — done                             |
+| 079  | Roles + permissions schema (tables/enums)                                   | migration — done                       |
+| 080  | Seed default roles (admin, editor, viewer)                                  | seed script — done                     |
+| 081  | `RolesGuard` + `@Roles()`                                                   | e2e — done                             |
+| 082  | Fine-grained `PermissionsGuard` + constants                                 | e2e — done                             |
+| 083  | Sample CMS route protected by RBAC                                          | e2e forbidden case — done              |
+| 084  | JWT payload shape documented in `shared-contracts`                          | `nx run shared-contracts:build` — done |
+| 085  | Auth e2e: register → login happy path                                       | e2e — done                             |
+| 086  | Auth e2e: refresh rotation                                                  | e2e — done                             |
+| 087  | Auth e2e: RBAC forbidden cases                                              | e2e — done                             |
+| 088  | Security audit log table                                                    | migration — done                       |
+| 089  | Audit events for auth mutations                                             | unit test — done                       |
+| 090  | Email channel: MailDev in compose + `EmailService` + verify/reset templates | compose + unit — done                  |
+| 091  | Rate limits on `request-password-reset` and resend verify (email + IP)      | e2e                                    |
+| 092  | API security baseline: Helmet + global `@nestjs/throttler`                  | e2e / header scan                      |
+| 093  | `REQUIRE_EMAIL_VERIFIED` policy (env) for login and sensitive routes        | unit + e2e                             |
+| 094  | OpenAPI/Swagger (`/api/docs`) + schema export for review                    | `nx run api:build`                     |
+| 095  | Session/device metadata (optional minimal)                                  | docs + unit                            |
+| 096  | Map auth failures to API error envelope                                     | contract test                          |
+| 097  | Service/API key auth stub (optional)                                        | unit test                              |
+| 098  | OAuth/social login deferred ADR                                             | ADR file                               |
+| 099  | MFA roadmap note + threat model touch-up                                    | markdown review                        |
+| 100  | Account recovery edge-case tests                                            | `nx run api:test`                      |
+| 101  | Password rotation policy (optional)                                         | policy doc                             |
+| 102  | User soft-delete / anonymization stub                                       | migration + unit                       |
+| 103  | Auth integration test matrix doc                                            | docs check                             |
+| 104  | Cross-service auth header conventions                                       | ADR snippet                            |
+| 105  | Token rotation observability hook (counter/log)                             | manual verify                          |
+| 106  | Auth module README + operator runbook                                       | review                                 |
+| 107  | Track 2 acceptance checklist                                                | all DoD items                          |
+| 108  | Reserve: OIDC / SSO integration spike                                       | spike doc                              |
+| 109  | Reserve: WebAuthn / passkeys spike                                          | spike doc                              |
 
-## Track 3 Detailed Steps (105-164)
+## Track 3 Detailed Steps (110-174)
 
-| Step | Title                                        | Verify             |
-| ---- | -------------------------------------------- | ------------------ |
-| 105  | `Post` entity + lifecycle enum + migration   | migrate smoke      |
-| 106  | Slug field + unique index strategy           | DB constraint test |
-| 107  | `PostService`: create draft                  | unit test          |
-| 108  | Author ownership rules (`authorId`)          | unit/e2e           |
-| 109  | `PATCH` draft fields validation              | e2e                |
-| 110  | Publish rules: required fields checklist     | unit test          |
-| 111  | Publish transition + `publishedAt`           | e2e                |
-| 112  | Unpublish + state machine tests              | e2e                |
-| 113  | SEO title/description columns                | migration          |
-| 114  | Open Graph / Twitter card fields             | migration          |
-| 115  | Canonical URL + redirect policy              | unit test          |
-| 116  | `shared-contracts`: `PublicPostSummary`      | build              |
-| 117  | `shared-contracts`: `PublicPostDetail`       | build              |
-| 118  | `shared-contracts`: admin post write payload | build              |
-| 119  | List published posts query (pagination)      | e2e                |
-| 120  | Get public post by slug                      | e2e                |
-| 121  | `Tag` entity + migration                     | migrate smoke      |
-| 122  | Post–tag many-to-many                        | unit test          |
-| 123  | `Category` entity (+ optional hierarchy)     | migrate smoke      |
-| 124  | Post–category relation                       | unit test          |
-| 125  | Admin list posts with tag/category filters   | e2e                |
-| 126  | Public posts-by-tag contract                 | e2e                |
-| 127  | Tag slug uniqueness                          | DB test            |
-| 128  | Bulk add/remove tags endpoints               | e2e                |
-| 129  | `Comment` entity + migration                 | migrate smoke      |
-| 130  | Comment threading (`parentId`)               | unit test          |
-| 131  | `POST` public comment (pending moderation)   | e2e                |
-| 132  | Admin moderation queue list                  | e2e                |
-| 133  | Approve comment action                       | e2e                |
-| 134  | Reject/delete comment action                 | e2e                |
-| 135  | Moderation audit log entries                 | unit test          |
-| 136  | Comment anti-spam: throttle + honeypot field | e2e                |
-| 137  | Featured media fields on post                | migration          |
-| 138  | Attachment metadata table stub               | migration          |
-| 139  | HTML/Markdown sanitization pipeline          | XSS unit tests     |
-| 140  | XSS regression tests for user content        | `nx run api:test`  |
-| 141  | Reading time / word-count utility            | unit test          |
-| 142  | RSS/Atom XML public endpoint                 | curl               |
-| 143  | Related posts by shared tags                 | unit test          |
-| 144  | Internal sitemap data provider service       | unit test          |
-| 145  | Revision snapshots on publish                | e2e                |
-| 146  | Admin diff between two revisions             | e2e                |
-| 147  | Preview token model + TTL                    | unit test          |
-| 148  | Preview token middleware (scope-limited)     | e2e                |
-| 149  | Scheduled publish fields + worker stub       | docs + unit        |
-| 150  | Soft-delete posts + trash list (admin)       | e2e                |
-| 151  | Restore post from trash                      | e2e                |
-| 152  | Hard delete (admin-only) + cascade rules     | e2e                |
-| 153  | Search phase 1 (ILIKE / simple query)        | e2e                |
-| 154  | Search-supporting index migration            | explain smoke      |
-| 155  | Import post JSON validation stub             | unit test          |
-| 156  | Export post JSON stub endpoint               | curl               |
-| 157  | Co-authors relation (optional)               | migration          |
-| 158  | Report comment endpoint                      | e2e                |
-| 159  | Block user moderation endpoint               | e2e                |
-| 160  | Newsletter subscribe API stub                | e2e                |
-| 161  | CMS contract tests ↔ `shared-contracts`      | `nx run api:test`  |
-| 162  | List/detail query performance guidelines     | docs review        |
-| 163  | Track 3 acceptance checklist                 | all DoD items      |
-| 164  | Reserve: CMS extensions ADR                  | ADR file           |
+| Step | Title                                                                    | Verify             |
+| ---- | ------------------------------------------------------------------------ | ------------------ |
+| 110  | Dev seed: admin/editor users, sample draft post, tags                    | seed script        |
+| 111  | `Post` entity + lifecycle enum + migration                               | migrate smoke      |
+| 112  | Slug field + unique index strategy                                       | DB constraint test |
+| 113  | `PostService`: create draft                                              | unit test          |
+| 114  | Author ownership rules (`authorId`)                                      | unit/e2e           |
+| 115  | `PATCH` draft fields validation                                          | e2e                |
+| 116  | Post `version` + `If-Match` on `PATCH` (412 on conflict)                 | e2e                |
+| 117  | Publish rules: required fields checklist                                 | unit test          |
+| 118  | Publish transition + `publishedAt`                                       | e2e                |
+| 119  | Atomic publish: transaction for `status` + `publishedAt` + revision hook | e2e                |
+| 120  | Unpublish + state machine tests                                          | e2e                |
+| 121  | SEO title/description columns                                            | migration          |
+| 122  | Open Graph / Twitter card fields                                         | migration          |
+| 123  | Canonical URL + redirect policy                                          | unit test          |
+| 124  | `shared-contracts`: `PublicPostSummary`                                  | build              |
+| 125  | `shared-contracts`: `PublicPostDetail`                                   | build              |
+| 126  | `shared-contracts`: admin post write payload                             | build              |
+| 127  | Pagination and list contracts ADR (offset vs keyset)                     | ADR                |
+| 128  | List published posts query (pagination)                                  | e2e                |
+| 129  | Get public post by slug                                                  | e2e                |
+| 130  | `Tag` entity + migration                                                 | migrate smoke      |
+| 131  | Post–tag many-to-many                                                    | unit test          |
+| 132  | `Category` entity (+ optional hierarchy)                                 | migrate smoke      |
+| 133  | Post–category relation                                                   | unit test          |
+| 134  | Admin list posts with tag/category filters                               | e2e                |
+| 135  | Public posts-by-tag contract                                             | e2e                |
+| 136  | Tag slug uniqueness                                                      | DB test            |
+| 137  | Bulk add/remove tags endpoints                                           | e2e                |
+| 138  | `Comment` entity + migration                                             | migrate smoke      |
+| 139  | Comment threading (`parentId`)                                           | unit test          |
+| 140  | `POST` public comment (pending moderation)                               | e2e                |
+| 141  | Admin moderation queue list                                              | e2e                |
+| 142  | Approve comment action                                                   | e2e                |
+| 143  | Reject/delete comment action                                             | e2e                |
+| 144  | Moderation audit log entries                                             | unit test          |
+| 145  | Comment anti-spam: throttle + honeypot (depends on step 092)             | e2e                |
+| 146  | Safe URL validation for media/canonical/OG fields (SSRF prep)            | unit test          |
+| 147  | Featured media metadata fields on post (upload in step 265)              | migration          |
+| 148  | Attachment metadata table stub (no binary upload)                        | migration          |
+| 149  | HTML/Markdown sanitization pipeline                                      | XSS unit tests     |
+| 150  | XSS regression tests for user content                                    | `nx run api:test`  |
+| 151  | Reading time / word-count utility                                        | unit test          |
+| 152  | RSS/Atom XML public endpoint                                             | curl               |
+| 153  | Related posts by shared tags                                             | unit test          |
+| 154  | Internal sitemap data provider service                                   | unit test          |
+| 155  | Revision snapshots on publish                                            | e2e                |
+| 156  | Admin diff between two revisions                                         | e2e                |
+| 157  | Preview token model + TTL                                                | unit test          |
+| 158  | Preview token middleware (scope-limited)                                 | e2e                |
+| 159  | Scheduled publish fields + worker stub (depends on step 281 queue)       | docs + unit        |
+| 160  | Soft-delete posts + trash list (admin)                                   | e2e                |
+| 161  | Restore post from trash                                                  | e2e                |
+| 162  | Hard delete (admin-only) + cascade rules                                 | e2e                |
+| 163  | Search phase 1 (ILIKE / simple query)                                    | e2e                |
+| 164  | Search-supporting index migration                                        | explain smoke      |
+| 165  | Import post JSON validation stub                                         | unit test          |
+| 166  | Export post JSON stub endpoint                                           | curl               |
+| 167  | Co-authors relation (optional)                                           | migration          |
+| 168  | Report comment endpoint                                                  | e2e                |
+| 169  | Block user moderation endpoint                                           | e2e                |
+| 170  | Newsletter subscribe API stub                                            | e2e                |
+| 171  | CMS contract tests ↔ `shared-contracts`                                  | `nx run api:test`  |
+| 172  | List/detail query performance guidelines                                 | docs review        |
+| 173  | Track 3 acceptance checklist                                             | all DoD items      |
+| 174  | Reserve: CMS extensions ADR                                              | ADR file           |
 
-## Track 4 Detailed Steps (165-200)
+## Track 4 Detailed Steps (175-212)
 
-| Step | Title                                                      | Verify                        |
-| ---- | ---------------------------------------------------------- | ----------------------------- |
-| 165  | Public route tree scaffold (`/`, `/posts`)                 | `nx run web:build`            |
-| 166  | Post list route + layout                                   | `nx run web:typecheck`        |
-| 167  | Server loader: fetch published posts page                  | manual SSR check              |
-| 168  | Post card component + accessibility pass                   | RTL smoke optional            |
-| 169  | Post detail route `/posts/$slug`                           | `nx run web:build`            |
-| 170  | Loader: fetch post by slug + 404 mapping                   | manual                        |
-| 171  | Shared typography / prose styles for content               | visual review                 |
-| 172  | `<title>` + description meta from loader                   | view-source check             |
-| 173  | Open Graph meta component                                  | social debugger               |
-| 174  | Twitter card meta helper                                   | view-source check             |
-| 175  | Canonical `<link rel="canonical">` strategy                | view-source check             |
-| 176  | `robots.txt` route                                         | curl                          |
-| 177  | `sitemap.xml` generation route                             | curl                          |
-| 178  | Pagination UI + URL state                                  | manual                        |
-| 179  | Tag filter page `/tags/$slug`                              | manual                        |
-| 180  | Category archive route (optional)                          | manual                        |
-| 181  | Search page `/search?q=`                                   | manual                        |
-| 182  | Empty-state UX for list/search                             | visual review                 |
-| 183  | Error boundary mapped to API error envelope                | manual                        |
-| 184  | JSON-LD `<script type="application/ld+json">` for articles | validator                     |
-| 185  | RSS `<link rel="alternate">` in layout                     | view-source check             |
-| 186  | Image `width`/`height` + lazy loading                      | Lighthouse note               |
-| 187  | Loading skeletons for list/detail                          | visual review                 |
-| 188  | Consume cache headers from API where applicable            | docs + manual                 |
-| 189  | Data caching policy doc (TanStack Query / loaders)         | docs check                    |
-| 190  | Playwright e2e: list + detail smoke                        | `nx run web:e2e` (if present) |
-| 191  | Lighthouse performance budget doc                          | markdown                      |
-| 192  | Optional: Lighthouse CI hook                               | green CI                      |
-| 193  | Track 4 acceptance checklist                               | all DoD items                 |
-| 194  | Reserve: i18n routing                                      | ADR/spike                     |
-| 195  | Reserve: AMP or alternate representation                   | ADR                           |
-| 196  | Reserve: CDN / edge caching notes                          | ADR                           |
-| 197  | Reserve: read-only comments embed                          | spike doc                     |
-| 198  | Reserve: public analytics hook                             | ADR                           |
-| 199  | Reserve: theme + a11y polish                               | checklist                     |
-| 200  | Reserve: CSP for third-party embeds                        | ADR                           |
+| Step | Title                                                        | Verify                        |
+| ---- | ------------------------------------------------------------ | ----------------------------- |
+| 175  | `libs/web-api`: fetch + Problem Details + auth header policy | `nx run web:build`            |
+| 176  | Web Vitest + RTL harness + MSW/fixtures                      | `nx run web:test`             |
+| 177  | Public route tree scaffold (`/`, `/posts`)                   | `nx run web:build`            |
+| 178  | Post list route + layout                                     | `nx run web:typecheck`        |
+| 179  | Server loader: fetch published posts page                    | manual SSR check              |
+| 180  | Post card component + accessibility pass                     | RTL smoke optional            |
+| 181  | Post detail route `/posts/$slug`                             | `nx run web:build`            |
+| 182  | Loader: fetch post by slug + 404 mapping                     | manual                        |
+| 183  | Shared typography / prose styles for content                 | visual review                 |
+| 184  | `<title>` + description meta from loader                     | view-source check             |
+| 185  | Open Graph meta component                                    | social debugger               |
+| 186  | Twitter card meta helper                                     | view-source check             |
+| 187  | Canonical `<link rel="canonical">` strategy                  | view-source check             |
+| 188  | `robots.txt` route                                           | curl                          |
+| 189  | `sitemap.xml` generation route                               | curl                          |
+| 190  | Pagination UI + URL state                                    | manual                        |
+| 191  | Tag filter page `/tags/$slug`                                | manual                        |
+| 192  | Category archive route (optional)                            | manual                        |
+| 193  | Search page `/search?q=`                                     | manual                        |
+| 194  | Empty-state UX for list/search                               | visual review                 |
+| 195  | Error boundary mapped to API error envelope                  | manual                        |
+| 196  | JSON-LD `<script type="application/ld+json">` for articles   | validator                     |
+| 197  | RSS `<link rel="alternate">` in layout                       | view-source check             |
+| 198  | Image `width`/`height` + lazy loading                        | Lighthouse note               |
+| 199  | Loading skeletons for list/detail                            | visual review                 |
+| 200  | Consume cache headers from API where applicable              | docs + manual                 |
+| 201  | Data caching policy doc (TanStack Query / loaders)           | docs check                    |
+| 202  | Playwright e2e: list + detail smoke                          | `nx run web:e2e` (if present) |
+| 203  | Lighthouse performance budget doc                            | markdown                      |
+| 204  | Optional: Lighthouse CI hook                                 | green CI                      |
+| 205  | Track 4 acceptance checklist                                 | all DoD items                 |
+| 206  | Reserve: i18n routing                                        | ADR/spike                     |
+| 207  | Reserve: AMP or alternate representation                     | ADR                           |
+| 208  | Reserve: CDN / edge caching notes                            | ADR                           |
+| 209  | Reserve: read-only comments embed                            | spike doc                     |
+| 210  | Reserve: public analytics hook                               | ADR                           |
+| 211  | Reserve: theme + a11y polish                                 | checklist                     |
+| 212  | Reserve: CSP for third-party embeds                          | ADR                           |
 
-## Track 5 Detailed Steps (201-252)
+## Track 5 Detailed Steps (213-264)
 
-| Step | Title                                          | Verify             |
-| ---- | ---------------------------------------------- | ------------------ |
-| 201  | Admin shell layout + navigation                | `nx run web:build` |
-| 202  | Auth gate for `/admin/*` routes                | e2e                |
-| 203  | Admin login page + token storage policy        | e2e                |
-| 204  | Silent refresh on navigation                   | manual             |
-| 205  | Dashboard home (metrics stubs)                 | visual             |
-| 206  | Admin posts table + server loader              | manual             |
-| 207  | “New post” flow entry                          | e2e                |
-| 208  | Draft editor layout (two-column)               | visual             |
-| 209  | Editor stack ADR (MDX vs rich text)            | ADR file           |
-| 210  | Autosave debounce → `PATCH` draft              | e2e                |
-| 211  | Autosave status indicator                      | visual             |
-| 212  | Optimistic concurrency / conflict UI           | e2e                |
-| 213  | Preview panel (iframe or embedded)             | manual             |
-| 214  | Preview route `/admin/posts/:id/preview`       | e2e                |
-| 215  | Publish dialog + confirmation                  | e2e                |
-| 216  | Inline validation for publish requirements     | e2e                |
-| 217  | Unpublish action                               | e2e                |
-| 218  | Tags editor (multi-select)                     | manual             |
-| 219  | Categories editor (tree optional)              | manual             |
-| 220  | Featured image picker UI stub                  | manual             |
-| 221  | Media library modal stub                       | manual             |
-| 222  | SEO fields form section                        | manual             |
-| 223  | Slug field + availability check API            | e2e                |
-| 224  | Comments moderation queue page                 | e2e                |
-| 225  | Bulk moderation actions                        | e2e                |
-| 226  | Role-based navigation visibility               | e2e                |
-| 227  | Admin-specific 403/404 pages                   | manual             |
-| 228  | Toast mapping from API errors                  | manual             |
-| 229  | Editor keyboard shortcuts (optional)           | docs               |
-| 230  | Draft list filters + pagination                | e2e                |
-| 231  | Trash management UI                            | e2e                |
-| 232  | Revision timeline UI                           | manual             |
-| 233  | Revision diff view                             | manual             |
-| 234  | Restore revision action                        | e2e                |
-| 235  | Scheduled publish datetime control             | e2e                |
-| 236  | Co-authors selector (optional)                 | manual             |
-| 237  | Audit log viewer stub                          | manual             |
-| 238  | Admin site settings stub page                  | manual             |
-| 239  | Admin e2e: login → create draft                | e2e                |
-| 240  | Admin e2e: publish happy path                  | e2e                |
-| 241  | Admin accessibility checklist                  | manual audit       |
-| 242  | Track 5 acceptance checklist                   | all DoD items      |
-| 243  | Reserve: collaborative editing research        | doc                |
-| 244  | Reserve: plugins/extensions architecture       | ADR                |
-| 245  | Reserve: admin dark mode tokens                | design doc         |
-| 246  | Reserve: admin i18n                            | ADR                |
-| 247  | Reserve: MDX vs WYSIWYG toggle                 | spike              |
-| 248  | Reserve: image CDN integration                 | ADR                |
-| 249  | Reserve: editor performance profiling          | notes              |
-| 250  | Reserve: mobile read-only admin                | spike              |
-| 251  | Reserve: staging/preview environments workflow | runbook            |
-| 252  | Reserve: SaaS billing gate variant             | ADR                |
+| Step | Title                                                      | Verify             |
+| ---- | ---------------------------------------------------------- | ------------------ |
+| 213  | Admin shell layout + navigation                            | `nx run web:build` |
+| 214  | Auth gate for `/admin/*` routes                            | e2e                |
+| 215  | Admin login page + token storage policy                    | e2e                |
+| 216  | Silent refresh on navigation                               | manual             |
+| 217  | Dashboard home (metrics stubs)                             | visual             |
+| 218  | Admin posts table + server loader                          | manual             |
+| 219  | “New post” flow entry                                      | e2e                |
+| 220  | Draft editor layout (two-column)                           | visual             |
+| 221  | Editor stack ADR (MDX vs rich text)                        | ADR file           |
+| 222  | Autosave debounce → `PATCH` draft                          | e2e                |
+| 223  | Autosave status indicator                                  | visual             |
+| 224  | Optimistic concurrency / conflict UI (depends on step 126) | e2e                |
+| 225  | Preview panel (iframe or embedded)                         | manual             |
+| 226  | Preview route `/admin/posts/:id/preview`                   | e2e                |
+| 227  | Publish dialog + confirmation                              | e2e                |
+| 228  | Inline validation for publish requirements                 | e2e                |
+| 229  | Unpublish action                                           | e2e                |
+| 230  | Tags editor (multi-select)                                 | manual             |
+| 231  | Categories editor (tree optional)                          | manual             |
+| 232  | Featured image picker UI stub                              | manual             |
+| 233  | Media library modal stub                                   | manual             |
+| 234  | SEO fields form section                                    | manual             |
+| 235  | Slug field + availability check API                        | e2e                |
+| 236  | Comments moderation queue page                             | e2e                |
+| 237  | Bulk moderation actions                                    | e2e                |
+| 238  | Role-based navigation visibility                           | e2e                |
+| 239  | Admin-specific 403/404 pages                               | manual             |
+| 240  | Toast mapping from API errors                              | manual             |
+| 241  | Editor keyboard shortcuts (optional)                       | docs               |
+| 242  | Draft list filters + pagination                            | e2e                |
+| 243  | Trash management UI                                        | e2e                |
+| 244  | Revision timeline UI                                       | manual             |
+| 245  | Revision diff view                                         | manual             |
+| 246  | Restore revision action                                    | e2e                |
+| 247  | Scheduled publish datetime control                         | e2e                |
+| 248  | Co-authors selector (optional)                             | manual             |
+| 249  | Audit log viewer stub                                      | manual             |
+| 250  | Admin site settings stub page                              | manual             |
+| 251  | Admin e2e: login → create draft                            | e2e                |
+| 252  | Admin e2e: publish happy path                              | e2e                |
+| 253  | Admin accessibility checklist                              | manual audit       |
+| 254  | Track 5 acceptance checklist                               | all DoD items      |
+| 255  | Reserve: collaborative editing research                    | doc                |
+| 256  | Reserve: plugins/extensions architecture                   | ADR                |
+| 257  | Reserve: admin dark mode tokens                            | design doc         |
+| 258  | Reserve: admin i18n                                        | ADR                |
+| 259  | Reserve: MDX vs WYSIWYG toggle                             | spike              |
+| 260  | Reserve: image CDN integration                             | ADR                |
+| 261  | Reserve: editor performance profiling                      | notes              |
+| 262  | Reserve: mobile read-only admin                            | spike              |
+| 263  | Reserve: staging/preview environments workflow             | runbook            |
+| 264  | Reserve: SaaS billing gate variant                         | ADR                |
 
-## Track 6 Detailed Steps (253-278)
+## Track 6 Detailed Steps (265-291)
 
-| Step | Title                                         | Verify              |
-| ---- | --------------------------------------------- | ------------------- |
-| 253  | DB index review for posts/slugs/tags/comments | migration review    |
-| 254  | Capture `EXPLAIN (ANALYZE)` baselines doc     | SQL artifact        |
-| 255  | Remove N+1 on post list queries               | `nx run api:test`   |
-| 256  | Optimize comment thread reads                 | explain smoke       |
-| 257  | Connection pool tuning notes                  | docs                |
-| 258  | Read replica ADR (optional stub)              | ADR                 |
-| 259  | Add Redis service to local compose            | `docker compose up` |
-| 260  | Redis cache module in API                     | unit test           |
-| 261  | Cache-aside: public post by slug              | e2e                 |
-| 262  | Invalidate cache on publish/unpublish/delete  | e2e                 |
-| 263  | Align HTTP cache headers API → web consumers  | manual              |
-| 264  | Surrogate key / tag invalidation design note  | ADR                 |
-| 265  | Query timeouts + circuit breaker stub         | unit test           |
-| 266  | Keyset vs offset pagination ADR               | ADR                 |
-| 267  | Materialized view for tag counts (optional)   | migration           |
-| 268  | Background job queue stub (optional BullMQ)   | smoke               |
-| 269  | Warm-cache hook on deploy (optional)          | script              |
-| 270  | Measure Web Vitals on public home             | RUM note            |
-| 271  | Performance budget thresholds (doc)           | markdown            |
-| 272  | Optional k6 load smoke script                 | local run           |
-| 273  | Track 6 acceptance checklist                  | all DoD items       |
-| 274  | Reserve: sharding notes                       | ADR                 |
-| 275  | Reserve: cold storage / archives              | ADR                 |
-| 276  | Reserve: image processing pipeline            | ADR                 |
-| 277  | Reserve: query fan-out guardrails             | doc                 |
-| 278  | Reserve: autoscaling signals                  | doc                 |
+| Step | Title                                                                 | Verify              |
+| ---- | --------------------------------------------------------------------- | ------------------- |
+| 265  | Media object storage (local disk or S3-compatible) + MIME/size limits | e2e                 |
+| 266  | DB index review for posts/slugs/tags/comments                         | migration review    |
+| 267  | Capture `EXPLAIN (ANALYZE)` baselines doc                             | SQL artifact        |
+| 268  | Remove N+1 on post list queries                                       | `nx run api:test`   |
+| 269  | Optimize comment thread reads                                         | explain smoke       |
+| 270  | Connection pool tuning notes                                          | docs                |
+| 271  | Read replica ADR (optional stub)                                      | ADR                 |
+| 272  | Add Redis service to local compose                                    | `docker compose up` |
+| 273  | Redis cache module in API                                             | unit test           |
+| 274  | Cache-aside: public post by slug                                      | e2e                 |
+| 275  | Invalidate cache on publish/unpublish/delete                          | e2e                 |
+| 276  | Align HTTP cache headers API → web consumers                          | manual              |
+| 277  | Surrogate key / tag invalidation design note                          | ADR                 |
+| 278  | Query timeouts + circuit breaker stub                                 | unit test           |
+| 279  | Keyset vs offset pagination ADR (supersedes step 127 if adopted)      | ADR                 |
+| 280  | Materialized view for tag counts (optional)                           | migration           |
+| 281  | Background job queue stub (optional BullMQ)                           | smoke               |
+| 282  | Warm-cache hook on deploy (optional)                                  | script              |
+| 283  | Measure Web Vitals on public home                                     | RUM note            |
+| 284  | Performance budget thresholds (doc)                                   | markdown            |
+| 285  | Optional k6 load smoke script                                         | local run           |
+| 286  | Track 6 acceptance checklist                                          | all DoD items       |
+| 287  | Reserve: sharding notes                                               | ADR                 |
+| 288  | Reserve: cold storage / archives                                      | ADR                 |
+| 289  | Reserve: image processing pipeline                                    | ADR                 |
+| 290  | Reserve: query fan-out guardrails                                     | doc                 |
+| 291  | Reserve: autoscaling signals                                          | doc                 |
 
-## Track 7 Detailed Steps (279-302)
+## Track 7 Detailed Steps (292-315)
 
-| Step | Title                                            | Verify          |
-| ---- | ------------------------------------------------ | --------------- |
-| 279  | Global HTTP rate limiting (by IP)                | e2e             |
-| 280  | Stricter throttles on `/auth/*`                  | e2e             |
-| 281  | Security headers baseline (Helmet or equivalent) | header scan     |
-| 282  | Production CORS tightening review                | checklist       |
-| 283  | Content-Security-Policy baseline for `web`       | browser console |
-| 284  | HSTS + secure cookie policy doc                  | docs            |
-| 285  | SSRF protections for outbound hooks              | unit test       |
-| 286  | CSRF strategy for cookie-based sessions          | ADR             |
-| 287  | Secrets scanning in CI (optional gitleaks)       | green CI        |
-| 288  | Dependency update policy + `npm audit` gate      | policy doc      |
-| 289  | Optional SAST / CodeQL workflow                  | green CI        |
-| 290  | Penetration test checklist → threat model        | markdown        |
-| 291  | Kubernetes-style liveness/readiness finalization | curl probes     |
-| 292  | Degraded mode when Redis unavailable             | e2e/manual      |
-| 293  | Security-denied structured logs                  | log review      |
-| 294  | Alerting skeleton (e.g. Slack webhook stub)      | manual          |
-| 295  | API latency SLO definitions                      | doc             |
-| 296  | Synthetic uptime check script                    | cron-ready      |
-| 297  | Track 7 acceptance checklist                     | all DoD items   |
-| 298  | Reserve: WAF integration notes                   | ADR             |
-| 299  | Reserve: mTLS for internal services              | ADR             |
-| 300  | Reserve: KMS / envelope encryption               | ADR             |
-| 301  | Reserve: SOC2 control mapping stub               | doc             |
-| 302  | Reserve: incident response drill runbook         | doc             |
+| Step | Title                                                                       | Verify          |
+| ---- | --------------------------------------------------------------------------- | --------------- |
+| 292  | Production HTTP rate limit tuning (Redis/per-route; baseline in step 092)   | e2e             |
+| 293  | Stricter production throttles on `/auth/*`                                  | e2e             |
+| 294  | Production security headers review (Helmet hardening; baseline in step 092) | header scan     |
+| 295  | Production CORS tightening review                                           | checklist       |
+| 296  | Content-Security-Policy baseline for `web`                                  | browser console |
+| 297  | HSTS + secure cookie policy doc                                             | docs            |
+| 298  | SSRF protections for outbound hooks (extends step 156)                      | unit test       |
+| 299  | CSRF strategy for cookie-based sessions                                     | ADR             |
+| 300  | Secrets scanning in CI (optional gitleaks)                                  | green CI        |
+| 301  | Dependency update policy + `npm audit` gate                                 | policy doc      |
+| 302  | Optional SAST / CodeQL workflow                                             | green CI        |
+| 303  | Penetration test checklist → threat model                                   | markdown        |
+| 304  | Kubernetes-style liveness/readiness finalization                            | curl probes     |
+| 305  | Degraded mode when Redis unavailable                                        | e2e/manual      |
+| 306  | Security-denied structured logs                                             | log review      |
+| 307  | Alerting skeleton (e.g. Slack webhook stub)                                 | manual          |
+| 308  | API latency SLO definitions                                                 | doc             |
+| 309  | Synthetic uptime check script                                               | cron-ready      |
+| 310  | Track 7 acceptance checklist                                                | all DoD items   |
+| 311  | Reserve: WAF integration notes                                              | ADR             |
+| 312  | Reserve: mTLS for internal services                                         | ADR             |
+| 313  | Reserve: KMS / envelope encryption                                          | ADR             |
+| 314  | Reserve: SOC2 control mapping stub                                          | doc             |
+| 315  | Reserve: incident response drill runbook                                    | doc             |
 
-## Track 8 Detailed Steps (303-320)
+## Track 8 Detailed Steps (316-334)
 
 | Step | Title                                               | Verify           |
 | ---- | --------------------------------------------------- | ---------------- |
-| 303  | Multi-stage `Dockerfile` for `api`                  | `docker build`   |
-| 304  | Multi-stage `Dockerfile` for `web` (SSR)            | `docker build`   |
-| 305  | Production-like `docker compose` stack              | compose up smoke |
-| 306  | Container image scanning in CI (optional Trivy)     | green CI         |
-| 307  | Deploy workflow skeleton (GitHub Actions)           | dry run          |
-| 308  | Environment promotion doc (dev/stage/prod)          | review           |
-| 309  | Release versioning + changelog gate                 | tag policy       |
-| 310  | DB migrations in deploy sequence                    | runbook          |
-| 311  | Documented rollback procedure                       | drill note       |
-| 312  | Observability stack compose (logs/metrics optional) | compose smoke    |
-| 313  | Capstone: architecture review checklist             | review meeting   |
-| 314  | Capstone: threat model refresh                      | markdown         |
-| 315  | Production one-page runbook                         | doc              |
-| 316  | Reserve: Kubernetes manifests stub                  | YAML lint        |
-| 317  | Reserve: Terraform module stub                      | fmt/validate     |
-| 318  | Reserve: blue/green deployment                      | ADR              |
-| 319  | Reserve: secrets manager integration                | ADR              |
-| 320  | Reserve: cost/usage observability dashboard         | doc              |
+| 316  | Multi-stage `Dockerfile` for `api`                  | `docker build`   |
+| 317  | Multi-stage `Dockerfile` for `web` (SSR)            | `docker build`   |
+| 318  | Production-like `docker compose` stack              | compose up smoke |
+| 319  | Container image scanning in CI (optional Trivy)     | green CI         |
+| 320  | Deploy workflow skeleton (GitHub Actions)           | dry run          |
+| 321  | Environment promotion doc (dev/stage/prod)          | review           |
+| 322  | Release versioning + changelog gate                 | tag policy       |
+| 323  | DB migrations in deploy sequence                    | runbook          |
+| 324  | DB backup/restore drill (local) + operator runbook  | drill note       |
+| 325  | Documented rollback procedure                       | drill note       |
+| 326  | Observability stack compose (logs/metrics optional) | compose smoke    |
+| 327  | Capstone: architecture review checklist             | review meeting   |
+| 328  | Capstone: threat model refresh                      | markdown         |
+| 329  | Production one-page runbook                         | doc              |
+| 330  | Reserve: Kubernetes manifests stub                  | YAML lint        |
+| 331  | Reserve: Terraform module stub                      | fmt/validate     |
+| 332  | Reserve: blue/green deployment                      | ADR              |
+| 333  | Reserve: secrets manager integration                | ADR              |
+| 334  | Reserve: cost/usage observability dashboard         | doc              |
+
+## Roadmap step migration (090+ renumber, 2026-05) {#roadmap-step-migration-090-renumber-2026-05}
+
+Steps **001–089** and completed lessons are unchanged. Former steps **090–320** map to new numbers below. **New steps** (no old number): **090–094**, **110** (dev seed), **116**, **119**, **127**, **146**, **175–176**, **265** (media storage), **324** (backup drill). Former **105** is now **111** (seed occupies **110**).
+
+See [ADR-003](../adr/003-roadmap-renumber-090-plus.md) for rationale.
+
+| Old step | New step |
+| -------- | -------- |
+| 090      | 095      |
+| 091      | 096      |
+| 092      | 097      |
+| 093      | 098      |
+| 094      | 099      |
+| 095      | 100      |
+| 096      | 101      |
+| 097      | 102      |
+| 098      | 103      |
+| 099      | 104      |
+| 100      | 105      |
+| 101      | 106      |
+| 102      | 107      |
+| 103      | 108      |
+| 104      | 109      |
+| 105      | 111      |
+| 106      | 112      |
+| 107      | 113      |
+| 108      | 114      |
+| 109      | 115      |
+| 110      | 117      |
+| 111      | 118      |
+| 112      | 120      |
+| 113      | 121      |
+| 114      | 122      |
+| 115      | 123      |
+| 116      | 124      |
+| 117      | 125      |
+| 118      | 126      |
+| 119      | 128      |
+| 120      | 129      |
+| 121      | 130      |
+| 122      | 131      |
+| 123      | 132      |
+| 124      | 133      |
+| 125      | 134      |
+| 126      | 135      |
+| 127      | 136      |
+| 128      | 137      |
+| 129      | 138      |
+| 130      | 139      |
+| 131      | 140      |
+| 132      | 141      |
+| 133      | 142      |
+| 134      | 143      |
+| 135      | 144      |
+| 136      | 145      |
+| 137      | 147      |
+| 138      | 148      |
+| 139      | 149      |
+| 140      | 150      |
+| 141      | 151      |
+| 142      | 152      |
+| 143      | 153      |
+| 144      | 154      |
+| 145      | 155      |
+| 146      | 156      |
+| 147      | 157      |
+| 148      | 158      |
+| 149      | 159      |
+| 150      | 160      |
+| 151      | 161      |
+| 152      | 162      |
+| 153      | 163      |
+| 154      | 164      |
+| 155      | 165      |
+| 156      | 166      |
+| 157      | 167      |
+| 158      | 168      |
+| 159      | 169      |
+| 160      | 170      |
+| 161      | 171      |
+| 162      | 172      |
+| 163      | 173      |
+| 164      | 174      |
+| 165      | 177      |
+| 166      | 178      |
+| 167      | 179      |
+| 168      | 180      |
+| 169      | 181      |
+| 170      | 182      |
+| 171      | 183      |
+| 172      | 184      |
+| 173      | 185      |
+| 174      | 186      |
+| 175      | 187      |
+| 176      | 188      |
+| 177      | 189      |
+| 178      | 190      |
+| 179      | 191      |
+| 180      | 192      |
+| 181      | 193      |
+| 182      | 194      |
+| 183      | 195      |
+| 184      | 196      |
+| 185      | 197      |
+| 186      | 198      |
+| 187      | 199      |
+| 188      | 200      |
+| 189      | 201      |
+| 190      | 202      |
+| 191      | 203      |
+| 192      | 204      |
+| 193      | 205      |
+| 194      | 206      |
+| 195      | 207      |
+| 196      | 208      |
+| 197      | 209      |
+| 198      | 210      |
+| 199      | 211      |
+| 200      | 212      |
+| 201      | 213      |
+| 202      | 214      |
+| 203      | 215      |
+| 204      | 216      |
+| 205      | 217      |
+| 206      | 218      |
+| 207      | 219      |
+| 208      | 220      |
+| 209      | 221      |
+| 210      | 222      |
+| 211      | 223      |
+| 212      | 224      |
+| 213      | 225      |
+| 214      | 226      |
+| 215      | 227      |
+| 216      | 228      |
+| 217      | 229      |
+| 218      | 230      |
+| 219      | 231      |
+| 220      | 232      |
+| 221      | 233      |
+| 222      | 234      |
+| 223      | 235      |
+| 224      | 236      |
+| 225      | 237      |
+| 226      | 238      |
+| 227      | 239      |
+| 228      | 240      |
+| 229      | 241      |
+| 230      | 242      |
+| 231      | 243      |
+| 232      | 244      |
+| 233      | 245      |
+| 234      | 246      |
+| 235      | 247      |
+| 236      | 248      |
+| 237      | 249      |
+| 238      | 250      |
+| 239      | 251      |
+| 240      | 252      |
+| 241      | 253      |
+| 242      | 254      |
+| 243      | 255      |
+| 244      | 256      |
+| 245      | 257      |
+| 246      | 258      |
+| 247      | 259      |
+| 248      | 260      |
+| 249      | 261      |
+| 250      | 262      |
+| 251      | 263      |
+| 252      | 264      |
+| 253      | 266      |
+| 254      | 267      |
+| 255      | 268      |
+| 256      | 269      |
+| 257      | 270      |
+| 258      | 271      |
+| 259      | 272      |
+| 260      | 273      |
+| 261      | 274      |
+| 262      | 275      |
+| 263      | 276      |
+| 264      | 277      |
+| 265      | 278      |
+| 266      | 279      |
+| 267      | 280      |
+| 268      | 281      |
+| 269      | 282      |
+| 270      | 283      |
+| 271      | 284      |
+| 272      | 285      |
+| 273      | 286      |
+| 274      | 287      |
+| 275      | 288      |
+| 276      | 289      |
+| 277      | 290      |
+| 278      | 291      |
+| 279      | 292      |
+| 280      | 293      |
+| 281      | 294      |
+| 282      | 295      |
+| 283      | 296      |
+| 284      | 297      |
+| 285      | 298      |
+| 286      | 299      |
+| 287      | 300      |
+| 288      | 301      |
+| 289      | 302      |
+| 290      | 303      |
+| 291      | 304      |
+| 292      | 305      |
+| 293      | 306      |
+| 294      | 307      |
+| 295      | 308      |
+| 296      | 309      |
+| 297      | 310      |
+| 298      | 311      |
+| 299      | 312      |
+| 300      | 313      |
+| 301      | 314      |
+| 302      | 315      |
+| 303      | 316      |
+| 304      | 317      |
+| 305      | 318      |
+| 306      | 319      |
+| 307      | 320      |
+| 308      | 321      |
+| 309      | 322      |
+| 310      | 323      |
+| 311      | 325      |
+| 312      | 326      |
+| 313      | 327      |
+| 314      | 328      |
+| 315      | 329      |
+| 316      | 330      |
+| 317      | 331      |
+| 318      | 332      |
+| 319      | 333      |
+| 320      | 334      |
 
 ## Completed Steps Snapshot
 
@@ -596,5 +851,6 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 087  | [lesson-087-auth-rbac-forbidden-e2e-flow.md](./lessons/lesson-087-auth-rbac-forbidden-e2e-flow.md)                     |
 | 088  | [lesson-088-security-audit-log-table.md](./lessons/lesson-088-security-audit-log-table.md)                             |
 | 089  | [lesson-089-audit-events-auth-mutations.md](./lessons/lesson-089-audit-events-auth-mutations.md)                       |
+| 090  | [lesson-090-email-channel.md](./lessons/lesson-090-email-channel.md)                                                   |
 
 Entry point: [LOCAL_SETUP.md](./LOCAL_SETUP.md)

@@ -14,6 +14,7 @@ import {
   DEFAULT_OTEL_TRACES_EXPORTER,
   OTEL_TRACES_EXPORTER_VALUES,
 } from './otel-env';
+import { DEFAULT_SMTP_FROM } from '../email/email.constants';
 
 function envTcpPort(defaultWhenEmpty: number) {
   return z.preprocess((val: unknown) => {
@@ -71,6 +72,39 @@ function jwtAccessExpiresIn() {
       return s.length === 0 ? '15m' : s;
     })
     .pipe(z.string().min(1));
+}
+
+function optionalTrimmedString() {
+  return z
+    .union([z.string(), z.undefined()])
+    .transform((raw) => {
+      if (raw === undefined) {
+        return '';
+      }
+      return String(raw).trim();
+    })
+    .pipe(z.string());
+}
+
+function envBoolean(defaultWhenEmpty: boolean) {
+  return z.preprocess((val: unknown) => {
+    if (val === undefined || val === '') {
+      return defaultWhenEmpty;
+    }
+    if (typeof val === 'boolean') {
+      return val;
+    }
+    if (typeof val === 'string') {
+      const normalized = val.trim().toLowerCase();
+      if (normalized === 'true' || normalized === '1') {
+        return true;
+      }
+      if (normalized === 'false' || normalized === '0') {
+        return false;
+      }
+    }
+    return '__INVALID_ENV_BOOLEAN__';
+  }, z.boolean());
 }
 
 function envMilliseconds(
@@ -200,6 +234,23 @@ export const rootEnvSchema = z
       DEFAULT_LOGIN_LOCKOUT_DURATION_MS,
       { min: 60_000, max: 86_400_000 },
     ),
+    SMTP_HOST: optionalTrimmedString(),
+    SMTP_PORT: envTcpPort(1025),
+    SMTP_SECURE: envBoolean(false),
+    SMTP_USER: optionalTrimmedString(),
+    SMTP_PASSWORD: optionalTrimmedString(),
+    SMTP_FROM: z
+      .union([z.string(), z.undefined()])
+      .transform((raw) => {
+        if (raw === undefined || raw === '') {
+          return DEFAULT_SMTP_FROM;
+        }
+        const s = String(raw).trim();
+        return s.length === 0 ? DEFAULT_SMTP_FROM : s;
+      })
+      .pipe(z.string().min(1)),
+    APP_PUBLIC_BASE_URL: optionalTrimmedString(),
+    EMAIL_RETURN_TOKEN_IN_RESPONSE: envBoolean(false),
   })
   .transform((value) => {
     const explicit =
@@ -217,6 +268,16 @@ export const rootEnvSchema = z
     return { ...value, DATABASE_URL };
   })
   .superRefine((value, ctx) => {
+    if (value.APP_PUBLIC_BASE_URL.length > 0) {
+      const publicUrl = z.string().url().safeParse(value.APP_PUBLIC_BASE_URL);
+      if (!publicUrl.success) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'APP_PUBLIC_BASE_URL must be a valid URL when set',
+          path: ['APP_PUBLIC_BASE_URL'],
+        });
+      }
+    }
     if (!isPostgresDatabaseUrl(value.DATABASE_URL)) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
@@ -260,6 +321,14 @@ const ROOT_ENV_KEYS = [
   'LOGIN_LOCKOUT_MAX_ATTEMPTS',
   'LOGIN_LOCKOUT_WINDOW_MS',
   'LOGIN_LOCKOUT_DURATION_MS',
+  'SMTP_HOST',
+  'SMTP_PORT',
+  'SMTP_SECURE',
+  'SMTP_USER',
+  'SMTP_PASSWORD',
+  'SMTP_FROM',
+  'APP_PUBLIC_BASE_URL',
+  'EMAIL_RETURN_TOKEN_IN_RESPONSE',
 ] as const;
 
 function pickRootEnvKeys(

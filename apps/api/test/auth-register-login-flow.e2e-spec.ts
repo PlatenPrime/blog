@@ -93,8 +93,9 @@ describe('Auth register → login flow (e2e)', () => {
     expect(evPersistForUser).toHaveBeenCalledOnce();
     expect(registerBody.email).toBe(email.trim().toLowerCase());
     expect(registerBody).not.toHaveProperty('passwordHash');
-    expect(typeof registerBody.emailVerificationToken).toBe('string');
-    expect(registerBody.emailVerificationToken.length).toBeGreaterThan(0);
+    expect(registerBody.emailVerificationToken).toBeDefined();
+    const emailVerificationToken = registerBody.emailVerificationToken!;
+    expect(emailVerificationToken.length).toBeGreaterThan(0);
 
     const loginResponse = await request(app.getHttpServer())
       .post(loginBase)

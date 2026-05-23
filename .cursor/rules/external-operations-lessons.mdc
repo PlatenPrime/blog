@@ -1,0 +1,43 @@
+---
+description: Lessons must explain Docker, cloud dashboards, and other out-of-repo setup for learners
+alwaysApply: true
+---
+
+# External operations in lessons (mandatory)
+
+The course author is **learning the stack**. Any step that needs action **outside** the repo (Docker Desktop, cloud dashboards, DNS, third-party accounts) must be spelled out in the **lesson**, not only in code or `.env.example`.
+
+**Full guide:** [`docs/lesson-authoring-guide.md`](docs/lesson-authoring-guide.md#external-operations-вне-репозитория)  
+**Template section:** [`docs/lessons/lesson-template.md`](docs/lessons/lesson-template.md) — **External operations (outside the repo)**
+
+## Every lesson must include
+
+Section **`## External operations (outside the repo)`** (or Russian title from template):
+
+1. **Table** — what to do, where (UI/CLI), required for this step or deferred, link to LOCAL_SETUP if shared.
+2. **Architecture sketch** — 3–6 sentences: what runs on the laptop, in Docker, in the cloud later; trust boundary in plain language.
+3. If **nothing external** — one explicit sentence: «В этом шаге достаточно monorepo + уже поднятого local compose; аккаунты Railway/Vercel/Supabase не нужны.»
+
+## When to call it out (non-exhaustive)
+
+| Category | Examples |
+| -------- | -------- |
+| Local containers | `docker compose up`, MailDev UI, Postgres port |
+| Cloud runtime | Railway, Render, Fly.io — service, env vars, deploy hook |
+| Frontend host | Vercel, Netlify — project link, `VITE_*`, SSR vs static |
+| Managed data | Supabase, Neon — connection string, migrations vs app |
+| Email / auth SaaS | Resend, Clerk — API keys, webhooks (if used) |
+| CI / secrets | GitHub Actions secrets, environment protection |
+| DNS / TLS | Custom domain, CNAME, certificates (production tracks) |
+
+## Agent behavior
+
+- When **writing or updating** `docs/lessons/lesson-NNN-*.md`, add or refresh **External operations**; do not bury dashboard steps only in Verification one-liners.
+- When **planning** a roadmap step that touches infra, note in the step title or verify column if external setup is expected (e.g. «compose + MailDev UI»).
+- **Storytelling** stays metaphor-only — no copy-paste of dashboard clicks; the lesson owns the how-to.
+
+## Definition of Done (lesson)
+
+- [ ] Section **External operations** present and accurate for this step.
+- [ ] Deferred cloud work named with **future step number** (e.g. «production SMTP — Track 8»).
+- [ ] [`LOCAL_SETUP.md`](docs/LOCAL_SETUP.md) updated if new ports, URLs, or compose services.
