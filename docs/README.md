@@ -120,6 +120,7 @@ npm run test:e2e
 - Step 089: [lesson-089-audit-events-auth-mutations.md](./lessons/lesson-089-audit-events-auth-mutations.md)
 - Step 090: [lesson-090-email-channel.md](./lessons/lesson-090-email-channel.md)
 - Step 091: [lesson-091-auth-sensitive-rate-limits.md](./lessons/lesson-091-auth-sensitive-rate-limits.md)
+- Step 092: [lesson-092-api-security-baseline.md](./lessons/lesson-092-api-security-baseline.md)
 
 Quality scripts from repo root (`build`, `test`, `lint`, `test:e2e`) run through Nx on the `api` app. The `web` app (TanStack Start) builds with `npx nx run web:build` or `npm run web:dev` for local dev. Full CI parity from root: `npm run ci` (see [lesson-019](./lessons/lesson-019-ci-pipeline-baseline.md)); GitHub Actions restores `.nx/cache` for repeated CI runs (see [lesson-020](./lessons/lesson-020-nx-cache-in-ci.md)); CI targets now run through `nx affected` range detection (see [lesson-021](./lessons/lesson-021-nx-affected-flow-in-ci.md)). Utility scripts:
 

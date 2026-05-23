@@ -8,6 +8,7 @@ import {
   RequestTimeoutException,
   UnauthorizedException,
 } from '@nestjs/common';
+import { ThrottlerException } from '@nestjs/throttler';
 import {
   API_ERROR_CODE_BAD_REQUEST,
   API_ERROR_CODE_CONFLICT,
@@ -158,6 +159,18 @@ describe('mapExceptionToApiError', () => {
       body: {
         code: API_ERROR_CODE_TOO_MANY_REQUESTS,
         message: 'Too many login attempts',
+      },
+    });
+  });
+
+  it('maps ThrottlerException to 429 TOO_MANY_REQUESTS', () => {
+    const exception = new ThrottlerException();
+
+    expect(mapExceptionToApiError(exception)).toEqual({
+      status: 429,
+      body: {
+        code: API_ERROR_CODE_TOO_MANY_REQUESTS,
+        message: exception.message,
       },
     });
   });

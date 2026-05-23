@@ -20,6 +20,10 @@ import {
   OTEL_TRACES_EXPORTER_VALUES,
 } from './otel-env';
 import { DEFAULT_SMTP_FROM } from '../email/email.constants';
+import {
+  DEFAULT_GLOBAL_THROTTLE_LIMIT,
+  DEFAULT_GLOBAL_THROTTLE_TTL_MS,
+} from './global-throttle.constants';
 
 function envTcpPort(defaultWhenEmpty: number) {
   return z.preprocess((val: unknown) => {
@@ -260,6 +264,23 @@ export const rootEnvSchema = z
       DEFAULT_AUTH_SENSITIVE_RATE_DURATION_MS,
       { min: 60_000, max: 86_400_000 },
     ),
+    GLOBAL_THROTTLE_TTL_MS: envMilliseconds(DEFAULT_GLOBAL_THROTTLE_TTL_MS, {
+      min: 1_000,
+      max: 3_600_000,
+    }),
+    GLOBAL_THROTTLE_LIMIT: z.preprocess((val: unknown) => {
+      if (val === undefined || val === '') {
+        return DEFAULT_GLOBAL_THROTTLE_LIMIT;
+      }
+      if (typeof val === 'number') {
+        return val;
+      }
+      if (typeof val === 'string') {
+        const s = val.trim();
+        return s.length === 0 ? DEFAULT_GLOBAL_THROTTLE_LIMIT : s;
+      }
+      return '__INVALID_GLOBAL_THROTTLE_LIMIT__';
+    }, z.coerce.number().int().min(1).max(10_000)),
     SMTP_HOST: optionalTrimmedString(),
     SMTP_PORT: envTcpPort(1025),
     SMTP_SECURE: envBoolean(false),
@@ -350,6 +371,8 @@ const ROOT_ENV_KEYS = [
   'AUTH_SENSITIVE_RATE_MAX_ATTEMPTS',
   'AUTH_SENSITIVE_RATE_WINDOW_MS',
   'AUTH_SENSITIVE_RATE_DURATION_MS',
+  'GLOBAL_THROTTLE_TTL_MS',
+  'GLOBAL_THROTTLE_LIMIT',
   'SMTP_HOST',
   'SMTP_PORT',
   'SMTP_SECURE',

@@ -1,6 +1,7 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { createApiValidationPipe } from './config/create-api-validation-pipe';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -35,6 +36,15 @@ import { UsersModule } from './users';
       envFilePath: resolveEnvFilePaths(),
       validate: validateRootEnv,
     }),
+    ThrottlerModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => [
+        {
+          ttl: config.getOrThrow<number>('GLOBAL_THROTTLE_TTL_MS'),
+          limit: config.getOrThrow<number>('GLOBAL_THROTTLE_LIMIT'),
+        },
+      ],
+    }),
     RequestContextModule,
     TracingModule,
     LoggingModule,
@@ -53,6 +63,10 @@ import { UsersModule } from './users';
   controllers: [AppController],
   providers: [
     AppService,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
     {
       provide: APP_FILTER,
       useClass: ApiExceptionFilter,

@@ -3,9 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { Logger } from 'nestjs-pino';
 import { AppModule } from './app.module';
-import { configureApiHttp } from './config/configure-api-http';
-import { configureApiShutdown } from './config/configure-api-shutdown';
-import { enableApiCors } from './config/enable-api-cors';
+import { configureApiHttpBootstrap } from './config/configure-api-http-bootstrap';
 
 const DEFAULT_API_PORT = 4000;
 const MAX_PORT_ATTEMPTS = 20;
@@ -14,9 +12,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
   app.useLogger(app.get(Logger));
   const bootstrapLogger = app.get(Logger);
-  enableApiCors(app);
-  configureApiHttp(app);
-  configureApiShutdown(app);
+  configureApiHttpBootstrap(app);
   const config = app.get(ConfigService);
   const initialPortRaw = config.get<number>('PORT');
   const initialPort =

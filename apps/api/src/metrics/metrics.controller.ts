@@ -1,7 +1,9 @@
 import { Controller, Get, Header, VERSION_NEUTRAL } from '@nestjs/common';
+import { SkipThrottle } from '@nestjs/throttler';
 import { PROMETHEUS_CONTENT_TYPE } from './prometheus.constants';
 import { MetricsService } from './metrics.service';
 
+@SkipThrottle()
 @Controller({ path: 'metrics', version: VERSION_NEUTRAL })
 export class MetricsController {
   constructor(private readonly metrics: MetricsService) {}

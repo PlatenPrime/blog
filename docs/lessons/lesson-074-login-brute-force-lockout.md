@@ -20,7 +20,7 @@
 
 Намеренно **не** делаем:
 
-- Lockout по IP, `@nestjs/throttler`, Redis/DB — baseline [092](../development-roadmap.md), prod tuning [292–293](../development-roadmap.md).
+- Lockout по IP — не в scope (глобальный IP throttle — [092](./lesson-092-api-security-baseline.md)); Redis/DB — prod tuning [292–293](../development-roadmap.md).
 - `Retry-After` header — note в Architecture Notes.
 - Register / refresh / logout — без изменений.
 

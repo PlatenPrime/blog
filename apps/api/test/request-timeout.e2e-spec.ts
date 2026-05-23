@@ -11,9 +11,7 @@ import {
 import { AppModule } from '../src/app.module';
 import { REQUEST_TIMEOUT_MS } from '../src/common/request-lifecycle/request-timeout.tokens';
 import { API_V1_BASE } from '../src/config/configure-api-http';
-import { configureApiHttp } from '../src/config/configure-api-http';
-import { configureApiShutdown } from '../src/config/configure-api-shutdown';
-import { enableApiCors } from '../src/config/enable-api-cors';
+import { configureApiHttpBootstrap } from '../src/config/configure-api-http-bootstrap';
 import { PostgresHealthIndicator } from '../src/health/indicators/postgres.health-indicator';
 import { createTestDataSourceStub } from '../src/testing/create-test-data-source.stub';
 
@@ -47,9 +45,7 @@ describe('Request timeout (e2e)', () => {
       .compile();
 
     app = moduleFixture.createNestApplication();
-    enableApiCors(app);
-    configureApiHttp(app);
-    configureApiShutdown(app);
+    configureApiHttpBootstrap(app);
     await app.init();
   });
 

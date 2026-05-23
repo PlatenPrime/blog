@@ -19,7 +19,7 @@
 
 Намеренно **не** делаем:
 
-- `@nestjs/throttler`, Helmet — [шаг 092](../development-roadmap.md).
+- ~~`@nestjs/throttler`, Helmet~~ — сделано в [шаг 092](./lesson-092-api-security-baseline.md).
 - Redis/shared store — **292+**.
 - `Retry-After` header.
 - Rate limit на `register` / `login` (login — **074**).
@@ -42,7 +42,7 @@
 
 **Architecture sketch:** Браузер или HTTP-клиент бьётся в Nest API. Перед обработкой reset/resend сервис проверяет два in-memory счётчика (email и IP) в рамках scope маршрута. При превышении порога API отвечает 429 problem+json, не раскрывая, существует ли email. В production за reverse proxy IP берётся из `X-Forwarded-For`; в dev supertest без заголовка попадает в bucket `unknown`.
 
-**Deferred:** глобальный throttle и Helmet — **092**; distributed rate limit — **292+**.
+**Deferred:** distributed rate limit — **292+** (глобальный throttle и Helmet — [092](./lesson-092-api-security-baseline.md)).
 
 ## Step-by-Step Changes
 
@@ -142,10 +142,10 @@ nx run api:test:e2e
 - [x] Rate limits on reset and resend (email + IP, separate scopes).
 - [x] `POST /api/v1/auth/resend-verification` with anti-enumeration.
 - [x] Unit + e2e specs; env documented.
-- [x] Storytelling chapter XVI updated; roadmap baseline **092** next.
+- [x] Storytelling chapter XVI updated; roadmap baseline **093** next (after 092).
 - [x] **External operations** — none required.
 
 ## What To Remember
 
-- Следующий шаг — **092** (Helmet + global `@nestjs/throttler`), не путать с точечными лимитами 091.
+- Следующий шаг после 092 — **093** (`REQUIRE_EMAIL_VERIFIED`); глобальный throttle не заменяет точечные лимиты 091.
 - Register по-прежнему без rate limit; повторная verify — только через resend.

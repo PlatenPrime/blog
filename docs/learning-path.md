@@ -106,8 +106,9 @@ Steps 033-056.
 
 - Step 090: [lesson-090-email-channel.md](./lessons/lesson-090-email-channel.md) — MailDev + `EmailService`
 - Step 091: [lesson-091-auth-sensitive-rate-limits.md](./lessons/lesson-091-auth-sensitive-rate-limits.md) — reset/resend rate limits
+- Step 092: [lesson-092-api-security-baseline.md](./lessons/lesson-092-api-security-baseline.md) — Helmet + global throttler
 
-- Step 092 (next): Helmet + global throttler — [development-roadmap.md](./development-roadmap.md)
+- Step 093 (next): `REQUIRE_EMAIL_VERIFIED` policy — [development-roadmap.md](./development-roadmap.md)
 
 Steps 093-109 (see [development-roadmap.md](./development-roadmap.md)).
 

@@ -5,6 +5,10 @@ import {
   DEFAULT_AUTH_SENSITIVE_RATE_WINDOW_MS,
 } from '../auth/auth-sensitive-rate-limit.constants';
 import {
+  DEFAULT_GLOBAL_THROTTLE_LIMIT,
+  DEFAULT_GLOBAL_THROTTLE_TTL_MS,
+} from './global-throttle.constants';
+import {
   DEFAULT_LOGIN_LOCKOUT_DURATION_MS,
   DEFAULT_LOGIN_LOCKOUT_MAX_ATTEMPTS,
   DEFAULT_LOGIN_LOCKOUT_WINDOW_MS,
@@ -37,6 +41,8 @@ describe('parseRootEnv', () => {
         DEFAULT_AUTH_SENSITIVE_RATE_MAX_ATTEMPTS,
       AUTH_SENSITIVE_RATE_WINDOW_MS: DEFAULT_AUTH_SENSITIVE_RATE_WINDOW_MS,
       AUTH_SENSITIVE_RATE_DURATION_MS: DEFAULT_AUTH_SENSITIVE_RATE_DURATION_MS,
+      GLOBAL_THROTTLE_TTL_MS: DEFAULT_GLOBAL_THROTTLE_TTL_MS,
+      GLOBAL_THROTTLE_LIMIT: DEFAULT_GLOBAL_THROTTLE_LIMIT,
       SMTP_HOST: '',
       SMTP_PORT: 1025,
       SMTP_SECURE: false,
@@ -86,6 +92,24 @@ describe('parseRootEnv', () => {
     expect(() =>
       parseRootEnv({ AUTH_SENSITIVE_RATE_MAX_ATTEMPTS: '0' }),
     ).toThrow(/AUTH_SENSITIVE_RATE_MAX_ATTEMPTS/);
+  });
+
+  it('parses GLOBAL_THROTTLE env overrides', () => {
+    expect(
+      parseRootEnv({
+        GLOBAL_THROTTLE_LIMIT: '50',
+        GLOBAL_THROTTLE_TTL_MS: '120000',
+      }),
+    ).toMatchObject({
+      GLOBAL_THROTTLE_LIMIT: 50,
+      GLOBAL_THROTTLE_TTL_MS: 120_000,
+    });
+  });
+
+  it('rejects GLOBAL_THROTTLE_LIMIT below minimum', () => {
+    expect(() => parseRootEnv({ GLOBAL_THROTTLE_LIMIT: '0' })).toThrow(
+      /GLOBAL_THROTTLE_LIMIT/,
+    );
   });
 
   it('parses JWT_ACCESS_EXPIRES_IN override', () => {
