@@ -1,5 +1,10 @@
 import { z } from 'zod';
 import {
+  DEFAULT_AUTH_SENSITIVE_RATE_DURATION_MS,
+  DEFAULT_AUTH_SENSITIVE_RATE_MAX_ATTEMPTS,
+  DEFAULT_AUTH_SENSITIVE_RATE_WINDOW_MS,
+} from '../auth/auth-sensitive-rate-limit.constants';
+import {
   DEFAULT_LOGIN_LOCKOUT_DURATION_MS,
   DEFAULT_LOGIN_LOCKOUT_MAX_ATTEMPTS,
   DEFAULT_LOGIN_LOCKOUT_WINDOW_MS,
@@ -234,6 +239,27 @@ export const rootEnvSchema = z
       DEFAULT_LOGIN_LOCKOUT_DURATION_MS,
       { min: 60_000, max: 86_400_000 },
     ),
+    AUTH_SENSITIVE_RATE_MAX_ATTEMPTS: z.preprocess((val: unknown) => {
+      if (val === undefined || val === '') {
+        return DEFAULT_AUTH_SENSITIVE_RATE_MAX_ATTEMPTS;
+      }
+      if (typeof val === 'number') {
+        return val;
+      }
+      if (typeof val === 'string') {
+        const s = val.trim();
+        return s.length === 0 ? DEFAULT_AUTH_SENSITIVE_RATE_MAX_ATTEMPTS : s;
+      }
+      return '__INVALID_AUTH_SENSITIVE_RATE_MAX_ATTEMPTS__';
+    }, z.coerce.number().int().min(1).max(100)),
+    AUTH_SENSITIVE_RATE_WINDOW_MS: envMilliseconds(
+      DEFAULT_AUTH_SENSITIVE_RATE_WINDOW_MS,
+      { min: 60_000, max: 86_400_000 },
+    ),
+    AUTH_SENSITIVE_RATE_DURATION_MS: envMilliseconds(
+      DEFAULT_AUTH_SENSITIVE_RATE_DURATION_MS,
+      { min: 60_000, max: 86_400_000 },
+    ),
     SMTP_HOST: optionalTrimmedString(),
     SMTP_PORT: envTcpPort(1025),
     SMTP_SECURE: envBoolean(false),
@@ -321,6 +347,9 @@ const ROOT_ENV_KEYS = [
   'LOGIN_LOCKOUT_MAX_ATTEMPTS',
   'LOGIN_LOCKOUT_WINDOW_MS',
   'LOGIN_LOCKOUT_DURATION_MS',
+  'AUTH_SENSITIVE_RATE_MAX_ATTEMPTS',
+  'AUTH_SENSITIVE_RATE_WINDOW_MS',
+  'AUTH_SENSITIVE_RATE_DURATION_MS',
   'SMTP_HOST',
   'SMTP_PORT',
   'SMTP_SECURE',

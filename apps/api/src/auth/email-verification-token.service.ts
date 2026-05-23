@@ -49,4 +49,15 @@ export class EmailVerificationTokenService {
       { consumedAt: new Date() },
     );
   }
+
+  async invalidateActiveForUser(userId: string): Promise<void> {
+    await this.emailVerificationTokens.update(
+      {
+        userId,
+        consumedAt: IsNull(),
+        expiresAt: MoreThan(new Date()),
+      },
+      { consumedAt: new Date() },
+    );
+  }
 }

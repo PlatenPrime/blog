@@ -3,6 +3,7 @@ import type {
   RefreshSessionResponse,
   RegisterUserResponse,
   RequestPasswordResetResponse,
+  ResendVerificationResponse,
   ResetPasswordResponse,
   VerifyEmailResponse,
 } from '@blog/shared-contracts';
@@ -25,11 +26,18 @@ import {
   INVALID_REFRESH_TOKEN_MESSAGE,
   PASSWORD_RESET_COMPLETED_MESSAGE,
   PASSWORD_RESET_REQUEST_ACCEPTED_MESSAGE,
+  RESEND_VERIFICATION_ACCEPTED_MESSAGE,
 } from './auth-credentials.constants';
+import {
+  AUTH_SENSITIVE_RATE_SCOPE_PASSWORD_RESET,
+  AUTH_SENSITIVE_RATE_SCOPE_RESEND_VERIFICATION,
+} from './auth-sensitive-rate-limit-scope';
+import { AuthSensitiveRateLimitService } from './auth-sensitive-rate-limit.service';
 import type { CreateLoginBodyDto } from './dto/create-login-body.dto';
 import type { CreateRefreshBodyDto } from './dto/create-refresh-body.dto';
 import type { CreateRegisterBodyDto } from './dto/create-register-body.dto';
 import type { CreateRequestPasswordResetBodyDto } from './dto/create-request-password-reset-body.dto';
+import type { CreateResendVerificationBodyDto } from './dto/create-resend-verification-body.dto';
 import type { CreateResetPasswordBodyDto } from './dto/create-reset-password-body.dto';
 import type { CreateVerifyEmailBodyDto } from './dto/create-verify-email-body.dto';
 import { emailVerificationExpiresAt } from './email-verification-expires-at';
@@ -59,6 +67,7 @@ export class AuthService {
     private readonly passwordResetTokens: PasswordResetTokenService,
     private readonly config: ConfigService,
     private readonly loginLockout: LoginLockoutService,
+    private readonly sensitiveRateLimit: AuthSensitiveRateLimitService,
     private readonly securityAudit: SecurityAuditService,
     private readonly email: EmailService,
   ) {}
@@ -85,7 +94,19 @@ export class AuthService {
 
   async requestPasswordReset(
     dto: CreateRequestPasswordResetBodyDto,
+    clientIp: string,
   ): Promise<RequestPasswordResetResponse> {
+    this.sensitiveRateLimit.assertWithinLimits(
+      AUTH_SENSITIVE_RATE_SCOPE_PASSWORD_RESET,
+      dto.email,
+      clientIp,
+    );
+    this.sensitiveRateLimit.recordAttempt(
+      AUTH_SENSITIVE_RATE_SCOPE_PASSWORD_RESET,
+      dto.email,
+      clientIp,
+    );
+
     const user = await this.users.findByEmail(dto.email);
 
     if (user === null) {
@@ -107,6 +128,43 @@ export class AuthService {
       message: PASSWORD_RESET_REQUEST_ACCEPTED_MESSAGE,
       ...(tokenInResponse !== undefined
         ? { passwordResetToken: tokenInResponse }
+        : {}),
+    };
+  }
+
+  async resendVerification(
+    dto: CreateResendVerificationBodyDto,
+    clientIp: string,
+  ): Promise<ResendVerificationResponse> {
+    this.sensitiveRateLimit.assertWithinLimits(
+      AUTH_SENSITIVE_RATE_SCOPE_RESEND_VERIFICATION,
+      dto.email,
+      clientIp,
+    );
+    this.sensitiveRateLimit.recordAttempt(
+      AUTH_SENSITIVE_RATE_SCOPE_RESEND_VERIFICATION,
+      dto.email,
+      clientIp,
+    );
+
+    const user = await this.users.findByEmail(dto.email);
+
+    if (user === null || user.emailVerifiedAt !== null) {
+      return { message: RESEND_VERIFICATION_ACCEPTED_MESSAGE };
+    }
+
+    const emailVerificationToken = await this.issueEmailVerificationForUser(
+      user.id,
+    );
+    const tokenInResponse = await this.deliverEmailVerification(
+      user.email,
+      emailVerificationToken,
+    );
+
+    return {
+      message: RESEND_VERIFICATION_ACCEPTED_MESSAGE,
+      ...(tokenInResponse !== undefined
+        ? { emailVerificationToken: tokenInResponse }
         : {}),
     };
   }
@@ -302,6 +360,7 @@ export class AuthService {
   }
 
   private async issueEmailVerificationForUser(userId: string): Promise<string> {
+    await this.emailVerificationTokens.invalidateActiveForUser(userId);
     const rawToken = generateOpaqueToken();
     await this.emailVerificationTokens.persistForUser({
       userId,

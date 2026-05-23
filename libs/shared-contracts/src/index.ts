@@ -45,6 +45,7 @@ export type { RefreshSessionResponse } from './auth/refresh.types.js';
 export type { RegisterUserResponse } from './auth/register.types.js';
 export type { VerifyEmailResponse } from './auth/verify-email.types.js';
 export type { RequestPasswordResetResponse } from './auth/request-password-reset.types.js';
+export type { ResendVerificationResponse } from './auth/resend-verification.types.js';
 export type { ResetPasswordResponse } from './auth/reset-password.types.js';
 
 export type {

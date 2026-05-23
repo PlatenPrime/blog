@@ -56,6 +56,7 @@ describe('Auth register → login → refresh flow (e2e)', () => {
       .useValue(inMemoryUsers)
       .overrideProvider(EmailVerificationTokenService)
       .useValue({
+        invalidateActiveForUser: vi.fn(),
         persistForUser: evPersistForUser,
         findActiveByRawToken: vi.fn(),
         findByRawToken: vi.fn(),

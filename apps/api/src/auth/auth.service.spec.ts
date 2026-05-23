@@ -19,7 +19,10 @@ import {
   INVALID_REFRESH_TOKEN_MESSAGE,
   PASSWORD_RESET_COMPLETED_MESSAGE,
   PASSWORD_RESET_REQUEST_ACCEPTED_MESSAGE,
+  RESEND_VERIFICATION_ACCEPTED_MESSAGE,
 } from './auth-credentials.constants';
+import { AUTH_SENSITIVE_RATE_LIMIT_MESSAGE } from './auth-sensitive-rate-limit.constants';
+import { AuthSensitiveRateLimitService } from './auth-sensitive-rate-limit.service';
 import type { EmailVerificationToken } from './email-verification-token.entity';
 import { EmailVerificationTokenService } from './email-verification-token.service';
 import { AuthService } from './auth.service';
@@ -27,6 +30,7 @@ import type { CreateLoginBodyDto } from './dto/create-login-body.dto';
 import type { CreateRefreshBodyDto } from './dto/create-refresh-body.dto';
 import type { CreateRegisterBodyDto } from './dto/create-register-body.dto';
 import type { CreateRequestPasswordResetBodyDto } from './dto/create-request-password-reset-body.dto';
+import type { CreateResendVerificationBodyDto } from './dto/create-resend-verification-body.dto';
 import type { CreateResetPasswordBodyDto } from './dto/create-reset-password-body.dto';
 import type { CreateVerifyEmailBodyDto } from './dto/create-verify-email-body.dto';
 import type { PasswordResetToken } from './password-reset-token.entity';
@@ -51,6 +55,7 @@ describe('AuthService', () => {
   let revokeTokenFamily: ReturnType<typeof vi.fn>;
   let markReplaced: ReturnType<typeof vi.fn>;
   let evPersistForUser: ReturnType<typeof vi.fn>;
+  let evInvalidateActiveForUser: ReturnType<typeof vi.fn>;
   let evFindActiveByRawToken: ReturnType<typeof vi.fn>;
   let evConsume: ReturnType<typeof vi.fn>;
   let prFindActiveByRawToken: ReturnType<typeof vi.fn>;
@@ -69,6 +74,9 @@ describe('AuthService', () => {
   let recordFailure: ReturnType<typeof vi.fn>;
   let clear: ReturnType<typeof vi.fn>;
   let loginLockout: LoginLockoutService;
+  let assertWithinLimits: ReturnType<typeof vi.fn>;
+  let recordAttempt: ReturnType<typeof vi.fn>;
+  let sensitiveRateLimit: AuthSensitiveRateLimitService;
   let recordAudit: ReturnType<typeof vi.fn>;
   let securityAudit: SecurityAuditService;
   let emailVerificationTokens: EmailVerificationTokenService;
@@ -79,6 +87,7 @@ describe('AuthService', () => {
   let shouldReturnTokenInResponse: boolean;
   let email: EmailService;
   const refreshTtlMs = 60_000;
+  const clientIp = '203.0.113.1';
 
   const savedUser: User = {
     id: '11111111-1111-4111-8111-111111111111',
@@ -101,6 +110,7 @@ describe('AuthService', () => {
     revokeTokenFamily = vi.fn();
     markReplaced = vi.fn();
     evPersistForUser = vi.fn();
+    evInvalidateActiveForUser = vi.fn();
     evFindActiveByRawToken = vi.fn();
     evConsume = vi.fn();
     prFindActiveByRawToken = vi.fn();
@@ -129,6 +139,7 @@ describe('AuthService', () => {
     } as unknown as RefreshTokenService;
     emailVerificationTokens = {
       persistForUser: evPersistForUser,
+      invalidateActiveForUser: evInvalidateActiveForUser,
       findActiveByRawToken: evFindActiveByRawToken,
       consume: evConsume,
     } as unknown as EmailVerificationTokenService;
@@ -161,6 +172,12 @@ describe('AuthService', () => {
       recordFailure,
       clear,
     } as unknown as LoginLockoutService;
+    assertWithinLimits = vi.fn();
+    recordAttempt = vi.fn();
+    sensitiveRateLimit = {
+      assertWithinLimits,
+      recordAttempt,
+    } as unknown as AuthSensitiveRateLimitService;
     recordAudit = vi.fn().mockResolvedValue(undefined);
     securityAudit = { record: recordAudit } as unknown as SecurityAuditService;
     isEmailEnabled = vi.fn().mockReturnValue(false);
@@ -181,9 +198,30 @@ describe('AuthService', () => {
       passwordResetTokens,
       config,
       loginLockout,
+      sensitiveRateLimit,
       securityAudit,
       email,
     );
+  });
+
+  it('requestPasswordReset throws 429 when rate limited without calling UserService', async () => {
+    assertWithinLimits.mockImplementation(() => {
+      throw new HttpException(
+        AUTH_SENSITIVE_RATE_LIMIT_MESSAGE,
+        HttpStatus.TOO_MANY_REQUESTS,
+      );
+    });
+    const dto: CreateRequestPasswordResetBodyDto = {
+      email: 'user@example.com',
+    };
+
+    await expect(
+      service.requestPasswordReset(dto, clientIp),
+    ).rejects.toMatchObject({
+      status: HttpStatus.TOO_MANY_REQUESTS,
+    });
+    expect(findByEmail).not.toHaveBeenCalled();
+    expect(recordAttempt).not.toHaveBeenCalled();
   });
 
   it('requestPasswordReset returns neutral message without token when email is unknown', async () => {
@@ -192,8 +230,10 @@ describe('AuthService', () => {
       email: 'missing@example.com',
     };
 
-    const result = await service.requestPasswordReset(dto);
+    const result = await service.requestPasswordReset(dto, clientIp);
 
+    expect(assertWithinLimits).toHaveBeenCalled();
+    expect(recordAttempt).toHaveBeenCalled();
     expect(findByEmail).toHaveBeenCalledWith('missing@example.com');
     expect(result).toEqual({
       message: PASSWORD_RESET_REQUEST_ACCEPTED_MESSAGE,
@@ -208,9 +248,10 @@ describe('AuthService', () => {
     findByEmail.mockResolvedValue(savedUser);
     prPersistForUser.mockResolvedValue({ id: 'prt-1' });
 
-    const result = await service.requestPasswordReset({
-      email: 'user@example.com',
-    });
+    const result = await service.requestPasswordReset(
+      { email: 'user@example.com' },
+      clientIp,
+    );
 
     expect(sendPasswordResetEmail).toHaveBeenCalledOnce();
     expect(result).toEqual({
@@ -225,9 +266,10 @@ describe('AuthService', () => {
     findByEmail.mockResolvedValue(savedUser);
     prPersistForUser.mockResolvedValue({ id: 'prt-1' });
 
-    const result = await service.requestPasswordReset({
-      email: 'user@example.com',
-    });
+    const result = await service.requestPasswordReset(
+      { email: 'user@example.com' },
+      clientIp,
+    );
 
     expect(typeof result.passwordResetToken).toBe('string');
     expect(result.passwordResetToken!.length).toBeGreaterThan(0);
@@ -240,7 +282,7 @@ describe('AuthService', () => {
       email: 'user@example.com',
     };
 
-    const result = await service.requestPasswordReset(dto);
+    const result = await service.requestPasswordReset(dto, clientIp);
 
     expect(prInvalidateActiveForUser).toHaveBeenCalledWith(savedUser.id);
     expect(prPersistForUser).toHaveBeenCalledOnce();
@@ -262,6 +304,49 @@ describe('AuthService', () => {
       actorUserId: savedUser.id,
       subjectUserId: savedUser.id,
     });
+  });
+
+  it('resendVerification returns neutral message for unknown email', async () => {
+    findByEmail.mockResolvedValue(null);
+    const dto: CreateResendVerificationBodyDto = {
+      email: 'missing@example.com',
+    };
+
+    const result = await service.resendVerification(dto, clientIp);
+
+    expect(result).toEqual({ message: RESEND_VERIFICATION_ACCEPTED_MESSAGE });
+    expect(evInvalidateActiveForUser).not.toHaveBeenCalled();
+    expect(evPersistForUser).not.toHaveBeenCalled();
+  });
+
+  it('resendVerification returns neutral message when email is already verified', async () => {
+    findByEmail.mockResolvedValue({
+      ...savedUser,
+      emailVerifiedAt: new Date('2026-05-21T00:00:00.000Z'),
+    });
+
+    const result = await service.resendVerification(
+      { email: 'user@example.com' },
+      clientIp,
+    );
+
+    expect(result).toEqual({ message: RESEND_VERIFICATION_ACCEPTED_MESSAGE });
+    expect(evPersistForUser).not.toHaveBeenCalled();
+  });
+
+  it('resendVerification issues token and sends email for unverified user', async () => {
+    findByEmail.mockResolvedValue(savedUser);
+    evPersistForUser.mockResolvedValue({ id: 'evt-2' });
+
+    const result = await service.resendVerification(
+      { email: 'user@example.com' },
+      clientIp,
+    );
+
+    expect(evInvalidateActiveForUser).toHaveBeenCalledWith(savedUser.id);
+    expect(evPersistForUser).toHaveBeenCalledOnce();
+    expect(result.message).toBe(RESEND_VERIFICATION_ACCEPTED_MESSAGE);
+    expect(typeof result.emailVerificationToken).toBe('string');
   });
 
   it('register delegates to UserService.create with email and plainPassword', async () => {

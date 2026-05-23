@@ -16,6 +16,7 @@ import { EmailVerificationTokenService } from './email-verification-token.servic
 import { PasswordResetToken } from './password-reset-token.entity';
 import { PasswordResetTokenService } from './password-reset-token.service';
 import { RefreshToken } from './refresh-token.entity';
+import { AuthSensitiveRateLimitService } from './auth-sensitive-rate-limit.service';
 import { LoginLockoutService } from './login-lockout.service';
 import { RefreshTokenService } from './refresh-token.service';
 
@@ -48,6 +49,7 @@ import { RefreshTokenService } from './refresh-token.service';
   providers: [
     AuthService,
     LoginLockoutService,
+    AuthSensitiveRateLimitService,
     JwtAccessTokenService,
     RefreshTokenService,
     EmailVerificationTokenService,

@@ -4,6 +4,7 @@ import type {
   RefreshSessionResponse,
   RegisterUserResponse,
   RequestPasswordResetResponse,
+  ResendVerificationResponse,
   ResetPasswordResponse,
   VerifyEmailResponse,
 } from '@blog/shared-contracts';
@@ -14,8 +15,11 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  Req,
   UseGuards,
 } from '@nestjs/common';
+import type { Request } from 'express';
+import { resolveClientIp } from '../http/resolve-client-ip';
 import type { AuthRequestUser } from './auth-request-user.types';
 import { AuthService } from './auth.service';
 import { CurrentUser } from './current-user.decorator';
@@ -23,6 +27,7 @@ import { CreateLoginBodyDto } from './dto/create-login-body.dto';
 import { CreateRefreshBodyDto } from './dto/create-refresh-body.dto';
 import { CreateRegisterBodyDto } from './dto/create-register-body.dto';
 import { CreateRequestPasswordResetBodyDto } from './dto/create-request-password-reset-body.dto';
+import { CreateResendVerificationBodyDto } from './dto/create-resend-verification-body.dto';
 import { CreateResetPasswordBodyDto } from './dto/create-reset-password-body.dto';
 import { CreateVerifyEmailBodyDto } from './dto/create-verify-email-body.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
@@ -59,8 +64,18 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   requestPasswordReset(
     @Body() body: CreateRequestPasswordResetBodyDto,
+    @Req() req: Request,
   ): Promise<RequestPasswordResetResponse> {
-    return this.auth.requestPasswordReset(body);
+    return this.auth.requestPasswordReset(body, resolveClientIp(req));
+  }
+
+  @Post('resend-verification')
+  @HttpCode(HttpStatus.OK)
+  resendVerification(
+    @Body() body: CreateResendVerificationBodyDto,
+    @Req() req: Request,
+  ): Promise<ResendVerificationResponse> {
+    return this.auth.resendVerification(body, resolveClientIp(req));
   }
 
   @Post('reset-password')

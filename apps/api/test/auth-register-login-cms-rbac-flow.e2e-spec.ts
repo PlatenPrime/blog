@@ -59,6 +59,7 @@ describe('Auth register → login → CMS RBAC flow (e2e)', () => {
       .useValue(inMemoryPermissions)
       .overrideProvider(EmailVerificationTokenService)
       .useValue({
+        invalidateActiveForUser: vi.fn(),
         persistForUser: vi.fn().mockResolvedValue({ id: 'evt-1' }),
         findActiveByRawToken: vi.fn(),
         findByRawToken: vi.fn(),

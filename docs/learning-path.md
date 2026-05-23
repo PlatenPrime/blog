@@ -105,10 +105,11 @@ Steps 033-056.
 - Step 089: [lesson-089-audit-events-auth-mutations.md](./lessons/lesson-089-audit-events-auth-mutations.md)
 
 - Step 090: [lesson-090-email-channel.md](./lessons/lesson-090-email-channel.md) — MailDev + `EmailService`
+- Step 091: [lesson-091-auth-sensitive-rate-limits.md](./lessons/lesson-091-auth-sensitive-rate-limits.md) — reset/resend rate limits
 
-- Step 091 (next): rate limits on sensitive auth routes — [development-roadmap.md](./development-roadmap.md)
+- Step 092 (next): Helmet + global throttler — [development-roadmap.md](./development-roadmap.md)
 
-Steps 092-109 (see [development-roadmap.md](./development-roadmap.md)).
+Steps 093-109 (see [development-roadmap.md](./development-roadmap.md)).
 
 ## Phase 4: CMS Backend (Track 3)
 

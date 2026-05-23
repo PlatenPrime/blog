@@ -59,6 +59,7 @@ describe('Auth register (e2e)', () => {
       .useValue({ create, findByEmail })
       .overrideProvider(EmailVerificationTokenService)
       .useValue({
+        invalidateActiveForUser: vi.fn(),
         persistForUser: evPersistForUser,
         findActiveByRawToken: vi.fn(),
         findByRawToken: vi.fn(),

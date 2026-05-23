@@ -66,6 +66,7 @@ describe('Auth verify-email (e2e)', () => {
       })
       .overrideProvider(EmailVerificationTokenService)
       .useValue({
+        invalidateActiveForUser: vi.fn(),
         persistForUser: vi.fn(),
         findActiveByRawToken,
         findByRawToken: vi.fn(),

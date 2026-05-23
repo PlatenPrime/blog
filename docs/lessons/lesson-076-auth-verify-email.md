@@ -26,7 +26,7 @@
 Намеренно **не** делаем:
 
 - Отправка email / magic link — будущий канал; токен временно в JSON register.
-- `POST /auth/resend-verification` — позже.
+- `POST /auth/resend-verification` — [шаг 091](./lesson-091-auth-sensitive-rate-limits.md) (done).
 - Env `EMAIL_VERIFICATION_EXPIRES_MS` — константа 24h (как в 075).
 - Полная e2e-матрица register→verify→login — [шаг 085](../development-roadmap.md).
 

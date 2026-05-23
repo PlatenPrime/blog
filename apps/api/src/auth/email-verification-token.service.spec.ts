@@ -96,4 +96,20 @@ describe('EmailVerificationTokenService', () => {
     const patch = update.mock.calls[0]?.[1] as { consumedAt: Date };
     expect(patch.consumedAt).toBeInstanceOf(Date);
   });
+
+  it('invalidateActiveForUser marks active tokens consumed for user', async () => {
+    update.mockResolvedValue({ affected: 2 });
+
+    await service.invalidateActiveForUser('user-1');
+
+    expect(update).toHaveBeenCalledOnce();
+    const criteria = update.mock.calls[0]?.[0] as {
+      userId: string;
+      consumedAt: { type: string };
+      expiresAt: ReturnType<typeof MoreThan>;
+    };
+    expect(criteria.userId).toBe('user-1');
+    expect(criteria.consumedAt.type).toBe('isNull');
+    expect(criteria.expiresAt.type).toBe('moreThan');
+  });
 });

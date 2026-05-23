@@ -14,6 +14,10 @@ export const INVALID_EMAIL_VERIFICATION_TOKEN_MESSAGE =
 export const PASSWORD_RESET_REQUEST_ACCEPTED_MESSAGE =
   'If this email is registered, password reset instructions have been sent' as const;
 
+/** Neutral message for resend verification (unknown, verified, or pending). */
+export const RESEND_VERIFICATION_ACCEPTED_MESSAGE =
+  'If this email is registered and not yet verified, verification instructions have been sent' as const;
+
 /** Generic message for invalid, expired, or consumed password reset tokens. */
 export const INVALID_PASSWORD_RESET_TOKEN_MESSAGE =
   'Invalid or expired password reset token' as const;

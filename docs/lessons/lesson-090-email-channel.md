@@ -17,7 +17,7 @@
 Намеренно **не** делаем:
 
 - Production ESP (SendGrid/SES) — ADR/runbook позже.
-- Rate limits на reset/resend — [шаг 091](../development-roadmap.md).
+- Rate limits на reset/resend — [шаг 091](./lesson-091-auth-sensitive-rate-limits.md) (done).
 - HTML-вёрстка «как в проде» — plain-text достаточно.
 
 ## Dependencies
@@ -115,11 +115,11 @@ nx run api:test:e2e
 - [x] MailDev documented and starts with compose.
 - [x] `EmailService` covered by unit tests (mock transport).
 - [x] Register and password-reset request invoke email when SMTP configured.
-- [x] Storytelling: chapter XVI arc; roadmap baseline **091** next.
+- [x] Storytelling: chapter XVI arc; roadmap baseline **092** next (after 091).
 - [x] No production secrets committed.
 - [ ] **External operations** (compose + MailDev UI) — выполните локально при первом проходе.
 
 ## What To Remember
 
-- Следующий шаг — **091** (rate limits on sensitive auth routes), не **095** (session metadata).
+- Следующий шаг после 091 — **092** (Helmet + global throttler), не **095** (session metadata).
 - См. [ADR-003](../adr/003-roadmap-renumber-090-plus.md) если встречаете старые номера шагов в уроках 001–089.

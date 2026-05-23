@@ -27,7 +27,7 @@
 Намеренно **не** делаем:
 
 - `POST /auth/reset-password`, `UserService.updatePassword`, revoke refresh — [шаг 078](./lesson-078-password-reset-completion.md) (done).
-- Отправка email / rate-limit на request — позже (ADR в Architecture Notes).
+- Отправка email — [090](./lesson-090-email-channel.md); rate-limit на request — [091](./lesson-091-auth-sensitive-rate-limits.md) (done).
 - Env `PASSWORD_RESET_EXPIRES_MS` — константа 1h.
 
 ## Dependencies
