@@ -5,6 +5,10 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import {
+  SecurityAuditEventType,
+  SecurityAuditService,
+} from '../security-audit';
 import { PasswordHasherService } from '../users/password-hasher.service';
 import type { User } from '../users/user.entity';
 import { UserService } from '../users/user.service';
@@ -64,6 +68,8 @@ describe('AuthService', () => {
   let recordFailure: ReturnType<typeof vi.fn>;
   let clear: ReturnType<typeof vi.fn>;
   let loginLockout: LoginLockoutService;
+  let recordAudit: ReturnType<typeof vi.fn>;
+  let securityAudit: SecurityAuditService;
   let emailVerificationTokens: EmailVerificationTokenService;
   let passwordResetTokens: PasswordResetTokenService;
   const refreshTtlMs = 60_000;
@@ -142,6 +148,8 @@ describe('AuthService', () => {
       recordFailure,
       clear,
     } as unknown as LoginLockoutService;
+    recordAudit = vi.fn().mockResolvedValue(undefined);
+    securityAudit = { record: recordAudit } as unknown as SecurityAuditService;
     service = new AuthService(
       users,
       passwordHasher,
@@ -151,6 +159,7 @@ describe('AuthService', () => {
       passwordResetTokens,
       config,
       loginLockout,
+      securityAudit,
     );
   });
 
@@ -168,6 +177,7 @@ describe('AuthService', () => {
     });
     expect(prInvalidateActiveForUser).not.toHaveBeenCalled();
     expect(prPersistForUser).not.toHaveBeenCalled();
+    expect(recordAudit).not.toHaveBeenCalled();
   });
 
   it('requestPasswordReset invalidates prior tokens, persists new token, and returns passwordResetToken', async () => {
@@ -194,6 +204,11 @@ describe('AuthService', () => {
       message: PASSWORD_RESET_REQUEST_ACCEPTED_MESSAGE,
       passwordResetToken: persistArgs.rawToken,
     });
+    expect(recordAudit).toHaveBeenCalledWith({
+      eventType: SecurityAuditEventType.AuthPasswordResetRequested,
+      actorUserId: savedUser.id,
+      subjectUserId: savedUser.id,
+    });
   });
 
   it('register delegates to UserService.create with email and plainPassword', async () => {
@@ -208,6 +223,11 @@ describe('AuthService', () => {
     expect(create).toHaveBeenCalledWith({
       email: 'user@example.com',
       plainPassword: 'secret123',
+    });
+    expect(recordAudit).toHaveBeenCalledWith({
+      eventType: SecurityAuditEventType.AuthRegisterSuccess,
+      actorUserId: savedUser.id,
+      subjectUserId: savedUser.id,
     });
   });
 
@@ -264,6 +284,11 @@ describe('AuthService', () => {
     expect(result).toEqual({
       message: PASSWORD_RESET_COMPLETED_MESSAGE,
     });
+    expect(recordAudit).toHaveBeenCalledWith({
+      eventType: SecurityAuditEventType.AuthPasswordResetCompleted,
+      actorUserId: savedUser.id,
+      subjectUserId: savedUser.id,
+    });
   });
 
   it('resetPassword throws UnauthorizedException when token is not active', async () => {
@@ -306,6 +331,11 @@ describe('AuthService', () => {
     expect(markEmailVerified).toHaveBeenCalledWith(savedUser.id);
     expect(result).toEqual({
       emailVerifiedAt: verifiedAt.toISOString(),
+    });
+    expect(recordAudit).toHaveBeenCalledWith({
+      eventType: SecurityAuditEventType.AuthVerifyEmailSuccess,
+      actorUserId: savedUser.id,
+      subjectUserId: savedUser.id,
     });
   });
 
@@ -384,6 +414,11 @@ describe('AuthService', () => {
     expect(assertNotLocked).toHaveBeenCalledWith('user@example.com');
     expect(clear).toHaveBeenCalledWith('user@example.com');
     expect(recordFailure).not.toHaveBeenCalled();
+    expect(recordAudit).toHaveBeenCalledWith({
+      eventType: SecurityAuditEventType.AuthLoginSuccess,
+      actorUserId: savedUser.id,
+      subjectUserId: savedUser.id,
+    });
   });
 
   it('login throws 429 when account is locked without calling UserService', async () => {
@@ -403,6 +438,7 @@ describe('AuthService', () => {
     );
     expect(findByEmail).not.toHaveBeenCalled();
     expect(recordFailure).not.toHaveBeenCalled();
+    expect(recordAudit).not.toHaveBeenCalled();
   });
 
   it('login throws UnauthorizedException when user is not found', async () => {
@@ -418,6 +454,30 @@ describe('AuthService', () => {
     expect(verify).not.toHaveBeenCalled();
     expect(persistForUser).not.toHaveBeenCalled();
     expect(recordFailure).toHaveBeenCalledWith('missing@example.com');
+    expect(recordAudit).toHaveBeenCalledWith({
+      eventType: SecurityAuditEventType.AuthLoginFailure,
+      metadata: { reason: 'invalid_credentials' },
+    });
+  });
+
+  it('login records lockout audit when recordFailure triggers lock', async () => {
+    findByEmail.mockResolvedValue(null);
+    recordFailure.mockReturnValue(true);
+    const dto: CreateLoginBodyDto = {
+      email: 'locked@example.com',
+      password: 'secret123',
+    };
+
+    await expect(service.login(dto)).rejects.toThrow(UnauthorizedException);
+
+    expect(recordAudit).toHaveBeenCalledWith({
+      eventType: SecurityAuditEventType.AuthLoginFailure,
+      metadata: { reason: 'invalid_credentials' },
+    });
+    expect(recordAudit).toHaveBeenCalledWith({
+      eventType: SecurityAuditEventType.AuthLockoutTriggered,
+      metadata: { lockoutKey: 'locked@example.com' },
+    });
   });
 
   it('login throws UnauthorizedException when password does not match', async () => {
@@ -433,6 +493,10 @@ describe('AuthService', () => {
     );
     expect(persistForUser).not.toHaveBeenCalled();
     expect(recordFailure).toHaveBeenCalledWith('user@example.com');
+    expect(recordAudit).toHaveBeenCalledWith({
+      eventType: SecurityAuditEventType.AuthLoginFailure,
+      metadata: { reason: 'invalid_credentials' },
+    });
   });
 
   it('refresh rotates token and returns new access and refresh tokens', async () => {
@@ -469,6 +533,11 @@ describe('AuthService', () => {
     expect(result.accessToken).toBe('new-access-token');
     expect(typeof result.refreshToken).toBe('string');
     expect(result.refreshToken).not.toBe(dto.refreshToken);
+    expect(recordAudit).toHaveBeenCalledWith({
+      eventType: SecurityAuditEventType.AuthRefreshSuccess,
+      actorUserId: savedUser.id,
+      subjectUserId: savedUser.id,
+    });
   });
 
   it('refresh throws UnauthorizedException when token is not active', async () => {
@@ -491,6 +560,7 @@ describe('AuthService', () => {
     findActiveByRawToken.mockResolvedValue(null);
     findByRawToken.mockResolvedValue({
       id: 'rt-old',
+      userId: savedUser.id,
       revokedAt: new Date('2026-05-20T12:00:00.000Z'),
       replacedByTokenId: 'rt-new',
     });
@@ -505,6 +575,12 @@ describe('AuthService', () => {
     expect(revokeTokenFamily).toHaveBeenCalledWith('rt-old');
     expect(persistForUser).not.toHaveBeenCalled();
     expect(markReplaced).not.toHaveBeenCalled();
+    expect(recordAudit).toHaveBeenCalledWith({
+      eventType: SecurityAuditEventType.AuthRefreshReuseDetected,
+      actorUserId: savedUser.id,
+      subjectUserId: savedUser.id,
+      metadata: { refreshTokenId: 'rt-old' },
+    });
   });
 
   it('refresh does not revoke family when token was logout-revoked only', async () => {
@@ -527,6 +603,7 @@ describe('AuthService', () => {
   it('logout revokes row when refresh token exists and is not revoked', async () => {
     const row = {
       id: 'rt-1',
+      userId: savedUser.id,
       revokedAt: null,
     } as RefreshToken;
     findByRawToken.mockResolvedValue(row);
@@ -539,6 +616,11 @@ describe('AuthService', () => {
 
     expect(findByRawToken).toHaveBeenCalledWith(dto.refreshToken);
     expect(revoke).toHaveBeenCalledWith('rt-1');
+    expect(recordAudit).toHaveBeenCalledWith({
+      eventType: SecurityAuditEventType.AuthLogout,
+      actorUserId: savedUser.id,
+      subjectUserId: savedUser.id,
+    });
   });
 
   it('logout does not revoke when row is already revoked', async () => {

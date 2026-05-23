@@ -12,6 +12,10 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import {
+  SecurityAuditEventType,
+  SecurityAuditService,
+} from '../security-audit';
 import { PasswordHasherService } from '../users/password-hasher.service';
 import { UserService } from '../users/user.service';
 import {
@@ -39,6 +43,7 @@ import { generateOpaqueToken } from './generate-opaque-token';
 import { JwtAccessTokenService } from './jwt-access-token.service';
 import { refreshExpiresAt } from './refresh-expires-at';
 import { isRotatedReuse } from './refresh-token-reuse';
+import { normalizeLockoutKey } from './login-lockout-state';
 import { LoginLockoutService } from './login-lockout.service';
 import { RefreshTokenService } from './refresh-token.service';
 
@@ -53,12 +58,18 @@ export class AuthService {
     private readonly passwordResetTokens: PasswordResetTokenService,
     private readonly config: ConfigService,
     private readonly loginLockout: LoginLockoutService,
+    private readonly securityAudit: SecurityAuditService,
   ) {}
 
   async register(dto: CreateRegisterBodyDto): Promise<RegisterUserResponse> {
     const user = await this.users.create({
       email: dto.email,
       plainPassword: dto.password,
+    });
+    await this.recordAuthAudit({
+      eventType: SecurityAuditEventType.AuthRegisterSuccess,
+      actorUserId: user.id,
+      subjectUserId: user.id,
     });
     const emailVerificationToken = await this.issueEmailVerificationForUser(
       user.id,
@@ -76,6 +87,11 @@ export class AuthService {
     }
 
     const passwordResetToken = await this.issuePasswordResetForUser(user.id);
+    await this.recordAuthAudit({
+      eventType: SecurityAuditEventType.AuthPasswordResetRequested,
+      actorUserId: user.id,
+      subjectUserId: user.id,
+    });
 
     return {
       message: PASSWORD_RESET_REQUEST_ACCEPTED_MESSAGE,
@@ -98,6 +114,11 @@ export class AuthService {
     await this.users.updatePassword(row.userId, dto.password);
     await this.refreshTokens.revokeAllActiveForUser(row.userId);
     await this.passwordResetTokens.invalidateActiveForUser(row.userId);
+    await this.recordAuthAudit({
+      eventType: SecurityAuditEventType.AuthPasswordResetCompleted,
+      actorUserId: row.userId,
+      subjectUserId: row.userId,
+    });
 
     return { message: PASSWORD_RESET_COMPLETED_MESSAGE };
   }
@@ -115,6 +136,11 @@ export class AuthService {
 
     await this.emailVerificationTokens.consume(row.id);
     const user = await this.users.markEmailVerified(row.userId);
+    await this.recordAuthAudit({
+      eventType: SecurityAuditEventType.AuthVerifyEmailSuccess,
+      actorUserId: row.userId,
+      subjectUserId: row.userId,
+    });
 
     return {
       emailVerifiedAt: user.emailVerifiedAt!.toISOString(),
@@ -132,6 +158,11 @@ export class AuthService {
       this.loginLockout.clear(dto.email);
       const accessToken = await this.accessTokens.signForUser(user.id);
       const refreshToken = await this.issueRefreshForUser(user.id);
+      await this.recordAuthAudit({
+        eventType: SecurityAuditEventType.AuthLoginSuccess,
+        actorUserId: user.id,
+        subjectUserId: user.id,
+      });
 
       return {
         ...this.toLoginUserResponse(user),
@@ -144,7 +175,16 @@ export class AuthService {
       }
 
       if (error instanceof UnauthorizedException) {
-        this.loginLockout.recordFailure(dto.email);
+        await this.recordAuthAudit({
+          eventType: SecurityAuditEventType.AuthLoginFailure,
+          metadata: { reason: 'invalid_credentials' },
+        });
+        if (this.loginLockout.recordFailure(dto.email)) {
+          await this.recordAuthAudit({
+            eventType: SecurityAuditEventType.AuthLockoutTriggered,
+            metadata: { lockoutKey: normalizeLockoutKey(dto.email) },
+          });
+        }
       }
 
       throw error;
@@ -161,6 +201,12 @@ export class AuthService {
 
       if (row !== null && isRotatedReuse(row)) {
         await this.refreshTokens.revokeTokenFamily(row.id);
+        await this.recordAuthAudit({
+          eventType: SecurityAuditEventType.AuthRefreshReuseDetected,
+          actorUserId: row.userId,
+          subjectUserId: row.userId,
+          metadata: { refreshTokenId: row.id },
+        });
       }
 
       throw new UnauthorizedException(INVALID_REFRESH_TOKEN_MESSAGE);
@@ -176,6 +222,11 @@ export class AuthService {
     await this.refreshTokens.markReplaced(existing.id, successor.id);
 
     const accessToken = await this.accessTokens.signForUser(existing.userId);
+    await this.recordAuthAudit({
+      eventType: SecurityAuditEventType.AuthRefreshSuccess,
+      actorUserId: existing.userId,
+      subjectUserId: existing.userId,
+    });
 
     return { accessToken, refreshToken: rawToken };
   }
@@ -185,7 +236,21 @@ export class AuthService {
 
     if (row !== null && row.revokedAt === null) {
       await this.refreshTokens.revoke(row.id);
+      await this.recordAuthAudit({
+        eventType: SecurityAuditEventType.AuthLogout,
+        actorUserId: row.userId,
+        subjectUserId: row.userId,
+      });
     }
+  }
+
+  private async recordAuthAudit(input: {
+    eventType: (typeof SecurityAuditEventType)[keyof typeof SecurityAuditEventType];
+    actorUserId?: string | null;
+    subjectUserId?: string | null;
+    metadata?: Record<string, unknown>;
+  }): Promise<void> {
+    await this.securityAudit.record(input);
   }
 
   private async requireUserForCredentials(

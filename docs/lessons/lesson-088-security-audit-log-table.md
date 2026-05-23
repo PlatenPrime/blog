@@ -15,7 +15,7 @@
 
 Намеренно **не** делаем:
 
-- `SecurityAuditService` и запись из auth — [шаг 089](../development-roadmap.md).
+- `SecurityAuditService` и запись из auth — [шаг 089](./lesson-089-audit-events-auth-mutations.md) (done).
 - E2E с реальными строками в audit.
 - Обогащение IP/UA из request — частично [090](../development-roadmap.md).
 - Moderation audit (Track 3, шаг 135) — отдельная таблица.

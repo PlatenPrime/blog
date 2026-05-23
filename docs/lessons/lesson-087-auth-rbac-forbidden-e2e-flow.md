@@ -125,7 +125,7 @@ npx nx run api:test:e2e -- auth-register-login-cms-rbac-flow.e2e-spec.ts
 1. **Flow e2e RBAC** дополняет `cms-posts-rbac.e2e-spec.ts`, не заменяет.
 2. **Права не в JWT** — guard всегда ходит в `UserPermissionsService` по `sub`.
 3. **Пустые permissions** после register — ожидаемый prod-like сценарий до назначения ролей.
-4. Глава XIV (085–087) закрыта; следующий шаг — [089](../development-roadmap.md) (audit events; схема — [088](./lesson-088-security-audit-log-table.md)).
+4. Глава XIV (085–087) закрыта; audit events — [089](./lesson-089-audit-events-auth-mutations.md) (схема — [088](./lesson-088-security-audit-log-table.md)).
 
 ## Verify
 

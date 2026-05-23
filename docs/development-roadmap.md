@@ -14,7 +14,7 @@ Every step is a sprint and must produce code changes + a lesson file in `docs/le
 
 | Area                                                    | Status                                     |
 | ------------------------------------------------------- | ------------------------------------------ |
-| Track 2 (Auth and identity)                             | Steps 057–088 completed; next: 089         |
+| Track 2 (Auth and identity)                             | Steps 057–089 completed; next: 090         |
 | NestJS app                                              | Exists in `apps/api/` (package name `api`) |
 | Root workspace                                          | Step 001 completed                         |
 | Node/npm policy                                         | Step 002 completed                         |
@@ -104,6 +104,7 @@ Every step is a sprint and must produce code changes + a lesson file in `docs/le
 | Auth e2e: refresh rotation                              | Step 086 completed                         |
 | Auth e2e: RBAC forbidden cases                          | Step 087 completed                         |
 | Security audit log table                                | Step 088 completed                         |
+| Audit events for auth mutations                         | Step 089 completed                         |
 
 ## Step Contract (mandatory for every lesson)
 
@@ -239,7 +240,7 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 086  | Auth e2e: refresh rotation                            | e2e — done                             |
 | 087  | Auth e2e: RBAC forbidden cases                        | e2e — done                             |
 | 088  | Security audit log table                              | migration — done                       |
-| 089  | Audit events for auth mutations                       | unit test                              |
+| 089  | Audit events for auth mutations                       | unit test — done                       |
 | 090  | Session/device metadata (optional minimal)            | docs + unit                            |
 | 091  | Map auth failures to API error envelope               | contract test                          |
 | 092  | Service/API key auth stub (optional)                  | unit test                              |
@@ -594,5 +595,6 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 086  | [lesson-086-auth-refresh-rotation-e2e-flow.md](./lessons/lesson-086-auth-refresh-rotation-e2e-flow.md)                 |
 | 087  | [lesson-087-auth-rbac-forbidden-e2e-flow.md](./lessons/lesson-087-auth-rbac-forbidden-e2e-flow.md)                     |
 | 088  | [lesson-088-security-audit-log-table.md](./lessons/lesson-088-security-audit-log-table.md)                             |
+| 089  | [lesson-089-audit-events-auth-mutations.md](./lessons/lesson-089-audit-events-auth-mutations.md)                       |
 
 Entry point: [LOCAL_SETUP.md](./LOCAL_SETUP.md)

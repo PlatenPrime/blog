@@ -36,11 +36,14 @@ export class LoginLockoutService {
     }
   }
 
-  recordFailure(email: string): void {
+  recordFailure(email: string): boolean {
     const key = normalizeLockoutKey(email);
     const now = Date.now();
-    const next = nextStateAfterFailure(this.store.get(key), now, this.policy);
+    const previous = this.store.get(key);
+    const wasLocked = isLoginLocked(previous, now);
+    const next = nextStateAfterFailure(previous, now, this.policy);
     this.store.set(key, next);
+    return !wasLocked && isLoginLocked(next, now);
   }
 
   clear(email: string): void {

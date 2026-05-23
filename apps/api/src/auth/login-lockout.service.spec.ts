@@ -29,6 +29,11 @@ describe('LoginLockoutService', () => {
     expect(() => service.assertNotLocked('user@example.com')).not.toThrow();
   });
 
+  it('recordFailure returns false until lock is triggered', () => {
+    expect(service.recordFailure('user@example.com')).toBe(false);
+    expect(service.recordFailure('user@example.com')).toBe(true);
+  });
+
   it('throws 429 after maxAttempts failures', () => {
     service.recordFailure('user@example.com');
     service.recordFailure('user@example.com');
