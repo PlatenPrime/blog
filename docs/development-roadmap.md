@@ -14,6 +14,7 @@ Every step is a sprint and must produce code changes + a lesson file in `docs/le
 
 | Area                                                    | Status                                     |
 | ------------------------------------------------------- | ------------------------------------------ |
+| Track 2 (Auth and identity)                             | Steps 057–088 completed; next: 089         |
 | NestJS app                                              | Exists in `apps/api/` (package name `api`) |
 | Root workspace                                          | Step 001 completed                         |
 | Node/npm policy                                         | Step 002 completed                         |
@@ -75,8 +76,34 @@ Every step is a sprint and must produce code changes + a lesson file in `docs/le
 | Datasource config from validated env (`DATABASE_URL`)   | Step 058 completed                         |
 | Migration workflow + baseline schema                    | Step 059 completed                         |
 | `User` entity + indexes (`users` table)                 | Step 060 completed                         |
+| Password hasher service (Argon2id)                      | Step 061 completed                         |
+| `UserService` create/find by email                      | Step 062 completed                         |
+| `POST /auth/register` + DTO                             | Step 063 completed                         |
 | Unique email + friendly CONFLICT on register            | Step 064 completed                         |
 | `POST /auth/login` with credential verification         | Step 065 completed                         |
+| JWT access token issuance + verify service              | Step 066 completed                         |
+| `JwtStrategy` + `AuthGuard`                             | Step 067 completed                         |
+| `@CurrentUser()` decorator                              | Step 068 completed                         |
+| Refresh token entity + persistence                      | Step 069 completed                         |
+| `POST /auth/refresh` + rotation semantics               | Step 070 completed                         |
+| `POST /auth/logout` + revoke refresh                    | Step 071 completed                         |
+| Refresh token reuse detection policy                    | Step 072 completed                         |
+| Token TTL configuration + documentation                 | Step 073 completed                         |
+| Login brute-force throttle / basic lockout              | Step 074 completed                         |
+| Email verification token model                          | Step 075 completed                         |
+| `POST /auth/verify-email`                               | Step 076 completed                         |
+| Password reset request flow                             | Step 077 completed                         |
+| Password reset completion                               | Step 078 completed                         |
+| Roles + permissions schema (tables/enums)               | Step 079 completed                         |
+| Seed default roles (admin, editor, viewer)              | Step 080 completed                         |
+| `RolesGuard` + `@Roles()`                               | Step 081 completed                         |
+| Fine-grained `PermissionsGuard` + constants             | Step 082 completed                         |
+| Sample CMS route protected by RBAC                      | Step 083 completed                         |
+| JWT payload shape in `shared-contracts`                 | Step 084 completed                         |
+| Auth e2e: register → login happy path                   | Step 085 completed                         |
+| Auth e2e: refresh rotation                              | Step 086 completed                         |
+| Auth e2e: RBAC forbidden cases                          | Step 087 completed                         |
+| Security audit log table                                | Step 088 completed                         |
 
 ## Step Contract (mandatory for every lesson)
 
