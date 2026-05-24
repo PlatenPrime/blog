@@ -154,4 +154,4 @@ nx run api:build
 ## What To Remember
 
 - Global throttle, login lockout и auth-sensitive limits — **три слоя**, не один сервис.
-- Следующий шаг после 093 — **094** (OpenAPI); gate verified-email — [lesson-093](./lesson-093-require-email-verified-policy.md).
+- Следующий шаг после 093 — **094** (OpenAPI) — [lesson-094](./lesson-094-openapi-swagger.md); gate verified-email — [lesson-093](./lesson-093-require-email-verified-policy.md).

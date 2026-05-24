@@ -27,6 +27,14 @@
         "command": "eslint apps/api/src apps/api/test --max-warnings=0",
         "cwd": "{workspaceRoot}"
       }
+    },
+    "openapi:export": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["shared-contracts:build"],
+      "options": {
+        "command": "npm run openapi:export -w api",
+        "cwd": "{workspaceRoot}"
+      }
     }
   }
 }
