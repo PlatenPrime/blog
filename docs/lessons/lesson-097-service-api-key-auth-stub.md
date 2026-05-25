@@ -18,7 +18,7 @@
 
 - API key storage in Postgres, rotation UI, ownership, scopes or audit events.
 - Protection for existing user-facing routes; JWT + RBAC stay unchanged.
-- OAuth/OIDC/social login; that is deferred to step **098**.
+- OAuth/OIDC/social login; that is deferred to step **098** ([lesson-098](./lesson-098-oauth-social-login-deferred-adr.md)).
 
 ## Dependencies
 
@@ -131,4 +131,4 @@ npx nx run api:openapi:export
 
 - Service keys are machine credentials, not user sessions.
 - Empty env disables successful API-key auth; it does not open a backdoor.
-- Следующий шаг Track 2 — **098**: OAuth/social login deferred ADR.
+- Следующий шаг Track 2 — **098**: [OAuth/social login deferred ADR](./lesson-098-oauth-social-login-deferred-adr.md).

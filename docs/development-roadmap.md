@@ -14,7 +14,7 @@ Every step is a sprint and must produce code changes + a lesson file in `docs/le
 
 | Area                                                    | Status                                             |
 | ------------------------------------------------------- | -------------------------------------------------- |
-| Track 2 (Auth and identity)                             | Steps 057–097 completed; next: **098** (OAuth ADR) |
+| Track 2 (Auth and identity)                             | Steps 057–098 completed; next: **099** (MFA brief) |
 | NestJS app                                              | Exists in `apps/api/` (package name `api`)         |
 | Root workspace                                          | Step 001 completed                                 |
 | Node/npm policy                                         | Step 002 completed                                 |
@@ -250,7 +250,7 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 095  | Session/device metadata (optional minimal)                                  | docs + unit — done                     |
 | 096  | Map auth failures to API error envelope                                     | contract test — done                   |
 | 097  | Service/API key auth stub (optional)                                        | unit test — done                       |
-| 098  | OAuth/social login deferred ADR                                             | ADR file                               |
+| 098  | OAuth/social login deferred ADR                                             | ADR file — done                        |
 | 099  | MFA roadmap note + threat model touch-up                                    | markdown review                        |
 | 100  | Account recovery edge-case tests                                            | `nx run api:test`                      |
 | 101  | Password rotation policy (optional)                                         | policy doc                             |
@@ -859,5 +859,6 @@ See [ADR-003](../adr/003-roadmap-renumber-090-plus.md) for rationale.
 | 095  | [lesson-095-session-device-metadata.md](./lessons/lesson-095-session-device-metadata.md)                               |
 | 096  | [lesson-096-auth-error-envelope.md](./lessons/lesson-096-auth-error-envelope.md)                                       |
 | 097  | [lesson-097-service-api-key-auth-stub.md](./lessons/lesson-097-service-api-key-auth-stub.md)                           |
+| 098  | [lesson-098-oauth-social-login-deferred-adr.md](./lessons/lesson-098-oauth-social-login-deferred-adr.md)               |
 
 Entry point: [LOCAL_SETUP.md](./LOCAL_SETUP.md)

@@ -112,10 +112,11 @@ Steps 033-056.
 - Step 095: [lesson-095-session-device-metadata.md](./lessons/lesson-095-session-device-metadata.md) — session metadata in audit
 - Step 096: [lesson-096-auth-error-envelope.md](./lessons/lesson-096-auth-error-envelope.md) — auth failures in API error envelope
 - Step 097: [lesson-097-service-api-key-auth-stub.md](./lessons/lesson-097-service-api-key-auth-stub.md) — service/API key auth stub
+- Step 098: [lesson-098-oauth-social-login-deferred-adr.md](./lessons/lesson-098-oauth-social-login-deferred-adr.md) — OAuth/social login deferred ADR
 
-- Step 098 (next): OAuth/social login deferred ADR — [development-roadmap.md](./development-roadmap.md)
+- Step 099 (next): MFA roadmap note + threat model touch-up — [development-roadmap.md](./development-roadmap.md)
 
-Steps 098-109 (see [development-roadmap.md](./development-roadmap.md)).
+Steps 099-109 (see [development-roadmap.md](./development-roadmap.md)).
 
 ## Phase 4: CMS Backend (Track 3)
 
