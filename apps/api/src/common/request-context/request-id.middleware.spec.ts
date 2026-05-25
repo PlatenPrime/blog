@@ -11,6 +11,8 @@ describe('RequestIdMiddleware', () => {
   function createMocks(options?: {
     readonly requestId?: string;
     readonly correlationId?: string;
+    readonly forwardedFor?: string;
+    readonly userAgent?: string;
   }) {
     const headers: Record<string, string | undefined> = {};
 
@@ -20,6 +22,14 @@ describe('RequestIdMiddleware', () => {
 
     if (options?.correlationId !== undefined) {
       headers['x-correlation-id'] = options.correlationId;
+    }
+
+    if (options?.forwardedFor !== undefined) {
+      headers['x-forwarded-for'] = options.forwardedFor;
+    }
+
+    if (options?.userAgent !== undefined) {
+      headers['user-agent'] = options.userAgent;
     }
 
     const req = { headers } as Request;
@@ -67,6 +77,28 @@ describe('RequestIdMiddleware', () => {
     expect(requestIdDuringNext).toBe('als-check-id');
     expect(correlationIdDuringNext).toBe('als-check-id');
     expect(requestContextStore.getRequestId()).toBeUndefined();
+  });
+
+  it('populates client metadata for the duration of next()', () => {
+    const { req, res, next, nextMock } = createMocks({
+      requestId: 'client-metadata-id',
+      forwardedFor: '203.0.113.10, 10.0.0.2',
+      userAgent: 'Mozilla/5.0 test browser',
+    });
+    let ipAddressDuringNext: string | undefined;
+    let userAgentDuringNext: string | undefined;
+
+    nextMock.mockImplementation(() => {
+      ipAddressDuringNext = requestContextStore.getIpAddress();
+      userAgentDuringNext = requestContextStore.getUserAgent();
+    });
+
+    middleware.use(req, res, next);
+
+    expect(ipAddressDuringNext).toBe('203.0.113.10');
+    expect(userAgentDuringNext).toBe('Mozilla/5.0 test browser');
+    expect(requestContextStore.getIpAddress()).toBeUndefined();
+    expect(requestContextStore.getUserAgent()).toBeUndefined();
   });
 
   it('echoes client correlation id when valid', () => {

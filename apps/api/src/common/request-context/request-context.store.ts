@@ -17,4 +17,12 @@ export class RequestContextStore {
   getCorrelationId(): string | undefined {
     return this.storage.getStore()?.correlationId;
   }
+
+  getIpAddress(): string | undefined {
+    return this.storage.getStore()?.ipAddress;
+  }
+
+  getUserAgent(): string | undefined {
+    return this.storage.getStore()?.userAgent;
+  }
 }

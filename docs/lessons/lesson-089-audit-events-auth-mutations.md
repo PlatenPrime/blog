@@ -17,7 +17,7 @@
 
 Намеренно **не** делаем:
 
-- IP / User-Agent в audit — [шаг 095](../development-roadmap.md).
+- IP / User-Agent в audit — позже закрыто в [шаге 095](./lesson-095-session-device-metadata.md).
 - E2E с реальными строками в Postgres после login.
 - Audit на RBAC/CMS (не auth mutations).
 
@@ -26,7 +26,7 @@
 - [Шаг 088](./lesson-088-security-audit-log-table.md) — таблица, сущность, `SecurityAuditEventType`.
 - [Шаг 072](./lesson-072-auth-refresh-reuse-detection.md) — reuse → `auth.refresh.reuse_detected`.
 - [Шаг 074](./lesson-074-login-brute-force-lockout.md) — lockout → `auth.lockout.triggered`.
-- [Шаг 043](./lesson-043-request-id-middleware-als-context.md) — `RequestContextStore`.
+- [Шаг 043](./lesson-043-request-id-middleware.md) — `RequestContextStore`.
 
 ## Step-by-Step Changes
 
@@ -101,7 +101,7 @@ await this.recordAuthAudit({
 ## Architecture Notes
 
 - `SecurityAuditModule` импортирует `RequestContextModule` — DI в изолированных module specs (Rbac → Auth).
-- `ip_address` / `user_agent` остаются `null` до 095.
+- `ip_address` / `user_agent` намеренно оставлены `null` до [095](./lesson-095-session-device-metadata.md).
 - Неуспешный verify/reset — без audit (как и отсутствие reset audit для unknown email).
 
 ## Changed Files
@@ -148,7 +148,7 @@ await this.recordAuthAudit({
 1. **Audit не блокирует auth** — fail-open + log.
 2. **Нет секретов в metadata** — только ids и reason codes.
 3. **Password reset unknown email** — без audit (anti-enumeration).
-4. IP/UA — [095](../development-roadmap.md); email channel — [090](./lesson-090-email-channel.md).
+4. IP/UA — [095](./lesson-095-session-device-metadata.md); email channel — [090](./lesson-090-email-channel.md).
 
 ## Verify
 

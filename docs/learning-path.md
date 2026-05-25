@@ -109,10 +109,11 @@ Steps 033-056.
 - Step 092: [lesson-092-api-security-baseline.md](./lessons/lesson-092-api-security-baseline.md) — Helmet + global throttler
 - Step 093: [lesson-093-require-email-verified-policy.md](./lessons/lesson-093-require-email-verified-policy.md) — `REQUIRE_EMAIL_VERIFIED` gate
 - Step 094: [lesson-094-openapi-swagger.md](./lessons/lesson-094-openapi-swagger.md) — OpenAPI/Swagger + schema export
+- Step 095: [lesson-095-session-device-metadata.md](./lessons/lesson-095-session-device-metadata.md) — session metadata in audit
 
-- Step 095 (next): session/device metadata — [development-roadmap.md](./development-roadmap.md)
+- Step 096 (next): auth failures mapped to API error envelope — [development-roadmap.md](./development-roadmap.md)
 
-Steps 095-109 (see [development-roadmap.md](./development-roadmap.md)).
+Steps 096-109 (see [development-roadmap.md](./development-roadmap.md)).
 
 ## Phase 4: CMS Backend (Track 3)
 

@@ -30,8 +30,8 @@ export class SecurityAuditService {
         subjectUserId: input.subjectUserId ?? null,
         requestId: this.requestContext.getRequestId() ?? null,
         correlationId: this.requestContext.getCorrelationId() ?? null,
-        ipAddress: null,
-        userAgent: null,
+        ipAddress: this.requestContext.getIpAddress() ?? null,
+        userAgent: this.requestContext.getUserAgent() ?? null,
         metadata: input.metadata ?? {},
         occurredAt: new Date(),
       });

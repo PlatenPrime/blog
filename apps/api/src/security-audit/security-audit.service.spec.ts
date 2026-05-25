@@ -12,6 +12,8 @@ describe('SecurityAuditService', () => {
   let save: ReturnType<typeof vi.fn>;
   let getRequestId: ReturnType<typeof vi.fn>;
   let getCorrelationId: ReturnType<typeof vi.fn>;
+  let getIpAddress: ReturnType<typeof vi.fn>;
+  let getUserAgent: ReturnType<typeof vi.fn>;
   let eventsRepo: Repository<SecurityAuditEvent>;
   let requestContext: RequestContextStore;
 
@@ -20,6 +22,8 @@ describe('SecurityAuditService', () => {
     save = vi.fn().mockResolvedValue({ id: 'audit-1' });
     getRequestId = vi.fn();
     getCorrelationId = vi.fn();
+    getIpAddress = vi.fn();
+    getUserAgent = vi.fn();
     eventsRepo = {
       create,
       save,
@@ -27,13 +31,17 @@ describe('SecurityAuditService', () => {
     requestContext = {
       getRequestId,
       getCorrelationId,
+      getIpAddress,
+      getUserAgent,
     } as unknown as RequestContextStore;
     service = new SecurityAuditService(eventsRepo, requestContext);
   });
 
-  it('persists event with actor, subject, metadata, and request context ids', async () => {
+  it('persists event with actor, subject, metadata, and request context', async () => {
     getRequestId.mockReturnValue('req-1');
     getCorrelationId.mockReturnValue('corr-1');
+    getIpAddress.mockReturnValue('203.0.113.10');
+    getUserAgent.mockReturnValue('Mozilla/5.0 test browser');
     const created = { id: 'audit-1' } as SecurityAuditEvent;
     create.mockReturnValue(created);
 
@@ -51,8 +59,8 @@ describe('SecurityAuditService', () => {
         subjectUserId: 'subject-1',
         requestId: 'req-1',
         correlationId: 'corr-1',
-        ipAddress: null,
-        userAgent: null,
+        ipAddress: '203.0.113.10',
+        userAgent: 'Mozilla/5.0 test browser',
         metadata: { source: 'test' },
       }),
     );
@@ -75,6 +83,8 @@ describe('SecurityAuditService', () => {
       expect.objectContaining({
         requestId: null,
         correlationId: null,
+        ipAddress: null,
+        userAgent: null,
         actorUserId: null,
         subjectUserId: null,
         metadata: {},

@@ -147,7 +147,7 @@ nx run api:openapi:export
 
 - OpenAPI в api — типы в shared-contracts; не смешивать слои.
 - После изменения HTTP API — `nx run api:openapi:export` в том же PR.
-- Следующий шаг Track 2 — **095** (session metadata в audit); Track 3 посты — **110**.
+- Session metadata в audit — [lesson-095](./lesson-095-session-device-metadata.md); следующий шаг Track 2 — **096** (auth error envelope).
 
 ## Verify
 
