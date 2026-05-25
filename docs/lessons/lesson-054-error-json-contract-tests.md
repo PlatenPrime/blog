@@ -17,7 +17,7 @@
 Намеренно **не** делаем:
 
 - OpenAPI/Swagger для ошибок.
-- Production-роуты для auth-кодов (Track 2, шаг 096).
+- Production-роуты для auth-кодов (позже закрыто в [шаге 096](./lesson-096-auth-error-envelope.md)).
 - Ужесточение Zod `code` до enum (domain-коды позже).
 
 ## Dependencies
@@ -80,7 +80,7 @@ const { body } = expectProblemDetailsContract(response, {
 
 - Contract tests живут в `src/**/*.contract.spec.ts` и входят в `api:test`, не в e2e.
 - Wire: `detail` + `status` в body; legacy Nest-поля не утекают в JSON.
-- Auth-ошибки в production появятся в Track 2; probe закрывает контракт до этого.
+- Auth-ошибки в production закрыты отдельной матрицей в [шаге 096](./lesson-096-auth-error-envelope.md).
 
 ## Verify
 

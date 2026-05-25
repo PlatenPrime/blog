@@ -20,7 +20,7 @@
 
 - Claim `emailVerified` в JWT — проверка по БД.
 - Глобальный `APP_GUARD` на все маршруты.
-- Унификация auth error codes (**096**); OpenAPI — [lesson-094](./lesson-094-openapi-swagger.md).
+- Унификация auth error codes (позже закрыто в [096](./lesson-096-auth-error-envelope.md)); OpenAPI — [lesson-094](./lesson-094-openapi-swagger.md).
 
 ## Dependencies
 
@@ -135,4 +135,4 @@ nx run api:build
 
 - Pre-auth маршруты (register, verify-email, resend, reset) **вне** gate — иначе пользователь не сможет подтвердить почту.
 - Refresh блокируется при policy on — нельзя обойти gate старым refresh.
-- Session metadata в audit — [lesson-095](./lesson-095-session-device-metadata.md); следующий шаг Track 2 — **096** (auth error envelope).
+- Session metadata в audit — [lesson-095](./lesson-095-session-device-metadata.md); auth error envelope — [lesson-096](./lesson-096-auth-error-envelope.md).

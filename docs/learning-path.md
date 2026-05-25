@@ -110,10 +110,11 @@ Steps 033-056.
 - Step 093: [lesson-093-require-email-verified-policy.md](./lessons/lesson-093-require-email-verified-policy.md) — `REQUIRE_EMAIL_VERIFIED` gate
 - Step 094: [lesson-094-openapi-swagger.md](./lessons/lesson-094-openapi-swagger.md) — OpenAPI/Swagger + schema export
 - Step 095: [lesson-095-session-device-metadata.md](./lessons/lesson-095-session-device-metadata.md) — session metadata in audit
+- Step 096: [lesson-096-auth-error-envelope.md](./lessons/lesson-096-auth-error-envelope.md) — auth failures in API error envelope
 
-- Step 096 (next): auth failures mapped to API error envelope — [development-roadmap.md](./development-roadmap.md)
+- Step 097 (next): service/API key auth stub — [development-roadmap.md](./development-roadmap.md)
 
-Steps 096-109 (see [development-roadmap.md](./development-roadmap.md)).
+Steps 097-109 (see [development-roadmap.md](./development-roadmap.md)).
 
 ## Phase 4: CMS Backend (Track 3)
 

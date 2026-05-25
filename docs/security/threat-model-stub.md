@@ -1,6 +1,6 @@
 # Threat model (stub)
 
-**Status:** living stub — auth controls mapped through step **095**; full expansion in Track 7 step **305** and capstone **328**.
+**Status:** living stub — auth controls mapped through step **096**; full expansion in Track 7 step **305** and capstone **328**.
 
 This document anchors **scope and vocabulary**. Step numbers refer to the **2026-05 roadmap renumber** ([ADR-003](../adr/003-roadmap-renumber-090-plus.md)).
 
@@ -43,7 +43,7 @@ Browser (untrusted)
 | Spoofing               | Stolen refresh, forged JWT, session fixation | Short-lived access JWT; opaque refresh hashed at rest; rotation + reuse revokes family (**070–072**); `@CurrentUser()` from verified JWT (**067–068**); email verify flow (**075–076**); verify/reset tokens via SMTP/MailDev (**090**); production ESP later |
 | Tampering              | MITM on API, mass assignment on DTOs         | HTTPS assumed in prod; global `ValidationPipe` whitelist (**039**); Problem Details without stack leak (**042**)                                                                                                                                              |
 | Repudiation            | “Who published / logged in?”                 | Structured logs + request/correlation IDs (**043–046**); `security_audit_events` for auth mutations (**088–089**); IP/User-Agent in audit (**095**)                                                                                                           |
-| Information disclosure | Account enumeration, JWT PII, error oracle   | Login/reset neutral messages (**065**, **077**); no email in access JWT (**066**, **084**); log redaction (**047**); friendly 409 on duplicate email (**064**)                                                                                                |
+| Information disclosure | Account enumeration, JWT PII, error oracle   | Login/reset neutral messages (**065**, **077**); no email in access JWT (**066**, **084**); log redaction (**047**); friendly 409 on duplicate email (**064**); auth failures use the shared error envelope (**096**)                                         |
 | DoS                    | Login/reset spam, expensive queries          | Per-email login lockout (**074**); reset/resend rate limits per email + IP (**091**); global throttler baseline (**092**); prod tuning (**292–293**); request timeout (**053**)                                                                               |
 | Elevation              | Viewer → editor, cross-user data             | RBAC schema + seeds (**079–080**); `RolesGuard` / `PermissionsGuard` (**081–082**); CMS route requires `posts:read` (**083**); e2e forbidden cases (**087**); verified-email gate on login/sensitive routes when `REQUIRE_EMAIL_VERIFIED` (**093**)           |
 

@@ -21,7 +21,7 @@
 Намеренно **не** делаем:
 
 - Генерацию `libs/web-api` (**175**).
-- Полную матрицу auth error codes в spec (**096**).
+- Полную матрицу auth error codes в spec (позже закрыто в [096](./lesson-096-auth-error-envelope.md)).
 - Ops routes (`/health`, `/metrics`) в публичной spec.
 - Prod env gate `OPENAPI_ENABLED` (можно позже).
 - CI diff-gate на openapi.json.
@@ -147,7 +147,7 @@ nx run api:openapi:export
 
 - OpenAPI в api — типы в shared-contracts; не смешивать слои.
 - После изменения HTTP API — `nx run api:openapi:export` в том же PR.
-- Session metadata в audit — [lesson-095](./lesson-095-session-device-metadata.md); следующий шаг Track 2 — **096** (auth error envelope).
+- Session metadata в audit — [lesson-095](./lesson-095-session-device-metadata.md); auth error envelope — [lesson-096](./lesson-096-auth-error-envelope.md).
 
 ## Verify
 
