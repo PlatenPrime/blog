@@ -119,4 +119,4 @@ This is a docs/ADR-only step. There is no red/green API code cycle because no ru
 
 - "Deferred" is a decision when it records why, boundaries and return criteria.
 - OAuth needs provider, redirect, linking, audit and error-envelope policies before code.
-- Следующий шаг Track 2 — **099**: MFA roadmap note + threat model touch-up.
+- Следующий шаг Track 2 — **099**: [MFA roadmap note + threat model touch-up](./lesson-099-mfa-roadmap-note-threat-model.md).

@@ -12,99 +12,99 @@ Every step is a sprint and must produce code changes + a lesson file in `docs/le
 
 ## Baseline Status
 
-| Area                                                    | Status                                             |
-| ------------------------------------------------------- | -------------------------------------------------- |
-| Track 2 (Auth and identity)                             | Steps 057–098 completed; next: **099** (MFA brief) |
-| NestJS app                                              | Exists in `apps/api/` (package name `api`)         |
-| Root workspace                                          | Step 001 completed                                 |
-| Node/npm policy                                         | Step 002 completed                                 |
-| Nx init                                                 | Step 003 completed                                 |
-| Nx target defaults                                      | Step 004 completed                                 |
-| Nest in apps/api                                        | Step 005 completed                                 |
-| Root tsconfig base + paths                              | Step 006 completed                                 |
-| Root ESLint flat config                                 | Step 007 completed                                 |
-| Root Prettier + EditorConfig                            | Step 008 completed                                 |
-| Root scripts via Nx (build/test/lint)                   | Step 009 completed                                 |
-| TanStack Start app in `apps/web`                        | Step 010 completed                                 |
-| `web:typecheck` Nx target                               | Step 011 completed                                 |
-| `libs/shared-contracts`                                 | Step 012 completed                                 |
-| Wire shared-contracts into API                          | Step 013 completed                                 |
-| Wire shared-contracts into web                          | Step 014 completed                                 |
-| CORS + dev origins                                      | Step 015 completed                                 |
-| Local infra: Postgres compose                           | Step 016 completed                                 |
-| `.env.example` files                                    | Step 017 completed                                 |
-| Root README + API/web runbook                           | Step 018 completed                                 |
-| CI pipeline baseline (GitHub Actions)                   | Step 019 completed                                 |
-| Nx cache in CI                                          | Step 020 completed                                 |
-| Nx affected flow in CI                                  | Step 021 completed                                 |
-| Optional husky/lint-staged policy                       | Step 022 completed                                 |
-| Lessons folder structure conventions                    | Step 023 completed                                 |
-| Release stub and changelog policy                       | Step 024 completed                                 |
-| Normalize `.gitignore`                                  | Step 025 completed                                 |
-| Optional VS Code recommendations                        | Step 026 completed                                 |
-| ADR-000 (Nx + TanStack Start)                           | Step 027 completed                                 |
-| Threat model stub                                       | Step 028 completed                                 |
-| Health smoke script                                     | Step 029 completed                                 |
-| Track 0 acceptance checklist                            | Step 030 completed                                 |
-| CI matrix improvements (reserve)                        | Step 031 completed                                 |
-| ADR process for deviations (reserve)                    | Step 032 completed                                 |
-| Config module + env validation (Zod)                    | Step 033 completed                                 |
-| Terminus `/health` liveness                             | Step 034 completed                                 |
-| Readiness probe `/health/ready`                         | Step 035 completed                                 |
-| Health response DTOs (shared-contracts)                 | Step 036 completed                                 |
-| API error envelope types (shared-contracts)             | Step 037 completed                                 |
-| Global exception filter + HTTP error mapping            | Step 038 completed                                 |
-| Global ValidationPipe (whitelist, transform)            | Step 039 completed                                 |
-| DTO validation conventions + sample resource            | Step 040 completed                                 |
-| Problem Details (`problem+json`) alignment              | Step 041 completed                                 |
-| Safe unknown errors (no stack leak)                     | Step 042 completed                                 |
-| Request ID middleware + ALS context                     | Step 043 completed                                 |
-| Structured logging (nestjs-pino)                        | Step 044 completed                                 |
-| Request logging interceptor                             | Step 045 completed                                 |
-| Correlation ID in response headers                      | Step 046 completed                                 |
-| Redact sensitive fields in logs                         | Step 047 completed                                 |
-| OpenTelemetry noop tracer provider                      | Step 048 completed                                 |
-| Trace context propagation (W3C)                         | Step 049 completed                                 |
-| Prometheus `/metrics` stub                              | Step 050 completed                                 |
-| Global API prefix + URI versioning (`/api/v1`)          | Step 051 completed                                 |
-| Graceful shutdown hooks (SIGTERM)                       | Step 052 completed                                 |
-| Request timeout / abort + shutdown grace                | Step 053 completed                                 |
-| Contract tests for error JSON shape                     | Step 054 completed                                 |
-| Track 1 acceptance checklist                            | Step 055 completed                                 |
-| Platform observability follow-ups (OTLP, logs, metrics) | Step 056 completed                                 |
-| Database module (Postgres + TypeORM bootstrap)          | Step 057 completed                                 |
-| Datasource config from validated env (`DATABASE_URL`)   | Step 058 completed                                 |
-| Migration workflow + baseline schema                    | Step 059 completed                                 |
-| `User` entity + indexes (`users` table)                 | Step 060 completed                                 |
-| Password hasher service (Argon2id)                      | Step 061 completed                                 |
-| `UserService` create/find by email                      | Step 062 completed                                 |
-| `POST /auth/register` + DTO                             | Step 063 completed                                 |
-| Unique email + friendly CONFLICT on register            | Step 064 completed                                 |
-| `POST /auth/login` with credential verification         | Step 065 completed                                 |
-| JWT access token issuance + verify service              | Step 066 completed                                 |
-| `JwtStrategy` + `AuthGuard`                             | Step 067 completed                                 |
-| `@CurrentUser()` decorator                              | Step 068 completed                                 |
-| Refresh token entity + persistence                      | Step 069 completed                                 |
-| `POST /auth/refresh` + rotation semantics               | Step 070 completed                                 |
-| `POST /auth/logout` + revoke refresh                    | Step 071 completed                                 |
-| Refresh token reuse detection policy                    | Step 072 completed                                 |
-| Token TTL configuration + documentation                 | Step 073 completed                                 |
-| Login brute-force throttle / basic lockout              | Step 074 completed                                 |
-| Email verification token model                          | Step 075 completed                                 |
-| `POST /auth/verify-email`                               | Step 076 completed                                 |
-| Password reset request flow                             | Step 077 completed                                 |
-| Password reset completion                               | Step 078 completed                                 |
-| Roles + permissions schema (tables/enums)               | Step 079 completed                                 |
-| Seed default roles (admin, editor, viewer)              | Step 080 completed                                 |
-| `RolesGuard` + `@Roles()`                               | Step 081 completed                                 |
-| Fine-grained `PermissionsGuard` + constants             | Step 082 completed                                 |
-| Sample CMS route protected by RBAC                      | Step 083 completed                                 |
-| JWT payload shape in `shared-contracts`                 | Step 084 completed                                 |
-| Auth e2e: register → login happy path                   | Step 085 completed                                 |
-| Auth e2e: refresh rotation                              | Step 086 completed                                 |
-| Auth e2e: RBAC forbidden cases                          | Step 087 completed                                 |
-| Security audit log table                                | Step 088 completed                                 |
-| Audit events for auth mutations                         | Step 089 completed                                 |
+| Area                                                    | Status                                     |
+| ------------------------------------------------------- | ------------------------------------------ |
+| Track 2 (Auth and identity)                             | Steps 057–099 completed; next: **100**     |
+| NestJS app                                              | Exists in `apps/api/` (package name `api`) |
+| Root workspace                                          | Step 001 completed                         |
+| Node/npm policy                                         | Step 002 completed                         |
+| Nx init                                                 | Step 003 completed                         |
+| Nx target defaults                                      | Step 004 completed                         |
+| Nest in apps/api                                        | Step 005 completed                         |
+| Root tsconfig base + paths                              | Step 006 completed                         |
+| Root ESLint flat config                                 | Step 007 completed                         |
+| Root Prettier + EditorConfig                            | Step 008 completed                         |
+| Root scripts via Nx (build/test/lint)                   | Step 009 completed                         |
+| TanStack Start app in `apps/web`                        | Step 010 completed                         |
+| `web:typecheck` Nx target                               | Step 011 completed                         |
+| `libs/shared-contracts`                                 | Step 012 completed                         |
+| Wire shared-contracts into API                          | Step 013 completed                         |
+| Wire shared-contracts into web                          | Step 014 completed                         |
+| CORS + dev origins                                      | Step 015 completed                         |
+| Local infra: Postgres compose                           | Step 016 completed                         |
+| `.env.example` files                                    | Step 017 completed                         |
+| Root README + API/web runbook                           | Step 018 completed                         |
+| CI pipeline baseline (GitHub Actions)                   | Step 019 completed                         |
+| Nx cache in CI                                          | Step 020 completed                         |
+| Nx affected flow in CI                                  | Step 021 completed                         |
+| Optional husky/lint-staged policy                       | Step 022 completed                         |
+| Lessons folder structure conventions                    | Step 023 completed                         |
+| Release stub and changelog policy                       | Step 024 completed                         |
+| Normalize `.gitignore`                                  | Step 025 completed                         |
+| Optional VS Code recommendations                        | Step 026 completed                         |
+| ADR-000 (Nx + TanStack Start)                           | Step 027 completed                         |
+| Threat model stub                                       | Step 028 completed                         |
+| Health smoke script                                     | Step 029 completed                         |
+| Track 0 acceptance checklist                            | Step 030 completed                         |
+| CI matrix improvements (reserve)                        | Step 031 completed                         |
+| ADR process for deviations (reserve)                    | Step 032 completed                         |
+| Config module + env validation (Zod)                    | Step 033 completed                         |
+| Terminus `/health` liveness                             | Step 034 completed                         |
+| Readiness probe `/health/ready`                         | Step 035 completed                         |
+| Health response DTOs (shared-contracts)                 | Step 036 completed                         |
+| API error envelope types (shared-contracts)             | Step 037 completed                         |
+| Global exception filter + HTTP error mapping            | Step 038 completed                         |
+| Global ValidationPipe (whitelist, transform)            | Step 039 completed                         |
+| DTO validation conventions + sample resource            | Step 040 completed                         |
+| Problem Details (`problem+json`) alignment              | Step 041 completed                         |
+| Safe unknown errors (no stack leak)                     | Step 042 completed                         |
+| Request ID middleware + ALS context                     | Step 043 completed                         |
+| Structured logging (nestjs-pino)                        | Step 044 completed                         |
+| Request logging interceptor                             | Step 045 completed                         |
+| Correlation ID in response headers                      | Step 046 completed                         |
+| Redact sensitive fields in logs                         | Step 047 completed                         |
+| OpenTelemetry noop tracer provider                      | Step 048 completed                         |
+| Trace context propagation (W3C)                         | Step 049 completed                         |
+| Prometheus `/metrics` stub                              | Step 050 completed                         |
+| Global API prefix + URI versioning (`/api/v1`)          | Step 051 completed                         |
+| Graceful shutdown hooks (SIGTERM)                       | Step 052 completed                         |
+| Request timeout / abort + shutdown grace                | Step 053 completed                         |
+| Contract tests for error JSON shape                     | Step 054 completed                         |
+| Track 1 acceptance checklist                            | Step 055 completed                         |
+| Platform observability follow-ups (OTLP, logs, metrics) | Step 056 completed                         |
+| Database module (Postgres + TypeORM bootstrap)          | Step 057 completed                         |
+| Datasource config from validated env (`DATABASE_URL`)   | Step 058 completed                         |
+| Migration workflow + baseline schema                    | Step 059 completed                         |
+| `User` entity + indexes (`users` table)                 | Step 060 completed                         |
+| Password hasher service (Argon2id)                      | Step 061 completed                         |
+| `UserService` create/find by email                      | Step 062 completed                         |
+| `POST /auth/register` + DTO                             | Step 063 completed                         |
+| Unique email + friendly CONFLICT on register            | Step 064 completed                         |
+| `POST /auth/login` with credential verification         | Step 065 completed                         |
+| JWT access token issuance + verify service              | Step 066 completed                         |
+| `JwtStrategy` + `AuthGuard`                             | Step 067 completed                         |
+| `@CurrentUser()` decorator                              | Step 068 completed                         |
+| Refresh token entity + persistence                      | Step 069 completed                         |
+| `POST /auth/refresh` + rotation semantics               | Step 070 completed                         |
+| `POST /auth/logout` + revoke refresh                    | Step 071 completed                         |
+| Refresh token reuse detection policy                    | Step 072 completed                         |
+| Token TTL configuration + documentation                 | Step 073 completed                         |
+| Login brute-force throttle / basic lockout              | Step 074 completed                         |
+| Email verification token model                          | Step 075 completed                         |
+| `POST /auth/verify-email`                               | Step 076 completed                         |
+| Password reset request flow                             | Step 077 completed                         |
+| Password reset completion                               | Step 078 completed                         |
+| Roles + permissions schema (tables/enums)               | Step 079 completed                         |
+| Seed default roles (admin, editor, viewer)              | Step 080 completed                         |
+| `RolesGuard` + `@Roles()`                               | Step 081 completed                         |
+| Fine-grained `PermissionsGuard` + constants             | Step 082 completed                         |
+| Sample CMS route protected by RBAC                      | Step 083 completed                         |
+| JWT payload shape in `shared-contracts`                 | Step 084 completed                         |
+| Auth e2e: register → login happy path                   | Step 085 completed                         |
+| Auth e2e: refresh rotation                              | Step 086 completed                         |
+| Auth e2e: RBAC forbidden cases                          | Step 087 completed                         |
+| Security audit log table                                | Step 088 completed                         |
+| Audit events for auth mutations                         | Step 089 completed                         |
 
 ## Step Contract (mandatory for every lesson)
 
@@ -251,7 +251,7 @@ Detailed steps for Tracks 1–8 follow. High-level themes: **Track 1** — platf
 | 096  | Map auth failures to API error envelope                                     | contract test — done                   |
 | 097  | Service/API key auth stub (optional)                                        | unit test — done                       |
 | 098  | OAuth/social login deferred ADR                                             | ADR file — done                        |
-| 099  | MFA roadmap note + threat model touch-up                                    | markdown review                        |
+| 099  | MFA roadmap note + threat model touch-up                                    | markdown review — done                 |
 | 100  | Account recovery edge-case tests                                            | `nx run api:test`                      |
 | 101  | Password rotation policy (optional)                                         | policy doc                             |
 | 102  | User soft-delete / anonymization stub                                       | migration + unit                       |
@@ -860,5 +860,6 @@ See [ADR-003](../adr/003-roadmap-renumber-090-plus.md) for rationale.
 | 096  | [lesson-096-auth-error-envelope.md](./lessons/lesson-096-auth-error-envelope.md)                                       |
 | 097  | [lesson-097-service-api-key-auth-stub.md](./lessons/lesson-097-service-api-key-auth-stub.md)                           |
 | 098  | [lesson-098-oauth-social-login-deferred-adr.md](./lessons/lesson-098-oauth-social-login-deferred-adr.md)               |
+| 099  | [lesson-099-mfa-roadmap-note-threat-model.md](./lessons/lesson-099-mfa-roadmap-note-threat-model.md)                   |
 
 Entry point: [LOCAL_SETUP.md](./LOCAL_SETUP.md)
