@@ -1162,6 +1162,12 @@
         "bearerFormat": "JWT",
         "type": "http",
         "description": "Access token from login or refresh"
+      },
+      "ServiceApiKey": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-service-api-key",
+        "description": "Machine-to-machine credential for future service routes; not used by user JWT routes."
       }
     },
     "schemas": {

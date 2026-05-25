@@ -21,6 +21,8 @@ import { LoginLockoutService } from './login-lockout.service';
 import { RefreshTokenService } from './refresh-token.service';
 import { EmailVerifiedGuard } from './email-verified.guard';
 import { EmailVerifiedPolicyService } from './email-verified-policy.service';
+import { ServiceApiKeyGuard } from './service-api-key.guard';
+import { ServiceApiKeyService } from './service-api-key.service';
 
 @Module({
   imports: [
@@ -60,12 +62,16 @@ import { EmailVerifiedPolicyService } from './email-verified-policy.service';
     JwtAuthGuard,
     EmailVerifiedPolicyService,
     EmailVerifiedGuard,
+    ServiceApiKeyService,
+    ServiceApiKeyGuard,
   ],
   exports: [
     JwtAccessTokenService,
     JwtAuthGuard,
     EmailVerifiedPolicyService,
     EmailVerifiedGuard,
+    ServiceApiKeyService,
+    ServiceApiKeyGuard,
     UsersModule,
     RefreshTokenService,
     EmailVerificationTokenService,

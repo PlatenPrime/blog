@@ -14,6 +14,7 @@ import {
   DEFAULT_LOGIN_LOCKOUT_WINDOW_MS,
 } from '../auth/login-lockout.constants';
 import { DEFAULT_REFRESH_TOKEN_TTL_MS } from '../auth/refresh-token.constants';
+import { SERVICE_API_KEY_MIN_LENGTH } from '../auth/service-api-key.constants';
 import { parseRootEnv, validateRootEnv } from './env.schema';
 
 describe('parseRootEnv', () => {
@@ -52,7 +53,26 @@ describe('parseRootEnv', () => {
       APP_PUBLIC_BASE_URL: '',
       EMAIL_RETURN_TOKEN_IN_RESPONSE: false,
       REQUIRE_EMAIL_VERIFIED: false,
+      SERVICE_API_KEY: '',
     });
+  });
+
+  it('parses SERVICE_API_KEY as an optional trimmed secret', () => {
+    const key = 'service-api-key-with-at-least-32-characters';
+
+    expect(parseRootEnv({ SERVICE_API_KEY: `  ${key}  ` })).toMatchObject({
+      SERVICE_API_KEY: key,
+    });
+    expect(parseRootEnv({ SERVICE_API_KEY: '' })).toMatchObject({
+      SERVICE_API_KEY: '',
+    });
+  });
+
+  it('rejects short non-empty SERVICE_API_KEY values', () => {
+    expect(() =>
+      parseRootEnv({ SERVICE_API_KEY: 'short-service-key' }),
+    ).toThrow(/SERVICE_API_KEY/);
+    expect('short-service-key'.length).toBeLessThan(SERVICE_API_KEY_MIN_LENGTH);
   });
 
   it('parses REQUIRE_EMAIL_VERIFIED boolean', () => {

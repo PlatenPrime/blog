@@ -119,4 +119,4 @@ npx nx run api:test
 
 - Auth errors are not a separate wire format.
 - Neutral auth messages prevent account/token enumeration.
-- Следующий шаг Track 2 — **097**: service/API key auth stub.
+- Service/API key auth stub — [lesson-097](./lesson-097-service-api-key-auth-stub.md); следующий шаг Track 2 — **098**: OAuth/social login deferred ADR.

@@ -3,7 +3,10 @@ import { DataSource } from 'typeorm';
 import { describe, expect, it } from 'vitest';
 import { AppModule } from '../app.module';
 import { PostgresHealthIndicator } from '../health/indicators/postgres.health-indicator';
-import { OPENAPI_BEARER_SCHEME } from '../openapi/openapi-constants';
+import {
+  OPENAPI_BEARER_SCHEME,
+  OPENAPI_SERVICE_API_KEY_SCHEME,
+} from '../openapi/openapi-constants';
 import { createTestDataSourceStub } from '../testing/create-test-data-source.stub';
 import {
   buildOpenApiDocument,
@@ -42,6 +45,15 @@ describe('buildOpenApiDocument', () => {
       expect.objectContaining({
         type: 'http',
         scheme: 'bearer',
+      }),
+    );
+    expect(
+      document.components?.securitySchemes?.[OPENAPI_SERVICE_API_KEY_SCHEME],
+    ).toEqual(
+      expect.objectContaining({
+        type: 'apiKey',
+        in: 'header',
+        name: 'x-service-api-key',
       }),
     );
 

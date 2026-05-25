@@ -128,4 +128,4 @@ npx nx run api:test
 
 - Session metadata здесь — это audit context, не device registry.
 - IP from proxy headers is operationally useful but not proof of identity.
-- Auth failures in API error envelope — [lesson-096](./lesson-096-auth-error-envelope.md); следующий шаг Track 2 — **097**: service/API key auth stub.
+- Auth failures in API error envelope — [lesson-096](./lesson-096-auth-error-envelope.md); service/API key auth stub — [lesson-097](./lesson-097-service-api-key-auth-stub.md).

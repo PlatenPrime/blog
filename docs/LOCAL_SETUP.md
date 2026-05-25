@@ -76,10 +76,11 @@ npx nx run shared-contracts:build
 
 The API reads environment variables at bootstrap. [`@nestjs/config`](https://docs.nestjs.com/techniques/configuration) loads the first existing file from [`resolveEnvFilePaths()`](../apps/api/src/config/env-file-paths.ts) (repo root or `apps/api` working directory), then validates the subset that matches [`.env.example`](../.env.example) using Zod in [`apps/api/src/config/env.schema.ts`](../apps/api/src/config/env.schema.ts).
 
-| Variable       | Default                 | Purpose                                                                                                                                                                         |
-| -------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `PORT`         | `4000`                  | Initial port for the NestJS API. If busy, it auto-increments up to 20 times.                                                                                                    |
-| `CORS_ORIGINS` | `http://localhost:3000` | Comma-separated whitelist of allowed origins. Use `*` (alone or with others) to reflect any origin. **Note:** combining `*` with `credentials: true` will be banned in Track 2. |
+| Variable          | Default                 | Purpose                                                                                                                                                                         |
+| ----------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `PORT`            | `4000`                  | Initial port for the NestJS API. If busy, it auto-increments up to 20 times.                                                                                                    |
+| `CORS_ORIGINS`    | `http://localhost:3000` | Comma-separated whitelist of allowed origins. Use `*` (alone or with others) to reflect any origin. **Note:** combining `*` with `credentials: true` will be banned in Track 2. |
+| `SERVICE_API_KEY` | empty                   | Optional machine-to-machine secret for future service routes. Keep empty locally unless testing a route that explicitly uses `ServiceApiKeyAuth()`.                             |
 
 ### `.env.example` files
 

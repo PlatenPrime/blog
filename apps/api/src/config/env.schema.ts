@@ -24,6 +24,7 @@ import {
   DEFAULT_GLOBAL_THROTTLE_LIMIT,
   DEFAULT_GLOBAL_THROTTLE_TTL_MS,
 } from './global-throttle.constants';
+import { SERVICE_API_KEY_MIN_LENGTH } from '../auth/service-api-key.constants';
 
 function envTcpPort(defaultWhenEmpty: number) {
   return z.preprocess((val: unknown) => {
@@ -93,6 +94,13 @@ function optionalTrimmedString() {
       return String(raw).trim();
     })
     .pipe(z.string());
+}
+
+function optionalServiceApiKey() {
+  return optionalTrimmedString().refine(
+    (value) => value.length === 0 || value.length >= SERVICE_API_KEY_MIN_LENGTH,
+    `SERVICE_API_KEY must be empty or at least ${SERVICE_API_KEY_MIN_LENGTH} characters`,
+  );
 }
 
 function envBoolean(defaultWhenEmpty: boolean) {
@@ -299,6 +307,7 @@ export const rootEnvSchema = z
     APP_PUBLIC_BASE_URL: optionalTrimmedString(),
     EMAIL_RETURN_TOKEN_IN_RESPONSE: envBoolean(false),
     REQUIRE_EMAIL_VERIFIED: envBoolean(false),
+    SERVICE_API_KEY: optionalServiceApiKey(),
   })
   .transform((value) => {
     const explicit =
@@ -383,6 +392,7 @@ const ROOT_ENV_KEYS = [
   'APP_PUBLIC_BASE_URL',
   'EMAIL_RETURN_TOKEN_IN_RESPONSE',
   'REQUIRE_EMAIL_VERIFIED',
+  'SERVICE_API_KEY',
 ] as const;
 
 function pickRootEnvKeys(
