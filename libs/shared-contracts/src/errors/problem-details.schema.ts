@@ -7,7 +7,7 @@ export const apiValidationFieldErrorSchema = z.object({
 });
 
 export const problemDetailsBodySchema = z.object({
-  type: z.string().url(),
+  type: z.url(),
   title: z.string().min(1),
   status: z.number().int().min(400).max(599),
   detail: z.string().min(1),

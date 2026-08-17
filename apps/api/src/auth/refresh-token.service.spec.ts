@@ -138,6 +138,14 @@ describe('RefreshTokenService', () => {
     const ids = await service.collectFamilyTokenIds('rt-2');
 
     expect(ids).toEqual(['rt-2', 'rt-3', 'rt-1']);
+    expect(findOne).toHaveBeenNthCalledWith(1, {
+      where: { id: 'rt-2' },
+      select: { id: true, replacedByTokenId: true },
+    });
+    expect(findOne).toHaveBeenNthCalledWith(3, {
+      where: { replacedByTokenId: 'rt-2' },
+      select: { id: true },
+    });
   });
 
   it('revokeTokenFamily revokes only non-revoked rows in the family', async () => {

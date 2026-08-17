@@ -6,14 +6,14 @@ Monorepo-практикум: **NestJS API** + **TanStack Start** (SSR/SEO) + **N
 
 ## Stack
 
-| Слой                 | Технология                                                                        | Где живёт                                                      |
-| -------------------- | --------------------------------------------------------------------------------- | -------------------------------------------------------------- |
-| Backend API          | NestJS 11 + Express 5 + @nestjs/config + Zod (env)                                | [`apps/api/`](apps/api/)                                       |
-| Public web (SSR/SEO) | TanStack Start (Vite 8 + Nitro), React 19, Tailwind 4                             | [`apps/web/`](apps/web/)                                       |
-| Shared contracts     | TypeScript типы/DTO, переиспользуемые API↔web                                     | [`libs/shared-contracts/`](libs/shared-contracts/)             |
-| Локальная инфра      | PostgreSQL 16 (`postgres:16-alpine`) + healthcheck + named volume                 | [`docker-compose.yml`](docker-compose.yml)                     |
-| Monorepo             | npm workspaces + Nx 22 (target defaults, cache, граф)                             | [`package.json`](package.json), [`nx.json`](nx.json)           |
-| Quality              | ESLint flat config 9, Prettier 3, EditorConfig, Husky 9 + `tests-first` precommit | [`eslint.config.mjs`](eslint.config.mjs), [`.husky/`](.husky/) |
+| Слой                 | Технология                                                                         | Где живёт                                                      |
+| -------------------- | ---------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| Backend API          | NestJS 11 + Express 5 + @nestjs/config + Zod (env)                                 | [`apps/api/`](apps/api/)                                       |
+| Public web (SSR/SEO) | TanStack Start (Vite 8 + Nitro), React 19, Tailwind 4                              | [`apps/web/`](apps/web/)                                       |
+| Shared contracts     | TypeScript типы/DTO, переиспользуемые API↔web                                      | [`libs/shared-contracts/`](libs/shared-contracts/)             |
+| Локальная инфра      | PostgreSQL 18 (`postgres:18-alpine`) + healthcheck + named volume                  | [`docker-compose.yml`](docker-compose.yml)                     |
+| Monorepo             | npm workspaces + Nx 23 (target defaults, cache, граф)                              | [`package.json`](package.json), [`nx.json`](nx.json)           |
+| Quality              | ESLint flat config 10, Prettier 3, EditorConfig, Husky 9 + `tests-first` precommit | [`eslint.config.mjs`](eslint.config.mjs), [`.husky/`](.husky/) |
 
 ## Prerequisites
 

@@ -63,17 +63,17 @@
   },
   "packageManager": "npm@10.8.2",
   "devDependencies": {
-    "@eslint/js": "^9.18.0",
-    "@nx/eslint": "22.7.0",
-    "@nx/vite": "22.7.0",
-    "eslint": "^9.18.0",
-    "eslint-config-prettier": "^10.0.1",
-    "eslint-plugin-prettier": "^5.2.2",
-    "globals": "^17.0.0",
-    "husky": "^9.0.0",
-    "lint-staged": "^16.4.0",
-    "nx": "22.7.0",
-    "prettier": "^3.4.2",
-    "typescript-eslint": "^8.20.0"
+    "@eslint/js": "^10.0.1",
+    "@nx/eslint": "23.1.1",
+    "@nx/vite": "23.1.1",
+    "eslint": "^10.8.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.6",
+    "globals": "^17.11.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.3.0",
+    "nx": "23.1.1",
+    "prettier": "^3.9.6",
+    "typescript-eslint": "^8.67.0"
   }
 }

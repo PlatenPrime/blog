@@ -44,7 +44,7 @@ API стартует через [`src/main.ts`](src/main.ts). Переменны
 
 ## Database (local)
 
-PostgreSQL поднимается через корневой [`docker-compose.yml`](../../docker-compose.yml) (service `db`, образ `postgres:16-alpine`, healthcheck, named volume `blog_pgdata`, bind на `127.0.0.1:5432`).
+PostgreSQL поднимается через корневой [`docker-compose.yml`](../../docker-compose.yml) (service `db`, образ `postgres:18-alpine`, healthcheck, named volume `blog_pgdata`, bind на `127.0.0.1:5432`).
 
 ```bash
 npm run db:up        # docker compose up -d db

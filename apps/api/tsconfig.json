@@ -3,6 +3,7 @@
   "include": ["src/**/*.ts", "test/**/*.ts"],
   "compilerOptions": {
     "outDir": "./dist",
+    "ignoreDeprecations": "6.0",
     "types": ["vitest/globals", "node"],
     "paths": {
       "@blog/shared-contracts": ["../../libs/shared-contracts/src/index.ts"],

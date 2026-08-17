@@ -1,0 +1,86 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    groups:
+      nestjs:
+        patterns:
+          - '@nestjs/*'
+      nx:
+        patterns:
+          - nx
+          - '@nx/*'
+      tanstack:
+        patterns:
+          - '@tanstack/*'
+      otel:
+        patterns:
+          - '@opentelemetry/*'
+      types:
+        patterns:
+          - '@types/*'
+      lint:
+        patterns:
+          - eslint
+          - eslint-*
+          - '@eslint/*'
+          - prettier
+          - eslint-config-prettier
+          - eslint-plugin-prettier
+          - typescript-eslint
+          - globals
+      test:
+        patterns:
+          - vitest
+          - '@vitest/*'
+          - '@testing-library/*'
+          - jsdom
+          - supertest
+      minor-and-patch:
+        update-types:
+          - minor
+          - patch
+        exclude-patterns:
+          - '@nestjs/*'
+          - nx
+          - '@nx/*'
+          - '@tanstack/*'
+          - '@opentelemetry/*'
+          - '@types/*'
+          - eslint
+          - eslint-*
+          - '@eslint/*'
+          - prettier
+          - eslint-config-prettier
+          - eslint-plugin-prettier
+          - typescript-eslint
+          - globals
+          - vitest
+          - '@vitest/*'
+          - '@testing-library/*'
+          - jsdom
+          - supertest
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    groups:
+      github-actions:
+        patterns:
+          - '*'
+
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    groups:
+      docker:
+        update-types:
+          - minor
+          - patch

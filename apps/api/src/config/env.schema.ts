@@ -326,10 +326,10 @@ export const rootEnvSchema = z
   })
   .superRefine((value, ctx) => {
     if (value.APP_PUBLIC_BASE_URL.length > 0) {
-      const publicUrl = z.string().url().safeParse(value.APP_PUBLIC_BASE_URL);
+      const publicUrl = z.url().safeParse(value.APP_PUBLIC_BASE_URL);
       if (!publicUrl.success) {
         ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+          code: 'custom',
           message: 'APP_PUBLIC_BASE_URL must be a valid URL when set',
           path: ['APP_PUBLIC_BASE_URL'],
         });
@@ -337,7 +337,7 @@ export const rootEnvSchema = z
     }
     if (!isPostgresDatabaseUrl(value.DATABASE_URL)) {
       ctx.addIssue({
-        code: z.ZodIssueCode.custom,
+        code: 'custom',
         message: 'DATABASE_URL must use postgresql:// or postgres:// scheme',
         path: ['DATABASE_URL'],
       });
@@ -347,7 +347,7 @@ export const rootEnvSchema = z
       !value.OTEL_EXPORTER_OTLP_ENDPOINT
     ) {
       ctx.addIssue({
-        code: z.ZodIssueCode.custom,
+        code: 'custom',
         message:
           'OTEL_EXPORTER_OTLP_ENDPOINT is required when OTEL_TRACES_EXPORTER=otlp',
         path: ['OTEL_EXPORTER_OTLP_ENDPOINT'],

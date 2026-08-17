@@ -117,7 +117,7 @@ CORS_ORIGINS="http://localhost:3000,http://localhost:5173" npm run start:dev
 
 ## Local infrastructure (PostgreSQL)
 
-Локальная БД поднимается в Docker через [`docker-compose.yml`](../docker-compose.yml) (сервис `db`, образ `postgres:16-alpine`, healthcheck `pg_isready`, named volume `blog_pgdata`, bind на `127.0.0.1:5432`).
+Локальная БД поднимается в Docker через [`docker-compose.yml`](../docker-compose.yml) (сервис `db`, образ `postgres:18-alpine`, healthcheck `pg_isready`, named volume `blog_pgdata`, bind на `127.0.0.1:5432`).
 
 Пререквизит: Docker Engine 24+ (или Docker Desktop) с compose v2 — проверить через `docker compose version`.
 
@@ -132,9 +132,11 @@ npm run db:reset       # остановить и удалить volume (полн
 npm run compose:up     # db + maildev (см. ниже)
 ```
 
+Если volume `blog_pgdata` создавался на PostgreSQL 16, после перехода на `postgres:18-alpine` контейнер не поднимется на старых файлах — нужен `npm run db:reset` (dev-данные сотрутся) и повторный `npm run db:migrate`.
+
 ## Local infrastructure (MailDev, step 090)
 
-Локальный SMTP-перехватчик для verify/reset писем — сервис `maildev` в [`docker-compose.yml`](../docker-compose.yml) (`maildev/maildev:2.1.0`, bind только на loopback).
+Локальный SMTP-перехватчик для verify/reset писем — сервис `maildev` в [`docker-compose.yml`](../docker-compose.yml) (`maildev/maildev:2.2.1`, bind только на loopback).
 
 | Port (host) | Назначение              |
 | ----------- | ----------------------- |

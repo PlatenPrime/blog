@@ -71,7 +71,7 @@ export class RefreshTokenService {
       ids.add(currentId);
       const row = await this.refreshTokens.findOne({
         where: { id: currentId },
-        select: ['id', 'replacedByTokenId'],
+        select: { id: true, replacedByTokenId: true },
       });
       currentId = row?.replacedByTokenId ?? null;
     }
@@ -80,7 +80,7 @@ export class RefreshTokenService {
     for (;;) {
       const parent = await this.refreshTokens.findOne({
         where: { replacedByTokenId: childId },
-        select: ['id'],
+        select: { id: true },
       });
       if (parent == null) {
         break;

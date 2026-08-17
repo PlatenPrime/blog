@@ -51,7 +51,7 @@ const otelEnvSchema = z
       !value.OTEL_EXPORTER_OTLP_ENDPOINT
     ) {
       ctx.addIssue({
-        code: z.ZodIssueCode.custom,
+        code: 'custom',
         message:
           'OTEL_EXPORTER_OTLP_ENDPOINT is required when OTEL_TRACES_EXPORTER=otlp',
         path: ['OTEL_EXPORTER_OTLP_ENDPOINT'],
