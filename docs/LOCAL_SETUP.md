@@ -4,7 +4,7 @@ This file is the local setup entry point after steps 001-009.
 
 ## Toolchain
 
-- Node.js: recommended `22.14.0` (see `.nvmrc`, `.node-version`)
+- Node.js: recommended `24.19.0` (see `.nvmrc`, `.node-version`; `engines`: `>=24.0.0`)
 - npm: `>=10`
 
 ## Version check
