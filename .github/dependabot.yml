@@ -37,7 +37,7 @@ updates:
           - vitest
           - '@vitest/*'
           - '@testing-library/*'
-          - jsdom
+          - happy-dom
           - supertest
       minor-and-patch:
         update-types:
@@ -61,7 +61,7 @@ updates:
           - vitest
           - '@vitest/*'
           - '@testing-library/*'
-          - jsdom
+          - happy-dom
           - supertest
 
   - package-ecosystem: github-actions

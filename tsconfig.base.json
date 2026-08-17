@@ -19,9 +19,8 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
-    "baseUrl": ".",
     "paths": {
-      "@blog/*": ["libs/*/src/index.ts"]
+      "@blog/*": ["./libs/*/src/index.ts"]
     }
   }
 }
