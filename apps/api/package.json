@@ -39,7 +39,7 @@
     "@nestjs/terminus": "^11.1.1",
     "@nestjs/throttler": "^6.5.0",
     "@nestjs/typeorm": "^11.0.3",
-    "@node-rs/argon2": "^2.1.0",
+    "@node-rs/argon2": "^2.2.0",
     "@opentelemetry/api": "^1.9.1",
     "@opentelemetry/context-async-hooks": "^2.10.0",
     "@opentelemetry/core": "^2.10.0",
@@ -52,7 +52,7 @@
     "dotenv": "^17.4.2",
     "helmet": "^8.3.0",
     "nestjs-pino": "^4.6.1",
-    "nodemailer": "^9.0.5",
+    "nodemailer": "^9.1.1",
     "passport": "^0.7.0",
     "passport-custom": "^1.2.1",
     "pg": "^8.23.0",
@@ -61,8 +61,8 @@
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2",
     "swagger-ui-express": "^5.0.1",
-    "typeorm": "^1.1.0",
-    "zod": "^4.4.3"
+    "typeorm": "^1.1.1",
+    "zod": "^4.5.4"
   },
   "nx": {
     "targets": {
