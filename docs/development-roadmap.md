@@ -102,7 +102,7 @@ v1 считается завершённым, когда одновременн�
 
 ### 007 — Local Postgres (Docker Compose)
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Быстрая локальная БД.
 - **Deliverables:** `docker-compose.yml` (Postgres), инструкция в docs.
 - **Verify:** Контейнер healthy; Payload коннектится.
