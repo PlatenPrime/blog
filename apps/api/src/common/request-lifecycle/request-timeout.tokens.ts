@@ -1,1 +1,0 @@
-export const REQUEST_TIMEOUT_MS = Symbol('REQUEST_TIMEOUT_MS');

@@ -1,1 +1,0 @@
-export const PROMETHEUS_REGISTRY = Symbol('PROMETHEUS_REGISTRY');
