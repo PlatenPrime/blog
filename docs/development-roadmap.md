@@ -86,7 +86,7 @@ v1 считается завершённым, когда одновременн�
 
 ### 005 — Typecheck script
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Отдельный CI-gate типов.
 - **Deliverables:** `typecheck` script (`tsc --noEmit`).
 - **Verify:** Script падает на заведомой ошибке типов.
@@ -94,7 +94,7 @@ v1 считается завершённым, когда одновременн�
 
 ### 006 — Env contract (`.env.example`)
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Все переменные окружения описаны до появления сервисов.
 - **Deliverables:** `.env.example` с `DATABASE_URL`, `PAYLOAD_SECRET`, R2/*, Resend, Google OAuth, `NEXT_PUBLIC_*`.
 - **Verify:** Нет реальных секретов; комментарии понятны.

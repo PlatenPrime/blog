@@ -187,7 +187,7 @@ OpenTelemetry full stack — не обязателен в v1.
 | **Vitest** | Unit / component tests |
 | **Playwright** | E2E: разметка, дизайн-критичные экраны, auth/comment/bookmark flows |
 | **Testing Library** (по необходимости) | React component tests |
-| **Typecheck** (`tsc --noEmit`) | CI gate |
+| **Typecheck** (`tsc --noEmit`) | CI gate; script `npm run typecheck` |
 | **axe / a11y smoke** | Базовая доступность в Playwright |
 
 ---
@@ -231,6 +231,7 @@ OpenTelemetry full stack — не обязателен в v1.
 | --- | --- |
 | `docs/tech-stack.md` | Этот файл |
 | `docs/development-roadmap.md` | Инженерный роадмап до v1 |
+| `.env.example` | Канон переменных окружения (плейсхолдеры, без секретов) |
 | `docs/LOCAL_SETUP.md` | Локальный запуск, env, Docker, seed |
 | `docs/adr/` | Architecture Decision Records |
 | `docs/security/` | Threat model, security checklist |
