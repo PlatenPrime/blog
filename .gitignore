@@ -46,3 +46,12 @@ Desktop.ini
 # Misc
 *.pem
 .vercel
+
+# Payload / SQLite (local scaffold)
+*.db
+*.db-journal
+/media
+
+# Auto-generated AI agent stubs (Next/Payload scaffold)
+AGENTS.md
+CLAUDE.md

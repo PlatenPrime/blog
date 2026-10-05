@@ -62,7 +62,7 @@ v1 считается завершённым, когда одновременн�
 
 ### 002 — Scaffold Next.js + Payload CMS v3
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Один app: website + `/admin`.
 - **Deliverables:** Next.js App Router project; Payload config; `/admin` поднимается; TypeScript strict.
 - **Verify:** `npm run dev` → сайт и admin открываются локально.

@@ -1,0 +1,47 @@
+:root {
+  --bg: #f7f4ef;
+  --fg: #1a1a1a;
+  --muted: #5c5c5c;
+  --accent: #1a4d6d;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: Georgia, 'Times New Roman', serif;
+  line-height: 1.5;
+}
+
+.home {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2rem;
+  max-width: 40rem;
+}
+
+.home h1 {
+  margin: 0 0 0.5rem;
+  font-size: 2.5rem;
+  font-weight: 400;
+}
+
+.home p {
+  margin: 0 0 1rem;
+  color: var(--muted);
+}
+
+.home a {
+  color: var(--accent);
+}
