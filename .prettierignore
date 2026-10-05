@@ -1,0 +1,10 @@
+.next/
+out/
+build/
+node_modules/
+package-lock.json
+src/payload-types.ts
+src/payload-generated-schema.ts
+coverage/
+playwright-report/
+test-results/

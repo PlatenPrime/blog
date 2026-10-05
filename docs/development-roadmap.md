@@ -70,7 +70,7 @@ v1 считается завершённым, когда одновременн�
 
 ### 003 — Node LTS, npm, engines, editorconfig
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Зафиксировать runtime.
 - **Deliverables:** `engines` в `package.json`, `.nvmrc` или `volta`, `.editorconfig`.
 - **Verify:** Документированная версия Node совпадает с CI.
@@ -78,7 +78,7 @@ v1 считается завершённым, когда одновременн�
 
 ### 004 — ESLint + Prettier
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Единый стиль кода.
 - **Deliverables:** ESLint flat config (Next + TS), Prettier, npm scripts `lint` / `format`.
 - **Verify:** `npm run lint` проходит на scaffold.

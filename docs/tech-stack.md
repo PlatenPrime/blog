@@ -35,9 +35,9 @@ Vercel (Next.js SSR/ISR + Payload /admin)
 
 | Технология | Назначение |
 | --- | --- |
-| **Node.js LTS** | Runtime приложения (версию фиксируем по актуальному LTS на сайте Node / требованиям Next.js + Payload; обновляем по мере необходимости) |
+| **Node.js 24 (Active LTS)** | Runtime приложения. Pin major — [`.nvmrc`](../.nvmrc) (`24`); `engines.node` в `package.json` — `^24.0.0`. CI (шаг 012) обязан брать версию через `node-version-file: '.nvmrc'` |
 | **TypeScript** | Строгая типизация app + Payload collections + shared types |
-| **npm** | Package manager (workspaces не используем: один Next app) |
+| **npm** (`>=10`) | Package manager (workspaces не используем: один Next app); `engines.npm` в `package.json` |
 
 ---
 
@@ -182,8 +182,8 @@ OpenTelemetry full stack — не обязателен в v1.
 
 | Технология | Назначение |
 | --- | --- |
-| **ESLint** | Lint TypeScript/React/Next |
-| **Prettier** | Форматирование |
+| **ESLint** (flat config) | Lint TypeScript/React/Next через `eslint-config-next` + `eslint-config-prettier`; script `npm run lint` |
+| **Prettier** | Форматирование (`.prettierrc.json`); script `npm run format` |
 | **Vitest** | Unit / component tests |
 | **Playwright** | E2E: разметка, дизайн-критичные экраны, auth/comment/bookmark flows |
 | **Testing Library** (по необходимости) | React component tests |

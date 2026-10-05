@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import React from 'react'
 import './styles.css'
 
@@ -7,7 +8,7 @@ export default function HomePage() {
       <h1>Blog</h1>
       <p>Personal blog — Next.js + Payload CMS.</p>
       <p>
-        <a href="/admin">Open admin</a>
+        <Link href="/admin">Open admin</Link>
       </p>
     </div>
   )
