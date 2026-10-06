@@ -12,7 +12,7 @@ Vercel (Next.js SSR/ISR + Payload /admin)
  (контент, users, схемы)      (медиа / изображения)
 ```
 
-Документ описывает **что** используем и **зачем**. Порядок внедрения — в [`development-roadmap.md`](./development-roadmap.md).
+Документ описывает **что** используем и **зачем**. Почему этот стек (и почему не отдельный API) — [`adr/000-payload-next-neon-r2.md`](./adr/000-payload-next-neon-r2.md). Порядок внедрения — в [`development-roadmap.md`](./development-roadmap.md).
 
 ---
 
