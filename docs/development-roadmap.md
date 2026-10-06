@@ -118,7 +118,7 @@ v1 считается завершённым, когда одновременн�
 
 ### 009 — Migrations policy
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Dev push vs prod migrations.
 - **Deliverables:** Документ ADR + scripts migrate; prod без опасного auto-push.
 - **Verify:** Миграция применяется чисто на пустой БД.

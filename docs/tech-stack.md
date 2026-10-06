@@ -63,11 +63,13 @@ Vercel (Next.js SSR/ISR + Payload /admin)
 | **`@payloadcms/db-postgres`** | Локальная разработка и универсальный Postgres-адаптер |
 | **`@payloadcms/db-vercel-postgres`** | Оптимизированный адаптер для Vercel + Neon |
 | **Drizzle ORM** (через Payload DB adapter) | Схема и migrations; **отдельный ORM-слой не вводим** |
-| **Payload migrations** | Версионирование схемы для production |
+| **Payload migrations** | Версионирование схемы для production (`src/migrations/`) |
 
 **Почему так (лимиты Free):** личный блог с ISR/кэшем публичных страниц почти не нагружает БД. Текст и метаданные укладываются в Neon Free (~0.5 GB); тяжёлые байты живут в R2. Redis и второй ORM на v1 не нужны — они увеличивают стоимость и cold start.
 
 **Локально:** Docker Postgres (или Neon local connection) для быстрых schema push в dev. Выбор адаптера — `src/db/adapter.ts` (`db-postgres` по умолчанию, `db-vercel-postgres` при `VERCEL`).
+
+**Политика схемы:** dev — Drizzle push; prod/preview/CI — только migrations. Детали — [`docs/adr/001-migrations-policy.md`](./adr/001-migrations-policy.md).
 
 ---
 

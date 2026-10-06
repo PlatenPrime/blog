@@ -65,3 +65,19 @@ docker compose exec postgres psql -U postgres -d blog -c 'select 1'
 
 1. Поднимите Postgres: `docker compose up -d`
 2. Убедитесь, что в `.env` заданы `DATABASE_URL` и `PAYLOAD_SECRET`
+
+В **development** схема подтягивается через Drizzle push. Для shared/prod и для проверки «с нуля» используйте миграции (политика — [`docs/adr/001-migrations-policy.md`](./adr/001-migrations-policy.md)):
+
+```bash
+npm run migrate:status
+npm run migrate
+npm run migrate:create <name>
+```
+
+Если после push локальная БД разошлась с историей миграций — сбросьте volume и примените миграции заново:
+
+```bash
+docker compose down -v
+docker compose up -d
+npm run migrate
+```
