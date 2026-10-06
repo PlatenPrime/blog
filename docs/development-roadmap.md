@@ -150,7 +150,7 @@ v1 считается завершённым, когда одновременн�
 
 ### 013 — LOCAL_SETUP.md
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Повторяемый локальный запуск.
 - **Deliverables:** `docs/LOCAL_SETUP.md` (Node, Docker, env, migrate, seed placeholder, admin bootstrap).
 - **Verify:** Следование документу с нуля поднимает app.
@@ -158,7 +158,7 @@ v1 считается завершённым, когда одновременн�
 
 ### 014 — ADR-000: выбор стека
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Зафиксировать архитектурные решения.
 - **Deliverables:** `docs/adr/000-payload-next-neon-r2.md`.
 - **Verify:** ADR ссылается на tech-stack и отвечает «почему не отдельный API».

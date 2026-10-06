@@ -2,6 +2,8 @@
 
 Быстрая локальная БД для разработки без обязательной зависимости от Neon.
 
+Полный onboarding (Node, env, migrate, admin) — [`LOCAL_SETUP.md`](./LOCAL_SETUP.md).
+
 ## Предпосылки
 
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/) или Docker Engine + Compose plugin
