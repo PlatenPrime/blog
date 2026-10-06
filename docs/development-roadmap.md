@@ -134,7 +134,7 @@ v1 считается завершённым, когда одновременн�
 
 ### 011 — Playwright bootstrap
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** E2E каркас (дизайн, разметка, взаимодействия).
 - **Deliverables:** Playwright config, smoke «home loads», npm scripts.
 - **Verify:** Локальный e2e проходит против `dev`/`start`.
