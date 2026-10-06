@@ -110,7 +110,7 @@ v1 считается завершённым, когда одновременн�
 
 ### 008 — Payload DB adapter (Postgres + Drizzle)
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Подключить официальный Postgres adapter.
 - **Deliverables:** `@payloadcms/db-postgres` (local); заготовка под `@payloadcms/db-vercel-postgres` в prod.
 - **Verify:** Admin создаёт запись Users; таблицы появляются.

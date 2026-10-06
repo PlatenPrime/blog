@@ -67,7 +67,7 @@ Vercel (Next.js SSR/ISR + Payload /admin)
 
 **Почему так (лимиты Free):** личный блог с ISR/кэшем публичных страниц почти не нагружает БД. Текст и метаданные укладываются в Neon Free (~0.5 GB); тяжёлые байты живут в R2. Redis и второй ORM на v1 не нужны — они увеличивают стоимость и cold start.
 
-**Локально:** Docker Postgres (или Neon local connection) для быстрых schema push в dev.
+**Локально:** Docker Postgres (или Neon local connection) для быстрых schema push в dev. Выбор адаптера — `src/db/adapter.ts` (`db-postgres` по умолчанию, `db-vercel-postgres` при `VERCEL`).
 
 ---
 

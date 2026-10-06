@@ -59,4 +59,9 @@ docker compose exec postgres psql -U postgres -d blog -c 'select 1'
 
 ## Связь с Payload
 
-На шаге 007 контейнер готов, но приложение ещё может использовать SQLite. Подключение Payload к этому Postgres — шаг **008** роадмапа (`@payloadcms/db-postgres`).
+Локально Payload использует `@payloadcms/db-postgres` и тот же `DATABASE_URL`. На Vercel заготовка выбирает `@payloadcms/db-vercel-postgres` (см. `src/db/adapter.ts`).
+
+Перед `npm run dev`:
+
+1. Поднимите Postgres: `docker compose up -d`
+2. Убедитесь, что в `.env` заданы `DATABASE_URL` и `PAYLOAD_SECRET`
