@@ -207,6 +207,8 @@ OpenTelemetry full stack — не обязателен в v1.
 | **Dependabot** | Обновления зависимостей |
 | **Environments** | `local` · `preview` · `production` |
 
+**CI skeleton (шаг 012):** [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) — job `quality` на `pull_request` и `push` в `main`; Node из [`.nvmrc`](../.nvmrc) (`node-version-file`); gate: `npm ci` → `npm run lint` → `npm run typecheck` → `npm test` (unit). E2E в pipeline — шаг 086.
+
 **Neon:** один production project (без сложной ветвящейся schema-стратегии на старте). Preview app может шарить осторожно настроенный DB strategy (отдельная DB/branch — по мере необходимости; дефолт роадмапа — простой prod Neon + изолированные secrets).
 
 ---

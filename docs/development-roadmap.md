@@ -142,7 +142,7 @@ v1 считается завершённым, когда одновременн�
 
 ### 012 — GitHub Actions CI skeleton
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** PR не мержится без базовых проверок.
 - **Deliverables:** Workflow: install, lint, typecheck, unit tests.
 - **Verify:** PR запускает workflow; failing lint ломает check.
