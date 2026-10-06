@@ -126,7 +126,7 @@ v1 считается завершённым, когда одновременн�
 
 ### 010 — Vitest bootstrap
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Unit-тестовый раннер с первого кода домена.
 - **Deliverables:** Vitest config, пример smoke-теста, `npm test`.
 - **Verify:** Тест зелёный в CI-ready script.
