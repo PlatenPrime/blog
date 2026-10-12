@@ -4,11 +4,11 @@
 
 ## Предпосылки
 
-| Инструмент | Версия / заметка |
-| --- | --- |
-| Node.js | `^24` (см. `engines` в `package.json`) |
-| npm | `>=10` |
-| Docker | Docker Desktop или Docker Engine + Compose plugin |
+| Инструмент | Версия / заметка                                  |
+| ---------- | ------------------------------------------------- |
+| Node.js    | `^24` (см. `engines` в `package.json`)            |
+| npm        | `>=10`                                            |
+| Docker     | Docker Desktop или Docker Engine + Compose plugin |
 
 Проверка:
 
@@ -36,11 +36,11 @@ cp .env.example .env
 
 Заполните минимум для локального старта:
 
-| Переменная | Назначение |
-| --- | --- |
-| `DATABASE_URL` | Postgres (значение по умолчанию совпадает с Docker Compose) |
-| `PAYLOAD_SECRET` | Длинная случайная строка для сессий/токенов Payload |
-| `NEXT_PUBLIC_SERVER_URL` | Публичный origin app, обычно `http://localhost:3000` |
+| Переменная               | Назначение                                                  |
+| ------------------------ | ----------------------------------------------------------- |
+| `DATABASE_URL`           | Postgres (значение по умолчанию совпадает с Docker Compose) |
+| `PAYLOAD_SECRET`         | Длинная случайная строка для сессий/токенов Payload         |
+| `NEXT_PUBLIC_SERVER_URL` | Публичный origin app, обычно `http://localhost:3000`        |
 
 Остальные ключи в `.env.example` (R2, Resend, Google OAuth, Turnstile, `ADMIN_*`) для минимального локального старта можно оставить пустыми или как в примере. Реальные секреты не коммитьте.
 
@@ -81,22 +81,25 @@ Production-like локально: `npm run build` затем `npm start`.
 
 ## 6. Admin bootstrap
 
-Пока нет seed-скрипта (roadmap **040**): первый пользователь создаётся через Payload UI при первом заходе на `/admin` (форма create-first-user).
+Пока нет seed-скрипта (roadmap **040**): первый пользователь создаётся через Payload UI при первом заходе на `/admin` (форма create-first-user). Hook в Users выставляет ему `role: admin` автоматически.
+
+Роли (`admin` | `reader`): только `admin` проходит в `/admin`. Чтобы проверить stub access — создайте второго user с `role: reader` и попробуйте войти им на `/admin` (ожидается отказ).
 
 Переменные `ADMIN_EMAIL` и `ADMIN_PASSWORD` в `.env` зарезервированы под будущий bootstrap; сейчас они **не** создают пользователя автоматически.
 
 ## 7. Seed (placeholder)
 
-| Что | Сейчас | Позже |
-| --- | --- | --- |
-| Admin user | Вручную в `/admin` | Seed по `ADMIN_*` (шаг **040**) |
-| Контент / faker | Пустая БД | Track 12 (ops & seed) |
+| Что             | Сейчас             | Позже                           |
+| --------------- | ------------------ | ------------------------------- |
+| Admin user      | Вручную в `/admin` | Seed по `ADMIN_*` (шаг **040**) |
+| Контент / faker | Пустая БД          | Track 12 (ops & seed)           |
 
 Для текущего onboarding достаточно пустой БД после migrate и одного admin из UI.
 
 ## Полезные команды
 
 ```bash
+npm run ci                 # lint + format:check + typecheck + unit tests (как в GitHub Actions)
 npm run lint
 npm run typecheck
 npm test

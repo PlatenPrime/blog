@@ -32,11 +32,11 @@ docker compose down -v
 
 Совпадают с [`DATABASE_URL`](../.env.example):
 
-| Параметр | Значение |
-| --- | --- |
-| User | `postgres` |
-| Password | `postgres` |
-| Database | `blog` |
+| Параметр    | Значение         |
+| ----------- | ---------------- |
+| User        | `postgres`       |
+| Password    | `postgres`       |
+| Database    | `blog`           |
 | Host / port | `localhost:5432` |
 
 ```
