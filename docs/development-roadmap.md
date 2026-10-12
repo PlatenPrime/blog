@@ -7,12 +7,12 @@
 
 ## Как читать этот документ
 
-| Поле шага | Смысл |
-| --- | --- |
-| **Цель** | Зачем шаг |
+| Поле шага        | Смысл                                  |
+| ---------------- | -------------------------------------- |
+| **Цель**         | Зачем шаг                              |
 | **Deliverables** | Что появляется в репо / инфраструктуре |
-| **Verify** | Как проверить |
-| **DoD** | Definition of Done шага |
+| **Verify**       | Как проверить                          |
+| **DoD**          | Definition of Done шага                |
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked`.
 
@@ -172,7 +172,7 @@ v1 считается завершённым, когда одновременн�
 
 ### 015 — Users collection + roles
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** `admin` и `reader`.
 - **Deliverables:** Users auth-enabled; role field; access control stubs.
 - **Verify:** Admin входит в `/admin`; reader — нет.
@@ -1036,23 +1036,23 @@ v1 считается завершённым, когда одновременн�
 
 ## Сводная таблица треков
 
-| Track | Тема | Шаги |
-| --- | --- | --- |
-| 0 | Foundation | 001–014 |
-| 1 | Content model | 015–024 |
-| 2 | Auth | 025–032 |
-| 3 | Admin CMS & media | 033–040 |
-| 4 | i18n | 041–045 |
-| 5 | Public site | 046–056 |
-| 6 | Reader features | 057–061 |
-| 7 | Discovery & SEO | 062–072 |
-| 8 | Security | 073–078 |
-| 9 | Legal & email | 079–082 |
-| 10 | Quality | 083–087 |
-| 11 | CI/CD & envs | 088–096 |
-| 12 | Ops & seed | 097–103 |
-| 13 | Performance & launch | 104–110 |
-| 14 | Documentation | 111–115 |
+| Track | Тема                 | Шаги    |
+| ----- | -------------------- | ------- |
+| 0     | Foundation           | 001–014 |
+| 1     | Content model        | 015–024 |
+| 2     | Auth                 | 025–032 |
+| 3     | Admin CMS & media    | 033–040 |
+| 4     | i18n                 | 041–045 |
+| 5     | Public site          | 046–056 |
+| 6     | Reader features      | 057–061 |
+| 7     | Discovery & SEO      | 062–072 |
+| 8     | Security             | 073–078 |
+| 9     | Legal & email        | 079–082 |
+| 10    | Quality              | 083–087 |
+| 11    | CI/CD & envs         | 088–096 |
+| 12    | Ops & seed           | 097–103 |
+| 13    | Performance & launch | 104–110 |
+| 14    | Documentation        | 111–115 |
 
 **Всего шагов v1:** 115.
 

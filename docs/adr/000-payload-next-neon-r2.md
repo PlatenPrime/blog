@@ -20,13 +20,13 @@
 
 Один репозиторий, **один Next.js application** с Payload CMS v3:
 
-| Слой | Выбор |
-| --- | --- |
-| App / CMS | Next.js App Router + Payload v3 (`/admin` + website в одном процессе) |
-| Данные | Neon PostgreSQL (prod/preview); локально Docker Postgres |
-| Медиа | Cloudflare R2 (S3-compatible); upload только admin |
-| Auth | Payload Users + roles (`admin` / `reader`); без отдельного Auth.js-стека на v1 |
-| Доступ к данным из Next | Payload Local API / REST; **отдельный ORM-слой не вводим** |
+| Слой                    | Выбор                                                                          |
+| ----------------------- | ------------------------------------------------------------------------------ |
+| App / CMS               | Next.js App Router + Payload v3 (`/admin` + website в одном процессе)          |
+| Данные                  | Neon PostgreSQL (prod/preview); локально Docker Postgres                       |
+| Медиа                   | Cloudflare R2 (S3-compatible); upload только admin                             |
+| Auth                    | Payload Users + roles (`admin` / `reader`); без отдельного Auth.js-стека на v1 |
+| Доступ к данным из Next | Payload Local API / REST; **отдельный ORM-слой не вводим**                     |
 
 Канон имён, версий и сервисов — [`tech-stack.md`](../tech-stack.md). Политика схемы (dev push vs prod migrate) — [`001-migrations-policy.md`](./001-migrations-policy.md).
 
@@ -50,12 +50,12 @@ Vercel (Next.js SSR/ISR + Payload /admin)
 
 ## Отвергнутые альтернативы
 
-| Альтернатива | Почему нет (v1) |
-| --- | --- |
-| WordPress / headless WP | Чужой runtime, плагинная модель, хуже стыкуется с typed Next App Router |
+| Альтернатива                         | Почему нет (v1)                                                                    |
+| ------------------------------------ | ---------------------------------------------------------------------------------- |
+| WordPress / headless WP              | Чужой runtime, плагинная модель, хуже стыкуется с typed Next App Router            |
 | Strapi / Sanity как отдельный сервис | Второй хостинг и sync; Payload в том же Next — меньше трения для admin + Local API |
-| Next + отдельный Nest/Express | См. раздел выше |
-| Prisma (или иной ORM) поверх Payload | Схема и migrations уже через Payload/Drizzle adapter; второй ORM даёт drift |
+| Next + отдельный Nest/Express        | См. раздел выше                                                                    |
+| Prisma (или иной ORM) поверх Payload | Схема и migrations уже через Payload/Drizzle adapter; второй ORM даёт drift        |
 
 ## Последствия
 

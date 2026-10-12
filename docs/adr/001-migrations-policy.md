@@ -15,10 +15,10 @@ Payload + Postgres (Drizzle) умеет два режима синхрониза
 
 ## Решение
 
-| Окружение | Схема |
-| --- | --- |
-| Local / `NODE_ENV=development` | `push: true` — Drizzle push при старте Payload |
-| Prod, preview, CI, любой non-development | `push: false` — только `npm run migrate` |
+| Окружение                                | Схема                                          |
+| ---------------------------------------- | ---------------------------------------------- |
+| Local / `NODE_ENV=development`           | `push: true` — Drizzle push при старте Payload |
+| Prod, preview, CI, любой non-development | `push: false` — только `npm run migrate`       |
 
 Реализация: [`src/db/adapter.ts`](../../src/db/adapter.ts) (`push` и `migrationDir` → `src/migrations/`).
 
@@ -36,11 +36,11 @@ Payload + Postgres (Drizzle) умеет два режима синхрониза
 
 ### Scripts
 
-| Script | Команда |
-| --- | --- |
-| `npm run migrate` | применить pending |
+| Script                   | Команда                |
+| ------------------------ | ---------------------- |
+| `npm run migrate`        | применить pending      |
 | `npm run migrate:create` | сгенерировать миграцию |
-| `npm run migrate:status` | статус |
+| `npm run migrate:status` | статус                 |
 
 ## Последствия
 
