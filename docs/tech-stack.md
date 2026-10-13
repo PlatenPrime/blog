@@ -193,6 +193,8 @@ OpenTelemetry full stack — не обязателен в v1.
 | **Typecheck** (`tsc --noEmit`)         | CI gate; script `npm run typecheck`                                                                                                                                                                                              |
 | **axe / a11y smoke**                   | Базовая доступность в Playwright                                                                                                                                                                                                 |
 
+**Политика (что must / что не гоняем):** [`testing.md`](./testing.md).
+
 ---
 
 ## 13. CI/CD и релизный процесс
@@ -236,6 +238,7 @@ OpenTelemetry full stack — не обязателен в v1.
 | ----------------------------- | -------------------------------------------------------------------------- |
 | `docs/tech-stack.md`          | Этот файл                                                                  |
 | `docs/development-roadmap.md` | Инженерный роадмап до v1                                                   |
+| `docs/testing.md`             | Политика тестов (must-cover, слои, review gate)                            |
 | `.env.example`                | Канон переменных окружения (плейсхолдеры, без секретов)                    |
 | `docs/LOCAL_SETUP.md`         | Локальный запуск, env, Docker, seed                                        |
 | `docs/adr/`                   | Architecture Decision Records                                              |

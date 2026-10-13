@@ -6,6 +6,7 @@ import sharp from 'sharp'
 
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
+import { MEDIA_MAX_FILE_SIZE } from './collections/mediaLimits'
 import { getDatabaseAdapter } from './db/adapter'
 
 const filename = fileURLToPath(import.meta.url)
@@ -26,5 +27,11 @@ export default buildConfig({
   },
   db: getDatabaseAdapter(),
   sharp,
+  // Collection UploadConfig has no per-collection fileSize; Busboy limit is global.
+  upload: {
+    limits: {
+      fileSize: MEDIA_MAX_FILE_SIZE,
+    },
+  },
   plugins: [],
 })
