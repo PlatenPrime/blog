@@ -16,7 +16,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked`.
 
-**Baseline Status:** все шаги ниже — `todo` (старт с нуля после пустого репозитория).
+**Baseline Status:** следующий шаг по Track 1 — `017` (Categories + Tags). Шаги `001`–`016` и `083` (test policy) — `done`.
 
 **Правила ведения**
 
@@ -25,6 +25,9 @@
 3. Секреты не коммитятся; только `.env.example` + описание в LOCAL_SETUP.
 4. Conventional Commits + Changesets с момента появления релизного трека.
 5. Preview Deployment на каждый PR после подключения Vercel.
+6. Тесты — по [`testing.md`](./testing.md): критичная логика и ключевые UX-flows; не гонка за % coverage.
+7. После каждого шага — **review gate**: архитектура, оптимальность, best practices, здравый смысл, тесты/docs (детали в `.cursor/rules/roadmap-one-step.mdc` и в `testing.md`).
+8. После каждого шага агент даёт человеку: **как проверить** (команды + клики) и **что вынести** (смысл, инварианты, best practices) — формат в `.cursor/rules/roadmap-one-step.mdc`.
 
 ---
 
@@ -180,7 +183,7 @@ v1 считается завершённым, когда одновременн�
 
 ### 016 — Media collection
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Файлы как first-class entity (пока local disk ok до R2).
 - **Deliverables:** Media collection, mime/size limits для images.
 - **Verify:** Upload image в admin.
@@ -752,7 +755,7 @@ v1 считается завершённым, когда одновременн�
 
 ### 083 — Unit test policy
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Что обязательно покрываем.
 - **Deliverables:** `docs/testing.md` (helpers, access, search, reading time, i18n fallback).
 - **Verify:** Политика согласована с CI.
@@ -1084,9 +1087,11 @@ Track 14 можно заполнять параллельно с 0–13. Vercel 
 
 После завершения шага:
 
-1. Поставь `done` в заголовке шага.
-2. Обнови **Baseline Status** вверху (номер следующего `todo`).
-3. Если появился новый must-have — добавь шаг в конец трека с новым номером, не переписывая историю done-шагов без нужды.
+1. Пройди **review gate** (архитектура / best practices / здравый смысл / тесты) — см. правила ведения и [`testing.md`](./testing.md).
+2. Поставь `done` в заголовке шага.
+3. Обнови **Baseline Status** вверху (номер следующего `todo` в основной последовательности трека; параллельные doc/policy-шаги вроде Track 14 отмечай отдельно).
+4. В ответе человеку: **как проверить** + **что вынести** (формат в `.cursor/rules/roadmap-one-step.mdc`).
+5. Если появился новый must-have — добавь шаг в конец трека с новым номером, не переписывая историю done-шагов без нужды.
 
 ---
 

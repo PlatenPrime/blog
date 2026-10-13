@@ -96,6 +96,19 @@ Production-like локально: `npm run build` затем `npm start`.
 
 Для текущего onboarding достаточно пустой БД после migrate и одного admin из UI.
 
+## 8. Media (локальный disk)
+
+В `/admin` → **Media** можно загрузить изображение (JPEG / PNG / WebP / GIF). Поле `alt` обязательно.
+
+| Параметр  | Значение                                                                |
+| --------- | ----------------------------------------------------------------------- |
+| Хранилище | Локальная папка `media/` в корне репо (в `.gitignore`, не коммитится)   |
+| MIME      | Только `image/jpeg`, `image/png`, `image/webp`, `image/gif`             |
+| Max size  | 5 MiB (`MEDIA_MAX_FILE_SIZE` в `src/collections/mediaLimits.ts`)        |
+| R2        | Позже (roadmap **037**); env `R2_*` пока не нужны для локального upload |
+
+Проверка: создать Media с картинкой и `alt` → файл появляется в `media/`, запись видна в admin.
+
 ## Полезные команды
 
 ```bash

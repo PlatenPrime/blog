@@ -153,6 +153,9 @@ export interface User {
  */
 export interface Media {
   id: number;
+  /**
+   * Accessible description for the image (required for a11y).
+   */
   alt: string;
   updatedAt: string;
   createdAt: string;
