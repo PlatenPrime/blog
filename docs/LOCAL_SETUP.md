@@ -109,6 +109,26 @@ Production-like локально: `npm run build` затем `npm start`.
 
 Проверка: создать Media с картинкой и `alt` → файл появляется в `media/`, запись видна в admin.
 
+## 9. Categories и Tags (таксономия)
+
+В `/admin` доступны коллекции **Categories** и **Tags**. Поля `title` и `slug` **локализованы** (`uk` / `ru` / `en`; default locale — `uk`, fallback включён).
+
+| Параметр | Значение                                                                                                  |
+| -------- | --------------------------------------------------------------------------------------------------------- |
+| Write    | Только `admin` (create / update / delete)                                                                 |
+| Read     | Публичный (`read: true`) — для будущего browse                                                            |
+| Slug     | Уникален **в пределах локали**; если пуст при сохранении — генерируется из `title` (`src/lib/slugify.ts`) |
+
+Проверка:
+
+1. Войдите в `/admin` как admin.
+2. **Categories** → Create: заполните `title` (например «Інженерія»), оставьте `slug` пустым → Save. Ожидание: slug вроде `inzheneriya`.
+3. Переключите locale в admin на `en`, задайте English title/slug → Save.
+4. То же для **Tags**.
+5. Reader (если создан) не должен иметь write-доступ к этим коллекциям.
+
+Relation к Articles/Notes — шаги **018** / **019**. Unit-тесты slugify — **024**.
+
 ## Полезные команды
 
 ```bash

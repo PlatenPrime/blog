@@ -16,7 +16,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked`.
 
-**Baseline Status:** следующий шаг по Track 1 — `017` (Categories + Tags). Шаги `001`–`016` и `083` (test policy) — `done`.
+**Baseline Status:** следующий шаг по Track 1 — `018` (Articles collection). Шаги `001`–`017` и `083` (test policy) — `done`.
 
 **Правила ведения**
 
@@ -191,11 +191,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 017 — Categories + Tags
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Таксономия ленты.
 - **Deliverables:** Collections + localized titles/slugs.
 - **Verify:** CRUD в admin.
 - **DoD:** Готовы relation fields для Articles/Notes.
+- **Notes:** Payload `localization` (`uk`/`ru`/`en`, default `uk`, fallback) включён здесь; `043` добьёт localized fields у Articles/Notes/Pages + политику fallback. Unit для `slugify` — шаг **024**.
 
 ### 018 — Articles collection
 

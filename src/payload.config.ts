@@ -6,6 +6,8 @@ import sharp from 'sharp'
 
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
+import { Categories } from './collections/Categories'
+import { Tags } from './collections/Tags'
 import { MEDIA_MAX_FILE_SIZE } from './collections/mediaLimits'
 import { getDatabaseAdapter } from './db/adapter'
 
@@ -19,7 +21,16 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media],
+  collections: [Users, Media, Categories, Tags],
+  localization: {
+    locales: [
+      { code: 'uk', label: 'Ukrainian' },
+      { code: 'ru', label: 'Russian' },
+      { code: 'en', label: 'English' },
+    ],
+    defaultLocale: 'uk',
+    fallback: true,
+  },
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
