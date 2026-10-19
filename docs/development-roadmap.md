@@ -16,7 +16,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked`.
 
-**Baseline Status:** следующий шаг по Track 1 — `018` (Articles collection). Шаги `001`–`017` и `083` (test policy) — `done`.
+**Baseline Status:** следующий шаг по Track 1 — `019` (Notes collection). Шаги `001`–`018` и `083` (test policy) — `done`.
 
 **Правила ведения**
 
@@ -200,11 +200,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 018 — Articles collection
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Развёрнутые статьи.
 - **Deliverables:** title, slug, Lexical body, hero image, categories/tags, SEO fields, status/drafts, `publishedAt`, localization uk/ru/en.
 - **Verify:** Создать draft и published article в admin.
 - **DoD:** Модель статьи покрывает v1 product needs.
+- **Notes:** Access `publishedOrAdmin` + `seoFields` shared module; unit — **024**. Preview URL — **035**; Lexical image/YouTube — **034**; публичка — **051**.
 
 ### 019 — Notes collection (короткие мысли)
 

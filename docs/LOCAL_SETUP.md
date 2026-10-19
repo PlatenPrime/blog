@@ -129,6 +129,29 @@ Production-like локально: `npm run build` затем `npm start`.
 
 Relation к Articles/Notes — шаги **018** / **019**. Unit-тесты slugify — **024**.
 
+## 10. Articles
+
+В `/admin` доступна коллекция **Articles** (развёрнутые статьи).
+
+| Параметр | Значение                                                                                                                                                                                          |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Write    | Только `admin` (create / update / delete)                                                                                                                                                         |
+| Read     | Admin — все документы (включая drafts); иначе только `_status: published`                                                                                                                         |
+| Поля     | `title` / `slug` (localized, slug auto из title), Lexical `body` (localized), `heroImage` → Media, `categories` / `tags`, `publishedAt`, группа `seo` (`metaTitle`, `metaDescription`, `ogImage`) |
+| Drafts   | `versions.drafts` — Save Draft / Publish в admin                                                                                                                                                  |
+| Локали   | `uk` / `ru` / `en` (как у Categories/Tags)                                                                                                                                                        |
+
+Проверка:
+
+1. Войдите в `/admin` как admin.
+2. При необходимости создайте Category/Tag и загрузите Media (hero).
+3. **Articles** → Create: заполните `title`, оставьте `slug` пустым, наберите `body` → **Save Draft**. Ожидание: документ в статусе draft, slug заполнен.
+4. Переключите locale (`en` / `ru`), задайте локализованные поля → Save.
+5. **Publish** ту же статью; при желании задайте `publishedAt` и SEO.
+6. Reader / anonymous не должны видеть drafts через API (`read` фильтрует `_status`); write — только admin.
+
+Публичные роуты статьи — шаг **051**. Preview URL — **035**. Unit для `publishedOrAdmin` / slugify — **024**. Notes — **019**.
+
 ## Полезные команды
 
 ```bash
