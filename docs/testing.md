@@ -45,7 +45,7 @@
 - Инварианты модели в helpers (например uniqueness bookmark), если вынесены из Payload hooks
 - Парсеры / сериализаторы контента (TOC из headings, JSON-LD smoke-parse и т.п.), когда появятся
 
-**Сейчас (после 016):** осмысленного unit-suite ещё нет (только smoke bootstrap). Первая волна доменных unit — шаг **024** (+ access helpers из 015).
+**Сейчас (после 017):** осмысленного unit-suite ещё нет (только smoke bootstrap). `slugify` (`src/lib/slugify.ts`) и access helpers уже в коде — unit coverage на шаге **024**.
 
 ### Integration (Payload Local API / DB) — must для границ доступа
 
