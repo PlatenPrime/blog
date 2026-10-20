@@ -15,11 +15,17 @@ import { Comments } from './collections/Comments'
 import { Bookmarks } from './collections/Bookmarks'
 import { MEDIA_MAX_FILE_SIZE } from './collections/mediaLimits'
 import { getDatabaseAdapter } from './db/adapter'
+import { createEmailAdapter } from './auth/emailAdapter'
+import { googleOAuthPlugin } from './auth/googleOAuth'
+import { getServerUrl } from './auth/serverUrl'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
+const serverURL = getServerUrl()
+const emailAdapter = createEmailAdapter()
 
 export default buildConfig({
+  serverURL,
   admin: {
     user: Users.slug,
     importMap: {
@@ -42,12 +48,16 @@ export default buildConfig({
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
   db: getDatabaseAdapter(),
+  ...(emailAdapter ? { email: emailAdapter } : {}),
   sharp,
+  // Same-origin Next app: CSRF allowlist + CORS for the public origin (step 030).
+  csrf: [serverURL],
+  cors: [serverURL],
   // Collection UploadConfig has no per-collection fileSize; Busboy limit is global.
   upload: {
     limits: {
       fileSize: MEDIA_MAX_FILE_SIZE,
     },
   },
-  plugins: [],
+  plugins: [googleOAuthPlugin],
 })

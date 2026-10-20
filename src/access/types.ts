@@ -4,4 +4,6 @@ export type UserRole = 'admin' | 'reader'
 export type AccessUser = {
   id: number | string
   role?: UserRole | null
+  /** Present when Users.auth.verify is enabled; hidden field on the document. */
+  _verified?: boolean | null
 } | null

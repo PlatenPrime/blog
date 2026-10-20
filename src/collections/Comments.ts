@@ -2,12 +2,13 @@ import type { Access, CollectionBeforeValidateHook, CollectionConfig } from 'pay
 
 import { approvedOrAdmin } from '../access/approvedOrAdmin'
 import { isAdmin } from '../access/isAdmin'
-import { isAuthenticated } from '../access/isAuthenticated'
+import { isAuthenticatedAndVerified } from '../access/isVerified'
 import type { AccessUser } from '../access/types'
 
 const adminOnly: Access = ({ req: { user } }) => isAdmin(user as AccessUser)
 
-const authenticatedCreate: Access = ({ req: { user } }) => isAuthenticated(user as AccessUser)
+/** Comments require an authenticated + email-verified user (ADR-002). */
+const verifiedCreate: Access = ({ req: { user } }) => isAuthenticatedAndVerified(user as AccessUser)
 
 /**
  * Force author from session on create so clients cannot spoof another user.
@@ -31,7 +32,7 @@ export const Comments: CollectionConfig = {
   },
   access: {
     read: approvedOrAdmin,
-    create: authenticatedCreate,
+    create: verifiedCreate,
     update: adminOnly,
     delete: adminOnly,
   },

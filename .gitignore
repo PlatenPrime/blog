@@ -25,6 +25,7 @@ coverage/
 playwright-report/
 test-results/
 blob-report/
+tests/e2e/.auth/
 
 # TypeScript
 *.tsbuildinfo

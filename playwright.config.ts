@@ -27,8 +27,14 @@ export default defineConfig({
   },
   projects: [
     {
+      name: 'setup',
+      testMatch: /auth\.setup\.ts/,
+    },
+    {
       name: 'chromium',
+      testIgnore: /auth\.setup\.ts/,
       use: { ...devices['Desktop Chrome'], channel: 'chromium' },
+      dependencies: ['setup'],
     },
   ],
   webServer: {

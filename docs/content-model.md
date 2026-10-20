@@ -99,17 +99,18 @@ URL-safe сегмент: карта кириллицы uk/ru → латиниц�
 
 Аккаунты: один admin в админке + будущие readers на сайте.
 
-|                |                                                                                                                               |
-| -------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| Auth           | `auth: true` (email/password и поля Payload auth)                                                                             |
-| Drafts / trash | нет                                                                                                                           |
-| Access         | `admin`: только admin; `create`: всегда `true` (first-user + будущий register); `read` / `update` / `delete`: `isSelfOrAdmin` |
-| Hooks          | первый пользователь в БД (`totalDocs === 0`) → принудительно `role: 'admin'`                                                  |
+|                |                                                                                                          |
+| -------------- | -------------------------------------------------------------------------------------------------------- |
+| Auth           | email/password + verify + forgotPassword; cookies SameSite=Lax; Google OAuth optional (`payload-oauth2`) |
+| Drafts / trash | нет                                                                                                      |
+| Access         | `admin`: только admin; `create`: public (self-register); `read` / `update` / `delete`: `isSelfOrAdmin`   |
+| Hooks          | first user → `role: admin` + `_verified: true`; non-admin create → force `role: reader`                  |
 
 | Поле     | Тип                | Notes                                                                                  |
 | -------- | ------------------ | -------------------------------------------------------------------------------------- |
-| _(auth)_ | email, password, … | стандарт Payload                                                                       |
+| _(auth)_ | email, password, … | Payload auth + `_verified` / verification & reset tokens                               |
 | `role`   | select             | required; default `reader`; `admin` \| `reader`; create/update поля — **только admin** |
+| `sub`    | text               | OAuth subject (Google); set by plugin                                                  |
 
 ### `media` — Media
 
@@ -184,10 +185,10 @@ Drafts, access, taxonomy, `publishedAt`, SEO — те же.
 
 ### `comments` — Comments
 
-|        |                                                                               |
-| ------ | ----------------------------------------------------------------------------- |
-| Access | `read`: `approvedOrAdmin`; `create`: authenticated; update/delete: admin only |
-| Hooks  | `setAuthorFromUser`: на create `author = req.user.id` (anti-spoof)            |
+|        |                                                                                                |
+| ------ | ---------------------------------------------------------------------------------------------- |
+| Access | `read`: `approvedOrAdmin`; `create`: authenticated **and** verified; update/delete: admin only |
+| Hooks  | `setAuthorFromUser`: на create `author = req.user.id` (anti-spoof)                             |
 
 | Поле               | Тип                    | Required | Notes                                                                       |
 | ------------------ | ---------------------- | -------- | --------------------------------------------------------------------------- |
@@ -200,7 +201,7 @@ Drafts, access, taxonomy, `publishedAt`, SEO — те же.
 
 |        |                                                                                                         |
 | ------ | ------------------------------------------------------------------------------------------------------- |
-| Access | `read` / `update` / `delete`: `isOwnerOrAdmin`; `create`: authenticated                                 |
+| Access | `read` / `update` / `delete`: `isOwnerOrAdmin`; `create`: authenticated **and** verified                |
 | Hooks  | (1) `setUserFromSession` на create; (2) `rejectDuplicateBookmark` → 409 при дубликате `(user, content)` |
 
 | Поле      | Тип                    | Required | Notes                               |
@@ -233,6 +234,7 @@ Drafts, access, taxonomy, `publishedAt`, SEO — те же.
 - Bookmark uniqueness на hook, не на DB constraint (гонка возможна теоретически; усиление — отдельный шаг при необходимости).
 - Comments / Bookmarks не цепляются к `pages`.
 - Media пока на локальном `staticDir`; Cloudflare R2 — по роадмапу.
-- Поле `role` меняет только admin; публичный `create` users открыт под first-user и будущий reader register (Track 2).
+- Поле `role` меняет только admin; публичный `create` users — self-register readers (`/register`) + first-user admin bootstrap.
+- Comments/Bookmarks create: `isAuthenticatedAndVerified` (ADR-002). Полная матрица — [`security/access-matrix.md`](./security/access-matrix.md).
 - `publishedAt` есть, но job расписания публикации — шаг 036.
 - Soft-moderation комментариев в публичном UI — с шага 058.

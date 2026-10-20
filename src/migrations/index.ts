@@ -6,6 +6,8 @@ import * as migration_20261020_085631_notes from './20261020_085631_notes'
 import * as migration_20261020_100223_pages from './20261020_100223_pages'
 import * as migration_20261020_104138_comments from './20261020_104138_comments'
 import * as migration_20261020_113306_bookmarks from './20261020_113306_bookmarks'
+import * as migration_20261020_161000_users_auth_verify_oauth from './20261020_161000_users_auth_verify_oauth'
+import * as migration_20261020_163500_fix_verificationtoken_column from './20261020_163500_fix_verificationtoken_column'
 
 export const migrations = [
   {
@@ -47,5 +49,15 @@ export const migrations = [
     up: migration_20261020_113306_bookmarks.up,
     down: migration_20261020_113306_bookmarks.down,
     name: '20261020_113306_bookmarks',
+  },
+  {
+    up: migration_20261020_161000_users_auth_verify_oauth.up,
+    down: migration_20261020_161000_users_auth_verify_oauth.down,
+    name: '20261020_161000_users_auth_verify_oauth',
+  },
+  {
+    up: migration_20261020_163500_fix_verificationtoken_column.up,
+    down: migration_20261020_163500_fix_verificationtoken_column.down,
+    name: '20261020_163500_fix_verificationtoken_column',
   },
 ]

@@ -44,6 +44,19 @@ cp .env.example .env
 
 Остальные ключи в `.env.example` (R2, Resend, Google OAuth, Turnstile, `ADMIN_*`) для минимального локального старта можно оставить пустыми или как в примере. Реальные секреты не коммитьте.
 
+### Auth email (verify / password reset)
+
+| Режим     | Условие                                | Поведение                                                                            |
+| --------- | -------------------------------------- | ------------------------------------------------------------------------------------ |
+| Local     | `RESEND_API_KEY` пустой                | Console adapter — HTML письма в лог `npm run dev`                                    |
+| Prod-like | `RESEND_API_KEY` + `RESEND_FROM_EMAIL` | [`@payloadcms/email-resend`](https://www.npmjs.com/package/@payloadcms/email-resend) |
+
+После регистрации откройте `/verify?token=…` из лога (или письма Resend). Без verify логин reader’а отклоняется.
+
+### Google OAuth (optional)
+
+См. [`google-oauth-setup.md`](./google-oauth-setup.md). Без `GOOGLE_CLIENT_ID` кнопка на `/login` скрыта.
+
 Канон имён переменных — [`.env.example`](../.env.example).
 
 ## 3. Postgres (Docker)
@@ -83,9 +96,11 @@ Production-like локально: `npm run build` затем `npm start`.
 
 Пока нет seed-скрипта (roadmap **040**): первый пользователь создаётся через Payload UI при первом заходе на `/admin` (форма create-first-user). Hook в Users выставляет ему `role: admin` автоматически.
 
-Роли (`admin` | `reader`): только `admin` проходит в `/admin`. Чтобы проверить stub access — создайте второго user с `role: reader` и попробуйте войти им на `/admin` (ожидается отказ).
+Роли (`admin` | `reader`): только `admin` проходит в `/admin`. Публичная регистрация: `/register` → verify email → `/login`. Reader на `/admin` получает отказ.
 
 Переменные `ADMIN_EMAIL` и `ADMIN_PASSWORD` в `.env` зарезервированы под будущий bootstrap; сейчас они **не** создают пользователя автоматически.
+
+Полезные URL: `/login`, `/register`, `/forgot-password`, `/reset-password`, `/verify`, `/logout`. Матрица доступа — [`security/access-matrix.md`](./security/access-matrix.md).
 
 ## 7. Seed (placeholder)
 
