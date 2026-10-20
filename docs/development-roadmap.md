@@ -16,7 +16,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked`.
 
-**Baseline Status:** следующий шаг по Track 1 — `019` (Notes collection). Шаги `001`–`018` и `083` (test policy) — `done`.
+**Baseline Status:** следующий шаг по Track 2 — `025` (email+password register/login). Шаги `001`–`024` и `083` (test policy) — `done`.
 
 **Правила ведения**
 
@@ -209,39 +209,43 @@ v1 считается завершённым, когда одновременн�
 
 ### 019 — Notes collection (короткие мысли)
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Короткий формат, отдельный от Articles.
 - **Deliverables:** Аналогичные поля, упрощённый body; отличимый type в API/URL.
 - **Verify:** Note создаётся и отличается от Article в запросах.
 - **DoD:** Два формата контента формализованы.
+- **Notes:** Collection `notes` без `heroImage`; те же drafts / `publishedOrAdmin` / SEO / taxonomy; unit — **024**; публичка — **052**.
 
 ### 020 — Pages collection
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** About, Privacy, Terms, Contact-like static pages.
 - **Deliverables:** Pages с Lexical/SEO; slugs.
 - **Verify:** Page `about` сохраняется.
 - **DoD:** Юридические и about страницы не хардкодятся навсегда в JSX без CMS-пути (CMS preferred).
+- **Notes:** Collection `pages` без taxonomy/hero; те же drafts / `publishedOrAdmin` / SEO; unit — **024**; публичка by slug — **054**.
 
 ### 021 — Comments collection
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Комментарии к Article/Note.
 - **Deliverables:** relation content + author user; body; createdAt; soft moderation field (approved/hidden) optional.
 - **Verify:** Reader-роль может создать comment через Local API в тесте; аноним — нет.
 - **DoD:** Модель комментариев готова к UI.
+- **Notes:** Collection `comments`: polymorphic `content` → articles|notes; `author` из session (hook); `moderationStatus` approved/hidden (default approved); create — authenticated; read — approvedOrAdmin; write update/delete — admin. Int test `tests/int/comments.int.spec.ts`. UI — **057** / moderation UX — **058**; unit access helpers — **024**.
 
 ### 022 — Bookmarks collection
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Закладки читателя.
 - **Deliverables:** unique (user, content); access: только владелец.
 - **Verify:** Дубликат закладки блокируется.
 - **DoD:** Модель закладок готова к UI.
+- **Notes:** Collection `bookmarks`: polymorphic `content` → articles\|notes; `user` из session (hook); unique (user, content) via beforeValidate + `bookmarkUniqueness` helpers; access create — authenticated, read/update/delete — `isOwnerOrAdmin`. Int test `tests/int/bookmarks.int.spec.ts`. UI — **059**; unit helpers — **024**.
 
 ### 023 — content-model.md
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Человекочитаемая схема данных.
 - **Deliverables:** `docs/content-model.md` со всеми collections и ключевыми полями.
 - **Verify:** Совпадает с Payload config.
@@ -249,11 +253,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 024 — Unit tests для access helpers / slug rules
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Защитить инварианты модели.
 - **Deliverables:** Vitest на slugify, role checks, bookmark uniqueness helpers.
 - **Verify:** `npm test` green.
 - **DoD:** Критичная логика покрыта до UI.
+- **Notes:** Unit suite: `tests/unit/slugify.test.ts`, `access.test.ts`, `bookmarkUniqueness.test.ts` (node env); smoke bootstrap сохранён.
 
 ---
 

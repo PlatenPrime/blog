@@ -8,5 +8,6 @@
 
 - [Локальный запуск](docs/LOCAL_SETUP.md) — Node, Docker, env, migrate, admin
 - [Технологический стек](docs/tech-stack.md) — канон технологий и архитектурные рамки
+- [Content model](docs/content-model.md) — коллекции Payload, поля, access, связи
 - [Development roadmap](docs/development-roadmap.md) — порядок внедрения до production v1
 - [Локальный Postgres](docs/local-postgres.md) — Docker Compose для разработки
