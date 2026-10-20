@@ -1,6 +1,6 @@
 /**
  * URL-safe slug from a title. Supports Latin + common Cyrillic (uk/ru).
- * Unit coverage deferred to roadmap step 024.
+ * Spaces and underscores become hyphens; other punctuation is dropped.
  */
 const CYRILLIC_TO_LATIN: Record<string, string> = {
   а: 'a',
@@ -62,8 +62,8 @@ export function slugify(input: string): string {
     .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
     .trim()
-    .replace(/[^a-z0-9\s-]/g, '')
     .replace(/[\s_]+/g, '-')
+    .replace(/[^a-z0-9-]/g, '')
     .replace(/-+/g, '-')
     .replace(/^-|-$/g, '')
 }

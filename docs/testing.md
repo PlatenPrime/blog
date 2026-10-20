@@ -45,7 +45,7 @@
 - Инварианты модели в helpers (например uniqueness bookmark), если вынесены из Payload hooks
 - Парсеры / сериализаторы контента (TOC из headings, JSON-LD smoke-parse и т.п.), когда появятся
 
-**Сейчас (после 018):** осмысленного unit-suite ещё нет (только smoke bootstrap). `slugify`, access helpers (`isAdmin`, `isSelfOrAdmin`, `publishedOrAdmin`) уже в коде — unit coverage на шаге **024**.
+**Сейчас (после 024):** unit покрывает `slugify`, access helpers (`isAdmin`, `isAuthenticated`, `isSelfOrAdmin`, `isOwnerOrAdmin`, `publishedOrAdmin`, `approvedOrAdmin`) и `bookmarkUniqueness` (`tests/unit/*.test.ts`). Comments/Bookmarks access и bookmark duplicate по-прежнему покрыты integration-тестами (`tests/int/comments.int.spec.ts`, `tests/int/bookmarks.int.spec.ts`).
 
 ### Integration (Payload Local API / DB) — must для границ доступа
 

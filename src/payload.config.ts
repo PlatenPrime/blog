@@ -9,6 +9,10 @@ import { Media } from './collections/Media'
 import { Categories } from './collections/Categories'
 import { Tags } from './collections/Tags'
 import { Articles } from './collections/Articles'
+import { Notes } from './collections/Notes'
+import { Pages } from './collections/Pages'
+import { Comments } from './collections/Comments'
+import { Bookmarks } from './collections/Bookmarks'
 import { MEDIA_MAX_FILE_SIZE } from './collections/mediaLimits'
 import { getDatabaseAdapter } from './db/adapter'
 
@@ -22,7 +26,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, Categories, Tags, Articles],
+  collections: [Users, Media, Categories, Tags, Articles, Notes, Pages, Comments, Bookmarks],
   localization: {
     locales: [
       { code: 'uk', label: 'Ukrainian' },

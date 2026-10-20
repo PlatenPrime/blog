@@ -127,7 +127,7 @@ Production-like локально: `npm run build` затем `npm start`.
 4. То же для **Tags**.
 5. Reader (если создан) не должен иметь write-доступ к этим коллекциям.
 
-Relation к Articles/Notes — шаги **018** / **019**. Unit-тесты slugify — **024**.
+Relation к Articles/Notes — шаги **018** / **019** (оба done). Unit-тесты slugify/access — **024** (done): `npm test`.
 
 ## 10. Articles
 
@@ -150,7 +150,96 @@ Relation к Articles/Notes — шаги **018** / **019**. Unit-тесты slugi
 5. **Publish** ту же статью; при желании задайте `publishedAt` и SEO.
 6. Reader / anonymous не должны видеть drafts через API (`read` фильтрует `_status`); write — только admin.
 
-Публичные роуты статьи — шаг **051**. Preview URL — **035**. Unit для `publishedOrAdmin` / slugify — **024**. Notes — **019**.
+Публичные роуты статьи — шаг **051**. Preview URL — **035**. Unit для `publishedOrAdmin` / slugify — **024** (done).
+
+## 11. Notes
+
+В `/admin` доступна коллекция **Notes** (короткие мысли, отдельный формат от Articles).
+
+| Параметр | Значение                                                                                                                                                           |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Write    | Только `admin` (create / update / delete)                                                                                                                          |
+| Read     | Admin — все документы (включая drafts); иначе только `_status: published`                                                                                          |
+| Поля     | `title` / `slug` (localized, slug auto из title), Lexical `body` (localized, short-form), `categories` / `tags`, `publishedAt`, группа `seo` — **без** `heroImage` |
+| Drafts   | `versions.drafts` — Save Draft / Publish в admin                                                                                                                   |
+| API      | Collection slug `notes` → REST `/api/notes` (отдельно от `/api/articles`)                                                                                          |
+| Локали   | `uk` / `ru` / `en`                                                                                                                                                 |
+
+Проверка:
+
+1. Войдите в `/admin` как admin.
+2. **Notes** → Create: заполните `title`, оставьте `slug` пустым, короткий `body` → **Save Draft**. Ожидание: draft, slug заполнен.
+3. **Publish** ту же заметку; при желании — `publishedAt`, categories/tags, SEO (`ogImage` вместо cover).
+4. Сравните API: `GET /api/notes` и `GET /api/articles` — разные коллекции; draft note не виден anonymous.
+5. Write — только admin.
+
+Публичные роуты notes — шаг **052**. Preview — **035**. Unit access/slugify — **024** (done).
+
+## 12. Pages
+
+В `/admin` доступна коллекция **Pages** (статические страницы: About, Privacy, Terms и т.п.).
+
+| Параметр | Значение                                                                                                                                            |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Write    | Только `admin` (create / update / delete)                                                                                                           |
+| Read     | Admin — все документы (включая drafts); иначе только `_status: published`                                                                           |
+| Поля     | `title` / `slug` (localized, slug auto из title), Lexical `body` (localized), `publishedAt`, группа `seo` — **без** categories / tags / `heroImage` |
+| Drafts   | `versions.drafts` — Save Draft / Publish в admin                                                                                                    |
+| API      | Collection slug `pages` → REST `/api/pages`                                                                                                         |
+| Локали   | `uk` / `ru` / `en`                                                                                                                                  |
+
+Проверка:
+
+1. Войдите в `/admin` как admin.
+2. **Pages** → Create: `title` = About (или любой), `slug` = `about` (или оставьте пустым для auto), наберите `body` → **Save Draft**. Ожидание: draft, slug заполнен.
+3. **Publish** ту же страницу; при желании — `publishedAt`, SEO.
+4. `GET /api/pages` — published pages видны; draft page не видна anonymous.
+5. Write — только admin.
+
+Публичный рендер page by slug — шаг **054**. Unit access/slugify — **024** (done).
+
+## 13. Comments
+
+В `/admin` доступна коллекция **Comments** (комментарии к Article или Note).
+
+| Параметр        | Значение                                                                                                                                                                    |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Create          | Любой authenticated (`reader` / `admin`); anonymous — отказ                                                                                                                 |
+| Read            | Admin — все; иначе только `moderationStatus: approved`                                                                                                                      |
+| Update / Delete | Только `admin` (модерация)                                                                                                                                                  |
+| Поля            | `content` (polymorphic → `articles` \| `notes`), `author` (auto из session), `body` (textarea), `moderationStatus` (`approved` / `hidden`, default `approved`), `createdAt` |
+| API             | Collection slug `comments` → REST `/api/comments`                                                                                                                           |
+
+Проверка:
+
+1. Войдите в `/admin` как admin (или создайте comment через Local API как reader — см. `npm run test:int`).
+2. Убедитесь, что есть published Article или Note.
+3. **Comments** → Create: выберите `content`, введите `body` → Save. `author` подставится из текущего пользователя; `moderationStatus` по умолчанию `approved`.
+4. Anonymous create через API должен быть отклонён (интеграционный тест это фиксирует).
+
+Публичный Comments UI — шаг **057**. Hide/approve в публичке — **058**. Unit для access helpers — **024** (done).
+
+## 14. Bookmarks
+
+В `/admin` доступна коллекция **Bookmarks** (закладки читателя на Article или Note).
+
+| Параметр               | Значение                                                                                             |
+| ---------------------- | ---------------------------------------------------------------------------------------------------- |
+| Create                 | Любой authenticated (`reader` / `admin`); anonymous — отказ                                          |
+| Read / Update / Delete | Владелец документа (поле `user`) или `admin`                                                         |
+| Поля                   | `user` (auto из session), `content` (polymorphic → `articles` \| `notes`), `createdAt` / `updatedAt` |
+| Уникальность           | Пара `(user, content)` — повторный create отклоняется (409)                                          |
+| API                    | Collection slug `bookmarks` → REST `/api/bookmarks`                                                  |
+
+Проверка:
+
+1. Войдите в `/admin` как admin (или создайте bookmark через Local API как reader — см. `npm run test:int`).
+2. Убедитесь, что есть published Article или Note.
+3. **Bookmarks** → Create: выберите `content` → Save. `user` подставится из текущего пользователя.
+4. Повторное создание закладки тем же user на тот же content должно быть отклонено (интеграционный тест это фиксирует).
+5. Anonymous create через API должен быть отклонён.
+
+Публичный Bookmarks UI (toggle / «Мои закладки») — шаг **059**. Unit для uniqueness/access helpers — **024** (done).
 
 ## Полезные команды
 
