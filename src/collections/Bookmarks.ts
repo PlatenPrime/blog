@@ -1,12 +1,13 @@
 import type { Access, CollectionBeforeValidateHook, CollectionConfig } from 'payload'
 import { APIError } from 'payload'
 
-import { isAuthenticated } from '../access/isAuthenticated'
+import { isAuthenticatedAndVerified } from '../access/isVerified'
 import { isOwnerOrAdmin } from '../access/isOwnerOrAdmin'
 import type { AccessUser } from '../access/types'
 import { buildBookmarkDuplicateWhere, normalizeBookmarkContent } from './bookmarkUniqueness'
 
-const authenticatedCreate: Access = ({ req: { user } }) => isAuthenticated(user as AccessUser)
+/** Bookmarks require an authenticated + email-verified user (ADR-002). */
+const verifiedCreate: Access = ({ req: { user } }) => isAuthenticatedAndVerified(user as AccessUser)
 
 /**
  * Force user from session on create so clients cannot spoof another owner.
@@ -72,7 +73,7 @@ export const Bookmarks: CollectionConfig = {
   },
   access: {
     read: isOwnerOrAdmin,
-    create: authenticatedCreate,
+    create: verifiedCreate,
     update: isOwnerOrAdmin,
     delete: isOwnerOrAdmin,
   },

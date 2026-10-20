@@ -16,7 +16,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked`.
 
-**Baseline Status:** следующий шаг по Track 2 — `025` (email+password register/login). Шаги `001`–`024` и `083` (test policy) — `done`.
+**Baseline Status:** следующий шаг — `033` (Admin UX cleanup). Шаги `001`–`032` и `083` (test policy) — `done`.
 
 **Правила ведения**
 
@@ -39,7 +39,7 @@ v1 считается завершённым, когда одновременн�
 - [ ] Admin на `/admin`: один admin публикует Articles и Notes (draft / preview / schedule)
 - [ ] Медиа: изображения в R2 (WebP); видео — YouTube embed
 - [ ] Локали `uk` / `ru` / `en` для UI и контента
-- [ ] Readers: register/login (email+password + Google), verify email, password reset (Resend)
+- [x] Readers: register/login (email+password + Google), verify email, password reset (Resend)
 - [ ] Comments и Bookmarks только для авторизованных
 - [ ] SEO: RSS, sitemap, OG images, JSON-LD, TOC, reading time, related, code highlight
 - [ ] Поиск по Postgres
@@ -266,67 +266,75 @@ v1 считается завершённым, когда одновременн�
 
 ### 025 — Email+password register/login (public)
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Публичные страницы auth для readers.
-- **Deliverables:** `/[locale]/login`, `/register`, Payload auth integration, sessions/cookies.
+- **Deliverables:** `/login`, `/register`, Payload auth integration, sessions/cookies.
 - **Verify:** Reader регистрируется и логинится; admin panel недоступен.
 - **DoD:** Credentials flow работает end-to-end локально.
+- **Notes:** Routes без `[locale]` (миграция в **041**). Server actions + `@payloadcms/next/auth` login. Int: `tests/int/auth.int.spec.ts`.
 
 ### 026 — Email verification
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Почта привязана и подтверждена.
 - **Deliverables:** verification token flow; блокировка чувствительных действий до verify (политика зафиксирована в ADR).
 - **Verify:** Письмо уходит (dev transport); ссылка подтверждает аккаунт.
 - **DoD:** Unverified пользователь явно обработан в UX.
+- **Notes:** `Users.auth.verify`; `/verify`; comments/bookmarks create → `isAuthenticatedAndVerified`; ADR-002.
 
 ### 027 — Password reset
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Сброс пароля по почте.
 - **Deliverables:** request + reset pages; expiry tokens; rate limit hooks.
 - **Verify:** Полный цикл reset меняет пароль; старый не работает.
 - **DoD:** Reset безопасен и документирован.
+- **Notes:** `/forgot-password`, `/reset-password`; expiry 1h; action + Payload `minRequestInterval`.
 
 ### 028 — Resend integration (prod-ready adapter)
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Единый mail provider.
 - **Deliverables:** Email adapter Resend; templates verification/reset; env vars.
 - **Verify:** В staging/prod-like env письмо доходит; локально — fallback.
 - **DoD:** Auth email не зависит от console.log в production.
+- **Notes:** `@payloadcms/email-resend` when `RESEND_API_KEY` set; else Payload `consoleEmailAdapter`.
 
 ### 029 — Google OAuth
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Вход через Google.
 - **Deliverables:** OAuth app setup docs; callback; link/create reader user; ADR по account linking.
 - **Verify:** Google login создаёт/логинит reader.
 - **DoD:** Credentials + Google сосуществуют.
+- **Notes:** `payload-oauth2`; `docs/google-oauth-setup.md`; account linking in ADR-002; `users.sub` field.
 
 ### 030 — Session security hardening
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Cookie flags, CSRF strategy, logout everywhere basics.
 - **Deliverables:** Secure/HttpOnly/SameSite; logout; docs security note.
 - **Verify:** Playwright: login → authenticated request → logout.
 - **DoD:** Базовая session hygiene закрыта.
+- **Notes:** `docs/security/session-hardening.md`; `/logout`; logout everywhere on home.
 
 ### 031 — Access control matrix
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Явные права admin vs reader vs anonymous.
 - **Deliverables:** Таблица в `docs/security/access-matrix.md`; тесты access.
 - **Verify:** Anonymous не пишет comments; reader не пишет Articles.
 - **DoD:** Матрица совпадает с кодом.
+- **Notes:** Matrix + int coverage in `auth.int.spec.ts`; Media CUD gap until **039**.
 
 ### 032 — Auth Playwright suite
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Регрессия auth UI.
 - **Deliverables:** E2E register/login/logout/reset happy paths + negative.
 - **Verify:** Suite стабилен локально.
 - **DoD:** Auth покрыт e2e.
+- **Notes:** `tests/e2e/auth.e2e.spec.ts` + `auth.setup.ts`; CI e2e still **086**.
 
 ---
 

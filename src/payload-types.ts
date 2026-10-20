@@ -138,9 +138,13 @@ export interface UserAuthOperations {
 export interface User {
   id: number;
   /**
-   * admin — /admin panel; reader — site only (comments/bookmarks later).
+   * admin — /admin panel; reader — site only (comments/bookmarks).
    */
   role: 'admin' | 'reader';
+  /**
+   * OAuth subject (Google). Set by the OAuth plugin; unused for password-only users.
+   */
+  sub?: string | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -149,6 +153,8 @@ export interface User {
   salt?: string | null;
   hash?: string | null;
   resetPasswordRequestedAt?: string | null;
+  _verified?: boolean | null;
+  _verificationToken?: string | null;
   loginAttempts?: number | null;
   lockUntil?: string | null;
   sessions?:
@@ -523,6 +529,7 @@ export interface PayloadMigration {
  */
 export interface UsersSelect<T extends boolean = true> {
   role?: T;
+  sub?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -531,6 +538,8 @@ export interface UsersSelect<T extends boolean = true> {
   salt?: T;
   hash?: T;
   resetPasswordRequestedAt?: T;
+  _verified?: T;
+  _verificationToken?: T;
   loginAttempts?: T;
   lockUntil?: T;
   sessions?:

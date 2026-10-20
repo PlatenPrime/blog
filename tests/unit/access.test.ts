@@ -6,11 +6,13 @@ import { isAdmin } from '@/access/isAdmin'
 import { isAuthenticated } from '@/access/isAuthenticated'
 import { isOwnerOrAdmin } from '@/access/isOwnerOrAdmin'
 import { isSelfOrAdmin } from '@/access/isSelfOrAdmin'
+import { isAuthenticatedAndVerified, isVerified } from '@/access/isVerified'
 import { publishedOrAdmin } from '@/access/publishedOrAdmin'
 import type { AccessUser } from '@/access/types'
 
 const admin: AccessUser = { id: 1, role: 'admin' }
-const reader: AccessUser = { id: 42, role: 'reader' }
+const reader: AccessUser = { id: 42, role: 'reader', _verified: true }
+const unverifiedReader: AccessUser = { id: 43, role: 'reader', _verified: false }
 
 function accessArgs(user: AccessUser, id?: number | string) {
   return { req: { user }, id } as Parameters<typeof isSelfOrAdmin>[0]
@@ -30,6 +32,26 @@ describe('isAuthenticated', () => {
     expect(isAuthenticated(admin)).toBe(true)
     expect(isAuthenticated(reader)).toBe(true)
     expect(isAuthenticated(null)).toBe(false)
+  })
+})
+
+describe('isVerified', () => {
+  it('treats admins as verified', () => {
+    expect(isVerified(admin)).toBe(true)
+    expect(isVerified({ id: 1, role: 'admin', _verified: false })).toBe(true)
+  })
+
+  it('requires _verified for readers', () => {
+    expect(isVerified(reader)).toBe(true)
+    expect(isVerified(unverifiedReader)).toBe(false)
+    expect(isVerified({ id: 2, role: 'reader' })).toBe(false)
+    expect(isVerified(null)).toBe(false)
+  })
+
+  it('isAuthenticatedAndVerified combines both checks', () => {
+    expect(isAuthenticatedAndVerified(reader)).toBe(true)
+    expect(isAuthenticatedAndVerified(unverifiedReader)).toBe(false)
+    expect(isAuthenticatedAndVerified(null)).toBe(false)
   })
 })
 

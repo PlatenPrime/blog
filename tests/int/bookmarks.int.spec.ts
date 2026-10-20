@@ -54,6 +54,7 @@ describe('Bookmarks access and uniqueness (Local API)', () => {
         email: `bm-reader-${suffix}@example.com`,
         password: 'test-password-123',
         role: 'reader',
+        _verified: true,
       },
       overrideAccess: true,
     })) as User
@@ -64,6 +65,7 @@ describe('Bookmarks access and uniqueness (Local API)', () => {
         email: `bm-other-${suffix}@example.com`,
         password: 'test-password-123',
         role: 'reader',
+        _verified: true,
       },
       overrideAccess: true,
     })
@@ -142,6 +144,7 @@ describe('Bookmarks access and uniqueness (Local API)', () => {
         email: `bm-dup-${suffix}@example.com`,
         password: 'test-password-123',
         role: 'reader',
+        _verified: true,
       },
       overrideAccess: true,
     })) as User
@@ -188,6 +191,7 @@ describe('Bookmarks access and uniqueness (Local API)', () => {
         email: `bm-owner-${suffix}@example.com`,
         password: 'test-password-123',
         role: 'reader',
+        _verified: true,
       },
       overrideAccess: true,
     })) as User
@@ -198,6 +202,7 @@ describe('Bookmarks access and uniqueness (Local API)', () => {
         email: `bm-stranger-${suffix}@example.com`,
         password: 'test-password-123',
         role: 'reader',
+        _verified: true,
       },
       overrideAccess: true,
     })) as User

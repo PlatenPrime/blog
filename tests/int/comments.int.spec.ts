@@ -54,6 +54,7 @@ describe('Comments access (Local API)', () => {
         email: `reader-${suffix}@example.com`,
         password: 'test-password-123',
         role: 'reader',
+        _verified: true,
       },
       overrideAccess: true,
     })) as User
@@ -64,6 +65,7 @@ describe('Comments access (Local API)', () => {
         email: `other-${suffix}@example.com`,
         password: 'test-password-123',
         role: 'reader',
+        _verified: true,
       },
       overrideAccess: true,
     })
