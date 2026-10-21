@@ -16,7 +16,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked`.
 
-**Baseline Status:** следующий шаг — `033` (Admin UX cleanup). Шаги `001`–`032` и `083` (test policy) — `done`.
+**Baseline Status:** следующий шаг — `036` (Scheduled publish). Шаги `001`–`035` и `083` (test policy) — `done`.
 
 **Правила ведения**
 
@@ -342,27 +342,30 @@ v1 считается завершённым, когда одновременн�
 
 ### 033 — Admin UX cleanup под одного автора
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** `/admin` удобен для ежедневной публикации.
-- **Deliverables:** Навигация collections, labels RU/EN terms, defaults.
-- **Verify:** Admin создаёт Article за < N кликов (smoke checklist).
+- **Deliverables:** Навигация collections (`admin.group`), labels RU/EN, descriptions, `admin.meta`, list defaults; smoke в `LOCAL_SETUP.md`.
+- **Verify:** Admin создаёт Article за < N кликов (smoke checklist в `LOCAL_SETUP.md` §6).
 - **DoD:** CMS не выглядит «сырым scaffold».
+- **Notes:** Группы Content / Taxonomy / Community / System; хелпер `src/collections/adminUi.ts`. Preview / Lexical media / R2 / seed — шаги **034+**.
 
 ### 034 — Lexical: images + YouTube block
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Контент с картинками и видео-ссылками.
-- **Deliverables:** Upload/insert image; YouTube embed block; sanitize.
-- **Verify:** Статья с image + YouTube рендерится на публичке (после Track 5 — временный preview route ok).
+- **Deliverables:** `src/editor/lexical.ts` (UploadFeature → media + BlocksFeature YouTube); `src/lib/youtube.ts` sanitize; `PayloadRichText`; временный `/dev/rich-text/article/[slug]`; unit `youtube.test.ts`.
+- **Verify:** Статья с image + YouTube рендерится на `/dev/rich-text/article/{slug}` (продуктовая публичка — Track 5).
 - **DoD:** Оба медиа-формата поддерживаются в редакторе.
+- **Notes:** Embed только `youtube-nocookie`; draft preview URL — **035**; R2/WebP — **037–038**.
 
 ### 035 — Drafts + Preview
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Черновики и превью до публикации.
-- **Deliverables:** Drafts enabled; preview URL с секретом/auth; undocumented URL protection.
-- **Verify:** Draft не виден анонимам; preview виден admin.
+- **Deliverables:** `PREVIEW_SECRET`; `admin.preview` → `/next/preview` (secret + admin + path allowlist); draftMode; `/next/exit-preview`; draft-aware `/dev/rich-text/...`; unit `previewPaths.test.ts`.
+- **Verify:** Draft не виден анонимам; Preview из admin показывает черновик.
 - **DoD:** Редакционный цикл draft→preview работает.
+- **Notes:** Live Preview iframe не делали; продуктовые URL — Track 5; schedule — **036**.
 
 ### 036 — Scheduled publish
 

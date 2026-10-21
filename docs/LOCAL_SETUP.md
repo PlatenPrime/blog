@@ -40,9 +40,10 @@ cp .env.example .env
 | ------------------------ | ----------------------------------------------------------- |
 | `DATABASE_URL`           | Postgres (значение по умолчанию совпадает с Docker Compose) |
 | `PAYLOAD_SECRET`         | Длинная случайная строка для сессий/токенов Payload         |
+| `PREVIEW_SECRET`         | Секрет кнопки Preview в admin (draftMode); длинная случайная строка |
 | `NEXT_PUBLIC_SERVER_URL` | Публичный origin app, обычно `http://localhost:3000`        |
 
-Остальные ключи в `.env.example` (R2, Resend, Google OAuth, Turnstile, `ADMIN_*`) для минимального локального старта можно оставить пустыми или как в примере. Реальные секреты не коммитьте.
+Остальные ключи в `.env.example` (R2, Resend, Google OAuth, Turnstile, `ADMIN_*`) для минимального локального старта можно оставить пустыми или как в примере. Реальные секреты не коммитьте. Без `PREVIEW_SECRET` кнопка Preview в admin скрыта (URL не генерируется).
 
 ### Auth email (verify / password reset)
 
@@ -101,6 +102,23 @@ Production-like локально: `npm run build` затем `npm start`.
 Переменные `ADMIN_EMAIL` и `ADMIN_PASSWORD` в `.env` зарезервированы под будущий bootstrap; сейчас они **не** создают пользователя автоматически.
 
 Полезные URL: `/login`, `/register`, `/forgot-password`, `/reset-password`, `/verify`, `/logout`. Матрица доступа — [`security/access-matrix.md`](./security/access-matrix.md).
+
+### Admin UX smoke checklist (шаг 033)
+
+Цель: один admin создаёт Article за короткий путь кликов; сайдбар сгруппирован и подписан (не «сырой» slug-scaffold).
+
+Предусловия: `docker compose up -d`, `.env`, `npm run migrate`, `npm run dev`, admin из §6.
+
+| # | Действие | Ожидание |
+| - | -------- | -------- |
+| 1 | Открыть [http://localhost:3000/admin](http://localhost:3000/admin), войти | Dashboard; title вкладки с суффиксом `— Blog Admin` |
+| 2 | Посмотреть левый сайдбар | Группы **Content / Taxonomy / Community / System** (или RU: Контент / Таксономия / Сообщество / Система — зависит от языка admin UI) |
+| 3 | Content → **Articles** (Статьи) → Create New | Форма edit; description коллекции видна |
+| 4 | Заполнить `title`, `body` (Lexical) | Slug подставится из title (hook) |
+| 5 | Save Draft | Документ в `_status: draft` |
+| 6 | Publish | `_status: published`; запись в списке Articles с колонками title / slug / status / publishedAt |
+
+Бюджет кликов (после login): **сайдбар Articles → Create → title/body → Save Draft → Publish** ≈ 5–6 осознанных действий. Lexical images / YouTube — шаг **034**; preview URL — **035**.
 
 ## 7. Seed (placeholder)
 
@@ -165,7 +183,33 @@ Relation к Articles/Notes — шаги **018** / **019** (оба done). Unit-т
 5. **Publish** ту же статью; при желании задайте `publishedAt` и SEO.
 6. Reader / anonymous не должны видеть drafts через API (`read` фильтрует `_status`); write — только admin.
 
-Публичные роуты статьи — шаг **051**. Preview URL — **035**. Unit для `publishedOrAdmin` / slugify — **024** (done).
+### Lexical: image + YouTube (шаг 034)
+
+В `body` доступны вставка изображения (Media) и блок **YouTube**.
+
+1. В edit Article: в Lexical toolbar / slash menu → **Upload** (или Insert upload) → выберите/загрузите Media → Save.
+2. Slash / Blocks → **YouTube** → вставьте URL вида `https://www.youtube.com/watch?v=…` или `https://youtu.be/…` → Save / Publish.
+3. Невалидный URL (не YouTube) отклоняется валидатором поля.
+4. Временный публичный smoke (до Track 5): откройте  
+   `http://localhost:3000/dev/rich-text/article/{slug}`  
+   для **published** статьи — ожидайте картинку и iframe `youtube-nocookie`. Draft без preview mode → 404.
+
+Unit sanitize: `npm test` → `tests/unit/youtube.test.ts`. Продуктовые article routes — **051**.
+
+### Draft Preview (шаг 035)
+
+Редакционный цикл draft → Preview без публикации.
+
+Предусловия: `PREVIEW_SECRET` в `.env` (см. `.env.example`), admin залогинен в `/admin` (та же сессия/cookies).
+
+1. Создайте Article (или Note / Page) → **Save Draft** (не Publish).
+2. В edit view нажмите **Preview** — откроется `/next/preview?...` → redirect на `/dev/rich-text/article/{slug}` (или note/page).
+3. Ожидание: баннер «Draft preview», контент черновика, `Status: draft`.
+4. Incognito / без cookies admin: тот же `/dev/rich-text/article/{slug}` → **404** (draft не публичный).
+5. `/next/preview` с неверным `previewSecret` или без admin session → **403**.
+6. `/next/exit-preview` → выход из draftMode, redirect на `/`.
+
+Unit allowlist: `npm test` → `tests/unit/previewPaths.test.ts`.
 
 ## 11. Notes
 
@@ -188,7 +232,7 @@ Relation к Articles/Notes — шаги **018** / **019** (оба done). Unit-т
 4. Сравните API: `GET /api/notes` и `GET /api/articles` — разные коллекции; draft note не виден anonymous.
 5. Write — только admin.
 
-Публичные роуты notes — шаг **052**. Preview — **035**. Unit access/slugify — **024** (done).
+Публичные роуты notes — шаг **052**. Draft Preview (кнопка в admin) — § выше (шаг **035**). Unit access/slugify — **024** (done).
 
 ## 12. Pages
 

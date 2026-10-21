@@ -9,6 +9,7 @@ import {
   verificationEmailHTML,
   verificationEmailSubject,
 } from '../auth/emailTemplates'
+import { adminGroups, collectionLabels } from './adminUi'
 
 const roleFieldAccess: FieldAccess = ({ req: { user } }) => isAdmin(user as AccessUser)
 
@@ -16,9 +17,18 @@ const isProduction = process.env.NODE_ENV === 'production'
 
 export const Users: CollectionConfig = {
   slug: 'users',
+  labels: collectionLabels(
+    { singular: 'User', plural: 'Users' },
+    { singular: 'Пользователь', plural: 'Пользователи' },
+  ),
   admin: {
+    group: adminGroups.system,
     useAsTitle: 'email',
-    defaultColumns: ['email', 'role', 'updatedAt'],
+    defaultColumns: ['email', 'role', 'createdAt', 'updatedAt'],
+    description: {
+      en: 'Admins (CMS) and readers (site auth).',
+      ru: 'Админы (CMS) и читатели (авторизация на сайте).',
+    },
   },
   auth: {
     // Cookie hygiene (step 030): HttpOnly is Payload default; Secure in prod; SameSite=Lax for same-site app.

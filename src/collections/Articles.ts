@@ -3,6 +3,8 @@ import type { Access, CollectionConfig } from 'payload'
 import { isAdmin } from '../access/isAdmin'
 import { publishedOrAdmin } from '../access/publishedOrAdmin'
 import type { AccessUser } from '../access/types'
+import { createPreviewUrl } from '../preview/generatePreviewUrl'
+import { adminGroups, collectionLabels } from './adminUi'
 import { seoFields } from './seoFields'
 import { ensureSlugFromTitle, taxonomyTitleAndSlugFields } from './taxonomyFields'
 
@@ -10,9 +12,19 @@ const adminOnly: Access = ({ req: { user } }) => isAdmin(user as AccessUser)
 
 export const Articles: CollectionConfig = {
   slug: 'articles',
+  labels: collectionLabels(
+    { singular: 'Article', plural: 'Articles' },
+    { singular: 'Статья', plural: 'Статьи' },
+  ),
   admin: {
+    group: adminGroups.content,
     useAsTitle: 'title',
     defaultColumns: ['title', 'slug', '_status', 'publishedAt', 'updatedAt'],
+    description: {
+      en: 'Long-form posts for the public site.',
+      ru: 'Развёрнутые статьи для публичного сайта.',
+    },
+    preview: createPreviewUrl('articles'),
   },
   versions: {
     drafts: true,

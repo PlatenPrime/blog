@@ -9,13 +9,13 @@
 | Параметр     | Значение                                                            |
 | ------------ | ------------------------------------------------------------------- |
 | Locales      | `uk` (default), `ru`, `en`; `fallback: true`                        |
-| Rich text    | Lexical (`lexicalEditor`)                                           |
-| Upload limit | `MEDIA_MAX_FILE_SIZE` = 5 MiB (глобальный `upload.limits.fileSize`) |
-| Admin users  | коллекция `users`                                                   |
-| Timestamps   | Payload default: `createdAt` / `updatedAt` на всех коллекциях       |
-| Trash        | не используется                                                     |
+| Rich text    | Lexical (`src/editor/lexical.ts`): default features + `UploadFeature(media)` + block `youtube` |
+| Upload limit | `MEDIA_MAX_FILE_SIZE` = 5 MiB (глобальный `upload.limits.fileSize`)                            |
+| Admin users  | коллекция `users`                                                                              |
+| Timestamps   | Payload default: `createdAt` / `updatedAt` на всех коллекциях                                  |
+| Trash        | не используется                                                                                |
 
-Порядок регистрации коллекций: `users` → `media` → `categories` → `tags` → `articles` → `notes` → `pages` → `comments` → `bookmarks`.
+Порядок регистрации коллекций (admin.group UX, шаг **033**): `articles` → `notes` → `pages` → `media` → `categories` → `tags` → `comments` → `bookmarks` → `users`.
 
 ## Связи
 
@@ -91,6 +91,16 @@ URL-safe сегмент: карта кириллицы uk/ru → латиниц�
 
 Роли пользователя: `admin` \| `reader` (`AccessUser` / `UserRole` в `types.ts`).
 
+### Draft Preview (шаг 035)
+
+| Часть | Деталь |
+| ----- | ------ |
+| Env | `PREVIEW_SECRET` |
+| Admin | `admin.preview` на Articles / Notes / Pages → `/next/preview?...` |
+| Gate | секрет + session `role: admin` + allowlist path (`src/preview/paths.ts`) |
+| Front | Next.js `draftMode`; temporary `/dev/rich-text/{article\|note\|page}/[slug]` |
+| Exit | `/next/exit-preview` |
+
 ---
 
 ## Коллекции
@@ -153,7 +163,7 @@ URL-safe сегмент: карта кириллицы uk/ru → латиниц�
 | ------------- | --------------------------- | -------- | --------- | ---------------------------------- |
 | `title`       | text                        | yes      | yes       | taxonomy                           |
 | `slug`        | text                        | yes      | yes       | unique, indexed                    |
-| `body`        | richText                    | yes      | yes       | Lexical                            |
+| `body`        | richText                    | yes      | yes       | Lexical: Media upload + block `youtube` (sanitize URL → youtube-nocookie) |
 | `heroImage`   | upload → `media`            | no       | —         | обложка                            |
 | `categories`  | relationship → `categories` | no       | —         | hasMany, sidebar                   |
 | `tags`        | relationship → `tags`       | no       | —         | hasMany, sidebar                   |
