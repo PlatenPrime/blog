@@ -3,6 +3,7 @@ import type { Access, CollectionConfig } from 'payload'
 import { isAdmin } from '../access/isAdmin'
 import { publishedOrAdmin } from '../access/publishedOrAdmin'
 import type { AccessUser } from '../access/types'
+import { setPublishedAtOnPublish } from '../hooks/setPublishedAtOnPublish'
 import { createPreviewUrl } from '../preview/generatePreviewUrl'
 import { adminGroups, collectionLabels } from './adminUi'
 import { seoFields } from './seoFields'
@@ -37,6 +38,7 @@ export const Notes: CollectionConfig = {
   },
   hooks: {
     beforeValidate: [ensureSlugFromTitle],
+    beforeChange: [setPublishedAtOnPublish],
   },
   fields: [
     ...taxonomyTitleAndSlugFields,
@@ -75,7 +77,8 @@ export const Notes: CollectionConfig = {
         date: {
           pickerAppearance: 'dayAndTime',
         },
-        description: 'Public publish timestamp (schedule job — step 036).',
+        description:
+          'Empty = visible immediately on Publish. Future date = scheduled (hidden until then).',
       },
     },
     seoFields,

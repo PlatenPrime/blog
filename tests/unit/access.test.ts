@@ -99,13 +99,22 @@ describe('publishedOrAdmin', () => {
     expect(publishedOrAdmin(accessArgs(admin))).toBe(true)
   })
 
-  it('restricts everyone else to published status', () => {
-    expect(publishedOrAdmin(accessArgs(reader))).toEqual({
-      _status: { equals: 'published' },
-    })
-    expect(publishedOrAdmin(accessArgs(null))).toEqual({
-      _status: { equals: 'published' },
-    })
+  it('restricts everyone else to published + schedule where (ADR-003)', () => {
+    const expectedShape = {
+      and: [
+        { _status: { equals: 'published' } },
+        {
+          or: [
+            { publishedAt: { exists: false } },
+            { publishedAt: { equals: null } },
+            { publishedAt: { less_than_equal: expect.any(String) } },
+          ],
+        },
+      ],
+    }
+
+    expect(publishedOrAdmin(accessArgs(reader))).toMatchObject(expectedShape)
+    expect(publishedOrAdmin(accessArgs(null))).toMatchObject(expectedShape)
   })
 })
 

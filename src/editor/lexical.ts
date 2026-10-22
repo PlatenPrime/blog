@@ -1,8 +1,4 @@
-import {
-  BlocksFeature,
-  UploadFeature,
-  lexicalEditor,
-} from '@payloadcms/richtext-lexical'
+import { BlocksFeature, UploadFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
 
 import { YouTubeBlock } from '@/blocks/YouTube'
 

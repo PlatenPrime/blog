@@ -6,9 +6,7 @@ import { parseYouTubeVideoId, toYouTubeEmbedSrc, validateYouTubeUrl } from '@/li
 describe('parseYouTubeVideoId', () => {
   it('parses watch?v= URLs', () => {
     expect(parseYouTubeVideoId('https://www.youtube.com/watch?v=dQw4w9WgXcQ')).toBe('dQw4w9WgXcQ')
-    expect(parseYouTubeVideoId('https://youtube.com/watch?v=dQw4w9WgXcQ&t=10s')).toBe(
-      'dQw4w9WgXcQ',
-    )
+    expect(parseYouTubeVideoId('https://youtube.com/watch?v=dQw4w9WgXcQ&t=10s')).toBe('dQw4w9WgXcQ')
   })
 
   it('parses youtu.be short links', () => {

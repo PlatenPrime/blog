@@ -6,9 +6,9 @@
 
 ## Глобальные настройки
 
-| Параметр     | Значение                                                            |
-| ------------ | ------------------------------------------------------------------- |
-| Locales      | `uk` (default), `ru`, `en`; `fallback: true`                        |
+| Параметр     | Значение                                                                                       |
+| ------------ | ---------------------------------------------------------------------------------------------- |
+| Locales      | `uk` (default), `ru`, `en`; `fallback: true`                                                   |
 | Rich text    | Lexical (`src/editor/lexical.ts`): default features + `UploadFeature(media)` + block `youtube` |
 | Upload limit | `MEDIA_MAX_FILE_SIZE` = 5 MiB (глобальный `upload.limits.fileSize`)                            |
 | Admin users  | коллекция `users`                                                                              |
@@ -69,10 +69,11 @@ URL-safe сегмент: карта кириллицы uk/ru → латиниц�
 
 ### Media limits (`mediaLimits.ts`)
 
-| Константа             | Значение                                             |
-| --------------------- | ---------------------------------------------------- |
-| `MEDIA_MAX_FILE_SIZE` | 5 MiB                                                |
-| `MEDIA_MIME_TYPES`    | `image/jpeg`, `image/png`, `image/webp`, `image/gif` |
+| Константа                | Значение                                                    |
+| ------------------------ | ----------------------------------------------------------- |
+| `MEDIA_MAX_FILE_SIZE`    | 5 MiB                                                       |
+| `MEDIA_MIME_TYPES`       | Input: `image/jpeg`, `image/png`, `image/webp`, `image/gif` |
+| `mediaWebpFormatOptions` | Sharp → `webp` quality `MEDIA_WEBP_QUALITY` (80)            |
 
 ### Bookmark uniqueness (`bookmarkUniqueness.ts`)
 
@@ -80,26 +81,35 @@ URL-safe сегмент: карта кириллицы uk/ru → латиниц�
 
 ## Access helpers (`src/access/`)
 
-| Helper             | Поведение                                                            |
-| ------------------ | -------------------------------------------------------------------- |
-| `isAdmin`          | `user.role === 'admin'`                                              |
-| `isAuthenticated`  | есть `user.id`                                                       |
-| `isSelfOrAdmin`    | admin → все; auth → свой документ по `id`; иначе deny                |
-| `isOwnerOrAdmin`   | admin → все; auth → документы, где поле `user` = session; иначе deny |
-| `publishedOrAdmin` | admin → все; иначе `_status equals published` (нужны drafts)         |
-| `approvedOrAdmin`  | admin → все; иначе `moderationStatus equals approved`                |
+| Helper             | Поведение                                                                                           |
+| ------------------ | --------------------------------------------------------------------------------------------------- |
+| `isAdmin`          | `user.role === 'admin'`                                                                             |
+| `isAuthenticated`  | есть `user.id`                                                                                      |
+| `isSelfOrAdmin`    | admin → все; auth → свой документ по `id`; иначе deny                                               |
+| `isOwnerOrAdmin`   | admin → все; auth → документы, где поле `user` = session; иначе deny                                |
+| `publishedOrAdmin` | admin → все; иначе `publicContentWhere` (`_status published` + `publishedAt` не в будущем, ADR-003) |
+| `approvedOrAdmin`  | admin → все; иначе `moderationStatus equals approved`                                               |
 
 Роли пользователя: `admin` \| `reader` (`AccessUser` / `UserRole` в `types.ts`).
 
 ### Draft Preview (шаг 035)
 
-| Часть | Деталь |
-| ----- | ------ |
-| Env | `PREVIEW_SECRET` |
-| Admin | `admin.preview` на Articles / Notes / Pages → `/next/preview?...` |
-| Gate | секрет + session `role: admin` + allowlist path (`src/preview/paths.ts`) |
+| Часть | Деталь                                                                       |
+| ----- | ---------------------------------------------------------------------------- |
+| Env   | `PREVIEW_SECRET`                                                             |
+| Admin | `admin.preview` на Articles / Notes / Pages → `/next/preview?...`            |
+| Gate  | секрет + session `role: admin` + allowlist path (`src/preview/paths.ts`)     |
 | Front | Next.js `draftMode`; temporary `/dev/rich-text/{article\|note\|page}/[slug]` |
-| Exit | `/next/exit-preview` |
+| Exit  | `/next/exit-preview`                                                         |
+
+### Scheduled publish (шаг 036 / ADR-003)
+
+| Часть      | Деталь                                                               |
+| ---------- | -------------------------------------------------------------------- |
+| Visibility | `_status: published` и (`publishedAt` пуст/null или `<= now`)        |
+| Access     | `publicContentWhere` внутри `publishedOrAdmin`                       |
+| Hook       | `setPublishedAtOnPublish` — пустой `publishedAt` при Publish → `now` |
+| Not used   | Vercel cron для flip `_status`                                       |
 
 ---
 
@@ -124,13 +134,13 @@ URL-safe сегмент: карта кириллицы uk/ru → латиниц�
 
 ### `media` — Media
 
-Локальные изображения (R2 — позже по роадмапу).
+Изображения: local disk или R2; originals → WebP.
 
-|        |                                                                                         |
-| ------ | --------------------------------------------------------------------------------------- |
-| Upload | `staticDir` → repo-root `media/`; MIME из `MEDIA_MIME_TYPES`                            |
-| Access | `read`: публичный; create/update/delete **не заданы** → default Payload (authenticated) |
-| Hooks  | нет                                                                                     |
+|        |                                                                                                             |
+| ------ | ----------------------------------------------------------------------------------------------------------- |
+| Upload | Local `media/` или R2 (**037**); MIME input `MEDIA_MIME_TYPES`; `formatOptions` → WebP quality 80 (**038**) |
+| Access | `read`: публичный; create/update/delete: **admin only** (**039**)                                           |
+| Hooks  | нет                                                                                                         |
 
 | Поле            | Тип                                  | Notes           |
 | --------------- | ------------------------------------ | --------------- |
@@ -153,23 +163,23 @@ URL-safe сегмент: карта кириллицы uk/ru → латиниц�
 
 Длинный контент с обложкой и taxonomy.
 
-|          |                                              |
-| -------- | -------------------------------------------- |
-| Versions | `drafts: true` → `_status` draft / published |
-| Access   | `read`: `publishedOrAdmin`; CUD: admin only  |
-| Hooks    | `ensureSlugFromTitle`                        |
+|          |                                                  |
+| -------- | ------------------------------------------------ |
+| Versions | `drafts: true` → `_status` draft / published     |
+| Access   | `read`: `publishedOrAdmin`; CUD: admin only      |
+| Hooks    | `ensureSlugFromTitle`; `setPublishedAtOnPublish` |
 
-| Поле          | Тип                         | Required | Localized | Notes                              |
-| ------------- | --------------------------- | -------- | --------- | ---------------------------------- |
-| `title`       | text                        | yes      | yes       | taxonomy                           |
-| `slug`        | text                        | yes      | yes       | unique, indexed                    |
+| Поле          | Тип                         | Required | Localized | Notes                                                                     |
+| ------------- | --------------------------- | -------- | --------- | ------------------------------------------------------------------------- |
+| `title`       | text                        | yes      | yes       | taxonomy                                                                  |
+| `slug`        | text                        | yes      | yes       | unique, indexed                                                           |
 | `body`        | richText                    | yes      | yes       | Lexical: Media upload + block `youtube` (sanitize URL → youtube-nocookie) |
-| `heroImage`   | upload → `media`            | no       | —         | обложка                            |
-| `categories`  | relationship → `categories` | no       | —         | hasMany, sidebar                   |
-| `tags`        | relationship → `tags`       | no       | —         | hasMany, sidebar                   |
-| `publishedAt` | date                        | no       | —         | dayAndTime; schedule job — шаг 036 |
-| `seo`         | group                       | —        | nested    | см. SEO group                      |
-| `_status`     | (drafts)                    | —        | —         | через versions                     |
+| `heroImage`   | upload → `media`            | no       | —         | обложка                                                                   |
+| `categories`  | relationship → `categories` | no       | —         | hasMany, sidebar                                                          |
+| `tags`        | relationship → `tags`       | no       | —         | hasMany, sidebar                                                          |
+| `publishedAt` | date                        | no       | —         | dayAndTime; empty→now on Publish; future = scheduled (ADR-003)            |
+| `seo`         | group                       | —        | nested    | см. SEO group                                                             |
+| `_status`     | (drafts)                    | —        | —         | через versions                                                            |
 
 ### `notes` — Notes
 
@@ -243,8 +253,8 @@ Drafts, access, taxonomy, `publishedAt`, SEO — те же.
 
 - Bookmark uniqueness на hook, не на DB constraint (гонка возможна теоретически; усиление — отдельный шаг при необходимости).
 - Comments / Bookmarks не цепляются к `pages`.
-- Media пока на локальном `staticDir`; Cloudflare R2 — по роадмапу.
+- Media: local disk или R2; originals → WebP; CUD admin-only (**039**).
 - Поле `role` меняет только admin; публичный `create` users — self-register readers (`/register`) + first-user admin bootstrap.
 - Comments/Bookmarks create: `isAuthenticatedAndVerified` (ADR-002). Полная матрица — [`security/access-matrix.md`](./security/access-matrix.md).
-- `publishedAt` есть, но job расписания публикации — шаг 036.
+- Schedule: query-time visibility по `publishedAt` (ADR-003), без cron.
 - Soft-moderation комментариев в публичном UI — с шага 058.

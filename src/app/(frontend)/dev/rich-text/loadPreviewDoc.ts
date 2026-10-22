@@ -25,11 +25,8 @@ export async function loadPreviewDoc(
   const payload = await getPayload({ config })
   const { user } = await payload.auth({ headers })
 
-  const where: Where = isDraftPreview
-    ? { slug: { equals: slug } }
-    : {
-        and: [{ slug: { equals: slug } }, { _status: { equals: 'published' } }],
-      }
+  // Visibility (published + schedule) comes from `publishedOrAdmin` access (ADR-003).
+  const where: Where = { slug: { equals: slug } }
 
   const { docs } = await payload.find({
     collection,

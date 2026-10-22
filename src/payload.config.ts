@@ -18,12 +18,12 @@ import { createEmailAdapter } from './auth/emailAdapter'
 import { googleOAuthPlugin } from './auth/googleOAuth'
 import { getServerUrl } from './auth/serverUrl'
 import { editor } from './editor/lexical'
+import { createR2StoragePlugin } from './storage/r2'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 const serverURL = getServerUrl()
 const emailAdapter = createEmailAdapter()
-
 export default buildConfig({
   serverURL,
   admin: {
@@ -64,5 +64,5 @@ export default buildConfig({
       fileSize: MEDIA_MAX_FILE_SIZE,
     },
   },
-  plugins: [googleOAuthPlugin],
+  plugins: [googleOAuthPlugin, createR2StoragePlugin()],
 })
