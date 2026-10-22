@@ -1,4 +1,3 @@
-import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
@@ -18,12 +17,13 @@ import { getDatabaseAdapter } from './db/adapter'
 import { createEmailAdapter } from './auth/emailAdapter'
 import { googleOAuthPlugin } from './auth/googleOAuth'
 import { getServerUrl } from './auth/serverUrl'
+import { editor } from './editor/lexical'
+import { createR2StoragePlugin } from './storage/r2'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 const serverURL = getServerUrl()
 const emailAdapter = createEmailAdapter()
-
 export default buildConfig({
   serverURL,
   admin: {
@@ -31,8 +31,13 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
+    meta: {
+      titleSuffix: ' — Blog Admin',
+      description: 'CMS for the personal blog — one-author publishing workflow.',
+    },
   },
-  collections: [Users, Media, Categories, Tags, Articles, Notes, Pages, Comments, Bookmarks],
+  // Order within admin.group: Content → Taxonomy → Community → System (step 033).
+  collections: [Articles, Notes, Pages, Media, Categories, Tags, Comments, Bookmarks, Users],
   localization: {
     locales: [
       { code: 'uk', label: 'Ukrainian' },
@@ -42,7 +47,7 @@ export default buildConfig({
     defaultLocale: 'uk',
     fallback: true,
   },
-  editor: lexicalEditor(),
+  editor,
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
@@ -59,5 +64,5 @@ export default buildConfig({
       fileSize: MEDIA_MAX_FILE_SIZE,
     },
   },
-  plugins: [googleOAuthPlugin],
+  plugins: [googleOAuthPlugin, createR2StoragePlugin()],
 })

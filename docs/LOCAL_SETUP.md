@@ -36,13 +36,14 @@ cp .env.example .env
 
 Заполните минимум для локального старта:
 
-| Переменная               | Назначение                                                  |
-| ------------------------ | ----------------------------------------------------------- |
-| `DATABASE_URL`           | Postgres (значение по умолчанию совпадает с Docker Compose) |
-| `PAYLOAD_SECRET`         | Длинная случайная строка для сессий/токенов Payload         |
-| `NEXT_PUBLIC_SERVER_URL` | Публичный origin app, обычно `http://localhost:3000`        |
+| Переменная               | Назначение                                                          |
+| ------------------------ | ------------------------------------------------------------------- |
+| `DATABASE_URL`           | Postgres (значение по умолчанию совпадает с Docker Compose)         |
+| `PAYLOAD_SECRET`         | Длинная случайная строка для сессий/токенов Payload                 |
+| `PREVIEW_SECRET`         | Секрет кнопки Preview в admin (draftMode); длинная случайная строка |
+| `NEXT_PUBLIC_SERVER_URL` | Публичный origin app, обычно `http://localhost:3000`                |
 
-Остальные ключи в `.env.example` (R2, Resend, Google OAuth, Turnstile, `ADMIN_*`) для минимального локального старта можно оставить пустыми или как в примере. Реальные секреты не коммитьте.
+Остальные ключи в `.env.example` (R2, Resend, Google OAuth, Turnstile, `ADMIN_*`) для минимального локального старта можно оставить пустыми или как в примере. Реальные секреты не коммитьте. Без `PREVIEW_SECRET` кнопка Preview в admin скрыта (URL не генерируется).
 
 ### Auth email (verify / password reset)
 
@@ -94,35 +95,77 @@ Production-like локально: `npm run build` затем `npm start`.
 
 ## 6. Admin bootstrap
 
-Пока нет seed-скрипта (roadmap **040**): первый пользователь создаётся через Payload UI при первом заходе на `/admin` (форма create-first-user). Hook в Users выставляет ему `role: admin` автоматически.
+Рекомендуемый путь (шаг **040**): seed из env после migrate.
+
+В `.env` задайте реальные значения (не оставляйте password `replace-me` из `.env.example`):
+
+| Переменная       | Назначение                           |
+| ---------------- | ------------------------------------ |
+| `ADMIN_EMAIL`    | Email первого admin                  |
+| `ADMIN_PASSWORD` | Пароль (не placeholder `replace-me`) |
+
+```bash
+npm run migrate
+npm run seed:admin
+```
+
+Ожидание: лог `seed:admin — created admin …` при первой чистой БД. Повторный запуск — `skip` (уже есть admin или тот же email). Hook Users выставляет `_verified: true` для admin.
+
+Fallback без seed: первый заход на `/admin` → форма create-first-user (тоже получит `role: admin`).
 
 Роли (`admin` | `reader`): только `admin` проходит в `/admin`. Публичная регистрация: `/register` → verify email → `/login`. Reader на `/admin` получает отказ.
 
-Переменные `ADMIN_EMAIL` и `ADMIN_PASSWORD` в `.env` зарезервированы под будущий bootstrap; сейчас они **не** создают пользователя автоматически.
-
 Полезные URL: `/login`, `/register`, `/forgot-password`, `/reset-password`, `/verify`, `/logout`. Матрица доступа — [`security/access-matrix.md`](./security/access-matrix.md).
+
+Unit helpers: `npm test` → `tests/unit/adminSeed.test.ts`.
+
+### Admin UX smoke checklist (шаг 033)
+
+Цель: один admin создаёт Article за короткий путь кликов; сайдбар сгруппирован и подписан (не «сырой» slug-scaffold).
+
+Предусловия: `docker compose up -d`, `.env`, `npm run migrate`, `npm run dev`, admin из §6.
+
+| #   | Действие                                                                  | Ожидание                                                                                                                             |
+| --- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| 1   | Открыть [http://localhost:3000/admin](http://localhost:3000/admin), войти | Dashboard; title вкладки с суффиксом `— Blog Admin`                                                                                  |
+| 2   | Посмотреть левый сайдбар                                                  | Группы **Content / Taxonomy / Community / System** (или RU: Контент / Таксономия / Сообщество / Система — зависит от языка admin UI) |
+| 3   | Content → **Articles** (Статьи) → Create New                              | Форма edit; description коллекции видна                                                                                              |
+| 4   | Заполнить `title`, `body` (Lexical)                                       | Slug подставится из title (hook)                                                                                                     |
+| 5   | Save Draft                                                                | Документ в `_status: draft`                                                                                                          |
+| 6   | Publish                                                                   | `_status: published`; запись в списке Articles с колонками title / slug / status / publishedAt                                       |
+
+Бюджет кликов (после login): **сайдбар Articles → Create → title/body → Save Draft → Publish** ≈ 5–6 осознанных действий. Lexical images / YouTube — шаг **034**; preview URL — **035**.
 
 ## 7. Seed (placeholder)
 
-| Что             | Сейчас             | Позже                           |
-| --------------- | ------------------ | ------------------------------- |
-| Admin user      | Вручную в `/admin` | Seed по `ADMIN_*` (шаг **040**) |
-| Контент / faker | Пустая БД          | Track 12 (ops & seed)           |
+| Что             | Сейчас                                                    | Позже                 |
+| --------------- | --------------------------------------------------------- | --------------------- |
+| Admin user      | `npm run seed:admin` (`ADMIN_*`) или UI create-first-user | —                     |
+| Контент / faker | Пустая БД                                                 | Track 12 (ops & seed) |
 
-Для текущего onboarding достаточно пустой БД после migrate и одного admin из UI.
+Для onboarding: migrate → `seed:admin` → `npm run dev` → `/admin` с `ADMIN_EMAIL` / `ADMIN_PASSWORD`.
 
-## 8. Media (локальный disk)
+## 8. Media (локальный disk или R2)
 
 В `/admin` → **Media** можно загрузить изображение (JPEG / PNG / WebP / GIF). Поле `alt` обязательно.
 
-| Параметр  | Значение                                                                |
-| --------- | ----------------------------------------------------------------------- |
-| Хранилище | Локальная папка `media/` в корне репо (в `.gitignore`, не коммитится)   |
-| MIME      | Только `image/jpeg`, `image/png`, `image/webp`, `image/gif`             |
-| Max size  | 5 MiB (`MEDIA_MAX_FILE_SIZE` в `src/collections/mediaLimits.ts`)        |
-| R2        | Позже (roadmap **037**); env `R2_*` пока не нужны для локального upload |
+| Параметр | Значение                                                                   |
+| -------- | -------------------------------------------------------------------------- |
+| Локально | Если `R2_*` пустые → папка `media/` в корне репо (gitignored)              |
+| R2       | Если заданы все `R2_*` → Cloudflare R2 через `@payloadcms/storage-s3`      |
+| MIME in  | `image/jpeg`, `image/png`, `image/webp`, `image/gif`                       |
+| Хранение | На upload оригинал конвертируется в **WebP** (`formatOptions`, quality 80) |
+| Max size | 5 MiB (`MEDIA_MAX_FILE_SIZE` в `src/collections/mediaLimits.ts`)           |
 
-Проверка: создать Media с картинкой и `alt` → файл появляется в `media/`, запись видна в admin.
+Env (уже в `.env.example`): `R2_BUCKET`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_ENDPOINT`, `R2_PUBLIC_URL`, опционально `R2_REGION=auto`.
+
+Проверка без R2: Media + JPEG/PNG + `alt` → в `media/` файл `.webp`, в admin `mimeType: image/webp`.  
+Проверка с R2: см. runbook [`runbooks/r2-media.md`](./runbooks/r2-media.md); объект в bucket тоже WebP.  
+GIF → WebP: анимация не гарантируется.
+
+**Access (шаг 039):** create/update/delete Media — только `admin`. Reader/anonymous upload через API → отказ.  
+Unit (без БД): `npm test` → `tests/unit/mediaAccess.test.ts`.  
+Int (нужен Postgres: `docker compose up -d`): `npm run test:int` → `tests/int/media.int.spec.ts`.
 
 ## 9. Categories и Tags (таксономия)
 
@@ -151,7 +194,7 @@ Relation к Articles/Notes — шаги **018** / **019** (оба done). Unit-т
 | Параметр | Значение                                                                                                                                                                                          |
 | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Write    | Только `admin` (create / update / delete)                                                                                                                                                         |
-| Read     | Admin — все документы (включая drafts); иначе только `_status: published`                                                                                                                         |
+| Read     | Admin — все; иначе published + `publishedAt` не в будущем (ADR-003)                                                                                                                               |
 | Поля     | `title` / `slug` (localized, slug auto из title), Lexical `body` (localized), `heroImage` → Media, `categories` / `tags`, `publishedAt`, группа `seo` (`metaTitle`, `metaDescription`, `ogImage`) |
 | Drafts   | `versions.drafts` — Save Draft / Publish в admin                                                                                                                                                  |
 | Локали   | `uk` / `ru` / `en` (как у Categories/Tags)                                                                                                                                                        |
@@ -165,7 +208,45 @@ Relation к Articles/Notes — шаги **018** / **019** (оба done). Unit-т
 5. **Publish** ту же статью; при желании задайте `publishedAt` и SEO.
 6. Reader / anonymous не должны видеть drafts через API (`read` фильтрует `_status`); write — только admin.
 
-Публичные роуты статьи — шаг **051**. Preview URL — **035**. Unit для `publishedOrAdmin` / slugify — **024** (done).
+### Lexical: image + YouTube (шаг 034)
+
+В `body` доступны вставка изображения (Media) и блок **YouTube**.
+
+1. В edit Article: в Lexical toolbar / slash menu → **Upload** (или Insert upload) → выберите/загрузите Media → Save.
+2. Slash / Blocks → **YouTube** → вставьте URL вида `https://www.youtube.com/watch?v=…` или `https://youtu.be/…` → Save / Publish.
+3. Невалидный URL (не YouTube) отклоняется валидатором поля.
+4. Временный публичный smoke (до Track 5): откройте  
+   `http://localhost:3000/dev/rich-text/article/{slug}`  
+   для **published** статьи — ожидайте картинку и iframe `youtube-nocookie`. Draft без preview mode → 404.
+
+Unit sanitize: `npm test` → `tests/unit/youtube.test.ts`. Продуктовые article routes — **051**.
+
+### Draft Preview (шаг 035)
+
+Редакционный цикл draft → Preview без публикации.
+
+Предусловия: `PREVIEW_SECRET` в `.env` (см. `.env.example`), admin залогинен в `/admin` (та же сессия/cookies).
+
+1. Создайте Article (или Note / Page) → **Save Draft** (не Publish).
+2. В edit view нажмите **Preview** — откроется `/next/preview?...` → redirect на `/dev/rich-text/article/{slug}` (или note/page).
+3. Ожидание: баннер «Draft preview», контент черновика, `Status: draft`.
+4. Incognito / без cookies admin: тот же `/dev/rich-text/article/{slug}` → **404** (draft не публичный).
+5. `/next/preview` с неверным `previewSecret` или без admin session → **403**.
+6. `/next/exit-preview` → выход из draftMode, redirect на `/`.
+
+Unit allowlist: `npm test` → `tests/unit/previewPaths.test.ts`.
+
+### Scheduled publish (шаг 036)
+
+Отложенная видимость без cron (ADR-003): Publish + будущий `publishedAt` → скрыто для anonymous до наступления времени.
+
+1. Article → Publish, в sidebar `publishedAt` поставьте **завтра** (или +1 час) → Save.
+2. Incognito / без admin: `http://localhost:3000/dev/rich-text/article/{slug}` → **404**; `GET /api/articles` не возвращает этот doc.
+3. В admin тот же документ виден; Preview (035) тоже показывает.
+4. Смените `publishedAt` на прошлое (или очистите и Publish снова — hook проставит `now`) → публичный URL / API отдают документ.
+5. Publish без `publishedAt`: после сохранения поле заполнено текущим временем.
+
+Unit: `npm test` → visibility / `publishedOrAdmin` / `applyPublishedAtOnPublish`.
 
 ## 11. Notes
 
@@ -174,7 +255,7 @@ Relation к Articles/Notes — шаги **018** / **019** (оба done). Unit-т
 | Параметр | Значение                                                                                                                                                           |
 | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Write    | Только `admin` (create / update / delete)                                                                                                                          |
-| Read     | Admin — все документы (включая drafts); иначе только `_status: published`                                                                                          |
+| Read     | Admin — все; иначе published + `publishedAt` не в будущем (ADR-003)                                                                                                |
 | Поля     | `title` / `slug` (localized, slug auto из title), Lexical `body` (localized, short-form), `categories` / `tags`, `publishedAt`, группа `seo` — **без** `heroImage` |
 | Drafts   | `versions.drafts` — Save Draft / Publish в admin                                                                                                                   |
 | API      | Collection slug `notes` → REST `/api/notes` (отдельно от `/api/articles`)                                                                                          |
@@ -188,7 +269,7 @@ Relation к Articles/Notes — шаги **018** / **019** (оба done). Unit-т
 4. Сравните API: `GET /api/notes` и `GET /api/articles` — разные коллекции; draft note не виден anonymous.
 5. Write — только admin.
 
-Публичные роуты notes — шаг **052**. Preview — **035**. Unit access/slugify — **024** (done).
+Публичные роуты notes — шаг **052**. Draft Preview (кнопка в admin) — § выше (шаг **035**). Unit access/slugify — **024** (done).
 
 ## 12. Pages
 
@@ -197,7 +278,7 @@ Relation к Articles/Notes — шаги **018** / **019** (оба done). Unit-т
 | Параметр | Значение                                                                                                                                            |
 | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Write    | Только `admin` (create / update / delete)                                                                                                           |
-| Read     | Admin — все документы (включая drafts); иначе только `_status: published`                                                                           |
+| Read     | Admin — все; иначе published + `publishedAt` не в будущем (ADR-003)                                                                                 |
 | Поля     | `title` / `slug` (localized, slug auto из title), Lexical `body` (localized), `publishedAt`, группа `seo` — **без** categories / tags / `heroImage` |
 | Drafts   | `versions.drafts` — Save Draft / Publish в admin                                                                                                    |
 | API      | Collection slug `pages` → REST `/api/pages`                                                                                                         |

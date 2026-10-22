@@ -16,14 +16,12 @@ Verified: password users after email verify, or Google users with verified email
 | Categories / Tags — read                        | yes       | yes                 | yes               | yes   |
 | Categories / Tags — write                       | no        | no                  | no                | yes   |
 | Media — read                                    | yes       | yes                 | yes               | yes   |
-| Media — create/update/delete                    | no\*      | yes\*               | yes\*             | yes   |
+| Media — create/update/delete                    | no        | no                  | no                | yes   |
 | Comments — read approved                        | yes       | yes                 | yes               | all   |
 | Comments — create                               | no        | no                  | yes               | yes   |
 | Comments — update/delete                        | no        | no                  | no                | yes   |
 | Bookmarks — create                              | no        | no                  | yes               | yes   |
 | Bookmarks — read/update/delete                  | no        | owner               | owner             | all   |
-
-\*Media CUD defaults to authenticated until step **039** (admin-only upload). Tracked as known gap vs product DoD.
 
 ## Auth session notes
 
@@ -42,3 +40,5 @@ See also: [ADR-002](../adr/002-auth-verification-and-account-linking.md), [conte
 - Unit: `tests/unit/access.test.ts` (`isVerified`, role helpers)
 - Integration: `tests/int/auth.int.spec.ts` (anonymous/reader write boundaries, verify/reset)
 - Integration: `tests/int/comments.int.spec.ts`, `tests/int/bookmarks.int.spec.ts` (verified reader create)
+- Unit: `tests/unit/mediaAccess.test.ts` (Media CUD admin-only)
+- Integration: `tests/int/media.int.spec.ts` (reader/anonymous upload denied; admin WebP ok; needs Postgres)

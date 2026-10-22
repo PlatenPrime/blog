@@ -79,7 +79,7 @@ Vercel (Next.js SSR/ISR + Payload /admin)
 | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ |
 | **Cloudflare R2**                                                  | Object storage для изображений (S3-compatible API, бесплатный egress в типичных сценариях) |
 | **`@payloadcms/storage-s3`** (или актуальный R2/S3 plugin Payload) | Интеграция upload Media → R2                                                               |
-| **WebP pipeline**                                                  | Конвертация/отдача загружаемых изображений в WebP                                          |
+| **WebP pipeline**                                                  | Payload `upload.formatOptions` + sharp → WebP (quality 80) на Media upload                 |
 | **YouTube embeds**                                                 | Видео только по ссылке (Lexical block / field), без upload видео в R2                      |
 | **CDN / custom domain для R2**                                     | Опционально после v1; на старте достаточно публичного R2 URL                               |
 
@@ -132,18 +132,18 @@ Newsletter / marketing mail — out of scope.
 
 ## 9. Контентные возможности (зависят от стека)
 
-| Возможность                          | Реализация (ориентир)                                                                   |
-| ------------------------------------ | --------------------------------------------------------------------------------------- |
-| Drafts / Preview / Scheduled publish | Payload drafts + preview URL + `publishedAt` / schedule job или cron-safe publish field |
-| Comments                             | Collection + auth-only create; moderation hooks по необходимости                        |
-| Bookmarks                            | Collection `bookmarks` (user ↔ post/note)                                               |
-| Search                               | Postgres (`ILIKE` / `tsvector`) — без Meilisearch/Algolia                               |
-| Related posts                        | По tags/categories                                                                      |
-| Reading time / TOC                   | Вычисление на publish/render                                                            |
-| Code highlighting                    | Shiki или rehype/highlight в Lexical→HTML pipeline                                      |
-| RSS / Sitemap / OG / JSON-LD         | Next route handlers + Metadata API                                                      |
-| Versioning / rollback                | **Не используем в v1**                                                                  |
-| Audit log CMS                        | **Не используем в v1** (один admin)                                                     |
+| Возможность                          | Реализация (ориентир)                                                                         |
+| ------------------------------------ | --------------------------------------------------------------------------------------------- |
+| Drafts / Preview / Scheduled publish | Payload drafts + preview URL; schedule = query-time (`publishedAt <= now`, ADR-003) — не cron |
+| Comments                             | Collection + auth-only create; moderation hooks по необходимости                              |
+| Bookmarks                            | Collection `bookmarks` (user ↔ post/note)                                                     |
+| Search                               | Postgres (`ILIKE` / `tsvector`) — без Meilisearch/Algolia                                     |
+| Related posts                        | По tags/categories                                                                            |
+| Reading time / TOC                   | Вычисление на publish/render                                                                  |
+| Code highlighting                    | Shiki или rehype/highlight в Lexical→HTML pipeline                                            |
+| RSS / Sitemap / OG / JSON-LD         | Next route handlers + Metadata API                                                            |
+| Versioning / rollback                | **Не используем в v1**                                                                        |
+| Audit log CMS                        | **Не используем в v1** (один admin)                                                           |
 
 **Стержневые collections (v1):** Users, Media, Categories, Tags, Articles, Notes, Pages, Comments, Bookmarks.
 

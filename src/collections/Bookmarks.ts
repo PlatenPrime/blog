@@ -4,6 +4,7 @@ import { APIError } from 'payload'
 import { isAuthenticatedAndVerified } from '../access/isVerified'
 import { isOwnerOrAdmin } from '../access/isOwnerOrAdmin'
 import type { AccessUser } from '../access/types'
+import { adminGroups, collectionLabels } from './adminUi'
 import { buildBookmarkDuplicateWhere, normalizeBookmarkContent } from './bookmarkUniqueness'
 
 /** Bookmarks require an authenticated + email-verified user (ADR-002). */
@@ -67,9 +68,18 @@ const rejectDuplicateBookmark: CollectionBeforeValidateHook = async ({
 
 export const Bookmarks: CollectionConfig = {
   slug: 'bookmarks',
+  labels: collectionLabels(
+    { singular: 'Bookmark', plural: 'Bookmarks' },
+    { singular: 'Закладка', plural: 'Закладки' },
+  ),
   admin: {
-    useAsTitle: 'id',
-    defaultColumns: ['user', 'content', 'createdAt'],
+    group: adminGroups.community,
+    useAsTitle: 'content',
+    defaultColumns: ['content', 'user', 'createdAt'],
+    description: {
+      en: 'Reader bookmarks (Article or Note). Rarely edited manually.',
+      ru: 'Закладки читателей (статья или заметка). Редко правятся вручную.',
+    },
   },
   access: {
     read: isOwnerOrAdmin,

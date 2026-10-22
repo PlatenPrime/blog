@@ -16,7 +16,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked`.
 
-**Baseline Status:** следующий шаг — `033` (Admin UX cleanup). Шаги `001`–`032` и `083` (test policy) — `done`.
+**Baseline Status:** следующий шаг — `041` (Routing локалей uk/ru/en). Шаги `001`–`040` и `083` (test policy) — `done`.
 
 **Правила ведения**
 
@@ -342,67 +342,74 @@ v1 считается завершённым, когда одновременн�
 
 ### 033 — Admin UX cleanup под одного автора
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** `/admin` удобен для ежедневной публикации.
-- **Deliverables:** Навигация collections, labels RU/EN terms, defaults.
-- **Verify:** Admin создаёт Article за < N кликов (smoke checklist).
+- **Deliverables:** Навигация collections (`admin.group`), labels RU/EN, descriptions, `admin.meta`, list defaults; smoke в `LOCAL_SETUP.md`.
+- **Verify:** Admin создаёт Article за < N кликов (smoke checklist в `LOCAL_SETUP.md` §6).
 - **DoD:** CMS не выглядит «сырым scaffold».
+- **Notes:** Группы Content / Taxonomy / Community / System; хелпер `src/collections/adminUi.ts`. Preview / Lexical media / R2 / seed — шаги **034+**.
 
 ### 034 — Lexical: images + YouTube block
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Контент с картинками и видео-ссылками.
-- **Deliverables:** Upload/insert image; YouTube embed block; sanitize.
-- **Verify:** Статья с image + YouTube рендерится на публичке (после Track 5 — временный preview route ok).
+- **Deliverables:** `src/editor/lexical.ts` (UploadFeature → media + BlocksFeature YouTube); `src/lib/youtube.ts` sanitize; `PayloadRichText`; временный `/dev/rich-text/article/[slug]`; unit `youtube.test.ts`.
+- **Verify:** Статья с image + YouTube рендерится на `/dev/rich-text/article/{slug}` (продуктовая публичка — Track 5).
 - **DoD:** Оба медиа-формата поддерживаются в редакторе.
+- **Notes:** Embed только `youtube-nocookie`; draft preview URL — **035**; R2/WebP — **037–038**.
 
 ### 035 — Drafts + Preview
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Черновики и превью до публикации.
-- **Deliverables:** Drafts enabled; preview URL с секретом/auth; undocumented URL protection.
-- **Verify:** Draft не виден анонимам; preview виден admin.
+- **Deliverables:** `PREVIEW_SECRET`; `admin.preview` → `/next/preview` (secret + admin + path allowlist); draftMode; `/next/exit-preview`; draft-aware `/dev/rich-text/...`; unit `previewPaths.test.ts`.
+- **Verify:** Draft не виден анонимам; Preview из admin показывает черновик.
 - **DoD:** Редакционный цикл draft→preview работает.
+- **Notes:** Live Preview iframe не делали; продуктовые URL — Track 5; schedule — **036**.
 
 ### 036 — Scheduled publish
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Отложенная публикация.
-- **Deliverables:** `publishedAt` / `_status` стратегия; механизм publish (cron/Vercel cron или query-time visibility).
-- **Verify:** Будущая дата скрывает пост; после времени — показывает.
-- **DoD:** Schedule предсказуем и задокументирован (ADR).
+- **Deliverables:** Query-time visibility (`publicContentWhere` + `publishedOrAdmin`); hook `setPublishedAtOnPublish`; ADR-003; unit tests.
+- **Verify:** Будущая `publishedAt` скрывает пост анониму; прошлое/пустое — показывает (см. LOCAL_SETUP).
+- **DoD:** Schedule предсказуем и задокументирован (ADR-003).
+- **Notes:** Без Vercel cron в v1; cron только как возможный side-effect позже.
 
 ### 037 — Cloudflare R2 storage plugin
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Медиа в R2.
-- **Deliverables:** S3-compatible Payload storage; bucket; credentials в env; LOCAL_SETUP + runbook.
-- **Verify:** Upload в admin → объект в R2; публичный URL открывается.
+- **Deliverables:** `@payloadcms/storage-s3` + `src/storage/r2.ts` (enabled when `R2_*` set); runbook `docs/runbooks/r2-media.md`; LOCAL_SETUP; unit `isR2Configured`.
+- **Verify:** Upload в admin → объект в R2; публичный URL открывается (см. runbook). Без `R2_*` — локальный `media/`.
 - **DoD:** Локальный disk больше не нужен для prod media.
+- **Notes:** `clientUploads: true` + bucket CORS; WebP — **038**; Media ACL — **039**.
 
 ### 038 — WebP pipeline
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Все загружаемые изображения в WebP.
-- **Deliverables:** Conversion on upload (sharp или Payload image sizes); отказ/конверт non-webp.
-- **Verify:** PNG/JPEG upload сохраняется/отдаётся как WebP.
+- **Deliverables:** `mediaWebpFormatOptions` (`format: webp`, quality 80) на Media `upload.formatOptions`; unit; docs.
+- **Verify:** PNG/JPEG upload → `mimeType: image/webp` и файл `.webp` (local или R2).
 - **DoD:** Политика WebP enforced.
+- **Notes:** GIF→WebP может потерять анимацию; `imageSizes` не добавляли; Media ACL — **039**.
 
 ### 039 — Media access: admin-only upload
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Читатели не грузят файлы.
-- **Deliverables:** Access control Media create/update/delete = admin.
-- **Verify:** Reader API upload → 403.
+- **Deliverables:** Media `create`/`update`/`delete` = admin only; `read` публичный; unit `mediaAccess.test.ts` + int `media.int.spec.ts`; access-matrix.
+- **Verify:** Reader/anonymous create → отказ; admin create → WebP ok (`npm test`; `npm run test:int` с Postgres).
 - **DoD:** Граница upload закрыта тестом.
 
 ### 040 — Admin seed user
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Первый admin без ручного SQL.
-- **Deliverables:** Bootstrap script / env `ADMIN_EMAIL`+`ADMIN_PASSWORD` seed.
-- **Verify:** Чистая БД → один admin после seed.
+- **Deliverables:** `src/seed/adminSeed.ts` + `src/scripts/seedAdmin.ts`; `npm run seed:admin`; unit; LOCAL_SETUP.
+- **Verify:** Чистая БД → `seed:admin` → один admin; повтор → skip; placeholder password → error.
 - **DoD:** Onboarding admin воспроизводим.
+- **Notes:** Track 3 (Admin CMS & media) завершён. Контентный faker seed — Track 12.
 
 ---
 

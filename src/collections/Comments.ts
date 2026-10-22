@@ -4,6 +4,7 @@ import { approvedOrAdmin } from '../access/approvedOrAdmin'
 import { isAdmin } from '../access/isAdmin'
 import { isAuthenticatedAndVerified } from '../access/isVerified'
 import type { AccessUser } from '../access/types'
+import { adminGroups, collectionLabels } from './adminUi'
 
 const adminOnly: Access = ({ req: { user } }) => isAdmin(user as AccessUser)
 
@@ -26,9 +27,18 @@ const setAuthorFromUser: CollectionBeforeValidateHook = ({ data, operation, req 
 
 export const Comments: CollectionConfig = {
   slug: 'comments',
+  labels: collectionLabels(
+    { singular: 'Comment', plural: 'Comments' },
+    { singular: 'Комментарий', plural: 'Комментарии' },
+  ),
   admin: {
+    group: adminGroups.community,
     useAsTitle: 'body',
-    defaultColumns: ['body', 'author', 'moderationStatus', 'createdAt'],
+    defaultColumns: ['moderationStatus', 'body', 'author', 'createdAt'],
+    description: {
+      en: 'Reader comments on Articles and Notes — soft-moderate here.',
+      ru: 'Комментарии читателей к статьям и заметкам — мягкая модерация.',
+    },
   },
   access: {
     read: approvedOrAdmin,
