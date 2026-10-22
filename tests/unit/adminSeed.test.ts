@@ -17,8 +17,8 @@ describe('readAdminSeedEnv', () => {
   })
 
   it('rejects missing email or password', () => {
-    expect(() => readAdminSeedEnv({ ADMIN_PASSWORD: 'x' })).toThrow(/ADMIN_EMAIL/)
-    expect(() => readAdminSeedEnv({ ADMIN_EMAIL: 'a@b.co' })).toThrow(/ADMIN_PASSWORD/)
+    expect(() => readAdminSeedEnv({ ADMIN_PASSWORD: 'x' })).toThrow(/ADMIN_EMAIL is required/)
+    expect(() => readAdminSeedEnv({ ADMIN_EMAIL: 'a@b.co' })).toThrow(/ADMIN_PASSWORD is required/)
   })
 
   it('rejects placeholder password from .env.example', () => {

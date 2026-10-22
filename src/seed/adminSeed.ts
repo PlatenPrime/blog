@@ -24,7 +24,9 @@ export function readAdminSeedEnv(
   const password = env.ADMIN_PASSWORD ?? ''
 
   if (!email) {
-    throw new Error('ADMIN_EMAIL is required to seed an admin user.')
+    throw new Error(
+      'ADMIN_EMAIL is required. Add it to `.env` (see `.env.example`), then re-run `npm run seed:admin`.',
+    )
   }
 
   if (!email.includes('@')) {
@@ -32,7 +34,9 @@ export function readAdminSeedEnv(
   }
 
   if (!password) {
-    throw new Error('ADMIN_PASSWORD is required to seed an admin user.')
+    throw new Error(
+      'ADMIN_PASSWORD is required. Add it to `.env` (see `.env.example`), then re-run `npm run seed:admin`.',
+    )
   }
 
   if (password === PLACEHOLDER_ADMIN_PASSWORD) {

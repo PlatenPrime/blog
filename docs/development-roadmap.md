@@ -16,7 +16,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked`.
 
-**Baseline Status:** следующий шаг — `041` (Routing локалей uk/ru/en). Шаги `001`–`040` и `083` (test policy) — `done`.
+**Baseline Status:** следующий шаг — `042` (UI dictionaries). Шаги `001`–`041` и `083` (test policy) — `done`.
 
 **Правила ведения**
 
@@ -417,11 +417,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 041 — Routing локалей uk/ru/en
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** URL-структура с локалью.
-- **Deliverables:** `next-intl` (или выбранный i18n) middleware; default locale policy (ADR).
-- **Verify:** `/uk`, `/ru`, `/en` отдают UI.
+- **Deliverables:** `next-intl` + `src/proxy.ts`; `[locale]` routes; ADR-004 (`localePrefix: always`, default `uk`); stub messages; unit `i18nPaths` / preview paths.
+- **Verify:** `/uk`, `/ru`, `/en` отдают UI; `/` → locale redirect; `/admin` без префикса.
 - **DoD:** Локаль в URL стабильна.
+- **Notes:** UI dictionaries — **042**; switcher — **044**; missing-translation fallback tests — **045**. `/next/preview` остаётся без locale prefix.
 
 ### 042 — UI dictionaries
 

@@ -1,7 +1,9 @@
+import { withDefaultLocale } from '@/i18n/paths'
+
 import { getServerUrl } from './serverUrl'
 
 export function verificationEmailHTML(token: string): string {
-  const url = `${getServerUrl()}/verify?token=${encodeURIComponent(token)}`
+  const url = `${getServerUrl()}${withDefaultLocale('/verify')}?token=${encodeURIComponent(token)}`
   return `
     <!doctype html>
     <html>
@@ -19,7 +21,7 @@ export function verificationEmailSubject(): string {
 }
 
 export function resetPasswordEmailHTML(token: string): string {
-  const url = `${getServerUrl()}/reset-password?token=${encodeURIComponent(token)}`
+  const url = `${getServerUrl()}${withDefaultLocale('/reset-password')}?token=${encodeURIComponent(token)}`
   return `
     <!doctype html>
     <html>

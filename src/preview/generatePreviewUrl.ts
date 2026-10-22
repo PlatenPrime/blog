@@ -4,6 +4,7 @@ import { buildPreviewPath, type PreviewCollection } from './paths'
 
 /**
  * Payload `admin.preview` factory: relative `/next/preview?...` with secret (roadmap 035).
+ * `path` query uses default-locale preview URL (`/uk/dev/rich-text/...`, ADR-004).
  */
 export function createPreviewUrl(collection: PreviewCollection): GeneratePreviewURL {
   return (doc) => {

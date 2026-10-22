@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 /**
  * Visible only while Next.js draftMode is enabled (roadmap 035).
  */
@@ -13,9 +15,9 @@ export function DraftPreviewBanner() {
       }}
     >
       Draft preview — drafts are visible because draft mode is on.{' '}
-      <a href="/next/exit-preview" style={{ color: '#9ecbff' }}>
+      <Link href="/next/exit-preview" style={{ color: '#9ecbff' }}>
         Exit preview
-      </a>
+      </Link>
     </p>
   )
 }

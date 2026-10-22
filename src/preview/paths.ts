@@ -1,7 +1,10 @@
 /**
  * Allowlisted draft-preview paths (roadmap 035).
- * Temporary `/dev/rich-text/...` until Track 5 public routes.
+ * Temporary `/{locale}/dev/rich-text/...` until Track 5 public routes.
  */
+
+import { isAppLocale } from '@/i18n/paths'
+import { routing } from '@/i18n/routing'
 
 export const PREVIEW_COLLECTIONS = ['articles', 'notes', 'pages'] as const
 
@@ -22,6 +25,12 @@ const SEGMENT_TO_COLLECTION: Record<string, PreviewCollection> = {
   page: 'pages',
 }
 
+const LOCALE_ALTERNATION = routing.locales.join('|')
+
+const PREVIEW_PATH_RE = new RegExp(
+  `^/(${LOCALE_ALTERNATION})/dev/rich-text/(article|note|page)/([a-z0-9]+(?:-[a-z0-9]+)*)$`,
+)
+
 export function isPreviewCollection(value: unknown): value is PreviewCollection {
   return typeof value === 'string' && (PREVIEW_COLLECTIONS as readonly string[]).includes(value)
 }
@@ -31,7 +40,7 @@ export function isValidPreviewSlug(slug: unknown): slug is string {
 }
 
 /**
- * Build a relative preview path for an allowlisted collection + slug.
+ * Build a relative preview path for an allowlisted collection + slug (default locale).
  */
 export function buildPreviewPath(args: {
   collection: PreviewCollection
@@ -41,7 +50,7 @@ export function buildPreviewPath(args: {
   if (!isPreviewCollection(args.collection)) return null
 
   const segment = COLLECTION_TO_SEGMENT[args.collection]
-  return `/dev/rich-text/${segment}/${args.slug}`
+  return `/${routing.defaultLocale}/dev/rich-text/${segment}/${args.slug}`
 }
 
 /**
@@ -52,9 +61,10 @@ export function isAllowedPreviewPath(path: unknown): boolean {
   if (!path.startsWith('/') || path.startsWith('//') || path.includes('\\')) return false
   if (path.includes('://') || path.includes('..')) return false
 
-  const match = /^\/dev\/rich-text\/(article|note|page)\/([a-z0-9]+(?:-[a-z0-9]+)*)$/.exec(path)
+  const match = PREVIEW_PATH_RE.exec(path)
   if (!match) return false
 
-  const segment = match[1]!
-  return segment in SEGMENT_TO_COLLECTION
+  const locale = match[1]!
+  const segment = match[2]!
+  return isAppLocale(locale) && segment in SEGMENT_TO_COLLECTION
 }

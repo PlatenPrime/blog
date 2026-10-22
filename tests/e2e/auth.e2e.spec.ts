@@ -17,7 +17,7 @@ test.describe('Auth UI', () => {
     const suffix = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
     const email = `e2e-reg-${suffix}@example.com`
 
-    await page.goto('/register')
+    await page.goto('/uk/register')
     await page.getByLabel('Email').fill(email)
     await page.getByLabel('Password').fill('register-password-123')
     await page.getByRole('button', { name: 'Create account' }).click()
@@ -28,12 +28,12 @@ test.describe('Auth UI', () => {
   test('login → authenticated home → logout', async ({ page }) => {
     const { email, password } = readSeedUser()
 
-    await page.goto('/login')
+    await page.goto('/uk/login')
     await page.getByLabel('Email').fill(email)
     await page.getByLabel('Password').fill(password)
     await page.getByRole('button', { name: 'Log in' }).click()
 
-    await expect(page).toHaveURL('/')
+    await expect(page).toHaveURL('/uk')
     await expect(page.getByTestId('session-email')).toHaveText(email)
 
     await page.getByRole('link', { name: 'Log out' }).click()
@@ -44,7 +44,7 @@ test.describe('Auth UI', () => {
   test('login rejects wrong password', async ({ page }) => {
     const { email } = readSeedUser()
 
-    await page.goto('/login')
+    await page.goto('/uk/login')
     await page.getByLabel('Email').fill(email)
     await page.getByLabel('Password').fill('definitely-wrong-password')
     await page.getByRole('button', { name: 'Log in' }).click()
@@ -53,7 +53,7 @@ test.describe('Auth UI', () => {
   })
 
   test('forgot password shows neutral success', async ({ page }) => {
-    await page.goto('/forgot-password')
+    await page.goto('/uk/forgot-password')
     await page.getByLabel('Email').fill('nobody-e2e@example.com')
     await page.getByRole('button', { name: 'Send reset link' }).click()
 
@@ -84,11 +84,11 @@ test.describe('Auth UI', () => {
       disableEmail: true,
     })
 
-    await page.goto(`/reset-password?token=${encodeURIComponent(token as string)}`)
+    await page.goto(`/uk/reset-password?token=${encodeURIComponent(token as string)}`)
     await page.getByLabel('Password').fill(newPassword)
     await page.getByRole('button', { name: 'Set new password' }).click()
 
-    await expect(page).toHaveURL(/\/login/)
+    await expect(page).toHaveURL(/\/uk\/login/)
 
     await page.getByLabel('Email').fill(email)
     await page.getByLabel('Password').fill(newPassword)

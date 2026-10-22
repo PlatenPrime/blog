@@ -52,11 +52,11 @@ cp .env.example .env
 | Local     | `RESEND_API_KEY` пустой                | Console adapter — HTML письма в лог `npm run dev`                                    |
 | Prod-like | `RESEND_API_KEY` + `RESEND_FROM_EMAIL` | [`@payloadcms/email-resend`](https://www.npmjs.com/package/@payloadcms/email-resend) |
 
-После регистрации откройте `/verify?token=…` из лога (или письма Resend). Без verify логин reader’а отклоняется.
+После регистрации откройте `/uk/verify?token=…` из лога (или письма Resend). Без verify логин reader’а отклоняется. Публичные URL всегда с префиксом локали (`uk` / `ru` / `en`, default `uk`) — ADR-004.
 
 ### Google OAuth (optional)
 
-См. [`google-oauth-setup.md`](./google-oauth-setup.md). Без `GOOGLE_CLIENT_ID` кнопка на `/login` скрыта.
+См. [`google-oauth-setup.md`](./google-oauth-setup.md). Без `GOOGLE_CLIENT_ID` кнопка на `/uk/login` скрыта.
 
 Канон имён переменных — [`.env.example`](../.env.example).
 
@@ -113,9 +113,9 @@ npm run seed:admin
 
 Fallback без seed: первый заход на `/admin` → форма create-first-user (тоже получит `role: admin`).
 
-Роли (`admin` | `reader`): только `admin` проходит в `/admin`. Публичная регистрация: `/register` → verify email → `/login`. Reader на `/admin` получает отказ.
+Роли (`admin` | `reader`): только `admin` проходит в `/admin`. Публичная регистрация: `/uk/register` → verify email → `/uk/login`. Reader на `/admin` получает отказ.
 
-Полезные URL: `/login`, `/register`, `/forgot-password`, `/reset-password`, `/verify`, `/logout`. Матрица доступа — [`security/access-matrix.md`](./security/access-matrix.md).
+Полезные URL (префикс `uk` | `ru` | `en`): `/uk/login`, `/uk/register`, `/uk/forgot-password`, `/uk/reset-password`, `/uk/verify`, `/uk/logout`. Корень `/` редиректит на локаль. `/admin` и `/api` без префикса. Матрица доступа — [`security/access-matrix.md`](./security/access-matrix.md).
 
 Unit helpers: `npm test` → `tests/unit/adminSeed.test.ts`.
 

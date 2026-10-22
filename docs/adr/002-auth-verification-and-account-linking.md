@@ -12,7 +12,7 @@ Readers authenticate via Payload Users (email+password and optional Google OAuth
 
 ### Email verification
 
-1. `Users.auth.verify` is enabled. New password registrations receive a verification email and **cannot log in** until the token is consumed (`/verify?token=…`).
+1. `Users.auth.verify` is enabled. New password registrations receive a verification email and **cannot log in** until the token is consumed (`/uk/verify?token=…`, ADR-004).
 2. **Sensitive site actions** (create comments, create bookmarks) additionally require `isAuthenticatedAndVerified` — admins are always treated as verified.
 3. First-user bootstrap (`totalDocs === 0`) forces `role: admin`. Any user with `role: admin` is always `_verified: true` (hook) so `/admin` cannot enter a login↔panel loop when verify is enabled (JWT requires truthy `_verified`; login only rejects explicit `false`).
 4. Google OAuth users are created/linked with `_verified: true` when Google reports a verified email (default).
@@ -32,4 +32,4 @@ Out of scope v1: linking multiple distinct Google accounts to one user, GitHub/A
 
 - Local auth works with the console email adapter when `RESEND_API_KEY` is unset; production must use Resend (step 028).
 - OAuth is inactive until `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` are set; field `users.sub` remains in schema for when OAuth is enabled.
-- UI dictionaries / `[locale]` routes come later (Track 4); auth paths stay at `/login`, `/register`, etc. until step 041.
+- Frontend auth paths live under `[locale]` after step **041** (e.g. `/uk/login`); see ADR-004. UI dictionaries — step **042**.
