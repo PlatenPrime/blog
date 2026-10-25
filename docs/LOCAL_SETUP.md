@@ -115,7 +115,7 @@ Fallback без seed: первый заход на `/admin` → форма creat
 
 Роли (`admin` | `reader`): только `admin` проходит в `/admin`. Публичная регистрация: `/uk/register` → verify email → `/uk/login`. Reader на `/admin` получает отказ.
 
-Полезные URL: `/uk/login`, `/uk/register`, `/uk/forgot-password`, `/uk/reset-password`, `/uk/verify`, `/uk/logout`. Те же пути с префиксом `/ru` или `/en`. Голые `/login` и `/` редиректят на default locale `uk`. Матрица доступа — [`security/access-matrix.md`](./security/access-matrix.md).
+Полезные URL: `/uk/login`, `/uk/register`, `/uk/forgot-password`, `/uk/reset-password`, `/uk/verify`, `/uk/logout`. Те же пути с префиксом `/ru` или `/en`. Голые `/login` и `/` редиректят на default locale `uk`. В шапке публичных страниц — language switcher (`УК` / `РУ` / `EN`): меняет префикс локали, сохраняя путь и query (шаг **044**). OAuth/письма по-прежнему ведут на `/uk/...`; после возврата язык можно сменить свитчером. Матрица доступа — [`security/access-matrix.md`](./security/access-matrix.md).
 
 Unit helpers: `npm test` → `tests/unit/adminSeed.test.ts`.
 

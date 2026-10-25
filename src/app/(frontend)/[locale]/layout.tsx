@@ -4,6 +4,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import React from 'react'
 
+import { SiteHeader } from '@/components/language-switcher/SiteHeader'
 import { routing } from '@/i18n/routing'
 
 import '../styles.css'
@@ -41,6 +42,7 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
     <html lang={locale}>
       <body>
         <NextIntlClientProvider messages={messages}>
+          <SiteHeader />
           <main>{children}</main>
         </NextIntlClientProvider>
       </body>

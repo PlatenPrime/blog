@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked`.
 
-**Baseline Status:** следующий шаг — `044` (Language switcher). Шаги `001`–`043` и `083` (test policy) — `done`.
+**Baseline Status:** следующий шаг — `045` (i18n ADR + tests). Шаги `001`–`044` и `083` (test policy) — `done`.
 
 **Правила ведения**
 
@@ -446,11 +446,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 044 — Language switcher
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** UX переключения.
 - **Deliverables:** Switcher в header; сохранение пути.
 - **Verify:** Playwright переключает локаль на той же логической странице.
 - **DoD:** Switcher доступен на ключевых страницах.
+- **Notes:** `SiteHeader` + `LanguageSwitcher` в `[locale]/layout`; next-intl `Link` + `usePathname` + query. v1 = swap префикса, без ремапа localized slug (Track 5). OAuth return остаётся `uk`. E2e: `tests/e2e/language-switcher.e2e.spec.ts`. Полный nav — **048**.
 
 ### 045 — i18n ADR + tests
 

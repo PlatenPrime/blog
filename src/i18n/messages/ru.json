@@ -9,7 +9,11 @@
     "logoutEverywhere": "Выйти везде",
     "openAdmin": "Админка",
     "signedInAs": "Вы вошли как",
-    "emailUnverified": "(почта не подтверждена)"
+    "emailUnverified": "(почта не подтверждена)",
+    "language": "Язык",
+    "localeUk": "УК",
+    "localeRu": "РУ",
+    "localeEn": "EN"
   },
   "auth": {
     "email": "Электронная почта",

@@ -9,7 +9,11 @@
     "logoutEverywhere": "Log out everywhere",
     "openAdmin": "Open admin",
     "signedInAs": "Signed in as",
-    "emailUnverified": "(email not verified)"
+    "emailUnverified": "(email not verified)",
+    "language": "Language",
+    "localeUk": "UK",
+    "localeRu": "RU",
+    "localeEn": "EN"
   },
   "auth": {
     "email": "Email",

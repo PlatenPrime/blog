@@ -166,7 +166,7 @@ export interface Article {
   categories?: (number | Category)[] | null;
   tags?: (number | Tag)[] | null;
   /**
-   * Public publish timestamp (schedule job — step 036).
+   * Empty = visible immediately on Publish. Future date = scheduled (hidden until then).
    */
   publishedAt?: string | null;
   seo?: {
@@ -274,7 +274,7 @@ export interface Note {
   categories?: (number | Category)[] | null;
   tags?: (number | Tag)[] | null;
   /**
-   * Public publish timestamp (schedule job — step 036).
+   * Empty = visible immediately on Publish. Future date = scheduled (hidden until then).
    */
   publishedAt?: string | null;
   seo?: {
@@ -324,7 +324,7 @@ export interface Page {
     [k: string]: unknown;
   };
   /**
-   * Public publish timestamp (schedule job — step 036).
+   * Empty = visible immediately on Publish. Future date = scheduled (hidden until then).
    */
   publishedAt?: string | null;
   seo?: {
