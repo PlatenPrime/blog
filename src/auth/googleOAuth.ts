@@ -1,6 +1,8 @@
 import { OAuth2Plugin, defaultGetToken } from 'payload-oauth2'
 import type { PayloadRequest } from 'payload'
 
+import { prefixPublicPath } from '@/i18n/paths'
+
 import { getServerUrl } from './serverUrl'
 
 const clientId = process.env.GOOGLE_CLIENT_ID?.trim() || ''
@@ -66,9 +68,9 @@ export const googleOAuthPlugin = OAuth2Plugin({
       code,
     )
   },
-  successRedirect: () => '/',
+  successRedirect: () => prefixPublicPath('/'),
   failureRedirect: (_req, error) => {
     const message = error instanceof Error ? error.message : 'oauth_failed'
-    return `/login?error=${encodeURIComponent(message)}`
+    return `${prefixPublicPath('/login')}?error=${encodeURIComponent(message)}`
   },
 })

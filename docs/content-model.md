@@ -254,7 +254,7 @@ Drafts, access, taxonomy, `publishedAt`, SEO — те же.
 - Bookmark uniqueness на hook, не на DB constraint (гонка возможна теоретически; усиление — отдельный шаг при необходимости).
 - Comments / Bookmarks не цепляются к `pages`.
 - Media: local disk или R2; originals → WebP; CUD admin-only (**039**).
-- Поле `role` меняет только admin; публичный `create` users — self-register readers (`/register`) + first-user admin bootstrap.
+- Поле `role` меняет только admin; публичный `create` users — self-register readers (`/uk/register`, ADR-004) + first-user admin bootstrap.
 - Comments/Bookmarks create: `isAuthenticatedAndVerified` (ADR-002). Полная матрица — [`security/access-matrix.md`](./security/access-matrix.md).
 - Schedule: query-time visibility по `publishedAt` (ADR-003), без cron.
 - Soft-moderation комментариев в публичном UI — с шага 058.

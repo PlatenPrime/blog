@@ -13,6 +13,8 @@ export function DraftPreviewBanner() {
       }}
     >
       Draft preview — drafts are visible because draft mode is on.{' '}
+      {/* Document navigation: this route clears draftMode and redirects. */}
+      {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- exit-preview is a route handler, not a locale page */}
       <a href="/next/exit-preview" style={{ color: '#9ecbff' }}>
         Exit preview
       </a>

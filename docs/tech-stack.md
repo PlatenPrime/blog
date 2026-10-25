@@ -100,7 +100,7 @@ Upload медиа — **только admin**. Читатели не загруж
 | **Access Control (Payload)** | Admin panel, drafts/preview, CRUD комментариев/закладок                           |
 | **MFA (TOTP)**               | Out of scope v1 (заложено «позже»)                                                |
 
-Предпочтение: **не** плодить гибрид Auth.js + Payload без нужды. Auth читателей и admin — через Payload Users с разными ролями и UI (публичные `/login` vs `/admin`).
+Предпочтение: **не** плодить гибрид Auth.js + Payload без нужды. Auth читателей и admin — через Payload Users с разными ролями и UI (публичные `/{locale}/login` vs `/admin`, ADR-004).
 
 ---
 

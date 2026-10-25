@@ -33,7 +33,7 @@ test.describe('Auth UI', () => {
     await page.getByLabel('Password').fill(password)
     await page.getByRole('button', { name: 'Log in' }).click()
 
-    await expect(page).toHaveURL('/')
+    await expect(page).toHaveURL(/\/uk\/?$/)
     await expect(page.getByTestId('session-email')).toHaveText(email)
 
     await page.getByRole('link', { name: 'Log out' }).click()

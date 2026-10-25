@@ -4,6 +4,7 @@ test.describe('Frontend', () => {
   test('home loads', async ({ page }) => {
     await page.goto('/')
 
+    await expect(page).toHaveURL(/\/uk\/?$/)
     await expect(page).toHaveTitle(/Blog/)
 
     const heading = page.locator('h1').first()

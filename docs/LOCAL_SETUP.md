@@ -52,11 +52,11 @@ cp .env.example .env
 | Local     | `RESEND_API_KEY` пустой                | Console adapter — HTML письма в лог `npm run dev`                                    |
 | Prod-like | `RESEND_API_KEY` + `RESEND_FROM_EMAIL` | [`@payloadcms/email-resend`](https://www.npmjs.com/package/@payloadcms/email-resend) |
 
-После регистрации откройте `/verify?token=…` из лога (или письма Resend). Без verify логин reader’а отклоняется.
+После регистрации откройте `/uk/verify?token=…` из лога (или письма Resend). Без verify логин reader’а отклоняется.
 
 ### Google OAuth (optional)
 
-См. [`google-oauth-setup.md`](./google-oauth-setup.md). Без `GOOGLE_CLIENT_ID` кнопка на `/login` скрыта.
+См. [`google-oauth-setup.md`](./google-oauth-setup.md). Без `GOOGLE_CLIENT_ID` кнопка на `/uk/login` скрыта.
 
 Канон имён переменных — [`.env.example`](../.env.example).
 
@@ -88,7 +88,7 @@ npm run dev
 
 Ожидаемо:
 
-- сайт: [http://localhost:3000](http://localhost:3000)
+- сайт: [http://localhost:3000/uk](http://localhost:3000/uk) (`/` редиректит на `/uk`, ADR-004)
 - admin: [http://localhost:3000/admin](http://localhost:3000/admin)
 
 Production-like локально: `npm run build` затем `npm start`.
@@ -113,9 +113,9 @@ npm run seed:admin
 
 Fallback без seed: первый заход на `/admin` → форма create-first-user (тоже получит `role: admin`).
 
-Роли (`admin` | `reader`): только `admin` проходит в `/admin`. Публичная регистрация: `/register` → verify email → `/login`. Reader на `/admin` получает отказ.
+Роли (`admin` | `reader`): только `admin` проходит в `/admin`. Публичная регистрация: `/uk/register` → verify email → `/uk/login`. Reader на `/admin` получает отказ.
 
-Полезные URL: `/login`, `/register`, `/forgot-password`, `/reset-password`, `/verify`, `/logout`. Матрица доступа — [`security/access-matrix.md`](./security/access-matrix.md).
+Полезные URL: `/uk/login`, `/uk/register`, `/uk/forgot-password`, `/uk/reset-password`, `/uk/verify`, `/uk/logout`. Те же пути с префиксом `/ru` или `/en`. Голые `/login` и `/` редиректят на default locale `uk`. Матрица доступа — [`security/access-matrix.md`](./security/access-matrix.md).
 
 Unit helpers: `npm test` → `tests/unit/adminSeed.test.ts`.
 
@@ -216,7 +216,7 @@ Relation к Articles/Notes — шаги **018** / **019** (оба done). Unit-т
 2. Slash / Blocks → **YouTube** → вставьте URL вида `https://www.youtube.com/watch?v=…` или `https://youtu.be/…` → Save / Publish.
 3. Невалидный URL (не YouTube) отклоняется валидатором поля.
 4. Временный публичный smoke (до Track 5): откройте  
-   `http://localhost:3000/dev/rich-text/article/{slug}`  
+   `http://localhost:3000/uk/dev/rich-text/article/{slug}`  
    для **published** статьи — ожидайте картинку и iframe `youtube-nocookie`. Draft без preview mode → 404.
 
 Unit sanitize: `npm test` → `tests/unit/youtube.test.ts`. Продуктовые article routes — **051**.
@@ -228,11 +228,11 @@ Unit sanitize: `npm test` → `tests/unit/youtube.test.ts`. Продуктовы
 Предусловия: `PREVIEW_SECRET` в `.env` (см. `.env.example`), admin залогинен в `/admin` (та же сессия/cookies).
 
 1. Создайте Article (или Note / Page) → **Save Draft** (не Publish).
-2. В edit view нажмите **Preview** — откроется `/next/preview?...` → redirect на `/dev/rich-text/article/{slug}` (или note/page).
+2. В edit view нажмите **Preview** — откроется `/next/preview?...` → redirect на `/dev/rich-text/article/{slug}` (или note/page), затем proxy добавит default locale: `/uk/dev/rich-text/...`.
 3. Ожидание: баннер «Draft preview», контент черновика, `Status: draft`.
-4. Incognito / без cookies admin: тот же `/dev/rich-text/article/{slug}` → **404** (draft не публичный).
+4. Incognito / без cookies admin: тот же `/uk/dev/rich-text/article/{slug}` → **404** (draft не публичный).
 5. `/next/preview` с неверным `previewSecret` или без admin session → **403**.
-6. `/next/exit-preview` → выход из draftMode, redirect на `/`.
+6. `/next/exit-preview` → выход из draftMode, redirect на `/`, затем на `/uk`.
 
 Unit allowlist: `npm test` → `tests/unit/previewPaths.test.ts`.
 
@@ -241,7 +241,7 @@ Unit allowlist: `npm test` → `tests/unit/previewPaths.test.ts`.
 Отложенная видимость без cron (ADR-003): Publish + будущий `publishedAt` → скрыто для anonymous до наступления времени.
 
 1. Article → Publish, в sidebar `publishedAt` поставьте **завтра** (или +1 час) → Save.
-2. Incognito / без admin: `http://localhost:3000/dev/rich-text/article/{slug}` → **404**; `GET /api/articles` не возвращает этот doc.
+2. Incognito / без admin: `http://localhost:3000/uk/dev/rich-text/article/{slug}` → **404**; `GET /api/articles` не возвращает этот doc.
 3. В admin тот же документ виден; Preview (035) тоже показывает.
 4. Смените `publishedAt` на прошлое (или очистите и Publish снова — hook проставит `now`) → публичный URL / API отдают документ.
 5. Publish без `publishedAt`: после сохранения поле заполнено текущим временем.

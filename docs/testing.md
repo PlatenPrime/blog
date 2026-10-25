@@ -45,7 +45,7 @@
 - Инварианты модели в helpers (например uniqueness bookmark), если вынесены из Payload hooks
 - Парсеры / сериализаторы контента (TOC из headings, JSON-LD smoke-parse и т.п.), когда появятся
 
-**Сейчас (после Track 2 / 032):** unit — `slugify`, access helpers (+ `isVerified`), `bookmarkUniqueness`, `rateLimit`. Integration — comments/bookmarks + `tests/int/auth.int.spec.ts` (register/login/verify/reset, reader≠articles). E2E auth — `tests/e2e/auth.e2e.spec.ts` (локально; CI e2e — шаг **086**).
+**Сейчас (после Track 4 / 041):** unit — `slugify`, access helpers (+ `isVerified`), `bookmarkUniqueness`, `rateLimit`, контракт префикса локали (`tests/unit/i18nRouting.test.ts`). Integration — comments/bookmarks + `tests/int/auth.int.spec.ts` (register/login/verify/reset, reader≠articles). E2E auth — `tests/e2e/auth.e2e.spec.ts` (локально; CI e2e — шаг **086**). Fallback словарей — шаг **045**.
 
 ### Integration (Payload Local API / DB) — must для границ доступа
 
@@ -95,6 +95,7 @@ Admin CMS: только точечный smoke при необходимости
 | 024       | Unit: slugify, role/access helpers, bookmark uniqueness helpers |
 | 032       | E2E auth suite                                                  |
 | 039       | Integration/API: media upload 403 for reader                    |
+| 041       | Unit: locale prefix contract (ADR-004)                          |
 | 045       | Unit: i18n fallback                                             |
 | 061       | E2E comments/bookmarks + Vitest access                          |
 | 083       | Эта политика (`docs/testing.md`)                                |
