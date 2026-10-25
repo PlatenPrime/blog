@@ -1,6 +1,6 @@
-/* Legacy public pages (home, auth).
+/* Legacy auth pages.
    These unlayered rules beat Tailwind layers from globals.css.
-   Chrome uses the tokens in globals.css. This file goes away as home and auth move. */
+   Home and chrome use the tokens in globals.css. This file goes away when auth moves. */
 
 :root {
   --bg: #f7f4ef;
@@ -25,44 +25,6 @@ body {
   color: var(--fg);
   font-family: Georgia, 'Times New Roman', serif;
   line-height: 1.5;
-}
-
-.home {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 2rem;
-  max-width: 40rem;
-}
-
-.home h1 {
-  margin: 0 0 0.5rem;
-  font-size: 2.5rem;
-  font-weight: 400;
-}
-
-.home p {
-  margin: 0 0 1rem;
-  color: var(--legacy-muted);
-}
-
-.home a {
-  color: var(--legacy-accent);
-}
-
-.home-session {
-  margin-bottom: 1rem;
-}
-
-.home-session button {
-  margin-top: 0.5rem;
-  font: inherit;
-  cursor: pointer;
-  background: transparent;
-  border: 1px solid var(--legacy-muted);
-  color: var(--fg);
-  padding: 0.35rem 0.75rem;
 }
 
 .auth-page {
@@ -153,7 +115,7 @@ body {
   color: #8b1e1e;
 }
 
-/* Readability bridge until home and auth leave this file (048+).
+/* Readability bridge until auth leaves this file.
    Light values above stay put. Dark maps them onto the token set. */
 html.dark {
   --bg: var(--background);

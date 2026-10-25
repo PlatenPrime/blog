@@ -1,7 +1,9 @@
 import NextLink from 'next/link'
-import { getTranslations } from 'next-intl/server'
+import { getLocale, getTranslations } from 'next-intl/server'
 
+import { prefixPublicPath } from '@/i18n/paths'
 import { Link } from '@/i18n/navigation'
+import { resolveAppLocale } from '@/i18n/resolveAppLocale'
 
 import { siteChromeLinkClassName } from './site-nav'
 
@@ -13,13 +15,15 @@ type SiteAuthLinksProps = {
 export async function SiteAuthLinks({ isAdminUser, isAuthenticated }: SiteAuthLinksProps) {
   const t = await getTranslations('nav')
   const linkClassName = `${siteChromeLinkClassName} inline-flex min-h-8 items-center`
+  const logoutHref = prefixPublicPath('/logout', resolveAppLocale(await getLocale()))
 
   return (
     <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
       {isAuthenticated ? (
-        <Link className={linkClassName} href="/logout">
+        // Route handler, not a page: a client Link fetches an RSC payload and never hits GET.
+        <a className={linkClassName} href={logoutHref}>
           {t('logout')}
-        </Link>
+        </a>
       ) : (
         <>
           <Link className={linkClassName} href="/login">

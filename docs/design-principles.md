@@ -8,13 +8,13 @@
 
 ## Где живёт система
 
-| Что                     | Где                                                                                            |
-| ----------------------- | ---------------------------------------------------------------------------------------------- |
-| Токены, шкала, Tailwind | [`src/app/(frontend)/globals.css`](<../src/app/(frontend)/globals.css>)                        |
-| Примитивы               | `src/components/ui` — button, input, label, textarea, separator, badge, card                   |
-| `cn`                    | [`src/lib/utils.ts`](../src/lib/utils.ts) реэкспортирует пакет `cn`                            |
-| Иконки                  | `lucide-react`                                                                                 |
-| Легаси home / auth      | [`src/app/(frontend)/styles.css`](<../src/app/(frontend)/styles.css>) до переноса этих страниц |
+| Что                     | Где                                                                                          |
+| ----------------------- | -------------------------------------------------------------------------------------------- |
+| Токены, шкала, Tailwind | [`src/app/(frontend)/globals.css`](<../src/app/(frontend)/globals.css>)                      |
+| Примитивы               | `src/components/ui` — button, input, label, textarea, separator, badge, card                 |
+| `cn`                    | [`src/lib/utils.ts`](../src/lib/utils.ts) реэкспортирует пакет `cn`                          |
+| Иконки                  | `lucide-react`                                                                               |
+| Легаси auth             | [`src/app/(frontend)/styles.css`](<../src/app/(frontend)/styles.css>) до переноса форм входа |
 
 Новый компонент из реестра: `npx shadcn@latest add <name>` (в `components.json` стиль `radix-nova`, база Radix). Не ставить npm-пакет `shadcn` в зависимости приложения: это CLI. Варианты `data-open` / `data-horizontal`, которые нужны примитивам, уже лежат в `globals.css`.
 
@@ -28,7 +28,7 @@ Tailwind сканирует только публичный фронт и `src/c
 
 Класс `.dark` на `<html>` переопределяет те же переменные. Светлые значения висят на селекторе `:root, .light`: до первой отрисовки скрипт в locale layout ставит на `<html>` класс `light` или `dark`. До первого клика класс берётся из `prefers-color-scheme`. Кнопка в шапке пишет явный `light` или `dark` в `localStorage` (ключ `theme`). Отдельного пункта «как в системе» в интерфейсе нет.
 
-`--bg` и `--fg` в `styles.css` на светлой теме остаются как есть. В `html.dark` они, поля входа и цвета ошибок ссылаются на токены, чтобы главная и формы входа читались, пока их не переведут на систему. Имена `--muted` и `--accent` заняты ролями shadcn, поэтому легаси-файл держит те же цвета как `--legacy-muted` и `--legacy-accent`. Шапка и подвал уже на токенах.
+`--bg` и `--fg` в `styles.css` на светлой теме остаются как есть. В `html.dark` они, поля входа и цвета ошибок ссылаются на токены, чтобы формы входа читались, пока их не переведут на систему. Главная уже на токенах. Имена `--muted` и `--accent` заняты ролями shadcn, поэтому легаси-файл держит те же цвета как `--legacy-muted` и `--legacy-accent`. Шапка и подвал уже на токенах.
 
 ## Типографика
 
@@ -40,7 +40,7 @@ Tailwind сканирует только публичный фронт и `src/c
 | Body    | `text-body`                   | Длинное чтение, мера `max-w-measure` (65ch) |
 | Small   | `text-small`                  | Chrome, даты, мета                          |
 
-Чтение — `font-serif` (Source Serif 4). Интерфейс — `font-sans` (Source Sans 3). Оба с кириллицей: Newsreader её не содержит, поэтому не он. На `<html>` только CSS-переменные шрифтов. `body` в `styles.css` всё ещё Georgia, и это неслоиное правило побеждает Tailwind на текущих страницах. Новый экран сам ставит `font-serif` / `font-sans`.
+Чтение — `font-serif` (Source Serif 4). Интерфейс — `font-sans` (Source Sans 3). Оба с кириллицей: Newsreader её не содержит, поэтому не он. На `<html>` только CSS-переменные шрифтов. `body` в `styles.css` всё ещё Georgia: неслоиное правило действует на страницы, которые не задают свой шрифт (формы входа). Главная ставит `font-serif` на свою колонку.
 
 ## Витрина
 

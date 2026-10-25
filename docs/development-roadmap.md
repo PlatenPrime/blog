@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked`.
 
-**Baseline Status:** следующий шаг — `049` (Home page). Шаги `001`–`048` и `083` (test policy) — `done`.
+**Baseline Status:** следующий шаг — `050` (Лента). Шаги `001`–`049` и `083` (test policy) — `done`.
 
 **Правила ведения**
 
@@ -495,11 +495,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 049 — Home page
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Витрина автора.
 - **Deliverables:** Hero с именем автора, последние статьи/заметки, сильная типографика (не «dashboard»).
 - **Verify:** Playwright screenshot smoke; Lighthouse sanity optional.
 - **DoD:** Первый viewport — одна композиция, brand = имя автора.
+- **Notes:** `nav.siteTitle` = PlatenPrime во всех локалях: `h1`, шапка, подвал, `<title>`. Lead — `nav.siteDescription`. Пустая витрина — `home.empty`. До 3 статей и 3 заметок: `findLatestPublic` / `latestPublicFindArgs` (`publicContentWhere`, `overrideAccess: false`, `draft: false`, без `user` и без `req`). Ссылки `/articles/[slug]` и `/notes/[slug]` до **051–052** — локализованный 404. Сессия не в первом экране: дубли входа и почта убраны; `logoutEverywhere` ниже списков и только для вошедшего. Выход в шапке — обычная ссылка на route handler (`<a href>`), клиентский `Link` до GET не доходит. Главная на токенах, класс `.home` снят (`styles.css` остаётся у auth). Unit: `tests/unit/latestPublic.test.ts`. E2E: `tests/e2e/home.e2e.spec.ts` (hero light/dark), плюс правки `frontend.e2e` и `auth.e2e`. Свой Chromium Playwright на этой машине недокачан; прогон был с `PLAYWRIGHT_CHANNEL=chrome`. Lighthouse не гоняли. Лента — **050**. Скриншоты `/dev/design` и полный клик-сьют — **056**.
 
 ### 050 — Лента (mixed feed)
 

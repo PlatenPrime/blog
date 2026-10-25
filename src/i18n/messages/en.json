@@ -1,6 +1,6 @@
 {
   "nav": {
-    "siteTitle": "Blog",
+    "siteTitle": "PlatenPrime",
     "siteDescription": "Personal blog — Next.js and Payload CMS.",
     "home": "Home",
     "login": "Log in",
@@ -86,5 +86,8 @@
     "body": "This site uses cookies for sign-in and, with your consent, for analytics.",
     "accept": "Accept",
     "decline": "Decline"
+  },
+  "home": {
+    "empty": "Nothing here yet."
   }
 }

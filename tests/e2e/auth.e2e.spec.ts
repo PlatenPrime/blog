@@ -47,11 +47,14 @@ test.describe('Auth UI', () => {
     await page.getByRole('button', { name: uk.auth.login.submit }).click()
 
     await expect(page).toHaveURL(/\/uk\/?$/)
-    await expect(page.getByTestId('session-email')).toHaveText(email)
-
-    await page.getByRole('link', { name: uk.nav.logout }).click()
-    await expect(page.getByRole('link', { name: uk.nav.login })).toBeVisible()
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(uk.nav.siteTitle)
     await expect(page.getByTestId('session-email')).toHaveCount(0)
+    await expect(page.getByRole('button', { name: uk.nav.logoutEverywhere })).toBeVisible()
+
+    await page.getByRole('banner').getByRole('link', { name: uk.nav.logout }).click()
+    await expect(page.getByRole('banner').getByRole('link', { name: uk.nav.login })).toBeVisible()
+    await expect(page.getByTestId('session-email')).toHaveCount(0)
+    await expect(page.getByRole('button', { name: uk.nav.logoutEverywhere })).toHaveCount(0)
   })
 
   test('login rejects wrong password', async ({ page }) => {
@@ -62,7 +65,7 @@ test.describe('Auth UI', () => {
     await page.getByLabel(uk.auth.password).fill('definitely-wrong-password')
     await page.getByRole('button', { name: uk.auth.login.submit }).click()
 
-    await expect(page.getByRole('alert')).toContainText(uk.errors.invalidCredentials)
+    await expect(page.locator('p.auth-error')).toContainText(uk.errors.invalidCredentials)
   })
 
   test('forgot password shows neutral success', async ({ page }) => {
@@ -107,6 +110,8 @@ test.describe('Auth UI', () => {
     await page.getByLabel(uk.auth.password).fill(newPassword)
     await page.getByRole('button', { name: uk.auth.login.submit }).click()
 
-    await expect(page.getByTestId('session-email')).toHaveText(email)
+    await expect(page).toHaveURL(/\/uk\/?$/)
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(uk.nav.siteTitle)
+    await expect(page.getByRole('banner').getByRole('link', { name: uk.nav.logout })).toBeVisible()
   })
 })
