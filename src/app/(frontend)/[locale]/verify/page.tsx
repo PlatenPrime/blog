@@ -1,3 +1,5 @@
+import { getTranslations } from 'next-intl/server'
+
 import { verifyEmailAction } from '@/auth/actions'
 import { Link } from '@/i18n/navigation'
 
@@ -7,17 +9,20 @@ type VerifyPageProps = {
 
 export default async function VerifyPage({ searchParams }: VerifyPageProps) {
   const { token } = await searchParams
+  const tAuth = await getTranslations('auth')
+  const tErrors = await getTranslations('errors')
+  const tNav = await getTranslations('nav')
 
   if (!token) {
     return (
       <div className="auth-page">
         <div className="auth-card">
-          <h1>Verify email</h1>
+          <h1>{tAuth('verify.title')}</h1>
           <p className="auth-error" role="alert">
-            Missing verification token.
+            {tErrors('missingVerificationToken')}
           </p>
           <p className="auth-footer">
-            <Link href="/login">Log in</Link>
+            <Link href="/login">{tNav('login')}</Link>
           </p>
         </div>
       </div>
@@ -29,7 +34,7 @@ export default async function VerifyPage({ searchParams }: VerifyPageProps) {
   return (
     <div className="auth-page">
       <div className="auth-card">
-        <h1>Verify email</h1>
+        <h1>{tAuth('verify.title')}</h1>
         {result.ok ? (
           <p className="auth-success" role="status">
             {result.message}
@@ -40,7 +45,7 @@ export default async function VerifyPage({ searchParams }: VerifyPageProps) {
           </p>
         )}
         <p className="auth-footer">
-          <Link href="/login">Go to login</Link>
+          <Link href="/login">{tAuth('verify.goToLogin')}</Link>
         </p>
       </div>
     </div>

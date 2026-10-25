@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked`.
 
-**Baseline Status:** следующий шаг — `042` (UI dictionaries). Шаги `001`–`041` и `083` (test policy) — `done`.
+**Baseline Status:** следующий шаг — `043` (Payload localization контента). Шаги `001`–`042` и `083` (test policy) — `done`.
 
 **Правила ведения**
 
@@ -428,11 +428,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 042 — UI dictionaries
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Переводы chrome UI.
 - **Deliverables:** JSON/TS dictionaries для nav, auth, errors, cookies.
 - **Verify:** Переключение языка меняет UI strings.
 - **DoD:** Нет «голого» hardcoded RU-only chrome.
+- **Notes:** Каталоги `src/i18n/messages/{uk,ru,en}.json` (`nav`, `auth`, `errors`, `cookies`). Префикс URL выбирает каталог; свитчер — **044**. Ключи `cookies` лежат в каталоге, баннер не рисуется — **081**. Дырявый перевод — **045**. Неизвестный путь под локалью ловит `[...rest]` и отдаёт локализованный `not-found`. Письма, dev preview и админка Payload вне этих каталогов.
 
 ### 043 — Payload localization контента
 

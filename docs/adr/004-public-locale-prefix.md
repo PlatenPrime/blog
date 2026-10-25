@@ -18,7 +18,7 @@ Public pages live under `app/(frontend)/[locale]` and use **next-intl** (`src/pr
 4. These paths stay **outside** the proxy matcher: `/api` (including Google OAuth), `/admin`, `/next/preview`, `/next/exit-preview`, Next internals, and files with a dot. Draft preview still redirects to an unprefixed `/dev/rich-text/...`; the proxy adds `/uk` on the next request.
 5. Verification and reset emails, and OAuth success/failure, are built with `prefixPublicPath` and the default locale (`/uk/verify`, `/uk/login`). OAuth does not carry the locale the user had before leaving for Google; that return stays on `uk` until the switcher (044).
 
-Message catalogs are empty until step 042. Missing-translation behavior is step 045, not this decision.
+Public chrome catalogs (`nav`, `auth`, `errors`, `cookies`) ship in step 042, one JSON file per locale. The cookie banner that reads `cookies` is step 081. Missing-translation behavior is step 045, not this decision.
 
 ## Alternatives considered
 
@@ -32,5 +32,5 @@ Message catalogs are empty until step 042. Missing-translation behavior is step 
 
 - Stable public URLs are `/${locale}/...`. Unprefixed public URLs are redirects to the default locale, not a second copy of the page.
 - `/admin` and `/api` are unchanged.
-- UI strings are still English until 042. `html lang` follows the URL locale.
+- Public chrome strings come from the catalog for the URL locale (042). `html lang` follows the URL locale. Cookie copy is in the catalog; the banner is step 081. Dev-preview chrome and auth emails stay English.
 - A reader on `/ru/login` who finishes Google OAuth lands on `/uk` (known limit).

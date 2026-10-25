@@ -1,5 +1,6 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 import React, { useState, useTransition } from 'react'
 
 import type { AuthActionResult } from '@/auth/actions'
@@ -32,6 +33,8 @@ export function AuthForm({
   successFallback,
 }: AuthFormProps) {
   const router = useRouter()
+  const tAuth = useTranslations('auth')
+  const tNav = useTranslations('nav')
   const [error, setError] = useState<string | null>(null)
   const [message, setMessage] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
@@ -57,20 +60,20 @@ export function AuthForm({
               router.refresh()
               return
             }
-            setMessage(result.message ?? successFallback ?? 'Done.')
+            setMessage(result.message ?? successFallback ?? tAuth('done'))
           })
         }}
       >
         {token ? <input name="token" type="hidden" value={token} /> : null}
         {showEmail ? (
           <label htmlFor="email">
-            Email
+            {tAuth('email')}
             <input autoComplete="email" id="email" name="email" required type="email" />
           </label>
         ) : null}
         {showPassword ? (
           <label htmlFor="password">
-            Password
+            {tAuth('password')}
             <input
               autoComplete={token ? 'new-password' : 'current-password'}
               id="password"
@@ -92,12 +95,12 @@ export function AuthForm({
           </p>
         ) : null}
         <button disabled={isPending} type="submit">
-          {isPending ? 'Please wait…' : submitLabel}
+          {isPending ? tAuth('pending') : submitLabel}
         </button>
       </form>
       {footer ? <div className="auth-footer">{footer}</div> : null}
       <p className="auth-footer">
-        <Link href="/">← Home</Link>
+        <Link href="/">← {tNav('home')}</Link>
       </p>
     </div>
   )

@@ -1,16 +1,12 @@
 import { hasLocale, NextIntlClientProvider } from 'next-intl'
-import { getMessages, setRequestLocale } from 'next-intl/server'
+import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server'
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import React from 'react'
 
 import { routing } from '@/i18n/routing'
 
 import '../styles.css'
-
-export const metadata = {
-  description: 'Personal blog — Next.js + Payload CMS',
-  title: 'Blog',
-}
 
 type LocaleLayoutProps = {
   children: React.ReactNode
@@ -19,6 +15,17 @@ type LocaleLayoutProps = {
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }))
+}
+
+export async function generateMetadata({ params }: LocaleLayoutProps): Promise<Metadata> {
+  const { locale } = await params
+  const resolved = hasLocale(routing.locales, locale) ? locale : routing.defaultLocale
+  const t = await getTranslations({ locale: resolved, namespace: 'nav' })
+
+  return {
+    description: t('siteDescription'),
+    title: t('siteTitle'),
+  }
 }
 
 export default async function LocaleLayout({ children, params }: LocaleLayoutProps) {

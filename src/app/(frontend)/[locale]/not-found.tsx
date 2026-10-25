@@ -1,11 +1,15 @@
+import { getTranslations } from 'next-intl/server'
+
 import { Link } from '@/i18n/navigation'
 
-export default function NotFound() {
+export default async function NotFound() {
+  const t = await getTranslations('errors')
+
   return (
     <div className="home">
-      <h1>Page not found</h1>
+      <h1>{t('notFoundTitle')}</h1>
       <p>
-        <Link href="/">Back home</Link>
+        <Link href="/">{t('notFoundHome')}</Link>
       </p>
     </div>
   )

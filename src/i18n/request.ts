@@ -1,18 +1,16 @@
 import { hasLocale } from 'next-intl'
 import { getRequestConfig } from 'next-intl/server'
 
+import { messagesByLocale } from './messages'
 import { routing } from './routing'
 
-/**
- * Locale for Server Components. Message catalogs land in step 042;
- * chrome strings stay hardcoded until then.
- */
+/** Locale and chrome catalog for Server Components. */
 export default getRequestConfig(async ({ requestLocale }) => {
   const requested = await requestLocale
   const locale = hasLocale(routing.locales, requested) ? requested : routing.defaultLocale
 
   return {
     locale,
-    messages: {},
+    messages: messagesByLocale[locale],
   }
 })

@@ -3,6 +3,9 @@ import { getPayload } from 'payload'
 import fs from 'node:fs'
 import path from 'node:path'
 
+import en from '../../src/i18n/messages/en.json'
+import ru from '../../src/i18n/messages/ru.json'
+import uk from '../../src/i18n/messages/uk.json'
 import config from '../../src/payload.config'
 
 type SeedUser = { email: string; password: string }
@@ -13,31 +16,41 @@ function readSeedUser(): SeedUser {
 }
 
 test.describe('Auth UI', () => {
+  test('login chrome follows the locale prefix', async ({ page }) => {
+    await page.goto('/ru/login')
+    await expect(page.getByRole('heading', { name: ru.auth.login.title })).toBeVisible()
+    await expect(page.getByRole('button', { name: ru.auth.login.submit })).toBeVisible()
+
+    await page.goto('/en/login')
+    await expect(page.getByRole('heading', { name: en.auth.login.title })).toBeVisible()
+    await expect(page.getByRole('button', { name: en.auth.login.submit })).toBeVisible()
+  })
+
   test('register shows verify message', async ({ page }) => {
     const suffix = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
     const email = `e2e-reg-${suffix}@example.com`
 
     await page.goto('/register')
-    await page.getByLabel('Email').fill(email)
-    await page.getByLabel('Password').fill('register-password-123')
-    await page.getByRole('button', { name: 'Create account' }).click()
+    await page.getByLabel(uk.auth.email).fill(email)
+    await page.getByLabel(uk.auth.password).fill('register-password-123')
+    await page.getByRole('button', { name: uk.auth.register.submit }).click()
 
-    await expect(page.getByRole('status')).toContainText(/verify/i)
+    await expect(page.getByRole('status')).toContainText(uk.auth.register.success)
   })
 
   test('login → authenticated home → logout', async ({ page }) => {
     const { email, password } = readSeedUser()
 
     await page.goto('/login')
-    await page.getByLabel('Email').fill(email)
-    await page.getByLabel('Password').fill(password)
-    await page.getByRole('button', { name: 'Log in' }).click()
+    await page.getByLabel(uk.auth.email).fill(email)
+    await page.getByLabel(uk.auth.password).fill(password)
+    await page.getByRole('button', { name: uk.auth.login.submit }).click()
 
     await expect(page).toHaveURL(/\/uk\/?$/)
     await expect(page.getByTestId('session-email')).toHaveText(email)
 
-    await page.getByRole('link', { name: 'Log out' }).click()
-    await expect(page.getByRole('link', { name: 'Log in' })).toBeVisible()
+    await page.getByRole('link', { name: uk.nav.logout }).click()
+    await expect(page.getByRole('link', { name: uk.nav.login })).toBeVisible()
     await expect(page.getByTestId('session-email')).toHaveCount(0)
   })
 
@@ -45,19 +58,19 @@ test.describe('Auth UI', () => {
     const { email } = readSeedUser()
 
     await page.goto('/login')
-    await page.getByLabel('Email').fill(email)
-    await page.getByLabel('Password').fill('definitely-wrong-password')
-    await page.getByRole('button', { name: 'Log in' }).click()
+    await page.getByLabel(uk.auth.email).fill(email)
+    await page.getByLabel(uk.auth.password).fill('definitely-wrong-password')
+    await page.getByRole('button', { name: uk.auth.login.submit }).click()
 
-    await expect(page.getByRole('alert')).toContainText(/invalid/i)
+    await expect(page.getByRole('alert')).toContainText(uk.errors.invalidCredentials)
   })
 
   test('forgot password shows neutral success', async ({ page }) => {
     await page.goto('/forgot-password')
-    await page.getByLabel('Email').fill('nobody-e2e@example.com')
-    await page.getByRole('button', { name: 'Send reset link' }).click()
+    await page.getByLabel(uk.auth.email).fill('nobody-e2e@example.com')
+    await page.getByRole('button', { name: uk.auth.forgot.submit }).click()
 
-    await expect(page.getByRole('status')).toContainText(/if an account exists/i)
+    await expect(page.getByRole('status')).toContainText(uk.auth.forgot.success)
   })
 
   test('reset password happy path', async ({ page }) => {
@@ -85,14 +98,14 @@ test.describe('Auth UI', () => {
     })
 
     await page.goto(`/reset-password?token=${encodeURIComponent(token as string)}`)
-    await page.getByLabel('Password').fill(newPassword)
-    await page.getByRole('button', { name: 'Set new password' }).click()
+    await page.getByLabel(uk.auth.password).fill(newPassword)
+    await page.getByRole('button', { name: uk.auth.reset.submit }).click()
 
     await expect(page).toHaveURL(/\/login/)
 
-    await page.getByLabel('Email').fill(email)
-    await page.getByLabel('Password').fill(newPassword)
-    await page.getByRole('button', { name: 'Log in' }).click()
+    await page.getByLabel(uk.auth.email).fill(email)
+    await page.getByLabel(uk.auth.password).fill(newPassword)
+    await page.getByRole('button', { name: uk.auth.login.submit }).click()
 
     await expect(page.getByTestId('session-email')).toHaveText(email)
   })

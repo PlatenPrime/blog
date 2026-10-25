@@ -1,3 +1,5 @@
+import { getTranslations } from 'next-intl/server'
+
 import { resetPasswordAction } from '@/auth/actions'
 import { Link } from '@/i18n/navigation'
 
@@ -9,15 +11,18 @@ type ResetPasswordPageProps = {
 
 export default async function ResetPasswordPage({ searchParams }: ResetPasswordPageProps) {
   const { token } = await searchParams
+  const tAuth = await getTranslations('auth')
+  const tErrors = await getTranslations('errors')
 
   if (!token) {
     return (
       <div className="auth-page">
         <div className="auth-card">
-          <h1>Reset password</h1>
+          <h1>{tAuth('reset.title')}</h1>
           <p className="auth-error" role="alert">
-            Missing reset token. Request a new link from{' '}
-            <Link href="/forgot-password">Forgot password</Link>.
+            {tErrors.rich('missingResetToken', {
+              link: (chunks) => <Link href="/forgot-password">{chunks}</Link>,
+            })}
           </p>
         </div>
       </div>
@@ -30,13 +35,13 @@ export default async function ResetPasswordPage({ searchParams }: ResetPasswordP
         action={resetPasswordAction}
         footer={
           <p>
-            <Link href="/login">Back to login</Link>
+            <Link href="/login">{tAuth('backToLogin')}</Link>
           </p>
         }
         redirectOnSuccess="/login"
         showEmail={false}
-        submitLabel="Set new password"
-        title="Reset password"
+        submitLabel={tAuth('reset.submit')}
+        title={tAuth('reset.title')}
         token={token}
       />
     </div>
