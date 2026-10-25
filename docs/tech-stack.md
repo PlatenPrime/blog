@@ -100,7 +100,7 @@ Upload медиа — **только admin**. Читатели не загруж
 | **Access Control (Payload)** | Admin panel, drafts/preview, CRUD комментариев/закладок                           |
 | **MFA (TOTP)**               | Out of scope v1 (заложено «позже»)                                                |
 
-Предпочтение: **не** плодить гибрид Auth.js + Payload без нужды. Auth читателей и admin — через Payload Users с разными ролями и UI (публичные `/login` vs `/admin`).
+Предпочтение: **не** плодить гибрид Auth.js + Payload без нужды. Auth читателей и admin — через Payload Users с разными ролями и UI (публичные `/{locale}/login` vs `/admin`, ADR-004).
 
 ---
 
@@ -117,14 +117,14 @@ Newsletter / marketing mail — out of scope.
 
 ## 8. UI, дизайн-система, i18n
 
-| Технология                                     | Назначение                                              |
-| ---------------------------------------------- | ------------------------------------------------------- |
-| **Tailwind CSS**                               | Utility-first стили                                     |
-| **shadcn/ui** (Radix primitives)               | Компонентная база: формы, dialog, dropdown, tabs и т.д. |
-| **next-themes**                                | Light + **обязательный Dark** mode                      |
-| **Lucide** (или аналог из shadcn)              | Иконки                                                  |
-| **next-intl** (или эквивалент App Router i18n) | Маршрутизация и словари UI: `uk` / `ru` / `en`          |
-| **Payload localization**                       | Локализованные поля контента (title, body, slug и т.д.) |
+| Технология                                     | Назначение                                                                  |
+| ---------------------------------------------- | --------------------------------------------------------------------------- |
+| **Tailwind CSS**                               | Utility-first стили                                                         |
+| **shadcn/ui** (Radix primitives)               | Компонентная база: формы, dialog, dropdown, tabs и т.д.                     |
+| **next-themes**                                | Light + **обязательный Dark** mode                                          |
+| **Lucide** (или аналог из shadcn)              | Иконки                                                                      |
+| **next-intl** (или эквивалент App Router i18n) | Маршрутизация и словари UI: `uk` / `ru` / `en` (fallback/missing — ADR-005) |
+| **Payload localization**                       | Локализованные поля контента (title, body, slug и т.д.; empty → `uk`)       |
 
 **Дизайн-принцип:** элегантный, аккуратный, эстетичный, «взрослый» editorial look — без визуального шума, с сильной типографикой и спокойной иерархией. shadcn выбран как оптимальный для Next App Router (контроль кода компонентов, dark mode, экосистема).
 

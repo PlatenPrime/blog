@@ -10,4 +10,5 @@
 - [Технологический стек](docs/tech-stack.md) — канон технологий и архитектурные рамки
 - [Content model](docs/content-model.md) — коллекции Payload, поля, access, связи
 - [Development roadmap](docs/development-roadmap.md) — порядок внедрения до production v1
+- [Как мы делали блог](docs/how-we-built-the-blog.md) — ход проекта человеческим языком: зачем каждый кусок и как он связан с соседним
 - [Локальный Postgres](docs/local-postgres.md) — Docker Compose для разработки

@@ -52,11 +52,11 @@ cp .env.example .env
 | Local     | `RESEND_API_KEY` пустой                | Console adapter — HTML письма в лог `npm run dev`                                    |
 | Prod-like | `RESEND_API_KEY` + `RESEND_FROM_EMAIL` | [`@payloadcms/email-resend`](https://www.npmjs.com/package/@payloadcms/email-resend) |
 
-После регистрации откройте `/verify?token=…` из лога (или письма Resend). Без verify логин reader’а отклоняется.
+После регистрации откройте `/uk/verify?token=…` из лога (или письма Resend). Без verify логин reader’а отклоняется.
 
 ### Google OAuth (optional)
 
-См. [`google-oauth-setup.md`](./google-oauth-setup.md). Без `GOOGLE_CLIENT_ID` кнопка на `/login` скрыта.
+См. [`google-oauth-setup.md`](./google-oauth-setup.md). Без `GOOGLE_CLIENT_ID` кнопка на `/uk/login` скрыта.
 
 Канон имён переменных — [`.env.example`](../.env.example).
 
@@ -88,7 +88,7 @@ npm run dev
 
 Ожидаемо:
 
-- сайт: [http://localhost:3000](http://localhost:3000)
+- сайт: [http://localhost:3000/uk](http://localhost:3000/uk) (`/` редиректит на `/uk`, ADR-004)
 - admin: [http://localhost:3000/admin](http://localhost:3000/admin)
 
 Production-like локально: `npm run build` затем `npm start`.
@@ -113,9 +113,9 @@ npm run seed:admin
 
 Fallback без seed: первый заход на `/admin` → форма create-first-user (тоже получит `role: admin`).
 
-Роли (`admin` | `reader`): только `admin` проходит в `/admin`. Публичная регистрация: `/register` → verify email → `/login`. Reader на `/admin` получает отказ.
+Роли (`admin` | `reader`): только `admin` проходит в `/admin`. Публичная регистрация: `/uk/register` → verify email → `/uk/login`. Reader на `/admin` получает отказ.
 
-Полезные URL: `/login`, `/register`, `/forgot-password`, `/reset-password`, `/verify`, `/logout`. Матрица доступа — [`security/access-matrix.md`](./security/access-matrix.md).
+Полезные URL: `/uk/login`, `/uk/register`, `/uk/forgot-password`, `/uk/reset-password`, `/uk/verify`, `/uk/logout`. Те же пути с префиксом `/ru` или `/en`. Голые `/login` и `/` редиректят на default locale `uk`. В шапке публичных страниц — language switcher (`УК` / `РУ` / `EN`): меняет префикс локали, сохраняя путь и query (шаг **044**). OAuth/письма по-прежнему ведут на `/uk/...`; после возврата язык можно сменить свитчером. Матрица доступа — [`security/access-matrix.md`](./security/access-matrix.md).
 
 Unit helpers: `npm test` → `tests/unit/adminSeed.test.ts`.
 
@@ -169,7 +169,7 @@ Int (нужен Postgres: `docker compose up -d`): `npm run test:int` → `tests
 
 ## 9. Categories и Tags (таксономия)
 
-В `/admin` доступны коллекции **Categories** и **Tags**. Поля `title` и `slug` **локализованы** (`uk` / `ru` / `en`; default locale — `uk`, fallback включён).
+В `/admin` доступны коллекции **Categories** и **Tags**. Поля `title` и `slug` **локализованы** (`uk` / `ru` / `en`; default locale — `uk`, `fallback: true` — пустая локаль тянет `uk`).
 
 | Параметр | Значение                                                                                                  |
 | -------- | --------------------------------------------------------------------------------------------------------- |
@@ -181,9 +181,11 @@ Int (нужен Postgres: `docker compose up -d`): `npm run test:int` → `tests
 
 1. Войдите в `/admin` как admin.
 2. **Categories** → Create: заполните `title` (например «Інженерія»), оставьте `slug` пустым → Save. Ожидание: slug вроде `inzheneriya`.
-3. Переключите locale в admin на `en`, задайте English title/slug → Save.
+3. Переключите locale в admin на `en`, задайте English title/slug → Save. То же для `ru`, если нужен перевод.
 4. То же для **Tags**.
 5. Reader (если создан) не должен иметь write-доступ к этим коллекциям.
+
+Редактура (шаг **043**): переключатель locale в admin заполняет **ту же** запись, не создаёт вторую. Незаполненная локаль на сайте/preview отдаёт `uk` (Payload fallback), а не пустой заголовок.
 
 Relation к Articles/Notes — шаги **018** / **019** (оба done). Unit-тесты slugify/access — **024** (done): `npm test`.
 
@@ -197,16 +199,17 @@ Relation к Articles/Notes — шаги **018** / **019** (оба done). Unit-т
 | Read     | Admin — все; иначе published + `publishedAt` не в будущем (ADR-003)                                                                                                                               |
 | Поля     | `title` / `slug` (localized, slug auto из title), Lexical `body` (localized), `heroImage` → Media, `categories` / `tags`, `publishedAt`, группа `seo` (`metaTitle`, `metaDescription`, `ogImage`) |
 | Drafts   | `versions.drafts` — Save Draft / Publish в admin                                                                                                                                                  |
-| Локали   | `uk` / `ru` / `en` (как у Categories/Tags)                                                                                                                                                        |
+| Локали   | `uk` / `ru` / `en`; пустая локаль → fallback на `uk` (см. `content-model.md`, шаг **043**)                                                                                                        |
 
 Проверка:
 
 1. Войдите в `/admin` как admin.
 2. При необходимости создайте Category/Tag и загрузите Media (hero).
-3. **Articles** → Create: заполните `title`, оставьте `slug` пустым, наберите `body` → **Save Draft**. Ожидание: документ в статусе draft, slug заполнен.
-4. Переключите locale (`en` / `ru`), задайте локализованные поля → Save.
+3. **Articles** → Create в locale `uk`: заполните `title`, оставьте `slug` пустым, наберите `body` → **Save Draft**. Ожидание: документ в статусе draft, slug заполнен.
+4. Переключите locale на `ru`, затем `en`: задайте свои `title` / `slug` / `body` (и SEO text) → Save на каждой локали. Обложка, categories/tags, `publishedAt` — общие.
 5. **Publish** ту же статью; при желании задайте `publishedAt` и SEO.
-6. Reader / anonymous не должны видеть drafts через API (`read` фильтрует `_status`); write — только admin.
+6. Preview по префиксу: `/uk/dev/rich-text/article/<slug>`, `/ru/...`, `/en/...` — разные заголовки/тело при заполненных локалях.
+7. Reader / anonymous не должны видеть drafts через API (`read` фильтрует `_status`); write — только admin.
 
 ### Lexical: image + YouTube (шаг 034)
 
@@ -216,7 +219,7 @@ Relation к Articles/Notes — шаги **018** / **019** (оба done). Unit-т
 2. Slash / Blocks → **YouTube** → вставьте URL вида `https://www.youtube.com/watch?v=…` или `https://youtu.be/…` → Save / Publish.
 3. Невалидный URL (не YouTube) отклоняется валидатором поля.
 4. Временный публичный smoke (до Track 5): откройте  
-   `http://localhost:3000/dev/rich-text/article/{slug}`  
+   `http://localhost:3000/uk/dev/rich-text/article/{slug}`  
    для **published** статьи — ожидайте картинку и iframe `youtube-nocookie`. Draft без preview mode → 404.
 
 Unit sanitize: `npm test` → `tests/unit/youtube.test.ts`. Продуктовые article routes — **051**.
@@ -228,11 +231,11 @@ Unit sanitize: `npm test` → `tests/unit/youtube.test.ts`. Продуктовы
 Предусловия: `PREVIEW_SECRET` в `.env` (см. `.env.example`), admin залогинен в `/admin` (та же сессия/cookies).
 
 1. Создайте Article (или Note / Page) → **Save Draft** (не Publish).
-2. В edit view нажмите **Preview** — откроется `/next/preview?...` → redirect на `/dev/rich-text/article/{slug}` (или note/page).
+2. В edit view нажмите **Preview** — откроется `/next/preview?...` → redirect на `/dev/rich-text/article/{slug}` (или note/page), затем proxy добавит default locale: `/uk/dev/rich-text/...`.
 3. Ожидание: баннер «Draft preview», контент черновика, `Status: draft`.
-4. Incognito / без cookies admin: тот же `/dev/rich-text/article/{slug}` → **404** (draft не публичный).
+4. Incognito / без cookies admin: тот же `/uk/dev/rich-text/article/{slug}` → **404** (draft не публичный).
 5. `/next/preview` с неверным `previewSecret` или без admin session → **403**.
-6. `/next/exit-preview` → выход из draftMode, redirect на `/`.
+6. `/next/exit-preview` → выход из draftMode, redirect на `/`, затем на `/uk`.
 
 Unit allowlist: `npm test` → `tests/unit/previewPaths.test.ts`.
 
@@ -241,7 +244,7 @@ Unit allowlist: `npm test` → `tests/unit/previewPaths.test.ts`.
 Отложенная видимость без cron (ADR-003): Publish + будущий `publishedAt` → скрыто для anonymous до наступления времени.
 
 1. Article → Publish, в sidebar `publishedAt` поставьте **завтра** (или +1 час) → Save.
-2. Incognito / без admin: `http://localhost:3000/dev/rich-text/article/{slug}` → **404**; `GET /api/articles` не возвращает этот doc.
+2. Incognito / без admin: `http://localhost:3000/uk/dev/rich-text/article/{slug}` → **404**; `GET /api/articles` не возвращает этот doc.
 3. В admin тот же документ виден; Preview (035) тоже показывает.
 4. Смените `publishedAt` на прошлое (или очистите и Publish снова — hook проставит `now`) → публичный URL / API отдают документ.
 5. Publish без `publishedAt`: после сохранения поле заполнено текущим временем.

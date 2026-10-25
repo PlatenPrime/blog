@@ -24,11 +24,11 @@ Restart `npm run dev`. Login page shows “Continue with Google” when `GOOGLE_
 ## 2. Behaviour
 
 - Authorize URL: `/api/users/oauth/google`
-- Success → `/`; failure → `/login?error=…`
+- Success → `/uk`; failure → `/uk/login?error=…` (ADR-004; the locale before Google is not preserved)
 - Account linking by email: [ADR-002](./adr/002-auth-verification-and-account-linking.md)
 
 ## 3. Verify
 
-1. Open `/login` → Continue with Google.
+1. Open `/uk/login` (or `/login`, which redirects there) → Continue with Google.
 2. Complete Google consent.
-3. Land on `/` signed in as reader (`role: reader`); `/admin` still denied for that account.
+3. Land on `/uk` signed in as reader (`role: reader`); `/admin` still denied for that account.

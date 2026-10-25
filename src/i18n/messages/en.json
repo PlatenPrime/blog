@@ -1,0 +1,80 @@
+{
+  "nav": {
+    "siteTitle": "Blog",
+    "siteDescription": "Personal blog — Next.js and Payload CMS.",
+    "home": "Home",
+    "login": "Log in",
+    "register": "Register",
+    "logout": "Log out",
+    "logoutEverywhere": "Log out everywhere",
+    "openAdmin": "Open admin",
+    "signedInAs": "Signed in as",
+    "emailUnverified": "(email not verified)",
+    "language": "Language",
+    "localeUk": "UK",
+    "localeRu": "RU",
+    "localeEn": "EN"
+  },
+  "auth": {
+    "email": "Email",
+    "password": "Password",
+    "pending": "Please wait…",
+    "done": "Done.",
+    "backToLogin": "Back to login",
+    "logoutEverywhereSuccess": "Signed out of all sessions.",
+    "login": {
+      "title": "Log in",
+      "submit": "Log in",
+      "noAccount": "No account?",
+      "forgot": "Forgot password?",
+      "google": "Continue with Google"
+    },
+    "register": {
+      "title": "Register",
+      "submit": "Create account",
+      "hasAccount": "Already have an account?",
+      "success": "Account created. Check your email to verify before logging in."
+    },
+    "forgot": {
+      "title": "Forgot password",
+      "submit": "Send reset link",
+      "success": "If an account exists for that email, a reset link has been sent."
+    },
+    "reset": {
+      "title": "Reset password",
+      "submit": "Set new password",
+      "success": "Password updated. You can log in."
+    },
+    "verify": {
+      "title": "Verify email",
+      "goToLogin": "Go to login",
+      "success": "Email verified. You can log in."
+    }
+  },
+  "errors": {
+    "notFoundTitle": "Page not found",
+    "notFoundHome": "Back home",
+    "emailAndPasswordRequired": "Email and password are required.",
+    "passwordTooShort": "Password must be at least 8 characters.",
+    "tooManyRegistrations": "Too many registration attempts. Try again shortly.",
+    "registrationFailed": "Registration failed.",
+    "tooManyLogins": "Too many login attempts. Try again shortly.",
+    "verifyEmailFirst": "Verify your email before logging in. Check your inbox.",
+    "invalidCredentials": "Invalid email or password.",
+    "logoutFailed": "Logout failed.",
+    "emailRequired": "Email is required.",
+    "tooManyResets": "Too many reset requests. Try again later.",
+    "tokenAndPasswordRequired": "Token and new password are required.",
+    "resetFailed": "Reset failed. The link may have expired.",
+    "missingResetToken": "Missing reset token. Request a new link from <link>Forgot password</link>.",
+    "missingVerificationToken": "Missing verification token.",
+    "verificationFailed": "Verification failed. The link may have expired.",
+    "oauthFailed": "Google sign-in failed: {code}"
+  },
+  "cookies": {
+    "title": "Cookies",
+    "body": "This site uses cookies for sign-in and, with your consent, for analytics.",
+    "accept": "Accept",
+    "decline": "Decline"
+  }
+}

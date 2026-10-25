@@ -7,6 +7,8 @@
 
 ## Как читать этот документ
 
+Этот файл — чертёж: порядок работ, статусы, как проверить шаг. Ход проекта человеческим языком — зачем шаг появился и как он держится на предыдущем — в [how-we-built-the-blog.md](./how-we-built-the-blog.md). Книга дописана по сделанное; чертёж остаётся источником правды по статусам.
+
 | Поле шага        | Смысл                                  |
 | ---------------- | -------------------------------------- |
 | **Цель**         | Зачем шаг                              |
@@ -16,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked`.
 
-**Baseline Status:** следующий шаг — `041` (Routing локалей uk/ru/en). Шаги `001`–`040` и `083` (test policy) — `done`.
+**Baseline Status:** следующий шаг — `045` (i18n ADR + tests). Шаги `001`–`044` и `083` (test policy) — `done`.
 
 **Правила ведения**
 
@@ -196,7 +198,7 @@ v1 считается завершённым, когда одновременн�
 - **Deliverables:** Collections + localized titles/slugs.
 - **Verify:** CRUD в admin.
 - **DoD:** Готовы relation fields для Articles/Notes.
-- **Notes:** Payload `localization` (`uk`/`ru`/`en`, default `uk`, fallback) включён здесь; `043` добьёт localized fields у Articles/Notes/Pages + политику fallback. Unit для `slugify` — шаг **024**.
+- **Notes:** Payload `localization` (`uk`/`ru`/`en`, default `uk`, fallback) включён здесь; редакционная практика + runtime locale в fetch — **043** (done). Unit для `slugify` — шаг **024**.
 
 ### 018 — Articles collection
 
@@ -417,43 +419,48 @@ v1 считается завершённым, когда одновременн�
 
 ### 041 — Routing локалей uk/ru/en
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** URL-структура с локалью.
-- **Deliverables:** `next-intl` (или выбранный i18n) middleware; default locale policy (ADR).
-- **Verify:** `/uk`, `/ru`, `/en` отдают UI.
+- **Deliverables:** `next-intl` (`src/proxy.ts`, `src/i18n/*`); публичные страницы в `[locale]`; ADR-004 (`localePrefix: always`, default `uk`, detection off).
+- **Verify:** `/uk`, `/ru`, `/en` отдают UI; `/` и `/login` редиректят на `/uk` и `/uk/login`.
 - **DoD:** Локаль в URL стабильна.
+- **Notes:** Словари — **042**, свитчер — **044**, missing translation — **045** (done, ADR-005). `/admin`, `/api`, `/next/preview` без префикса. OAuth return остаётся на `uk`.
 
 ### 042 — UI dictionaries
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Переводы chrome UI.
 - **Deliverables:** JSON/TS dictionaries для nav, auth, errors, cookies.
 - **Verify:** Переключение языка меняет UI strings.
 - **DoD:** Нет «голого» hardcoded RU-only chrome.
+- **Notes:** Каталоги `src/i18n/messages/{uk,ru,en}.json` (`nav`, `auth`, `errors`, `cookies`). Префикс URL выбирает каталог; свитчер — **044**. Ключи `cookies` лежат в каталоге, баннер не рисуется — **081**. Дырявый перевод — **045** (done, ADR-005). Неизвестный путь под локалью ловит `[...rest]` и отдаёт локализованный `not-found`. Письма, dev preview и админка Payload вне этих каталогов.
 
 ### 043 — Payload localization контента
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Контент на трёх языках.
-- **Deliverables:** Localized fields Articles/Notes/Pages/Categories/Tags; fallback policy.
-- **Verify:** Одна сущность с uk+ru+en полями.
-- **DoD:** Редактор заполняет локали осознанно.
+- **Deliverables:** Localized fields Articles/Notes/Pages/Categories/Tags; fallback policy; `resolveContentLocale` + locale в preview `loadPreviewDoc`; unit + int.
+- **Verify:** Одна сущность с uk+ru+en полями; preview `/uk|ru|en/dev/rich-text/...` отдаёт свою локаль; `npm test` / `npm run test:int`.
+- **DoD:** Редактор заполняет локали осознанно; пустая локаль = fallback на `uk` (задокументировано).
+- **Notes:** Схема `localized` была с 017–020; этот шаг — редакционная практика + runtime locale в fetch. ADR/unit «missing не 500» — **045** (done); switcher — **044**; product routes — Track 5.
 
 ### 044 — Language switcher
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** UX переключения.
 - **Deliverables:** Switcher в header; сохранение пути.
 - **Verify:** Playwright переключает локаль на той же логической странице.
 - **DoD:** Switcher доступен на ключевых страницах.
+- **Notes:** `SiteHeader` + `LanguageSwitcher` в `[locale]/layout`; next-intl `Link` + `usePathname` + query. v1 = swap префикса, без ремапа localized slug (Track 5). OAuth return остаётся `uk`. E2e: `tests/e2e/language-switcher.e2e.spec.ts`. Полный nav — **048**.
 
 ### 045 — i18n ADR + tests
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Зафиксировать fallback и missing translation behavior.
 - **Deliverables:** ADR; unit tests fallback.
 - **Verify:** Missing locale не роняет 500.
 - **DoD:** Политика i18n явная.
+- **Notes:** ADR-005: URL unknown → 404; `resolveAppLocale` → `uk`; chrome missing key → next-intl default (no throw); Payload empty field → `uk` (`content-model`). Helper `src/i18n/resolveAppLocale.ts`; unit `tests/unit/i18nFallback.test.ts`.
 
 ---
 

@@ -17,6 +17,23 @@
 
 Порядок регистрации коллекций (admin.group UX, шаг **033**): `articles` → `notes` → `pages` → `media` → `categories` → `tags` → `comments` → `bookmarks` → `users`.
 
+### Editorial localization + fallback (шаг **043**)
+
+Один документ — три локали (`uk` / `ru` / `en`), не три отдельных записи. Публичный URL и Payload Local API передают `locale` из префикса (`resolveContentLocale` в [`src/i18n/contentLocale.ts`](../src/i18n/contentLocale.ts)); временный preview — [`loadPreviewDoc`](<../src/app/(frontend)/[locale]/dev/rich-text/loadPreviewDoc.ts>).
+
+| Политика | Правило                                                                                                                                         |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| Default  | `uk` — и Payload `defaultLocale`, и публичный default (ADR-004)                                                                                 |
+| Fallback | `fallback: true`: пустое локализованное поле в запрошенной локали → значение из `uk`                                                            |
+| Редактор | Заполняет локали **осознанно**: `uk` как база; `ru`/`en` — когда есть перевод; пустая локаль = сознательный fallback на `uk`, не «забыли схему» |
+| Slug     | Локализован; уникальность **per locale** `(slug, _locale)`                                                                                      |
+
+**Localized:** `title`, `slug`, `body`, `seo.metaTitle`, `seo.metaDescription` (Articles / Notes / Pages); у Categories / Tags — `title`, `slug`.
+
+**Не localized (общие на документ):** `heroImage`, `categories`, `tags`, `publishedAt`, `seo.ogImage`, `_status`, timestamps.
+
+Полная политика дыр (URL 404 vs chrome key path vs Payload `uk`) — [ADR-005](./adr/005-i18n-fallback-and-missing.md); chrome JSON **не** мержится с `uk` в runtime. Language switcher — **044** (done). Продуктовые маршруты статей/заметок/страниц и ремап slug между локалями — Track 5.
+
 ## Связи
 
 ```mermaid
@@ -254,7 +271,7 @@ Drafts, access, taxonomy, `publishedAt`, SEO — те же.
 - Bookmark uniqueness на hook, не на DB constraint (гонка возможна теоретически; усиление — отдельный шаг при необходимости).
 - Comments / Bookmarks не цепляются к `pages`.
 - Media: local disk или R2; originals → WebP; CUD admin-only (**039**).
-- Поле `role` меняет только admin; публичный `create` users — self-register readers (`/register`) + first-user admin bootstrap.
+- Поле `role` меняет только admin; публичный `create` users — self-register readers (`/uk/register`, ADR-004) + first-user admin bootstrap.
 - Comments/Bookmarks create: `isAuthenticatedAndVerified` (ADR-002). Полная матрица — [`security/access-matrix.md`](./security/access-matrix.md).
 - Schedule: query-time visibility по `publishedAt` (ADR-003), без cron.
 - Soft-moderation комментариев в публичном UI — с шага 058.
