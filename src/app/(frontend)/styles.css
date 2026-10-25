@@ -1,6 +1,6 @@
-/* Legacy public pages (home, auth, language switcher).
+/* Legacy public pages (home, auth).
    These unlayered rules beat Tailwind layers from globals.css.
-   New screens use the tokens in globals.css. This file goes away as those pages move (048+). */
+   Chrome uses the tokens in globals.css. This file goes away as home and auth move. */
 
 :root {
   --bg: #f7f4ef;
@@ -179,59 +179,4 @@ html.dark .auth-unverified {
 
 html.dark .auth-success {
   color: var(--chart-2);
-}
-
-.site-header {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 0.75rem;
-  padding: 0.75rem 1.25rem;
-}
-
-.theme-toggle {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.75rem;
-  height: 1.75rem;
-  padding: 0;
-  border: 1px solid var(--legacy-muted);
-  border-radius: 999px;
-  background: transparent;
-  color: var(--fg);
-  cursor: pointer;
-}
-
-.theme-toggle:focus-visible {
-  outline: 2px solid var(--legacy-accent);
-  outline-offset: 2px;
-}
-
-.language-switcher {
-  min-height: 1.5rem;
-}
-
-.language-switcher-list {
-  display: flex;
-  gap: 0.5rem;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  font-size: 0.9rem;
-  letter-spacing: 0.02em;
-}
-
-.language-switcher-link {
-  color: var(--legacy-accent);
-  text-decoration: none;
-}
-
-.language-switcher-link:hover {
-  text-decoration: underline;
-}
-
-.language-switcher-current {
-  color: var(--fg);
-  font-weight: 600;
 }

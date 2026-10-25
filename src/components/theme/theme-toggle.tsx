@@ -44,7 +44,7 @@ export function ThemeToggle() {
   return (
     <button
       aria-label={isDark ? t('themeToLight') : t('themeToDark')}
-      className="theme-toggle"
+      className="inline-flex size-8 items-center justify-center rounded-full border border-border bg-transparent text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       onClick={() => setTheme(isDark ? 'light' : 'dark')}
       type="button"
     >

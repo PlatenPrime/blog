@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked`.
 
-**Baseline Status:** следующий шаг — `048` (Layout: header / footer / nav). Шаги `001`–`047` и `083` (test policy) — `done`.
+**Baseline Status:** следующий шаг — `049` (Home page). Шаги `001`–`048` и `083` (test policy) — `done`.
 
 **Правила ведения**
 
@@ -486,11 +486,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 048 — Layout: header / footer / nav
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Каркас всех публичных страниц.
 - **Deliverables:** Locale-aware nav: лента, категории, notes, articles, about, auth links.
 - **Verify:** Responsive + a11y landmarks.
 - **DoD:** Единый chrome сайта.
+- **Notes:** `SiteHeader` / `SiteFooter` / skip-link в `[locale]/layout`. Пути в `src/components/site/site-nav.ts`: `/feed`, `/articles`, `/notes`, `/categories`, `/about`; слово сайта ведёт на `/`. Гость — вход и регистрация; сессия — `/logout`; `admin` — `/admin` без префикса (ADR-004). `logoutEverywhere` остаётся на главной. Ключи в `nav` (без нового namespace). Клик по разделу до **050–054** — локализованный 404 (`[...rest]`), страницы разделов не в этом шаге. Unit: `tests/unit/siteNav.test.ts`. E2E landmarks: `tests/e2e/site-chrome.e2e.spec.ts`. Скриншоты и полный клик-сьют — **049** / **056**. Privacy/Terms в подвале — **079–080**.
 
 ### 049 — Home page
 

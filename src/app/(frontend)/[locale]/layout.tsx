@@ -5,7 +5,9 @@ import { Source_Sans_3, Source_Serif_4 } from 'next/font/google'
 import { notFound } from 'next/navigation'
 import React from 'react'
 
-import { SiteHeader } from '@/components/language-switcher/SiteHeader'
+import { SiteFooter } from '@/components/site/site-footer'
+import { SiteHeader } from '@/components/site/site-header'
+import { SkipLink } from '@/components/site/skip-link'
 import { themeInitScript } from '@/components/theme/theme-init-script'
 import { ThemeProvider } from '@/components/theme/theme-provider'
 import { routing } from '@/i18n/routing'
@@ -68,8 +70,14 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <ThemeProvider>
           <NextIntlClientProvider messages={messages}>
-            <SiteHeader />
-            <main>{children}</main>
+            <div className="flex min-h-dvh flex-col">
+              <SkipLink />
+              <SiteHeader />
+              <main className="flex-1 outline-none" id="main" tabIndex={-1}>
+                {children}
+              </main>
+              <SiteFooter />
+            </div>
           </NextIntlClientProvider>
         </ThemeProvider>
       </body>
