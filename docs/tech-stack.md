@@ -123,8 +123,8 @@ Newsletter / marketing mail — out of scope.
 | **shadcn/ui** (Radix primitives)               | Компонентная база: формы, dialog, dropdown, tabs и т.д. |
 | **next-themes**                                | Light + **обязательный Dark** mode                      |
 | **Lucide** (или аналог из shadcn)              | Иконки                                                  |
-| **next-intl** (или эквивалент App Router i18n) | Маршрутизация и словари UI: `uk` / `ru` / `en`          |
-| **Payload localization**                       | Локализованные поля контента (title, body, slug и т.д.) |
+| **next-intl** (или эквивалент App Router i18n) | Маршрутизация и словари UI: `uk` / `ru` / `en` (fallback/missing — ADR-005) |
+| **Payload localization**                       | Локализованные поля контента (title, body, slug и т.д.; empty → `uk`)       |
 
 **Дизайн-принцип:** элегантный, аккуратный, эстетичный, «взрослый» editorial look — без визуального шума, с сильной типографикой и спокойной иерархией. shadcn выбран как оптимальный для Next App Router (контроль кода компонентов, dark mode, экосистема).
 

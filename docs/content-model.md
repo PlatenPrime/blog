@@ -32,7 +32,7 @@
 
 **Не localized (общие на документ):** `heroImage`, `categories`, `tags`, `publishedAt`, `seo.ogImage`, `_status`, timestamps.
 
-Поведение «missing locale не роняет 500» на публичной витрине и unit-тесты — шаг **045**. Language switcher (префикс + тот же path/query) — **044** (done). Продуктовые маршруты статей/заметок/страниц и ремап slug между локалями — Track 5.
+Полная политика дыр (URL 404 vs chrome key path vs Payload `uk`) — [ADR-005](./adr/005-i18n-fallback-and-missing.md); chrome JSON **не** мержится с `uk` в runtime. Language switcher — **044** (done). Продуктовые маршруты статей/заметок/страниц и ремап slug между локалями — Track 5.
 
 ## Связи
 

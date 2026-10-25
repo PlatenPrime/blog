@@ -45,7 +45,7 @@
 - Инварианты модели в helpers (например uniqueness bookmark), если вынесены из Payload hooks
 - Парсеры / сериализаторы контента (TOC из headings, JSON-LD smoke-parse и т.п.), когда появятся
 
-**Сейчас (после Track 4 / 043):** unit — `slugify`, access helpers (+ `isVerified`), `bookmarkUniqueness`, `rateLimit`, контракт префикса локали (`tests/unit/i18nRouting.test.ts`), паритет ключей словарей (`tests/unit/i18nMessages.test.ts`), `resolveContentLocale` (`tests/unit/contentLocale.test.ts`). Integration — comments/bookmarks + `tests/int/auth.int.spec.ts` (register/login/verify/reset, reader≠articles) + `tests/int/contentLocale.int.spec.ts` (uk+ru+en + fallback на `uk`). E2E auth — `tests/e2e/auth.e2e.spec.ts` (локально; CI e2e — шаг **086**), лейблы из каталога `uk`, плюс проверка `/ru/login` и `/en/login`. Fallback словарей / «не 500» — шаг **045**.
+**Сейчас (после Track 4 / 045):** unit — `slugify`, access helpers (+ `isVerified`), `bookmarkUniqueness`, `rateLimit`, контракт префикса локали (`tests/unit/i18nRouting.test.ts`), паритет ключей словарей (`tests/unit/i18nMessages.test.ts`), `resolveContentLocale` (`tests/unit/contentLocale.test.ts`), i18n fallback / missing key no-throw (`tests/unit/i18nFallback.test.ts`, ADR-005). Integration — comments/bookmarks + `tests/int/auth.int.spec.ts` (register/login/verify/reset, reader≠articles) + `tests/int/contentLocale.int.spec.ts` (uk+ru+en + fallback на `uk`). E2E auth — `tests/e2e/auth.e2e.spec.ts` (локально; CI e2e — шаг **086**), лейблы из каталога `uk`, плюс проверка `/ru/login` и `/en/login`; language switcher — `tests/e2e/language-switcher.e2e.spec.ts`.
 
 ### Integration (Payload Local API / DB) — must для границ доступа
 
@@ -98,7 +98,7 @@ Admin CMS: только точечный smoke при необходимости
 | 041       | Unit: locale prefix contract (ADR-004)                          |
 | 042       | Unit: UI catalog key parity (`uk` / `ru` / `en`)                |
 | 043       | Unit: `resolveContentLocale`; int: article uk+ru+en + fallback  |
-| 045       | Unit: i18n fallback                                             |
+| 045       | Unit: i18n fallback (`i18nFallback`, ADR-005) — done            |
 | 061       | E2E comments/bookmarks + Vitest access                          |
 | 083       | Эта политика (`docs/testing.md`)                                |
 | 084       | Расширение Vitest на пробелы домена                             |

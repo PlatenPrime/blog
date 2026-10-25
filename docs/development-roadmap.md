@@ -424,7 +424,7 @@ v1 считается завершённым, когда одновременн�
 - **Deliverables:** `next-intl` (`src/proxy.ts`, `src/i18n/*`); публичные страницы в `[locale]`; ADR-004 (`localePrefix: always`, default `uk`, detection off).
 - **Verify:** `/uk`, `/ru`, `/en` отдают UI; `/` и `/login` редиректят на `/uk` и `/uk/login`.
 - **DoD:** Локаль в URL стабильна.
-- **Notes:** Словари — **042**, свитчер — **044**, missing translation — **045**. `/admin`, `/api`, `/next/preview` без префикса. OAuth return остаётся на `uk`.
+- **Notes:** Словари — **042**, свитчер — **044**, missing translation — **045** (done, ADR-005). `/admin`, `/api`, `/next/preview` без префикса. OAuth return остаётся на `uk`.
 
 ### 042 — UI dictionaries
 
@@ -433,7 +433,7 @@ v1 считается завершённым, когда одновременн�
 - **Deliverables:** JSON/TS dictionaries для nav, auth, errors, cookies.
 - **Verify:** Переключение языка меняет UI strings.
 - **DoD:** Нет «голого» hardcoded RU-only chrome.
-- **Notes:** Каталоги `src/i18n/messages/{uk,ru,en}.json` (`nav`, `auth`, `errors`, `cookies`). Префикс URL выбирает каталог; свитчер — **044**. Ключи `cookies` лежат в каталоге, баннер не рисуется — **081**. Дырявый перевод — **045**. Неизвестный путь под локалью ловит `[...rest]` и отдаёт локализованный `not-found`. Письма, dev preview и админка Payload вне этих каталогов.
+- **Notes:** Каталоги `src/i18n/messages/{uk,ru,en}.json` (`nav`, `auth`, `errors`, `cookies`). Префикс URL выбирает каталог; свитчер — **044**. Ключи `cookies` лежат в каталоге, баннер не рисуется — **081**. Дырявый перевод — **045** (done, ADR-005). Неизвестный путь под локалью ловит `[...rest]` и отдаёт локализованный `not-found`. Письма, dev preview и админка Payload вне этих каталогов.
 
 ### 043 — Payload localization контента
 
@@ -442,7 +442,7 @@ v1 считается завершённым, когда одновременн�
 - **Deliverables:** Localized fields Articles/Notes/Pages/Categories/Tags; fallback policy; `resolveContentLocale` + locale в preview `loadPreviewDoc`; unit + int.
 - **Verify:** Одна сущность с uk+ru+en полями; preview `/uk|ru|en/dev/rich-text/...` отдаёт свою локаль; `npm test` / `npm run test:int`.
 - **DoD:** Редактор заполняет локали осознанно; пустая локаль = fallback на `uk` (задокументировано).
-- **Notes:** Схема `localized` была с 017–020; этот шаг — редакционная практика + runtime locale в fetch. ADR/unit «missing не 500» — **045**; switcher — **044**; product routes — Track 5.
+- **Notes:** Схема `localized` была с 017–020; этот шаг — редакционная практика + runtime locale в fetch. ADR/unit «missing не 500» — **045** (done); switcher — **044**; product routes — Track 5.
 
 ### 044 — Language switcher
 
@@ -455,11 +455,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 045 — i18n ADR + tests
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Зафиксировать fallback и missing translation behavior.
 - **Deliverables:** ADR; unit tests fallback.
 - **Verify:** Missing locale не роняет 500.
 - **DoD:** Политика i18n явная.
+- **Notes:** ADR-005: URL unknown → 404; `resolveAppLocale` → `uk`; chrome missing key → next-intl default (no throw); Payload empty field → `uk` (`content-model`). Helper `src/i18n/resolveAppLocale.ts`; unit `tests/unit/i18nFallback.test.ts`.
 
 ---
 
