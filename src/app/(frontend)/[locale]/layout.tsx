@@ -6,6 +6,8 @@ import { notFound } from 'next/navigation'
 import React from 'react'
 
 import { SiteHeader } from '@/components/language-switcher/SiteHeader'
+import { themeInitScript } from '@/components/theme/theme-init-script'
+import { ThemeProvider } from '@/components/theme/theme-provider'
 import { routing } from '@/i18n/routing'
 
 import '../globals.css'
@@ -57,12 +59,19 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
   const messages = await getMessages()
 
   return (
-    <html className={`${sourceSerif.variable} ${sourceSans.variable}`} lang={locale}>
+    <html
+      className={`${sourceSerif.variable} ${sourceSans.variable}`}
+      lang={locale}
+      suppressHydrationWarning
+    >
       <body>
-        <NextIntlClientProvider messages={messages}>
-          <SiteHeader />
-          <main>{children}</main>
-        </NextIntlClientProvider>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        <ThemeProvider>
+          <NextIntlClientProvider messages={messages}>
+            <SiteHeader />
+            <main>{children}</main>
+          </NextIntlClientProvider>
+        </ThemeProvider>
       </body>
     </html>
   )

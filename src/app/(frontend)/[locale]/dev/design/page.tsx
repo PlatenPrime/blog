@@ -8,23 +8,22 @@ export const metadata: Metadata = {
 }
 
 /**
- * Dev scaffold for step 046. Not product chrome and not linked from the nav.
- * Both themes are on the page at once; the site toggle is step 047.
+ * Dev scaffold for the design system. Not product chrome and not linked from the nav.
+ * The header toggle switches the live theme of this page.
  */
 export default function DesignSmokePage() {
   return (
     <div className="bg-background font-sans text-foreground">
-      <div className="mx-auto max-w-6xl px-4 py-10">
+      <div className="mx-auto max-w-3xl px-4 py-10">
         <p className="text-small text-muted-foreground">
-          Dev scaffold. Not product chrome. The theme toggle is a later step.
+          Dev scaffold. Not product chrome. The header button switches the theme.
         </p>
         <h1 className="mt-2 font-serif text-h1">Design tokens</h1>
         <p className="mt-3 max-w-measure font-serif text-lead text-muted-foreground">
-          The same specimen in light and dark. Reading is serif. Controls are sans.
+          One specimen follows the document theme. Reading is serif. Controls are sans.
         </p>
-        <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <ThemeSpecimen tone="light" />
-          <ThemeSpecimen tone="dark" />
+        <div className="mt-8">
+          <ThemeSpecimen />
         </div>
       </div>
     </div>

@@ -154,7 +154,8 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-:root {
+:root,
+.light {
   color-scheme: light;
   --radius: 0.375rem;
   --background: oklch(0.967 0.008 89);

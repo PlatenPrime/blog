@@ -1,5 +1,7 @@
 import { Suspense } from 'react'
 
+import { ThemeToggle } from '@/components/theme/theme-toggle'
+
 import { LanguageSwitcher } from './LanguageSwitcher'
 
 function LanguageSwitcherFallback() {
@@ -9,6 +11,7 @@ function LanguageSwitcherFallback() {
 export function SiteHeader() {
   return (
     <header className="site-header">
+      <ThemeToggle />
       <Suspense fallback={<LanguageSwitcherFallback />}>
         <LanguageSwitcher />
       </Suspense>

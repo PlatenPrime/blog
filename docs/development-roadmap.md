@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked`.
 
-**Baseline Status:** следующий шаг — `047` (Dark / light theme). Шаги `001`–`046` и `083` (test policy) — `done`.
+**Baseline Status:** следующий шаг — `048` (Layout: header / footer / nav). Шаги `001`–`047` и `083` (test policy) — `done`.
 
 **Правила ведения**
 
@@ -477,11 +477,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 047 — Dark / light theme
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Обязательная тёмная тема.
 - **Deliverables:** `next-themes`, toggle, no FOUC strategy.
 - **Verify:** Toggle сохраняет preference; оба режима читабельны.
 - **DoD:** Theme — first-class UX.
+- **Notes:** `next-themes` (`attribute="class"`, `defaultTheme="system"`, `enableSystem`, `disableTransitionOnChange`). Исполняемый скрипт — `themeInitScript` в locale layout: он ставит `light` или `dark` на `<html>` до отрисовки и не затирает классы шрифтов. Скрипт самого провайдера помечен `text/plain`, иначе Next 16 считает клиентский `<script>` ошибкой и не выполняет его. Кнопка в `SiteHeader`; подписи `nav.themeToDark` / `nav.themeToLight`. Явный выбор — `localStorage`, ключ `theme`. До клика тема следует системе. Витрина `/dev/design` — одна колонка живой темы (вложенная колонка `.dark` ломала бы `dark:` утилиты). `styles.css`: в `html.dark` legacy-переменные, поля и сообщения auth смотрят на токены. E2E: `tests/e2e/theme.e2e.spec.ts`. Скриншоты — **049**. Полный набор публички — **056**. Chrome — **048**. Админка Payload этим провайдером не оборачивается.
 
 ### 048 — Layout: header / footer / nav
 

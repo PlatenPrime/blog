@@ -11,6 +11,8 @@
     "signedInAs": "Вы вошли как",
     "emailUnverified": "(почта не подтверждена)",
     "language": "Язык",
+    "themeToDark": "Включить тёмную тему",
+    "themeToLight": "Включить светлую тему",
     "localeUk": "УК",
     "localeRu": "РУ",
     "localeEn": "EN"

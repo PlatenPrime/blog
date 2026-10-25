@@ -11,6 +11,8 @@
     "signedInAs": "Signed in as",
     "emailUnverified": "(email not verified)",
     "language": "Language",
+    "themeToDark": "Switch to dark theme",
+    "themeToLight": "Switch to light theme",
     "localeUk": "UK",
     "localeRu": "RU",
     "localeEn": "EN"

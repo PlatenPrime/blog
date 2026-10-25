@@ -1,5 +1,3 @@
-import { Moon, Sun } from 'lucide-react'
-
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -20,34 +18,15 @@ const swatches = [
   { className: 'bg-ring', name: 'ring' },
 ] as const
 
-type ThemeSpecimenProps = {
-  tone: 'light' | 'dark'
-}
-
 /**
- * One column of the design smoke page. `dark` sets the class on this subtree
- * so both themes can sit on the page before the site-wide toggle (047).
+ * Token, type, and control specimen. It follows the document theme
+ * (`light` / `dark` on `<html>`), so the header toggle is how you see both.
  */
-export function ThemeSpecimen({ tone }: ThemeSpecimenProps) {
-  const isDark = tone === 'dark'
-  const fieldPrefix = `design-${tone}`
+export function ThemeSpecimen() {
+  const fieldPrefix = 'design'
 
   return (
-    <section
-      className={cn(
-        'flex flex-col gap-8 rounded-xl border border-border bg-background p-6 text-foreground',
-        isDark && 'dark',
-      )}
-    >
-      <header className="flex items-center gap-2">
-        {isDark ? (
-          <Moon aria-hidden="true" className="size-4" />
-        ) : (
-          <Sun aria-hidden="true" className="size-4" />
-        )}
-        <h2 className="font-sans text-small tracking-wide uppercase">{tone}</h2>
-      </header>
-
+    <section className="flex flex-col gap-8 rounded-xl border border-border bg-background p-6 text-foreground">
       <div>
         <h3 className="font-sans text-small text-muted-foreground">Color</h3>
         <ul className="mt-3 grid grid-cols-2 gap-3">
