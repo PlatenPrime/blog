@@ -26,12 +26,12 @@ Out of scope: per-locale slug remapping (Track 5), cookie banner UX (081), HTTP 
 
 ## Alternatives considered
 
-| Approach                                      | Why not for v1                                                                                          |
-| --------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| Silent serve `/fr/...` as `uk`                | Would publish a foreign URL as a real page; 404 keeps the address space honest.                         |
-| Runtime merge chrome `ru`/`en` ← `uk`         | Hides incomplete catalogs; parity tests and `tsc` already force complete files.                         |
-| Throw / hard-fail on missing chrome keys      | Would turn a missing string into a 500; product prefers a visible key path over a broken page.          |
-| Custom `getMessageFallback` returning English | Extra surface for no gain while catalogs stay complete; defaults already avoid throws.                  |
+| Approach                                      | Why not for v1                                                                                 |
+| --------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| Silent serve `/fr/...` as `uk`                | Would publish a foreign URL as a real page; 404 keeps the address space honest.                |
+| Runtime merge chrome `ru`/`en` ← `uk`         | Hides incomplete catalogs; parity tests and `tsc` already force complete files.                |
+| Throw / hard-fail on missing chrome keys      | Would turn a missing string into a 500; product prefers a visible key path over a broken page. |
+| Custom `getMessageFallback` returning English | Extra surface for no gain while catalogs stay complete; defaults already avoid throws.         |
 
 ## Consequences
 
