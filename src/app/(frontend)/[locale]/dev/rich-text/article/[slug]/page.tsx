@@ -7,7 +7,7 @@ import { DraftPreviewBanner } from '@/components/rich-text/DraftPreviewBanner'
 import { PayloadRichText } from '@/components/rich-text/PayloadRichText'
 
 type PageProps = {
-  params: Promise<{ slug: string }>
+  params: Promise<{ locale: string; slug: string }>
 }
 
 /**
@@ -15,9 +15,9 @@ type PageProps = {
  * Product routes — Track 5 (051).
  */
 export default async function DevRichTextArticlePage({ params }: PageProps) {
-  const { slug } = await params
+  const { locale, slug } = await params
   const { isEnabled: isDraftPreview } = await draftMode()
-  const article = await loadPreviewDoc('articles', slug)
+  const article = await loadPreviewDoc('articles', slug, locale)
   if (!article) notFound()
 
   return (

@@ -3,6 +3,7 @@ import { draftMode, headers as getHeaders } from 'next/headers'
 import { getPayload } from 'payload'
 import type { Where } from 'payload'
 
+import { resolveContentLocale } from '@/i18n/contentLocale'
 import type { PreviewCollection } from '@/preview/paths'
 
 export type PreviewDoc = {
@@ -15,11 +16,14 @@ export type PreviewDoc = {
  * Load article/note/page for temporary rich-text preview (034/035).
  * With draftMode + admin cookie: draft version via access control.
  * Without draftMode: published only.
+ * Locale comes from the URL prefix (043); Payload `fallback: true` fills gaps from `uk`.
  */
 export async function loadPreviewDoc(
   collection: PreviewCollection,
   slug: string,
+  locale: string,
 ): Promise<PreviewDoc | null> {
+  const contentLocale = resolveContentLocale(locale)
   const { isEnabled: isDraftPreview } = await draftMode()
   const headers = await getHeaders()
   const payload = await getPayload({ config })
@@ -33,6 +37,7 @@ export async function loadPreviewDoc(
     where,
     limit: 1,
     depth: 2,
+    locale: contentLocale,
     draft: isDraftPreview,
     overrideAccess: false,
     user: user ?? undefined,

@@ -7,16 +7,16 @@ import { DraftPreviewBanner } from '@/components/rich-text/DraftPreviewBanner'
 import { PayloadRichText } from '@/components/rich-text/PayloadRichText'
 
 type PageProps = {
-  params: Promise<{ slug: string }>
+  params: Promise<{ locale: string; slug: string }>
 }
 
 /**
  * Temporary note body preview + draftMode (roadmap 035). Product routes — 052.
  */
 export default async function DevRichTextNotePage({ params }: PageProps) {
-  const { slug } = await params
+  const { locale, slug } = await params
   const { isEnabled: isDraftPreview } = await draftMode()
-  const note = await loadPreviewDoc('notes', slug)
+  const note = await loadPreviewDoc('notes', slug, locale)
   if (!note) notFound()
 
   return (

@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked`.
 
-**Baseline Status:** следующий шаг — `043` (Payload localization контента). Шаги `001`–`042` и `083` (test policy) — `done`.
+**Baseline Status:** следующий шаг — `044` (Language switcher). Шаги `001`–`043` и `083` (test policy) — `done`.
 
 **Правила ведения**
 
@@ -198,7 +198,7 @@ v1 считается завершённым, когда одновременн�
 - **Deliverables:** Collections + localized titles/slugs.
 - **Verify:** CRUD в admin.
 - **DoD:** Готовы relation fields для Articles/Notes.
-- **Notes:** Payload `localization` (`uk`/`ru`/`en`, default `uk`, fallback) включён здесь; `043` добьёт localized fields у Articles/Notes/Pages + политику fallback. Unit для `slugify` — шаг **024**.
+- **Notes:** Payload `localization` (`uk`/`ru`/`en`, default `uk`, fallback) включён здесь; редакционная практика + runtime locale в fetch — **043** (done). Unit для `slugify` — шаг **024**.
 
 ### 018 — Articles collection
 
@@ -437,11 +437,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 043 — Payload localization контента
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Контент на трёх языках.
-- **Deliverables:** Localized fields Articles/Notes/Pages/Categories/Tags; fallback policy.
-- **Verify:** Одна сущность с uk+ru+en полями.
-- **DoD:** Редактор заполняет локали осознанно.
+- **Deliverables:** Localized fields Articles/Notes/Pages/Categories/Tags; fallback policy; `resolveContentLocale` + locale в preview `loadPreviewDoc`; unit + int.
+- **Verify:** Одна сущность с uk+ru+en полями; preview `/uk|ru|en/dev/rich-text/...` отдаёт свою локаль; `npm test` / `npm run test:int`.
+- **DoD:** Редактор заполняет локали осознанно; пустая локаль = fallback на `uk` (задокументировано).
+- **Notes:** Схема `localized` была с 017–020; этот шаг — редакционная практика + runtime locale в fetch. ADR/unit «missing не 500» — **045**; switcher — **044**; product routes — Track 5.
 
 ### 044 — Language switcher
 

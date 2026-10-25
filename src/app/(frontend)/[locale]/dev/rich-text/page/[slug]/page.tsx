@@ -7,16 +7,16 @@ import { DraftPreviewBanner } from '@/components/rich-text/DraftPreviewBanner'
 import { PayloadRichText } from '@/components/rich-text/PayloadRichText'
 
 type PageProps = {
-  params: Promise<{ slug: string }>
+  params: Promise<{ locale: string; slug: string }>
 }
 
 /**
  * Temporary CMS page body preview + draftMode (roadmap 035). Product routes — 054.
  */
 export default async function DevRichTextPagePage({ params }: PageProps) {
-  const { slug } = await params
+  const { locale, slug } = await params
   const { isEnabled: isDraftPreview } = await draftMode()
-  const page = await loadPreviewDoc('pages', slug)
+  const page = await loadPreviewDoc('pages', slug, locale)
   if (!page) notFound()
 
   return (

@@ -169,7 +169,7 @@ Int (нужен Postgres: `docker compose up -d`): `npm run test:int` → `tests
 
 ## 9. Categories и Tags (таксономия)
 
-В `/admin` доступны коллекции **Categories** и **Tags**. Поля `title` и `slug` **локализованы** (`uk` / `ru` / `en`; default locale — `uk`, fallback включён).
+В `/admin` доступны коллекции **Categories** и **Tags**. Поля `title` и `slug` **локализованы** (`uk` / `ru` / `en`; default locale — `uk`, `fallback: true` — пустая локаль тянет `uk`).
 
 | Параметр | Значение                                                                                                  |
 | -------- | --------------------------------------------------------------------------------------------------------- |
@@ -181,9 +181,11 @@ Int (нужен Postgres: `docker compose up -d`): `npm run test:int` → `tests
 
 1. Войдите в `/admin` как admin.
 2. **Categories** → Create: заполните `title` (например «Інженерія»), оставьте `slug` пустым → Save. Ожидание: slug вроде `inzheneriya`.
-3. Переключите locale в admin на `en`, задайте English title/slug → Save.
+3. Переключите locale в admin на `en`, задайте English title/slug → Save. То же для `ru`, если нужен перевод.
 4. То же для **Tags**.
 5. Reader (если создан) не должен иметь write-доступ к этим коллекциям.
+
+Редактура (шаг **043**): переключатель locale в admin заполняет **ту же** запись, не создаёт вторую. Незаполненная локаль на сайте/preview отдаёт `uk` (Payload fallback), а не пустой заголовок.
 
 Relation к Articles/Notes — шаги **018** / **019** (оба done). Unit-тесты slugify/access — **024** (done): `npm test`.
 
@@ -197,16 +199,17 @@ Relation к Articles/Notes — шаги **018** / **019** (оба done). Unit-т
 | Read     | Admin — все; иначе published + `publishedAt` не в будущем (ADR-003)                                                                                                                               |
 | Поля     | `title` / `slug` (localized, slug auto из title), Lexical `body` (localized), `heroImage` → Media, `categories` / `tags`, `publishedAt`, группа `seo` (`metaTitle`, `metaDescription`, `ogImage`) |
 | Drafts   | `versions.drafts` — Save Draft / Publish в admin                                                                                                                                                  |
-| Локали   | `uk` / `ru` / `en` (как у Categories/Tags)                                                                                                                                                        |
+| Локали   | `uk` / `ru` / `en`; пустая локаль → fallback на `uk` (см. `content-model.md`, шаг **043**)                                                                                                        |
 
 Проверка:
 
 1. Войдите в `/admin` как admin.
 2. При необходимости создайте Category/Tag и загрузите Media (hero).
-3. **Articles** → Create: заполните `title`, оставьте `slug` пустым, наберите `body` → **Save Draft**. Ожидание: документ в статусе draft, slug заполнен.
-4. Переключите locale (`en` / `ru`), задайте локализованные поля → Save.
+3. **Articles** → Create в locale `uk`: заполните `title`, оставьте `slug` пустым, наберите `body` → **Save Draft**. Ожидание: документ в статусе draft, slug заполнен.
+4. Переключите locale на `ru`, затем `en`: задайте свои `title` / `slug` / `body` (и SEO text) → Save на каждой локали. Обложка, categories/tags, `publishedAt` — общие.
 5. **Publish** ту же статью; при желании задайте `publishedAt` и SEO.
-6. Reader / anonymous не должны видеть drafts через API (`read` фильтрует `_status`); write — только admin.
+6. Preview по префиксу: `/uk/dev/rich-text/article/<slug>`, `/ru/...`, `/en/...` — разные заголовки/тело при заполненных локалях.
+7. Reader / anonymous не должны видеть drafts через API (`read` фильтрует `_status`); write — только admin.
 
 ### Lexical: image + YouTube (шаг 034)
 

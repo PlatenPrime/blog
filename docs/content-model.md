@@ -17,6 +17,23 @@
 
 Порядок регистрации коллекций (admin.group UX, шаг **033**): `articles` → `notes` → `pages` → `media` → `categories` → `tags` → `comments` → `bookmarks` → `users`.
 
+### Editorial localization + fallback (шаг **043**)
+
+Один документ — три локали (`uk` / `ru` / `en`), не три отдельных записи. Публичный URL и Payload Local API передают `locale` из префикса (`resolveContentLocale` в [`src/i18n/contentLocale.ts`](../src/i18n/contentLocale.ts)); временный preview — [`loadPreviewDoc`](<../src/app/(frontend)/[locale]/dev/rich-text/loadPreviewDoc.ts>).
+
+| Политика | Правило                                                                                                                                         |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| Default  | `uk` — и Payload `defaultLocale`, и публичный default (ADR-004)                                                                                 |
+| Fallback | `fallback: true`: пустое локализованное поле в запрошенной локали → значение из `uk`                                                            |
+| Редактор | Заполняет локали **осознанно**: `uk` как база; `ru`/`en` — когда есть перевод; пустая локаль = сознательный fallback на `uk`, не «забыли схему» |
+| Slug     | Локализован; уникальность **per locale** `(slug, _locale)`                                                                                      |
+
+**Localized:** `title`, `slug`, `body`, `seo.metaTitle`, `seo.metaDescription` (Articles / Notes / Pages); у Categories / Tags — `title`, `slug`.
+
+**Не localized (общие на документ):** `heroImage`, `categories`, `tags`, `publishedAt`, `seo.ogImage`, `_status`, timestamps.
+
+Поведение «missing locale не роняет 500» на публичной витрине и unit-тесты — шаг **045**. Language switcher — **044**. Продуктовые маршруты статей/заметок/страниц — Track 5.
+
 ## Связи
 
 ```mermaid
