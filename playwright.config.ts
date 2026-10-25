@@ -33,7 +33,12 @@ export default defineConfig({
     {
       name: 'chromium',
       testIgnore: /auth\.setup\.ts/,
-      use: { ...devices['Desktop Chrome'], channel: 'chromium' },
+      // `chromium` is Playwright's own build (`npm run test:e2e:install`).
+      // `PLAYWRIGHT_CHANNEL=chrome` uses the installed Google Chrome and skips that download.
+      use: {
+        ...devices['Desktop Chrome'],
+        channel: process.env.PLAYWRIGHT_CHANNEL === 'chrome' ? 'chrome' : 'chromium',
+      },
       dependencies: ['setup'],
     },
   ],

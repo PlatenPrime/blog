@@ -21,8 +21,8 @@ export function LanguageSwitcher() {
   const href = search ? `${pathname}?${search}` : pathname
 
   return (
-    <nav className="language-switcher" aria-label={t('language')}>
-      <ul className="language-switcher-list">
+    <nav aria-label={t('language')} className="font-sans text-small">
+      <ul className="m-0 flex list-none gap-2 p-0">
         {routing.locales.map((target) => {
           const label = t(LOCALE_LABEL_KEY[target])
           const isCurrent = target === locale
@@ -30,11 +30,18 @@ export function LanguageSwitcher() {
           return (
             <li key={target}>
               {isCurrent ? (
-                <span className="language-switcher-current" aria-current="page">
+                <span
+                  aria-current="page"
+                  className="inline-flex min-h-8 items-center font-semibold text-foreground"
+                >
                   {label}
                 </span>
               ) : (
-                <Link className="language-switcher-link" href={href} locale={target}>
+                <Link
+                  className="inline-flex min-h-8 items-center rounded-sm text-primary no-underline hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  href={href}
+                  locale={target}
+                >
                   {label}
                 </Link>
               )}

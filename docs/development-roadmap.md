@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked`.
 
-**Baseline Status:** следующий шаг — `045` (i18n ADR + tests). Шаги `001`–`044` и `083` (test policy) — `done`.
+**Baseline Status:** следующий шаг — `050` (Лента). Шаги `001`–`049` и `083` (test policy) — `done`.
 
 **Правила ведения**
 
@@ -468,35 +468,39 @@ v1 считается завершённым, когда одновременн�
 
 ### 046 — Design tokens + shadcn init
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Элегантная база UI.
 - **Deliverables:** Tailwind theme, CSS variables, shadcn components set, typography scale.
 - **Verify:** Story/smoke page в light/dark выглядит цельно.
 - **DoD:** Дизайн-система зафиксирована (короткий `docs/design-principles.md`).
+- **Notes:** Tailwind v4, токены и шкала в `src/app/(frontend)/globals.css`. shadcn `radix-nova`: button, input, label, textarea, separator, badge, card. Шрифты Source Serif 4 + Source Sans 3 (Newsreader без кириллицы). Витрина `/uk|ru|en/dev/design` — light и `.dark` рядом. Home/auth остаются на `styles.css`. Toggle и persistence — **047**. Chrome — **048**. Unit нет; screenshot e2e — **049**.
 
 ### 047 — Dark / light theme
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Обязательная тёмная тема.
 - **Deliverables:** `next-themes`, toggle, no FOUC strategy.
 - **Verify:** Toggle сохраняет preference; оба режима читабельны.
 - **DoD:** Theme — first-class UX.
+- **Notes:** `next-themes` (`attribute="class"`, `defaultTheme="system"`, `enableSystem`, `disableTransitionOnChange`). Исполняемый скрипт — `themeInitScript` в locale layout: он ставит `light` или `dark` на `<html>` до отрисовки и не затирает классы шрифтов. Скрипт самого провайдера помечен `text/plain`, иначе Next 16 считает клиентский `<script>` ошибкой и не выполняет его. Кнопка в `SiteHeader`; подписи `nav.themeToDark` / `nav.themeToLight`. Явный выбор — `localStorage`, ключ `theme`. До клика тема следует системе. Витрина `/dev/design` — одна колонка живой темы (вложенная колонка `.dark` ломала бы `dark:` утилиты). `styles.css`: в `html.dark` legacy-переменные, поля и сообщения auth смотрят на токены. E2E: `tests/e2e/theme.e2e.spec.ts`. Скриншоты — **049**. Полный набор публички — **056**. Chrome — **048**. Админка Payload этим провайдером не оборачивается.
 
 ### 048 — Layout: header / footer / nav
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Каркас всех публичных страниц.
 - **Deliverables:** Locale-aware nav: лента, категории, notes, articles, about, auth links.
 - **Verify:** Responsive + a11y landmarks.
 - **DoD:** Единый chrome сайта.
+- **Notes:** `SiteHeader` / `SiteFooter` / skip-link в `[locale]/layout`. Пути в `src/components/site/site-nav.ts`: `/feed`, `/articles`, `/notes`, `/categories`, `/about`; слово сайта ведёт на `/`. Гость — вход и регистрация; сессия — `/logout`; `admin` — `/admin` без префикса (ADR-004). `logoutEverywhere` остаётся на главной. Ключи в `nav` (без нового namespace). Клик по разделу до **050–054** — локализованный 404 (`[...rest]`), страницы разделов не в этом шаге. Unit: `tests/unit/siteNav.test.ts`. E2E landmarks: `tests/e2e/site-chrome.e2e.spec.ts`. Скриншоты и полный клик-сьют — **049** / **056**. Privacy/Terms в подвале — **079–080**.
 
 ### 049 — Home page
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Витрина автора.
 - **Deliverables:** Hero с именем автора, последние статьи/заметки, сильная типографика (не «dashboard»).
 - **Verify:** Playwright screenshot smoke; Lighthouse sanity optional.
 - **DoD:** Первый viewport — одна композиция, brand = имя автора.
+- **Notes:** `nav.siteTitle` = PlatenPrime во всех локалях: `h1`, шапка, подвал, `<title>`. Lead — `nav.siteDescription`. Пустая витрина — `home.empty`. До 3 статей и 3 заметок: `findLatestPublic` / `latestPublicFindArgs` (`publicContentWhere`, `overrideAccess: false`, `draft: false`, без `user` и без `req`). Ссылки `/articles/[slug]` и `/notes/[slug]` до **051–052** — локализованный 404. Сессия не в первом экране: дубли входа и почта убраны; `logoutEverywhere` ниже списков и только для вошедшего. Выход в шапке — обычная ссылка на route handler (`<a href>`), клиентский `Link` до GET не доходит. Главная на токенах, класс `.home` снят (`styles.css` остаётся у auth). Unit: `tests/unit/latestPublic.test.ts`. E2E: `tests/e2e/home.e2e.spec.ts` (hero light/dark), плюс правки `frontend.e2e` и `auth.e2e`. Свой Chromium Playwright на этой машине недокачан; прогон был с `PLAYWRIGHT_CHANNEL=chrome`. Lighthouse не гоняли. Лента — **050**. Скриншоты `/dev/design` и полный клик-сьют — **056**.
 
 ### 050 — Лента (mixed feed)
 

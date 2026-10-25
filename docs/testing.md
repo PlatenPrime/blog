@@ -45,7 +45,7 @@
 - Инварианты модели в helpers (например uniqueness bookmark), если вынесены из Payload hooks
 - Парсеры / сериализаторы контента (TOC из headings, JSON-LD smoke-parse и т.п.), когда появятся
 
-**Сейчас (после Track 4 / 045):** unit — `slugify`, access helpers (+ `isVerified`), `bookmarkUniqueness`, `rateLimit`, контракт префикса локали (`tests/unit/i18nRouting.test.ts`), паритет ключей словарей (`tests/unit/i18nMessages.test.ts`), `resolveContentLocale` (`tests/unit/contentLocale.test.ts`), i18n fallback / missing key no-throw (`tests/unit/i18nFallback.test.ts`, ADR-005). Integration — comments/bookmarks + `tests/int/auth.int.spec.ts` (register/login/verify/reset, reader≠articles) + `tests/int/contentLocale.int.spec.ts` (uk+ru+en + fallback на `uk`). E2E auth — `tests/e2e/auth.e2e.spec.ts` (локально; CI e2e — шаг **086**), лейблы из каталога `uk`, плюс проверка `/ru/login` и `/en/login`; language switcher — `tests/e2e/language-switcher.e2e.spec.ts`.
+**Сейчас (после 049):** unit — `slugify`, access helpers (+ `isVerified`), `bookmarkUniqueness`, `rateLimit`, контракт префикса локали (`tests/unit/i18nRouting.test.ts`), паритет ключей словарей (`tests/unit/i18nMessages.test.ts`), `resolveContentLocale` (`tests/unit/contentLocale.test.ts`), i18n fallback / missing key no-throw (`tests/unit/i18nFallback.test.ts`, ADR-005), аргументы публичного find главной (`tests/unit/latestPublic.test.ts`). Integration — comments/bookmarks + `tests/int/auth.int.spec.ts` (register/login/verify/reset, reader≠articles) + `tests/int/contentLocale.int.spec.ts` (uk+ru+en + fallback на `uk`). E2E auth — `tests/e2e/auth.e2e.spec.ts` (локально; CI e2e — шаг **086**), лейблы из каталога `uk`, плюс проверка `/ru/login` и `/en/login`; language switcher — `tests/e2e/language-switcher.e2e.spec.ts`; theme toggle — `tests/e2e/theme.e2e.spec.ts`; chrome landmarks — `tests/e2e/site-chrome.e2e.spec.ts`; главная — `tests/e2e/home.e2e.spec.ts` (бренд и screenshot hero).
 
 ### Integration (Payload Local API / DB) — must для границ доступа
 
@@ -89,22 +89,26 @@ Admin CMS: только точечный smoke при необходимости
 
 ## Карта роадмапа → тесты
 
-| Шаги      | Фокус тестов                                                    |
-| --------- | --------------------------------------------------------------- |
-| 010 / 011 | Bootstrap runners (уже есть smoke)                              |
-| 024       | Unit: slugify, role/access helpers, bookmark uniqueness helpers |
-| 032       | E2E auth suite                                                  |
-| 039       | Integration/API: media upload 403 for reader                    |
-| 041       | Unit: locale prefix contract (ADR-004)                          |
-| 042       | Unit: UI catalog key parity (`uk` / `ru` / `en`)                |
-| 043       | Unit: `resolveContentLocale`; int: article uk+ru+en + fallback  |
-| 045       | Unit: i18n fallback (`i18nFallback`, ADR-005) — done            |
-| 061       | E2E comments/bookmarks + Vitest access                          |
-| 083       | Эта политика (`docs/testing.md`)                                |
-| 084       | Расширение Vitest на пробелы домена                             |
-| 085       | Playwright a11y smoke                                           |
-| 086       | E2E в GitHub Actions                                            |
-| 087       | Test data factories                                             |
+| Шаги      | Фокус тестов                                                                                                                      |
+| --------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| 010 / 011 | Bootstrap runners (уже есть smoke)                                                                                                |
+| 024       | Unit: slugify, role/access helpers, bookmark uniqueness helpers                                                                   |
+| 032       | E2E auth suite                                                                                                                    |
+| 039       | Integration/API: media upload 403 for reader                                                                                      |
+| 041       | Unit: locale prefix contract (ADR-004)                                                                                            |
+| 042       | Unit: UI catalog key parity (`uk` / `ru` / `en`)                                                                                  |
+| 043       | Unit: `resolveContentLocale`; int: article uk+ru+en + fallback                                                                    |
+| 045       | Unit: i18n fallback (`i18nFallback`, ADR-005) — done                                                                              |
+| 046       | Нет unit: визуальная система. Ручной smoke `/[locale]/dev/design`. Screenshot витрины токенов — 056. Hero главной — 049           |
+| 047       | E2E: system theme, toggle пишет `localStorage`, reload хранит выбор (`theme.e2e`). Screenshot suite — 056                         |
+| 048       | Unit: канон путей chrome (`siteNav`). E2E: landmarks, префикс ссылки, узкий viewport (`site-chrome.e2e`). Screenshot chrome — 056 |
+| 049       | Unit: аргументы публичного find (`latestPublicQuery`). E2E: бренд uk/ru/en и screenshot hero light/dark (`home.e2e`)              |
+| 061       | E2E comments/bookmarks + Vitest access                                                                                            |
+| 083       | Эта политика (`docs/testing.md`)                                                                                                  |
+| 084       | Расширение Vitest на пробелы домена                                                                                               |
+| 085       | Playwright a11y smoke                                                                                                             |
+| 086       | E2E в GitHub Actions                                                                                                              |
+| 087       | Test data factories                                                                                                               |
 
 ---
 

@@ -1,8 +1,13 @@
+/* Legacy auth pages.
+   These unlayered rules beat Tailwind layers from globals.css.
+   Home and chrome use the tokens in globals.css. This file goes away when auth moves. */
+
 :root {
   --bg: #f7f4ef;
   --fg: #1a1a1a;
-  --muted: #5c5c5c;
-  --accent: #1a4d6d;
+  /* Not shadcn --muted / --accent. Those names belong to globals.css. */
+  --legacy-muted: #5c5c5c;
+  --legacy-accent: #1a4d6d;
 }
 
 * {
@@ -20,44 +25,6 @@ body {
   color: var(--fg);
   font-family: Georgia, 'Times New Roman', serif;
   line-height: 1.5;
-}
-
-.home {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 2rem;
-  max-width: 40rem;
-}
-
-.home h1 {
-  margin: 0 0 0.5rem;
-  font-size: 2.5rem;
-  font-weight: 400;
-}
-
-.home p {
-  margin: 0 0 1rem;
-  color: var(--muted);
-}
-
-.home a {
-  color: var(--accent);
-}
-
-.home-session {
-  margin-bottom: 1rem;
-}
-
-.home-session button {
-  margin-top: 0.5rem;
-  font: inherit;
-  cursor: pointer;
-  background: transparent;
-  border: 1px solid var(--muted);
-  color: var(--fg);
-  padding: 0.35rem 0.75rem;
 }
 
 .auth-page {
@@ -91,7 +58,7 @@ body {
   flex-direction: column;
   gap: 0.25rem;
   font-size: 0.95rem;
-  color: var(--muted);
+  color: var(--legacy-muted);
 }
 
 .auth-form input {
@@ -107,7 +74,7 @@ body {
   margin-top: 0.25rem;
   padding: 0.55rem 0.75rem;
   border: none;
-  background: var(--accent);
+  background: var(--legacy-accent);
   color: #fff;
   cursor: pointer;
 }
@@ -129,13 +96,13 @@ body {
 
 .auth-footer {
   margin-top: 1rem;
-  color: var(--muted);
+  color: var(--legacy-muted);
   font-size: 0.95rem;
 }
 
 .auth-footer a,
 .auth-banner a {
-  color: var(--accent);
+  color: var(--legacy-accent);
 }
 
 .auth-banner {
@@ -148,36 +115,30 @@ body {
   color: #8b1e1e;
 }
 
-.site-header {
-  display: flex;
-  justify-content: flex-end;
-  padding: 0.75rem 1.25rem;
+/* Readability bridge until auth leaves this file.
+   Light values above stay put. Dark maps them onto the token set. */
+html.dark {
+  --bg: var(--background);
+  --fg: var(--foreground);
+  --legacy-muted: var(--muted-foreground);
+  --legacy-accent: var(--primary);
 }
 
-.language-switcher {
-  min-height: 1.5rem;
+html.dark .auth-form input {
+  border-color: var(--border);
+  background: var(--card);
+  color: var(--foreground);
 }
 
-.language-switcher-list {
-  display: flex;
-  gap: 0.5rem;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  font-size: 0.9rem;
-  letter-spacing: 0.02em;
+html.dark .auth-form button {
+  color: var(--primary-foreground);
 }
 
-.language-switcher-link {
-  color: var(--accent);
-  text-decoration: none;
+html.dark .auth-error,
+html.dark .auth-unverified {
+  color: var(--destructive);
 }
 
-.language-switcher-link:hover {
-  text-decoration: underline;
-}
-
-.language-switcher-current {
-  color: var(--fg);
-  font-weight: 600;
+html.dark .auth-success {
+  color: var(--chart-2);
 }

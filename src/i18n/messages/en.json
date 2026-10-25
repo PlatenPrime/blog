@@ -1,6 +1,6 @@
 {
   "nav": {
-    "siteTitle": "Blog",
+    "siteTitle": "PlatenPrime",
     "siteDescription": "Personal blog — Next.js and Payload CMS.",
     "home": "Home",
     "login": "Log in",
@@ -10,7 +10,17 @@
     "openAdmin": "Open admin",
     "signedInAs": "Signed in as",
     "emailUnverified": "(email not verified)",
+    "feed": "Feed",
+    "articles": "Articles",
+    "notes": "Notes",
+    "categories": "Categories",
+    "about": "About",
+    "primary": "Sections",
+    "footer": "Footer",
+    "skipToContent": "Skip to content",
     "language": "Language",
+    "themeToDark": "Switch to dark theme",
+    "themeToLight": "Switch to light theme",
     "localeUk": "UK",
     "localeRu": "RU",
     "localeEn": "EN"
@@ -76,5 +86,8 @@
     "body": "This site uses cookies for sign-in and, with your consent, for analytics.",
     "accept": "Accept",
     "decline": "Decline"
+  },
+  "home": {
+    "empty": "Nothing here yet."
   }
 }

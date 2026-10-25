@@ -1,6 +1,6 @@
 {
   "nav": {
-    "siteTitle": "Блог",
+    "siteTitle": "PlatenPrime",
     "siteDescription": "Личный блог — Next.js и Payload CMS.",
     "home": "На главную",
     "login": "Войти",
@@ -10,7 +10,17 @@
     "openAdmin": "Админка",
     "signedInAs": "Вы вошли как",
     "emailUnverified": "(почта не подтверждена)",
+    "feed": "Лента",
+    "articles": "Статьи",
+    "notes": "Заметки",
+    "categories": "Рубрики",
+    "about": "Об авторе",
+    "primary": "Разделы",
+    "footer": "Подвал",
+    "skipToContent": "Перейти к содержимому",
     "language": "Язык",
+    "themeToDark": "Включить тёмную тему",
+    "themeToLight": "Включить светлую тему",
     "localeUk": "УК",
     "localeRu": "РУ",
     "localeEn": "EN"
@@ -76,5 +86,8 @@
     "body": "Сайт использует cookie для входа и, с вашего согласия, для аналитики.",
     "accept": "Принять",
     "decline": "Отклонить"
+  },
+  "home": {
+    "empty": "Пока здесь тихо."
   }
 }

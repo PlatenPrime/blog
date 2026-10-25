@@ -1,6 +1,6 @@
 {
   "nav": {
-    "siteTitle": "Блог",
+    "siteTitle": "PlatenPrime",
     "siteDescription": "Особистий блог — Next.js і Payload CMS.",
     "home": "На головну",
     "login": "Увійти",
@@ -10,7 +10,17 @@
     "openAdmin": "Адмінка",
     "signedInAs": "Ви увійшли як",
     "emailUnverified": "(пошту не підтверджено)",
+    "feed": "Стрічка",
+    "articles": "Статті",
+    "notes": "Нотатки",
+    "categories": "Рубрики",
+    "about": "Про автора",
+    "primary": "Розділи",
+    "footer": "Підвал",
+    "skipToContent": "Перейти до вмісту",
     "language": "Мова",
+    "themeToDark": "Увімкнути темну тему",
+    "themeToLight": "Увімкнути світлу тему",
     "localeUk": "УК",
     "localeRu": "РУ",
     "localeEn": "EN"
@@ -76,5 +86,8 @@
     "body": "Сайт використовує cookie для входу та, за вашою згодою, для аналітики.",
     "accept": "Прийняти",
     "decline": "Відхилити"
+  },
+  "home": {
+    "empty": "Поки що тут тихо."
   }
 }
