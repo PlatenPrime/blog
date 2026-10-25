@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked`.
 
-**Baseline Status:** следующий шаг — `045` (i18n ADR + tests). Шаги `001`–`044` и `083` (test policy) — `done`.
+**Baseline Status:** следующий шаг — `047` (Dark / light theme). Шаги `001`–`046` и `083` (test policy) — `done`.
 
 **Правила ведения**
 
@@ -468,11 +468,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 046 — Design tokens + shadcn init
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Элегантная база UI.
 - **Deliverables:** Tailwind theme, CSS variables, shadcn components set, typography scale.
 - **Verify:** Story/smoke page в light/dark выглядит цельно.
 - **DoD:** Дизайн-система зафиксирована (короткий `docs/design-principles.md`).
+- **Notes:** Tailwind v4, токены и шкала в `src/app/(frontend)/globals.css`. shadcn `radix-nova`: button, input, label, textarea, separator, badge, card. Шрифты Source Serif 4 + Source Sans 3 (Newsreader без кириллицы). Витрина `/uk|ru|en/dev/design` — light и `.dark` рядом. Home/auth остаются на `styles.css`. Toggle и persistence — **047**. Chrome — **048**. Unit нет; screenshot e2e — **049**.
 
 ### 047 — Dark / light theme
 

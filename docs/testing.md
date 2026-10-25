@@ -89,22 +89,23 @@ Admin CMS: только точечный smoke при необходимости
 
 ## Карта роадмапа → тесты
 
-| Шаги      | Фокус тестов                                                    |
-| --------- | --------------------------------------------------------------- |
-| 010 / 011 | Bootstrap runners (уже есть smoke)                              |
-| 024       | Unit: slugify, role/access helpers, bookmark uniqueness helpers |
-| 032       | E2E auth suite                                                  |
-| 039       | Integration/API: media upload 403 for reader                    |
-| 041       | Unit: locale prefix contract (ADR-004)                          |
-| 042       | Unit: UI catalog key parity (`uk` / `ru` / `en`)                |
-| 043       | Unit: `resolveContentLocale`; int: article uk+ru+en + fallback  |
-| 045       | Unit: i18n fallback (`i18nFallback`, ADR-005) — done            |
-| 061       | E2E comments/bookmarks + Vitest access                          |
-| 083       | Эта политика (`docs/testing.md`)                                |
-| 084       | Расширение Vitest на пробелы домена                             |
-| 085       | Playwright a11y smoke                                           |
-| 086       | E2E в GitHub Actions                                            |
-| 087       | Test data factories                                             |
+| Шаги      | Фокус тестов                                                                            |
+| --------- | --------------------------------------------------------------------------------------- |
+| 010 / 011 | Bootstrap runners (уже есть smoke)                                                      |
+| 024       | Unit: slugify, role/access helpers, bookmark uniqueness helpers                         |
+| 032       | E2E auth suite                                                                          |
+| 039       | Integration/API: media upload 403 for reader                                            |
+| 041       | Unit: locale prefix contract (ADR-004)                                                  |
+| 042       | Unit: UI catalog key parity (`uk` / `ru` / `en`)                                        |
+| 043       | Unit: `resolveContentLocale`; int: article uk+ru+en + fallback                          |
+| 045       | Unit: i18n fallback (`i18nFallback`, ADR-005) — done                                    |
+| 046       | Нет unit: визуальная система. Ручной smoke `/[locale]/dev/design`. Screenshot e2e — 049 |
+| 061       | E2E comments/bookmarks + Vitest access                                                  |
+| 083       | Эта политика (`docs/testing.md`)                                                        |
+| 084       | Расширение Vitest на пробелы домена                                                     |
+| 085       | Playwright a11y smoke                                                                   |
+| 086       | E2E в GitHub Actions                                                                    |
+| 087       | Test data factories                                                                     |
 
 ---
 
