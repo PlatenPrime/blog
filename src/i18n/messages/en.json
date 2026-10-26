@@ -83,7 +83,11 @@
     "missingResetToken": "Missing reset token. Request a new link from <link>Forgot password</link>.",
     "missingVerificationToken": "Missing verification token.",
     "verificationFailed": "Verification failed. The link may have expired.",
-    "oauthFailed": "Google sign-in failed: {code}"
+    "oauthFailed": "Google sign-in failed: {code}",
+    "commentEmpty": "Write a comment.",
+    "commentTooLong": "A comment can be at most 2000 characters.",
+    "commentNotAllowed": "This comment cannot be posted.",
+    "commentFailed": "The comment could not be posted."
   },
   "states": {
     "loading": "Loading"
@@ -127,6 +131,19 @@
     "pageStatus": "Page {page} of {pages}",
     "categories": "Categories",
     "tags": "Tags"
+  },
+  "comments": {
+    "title": "Comments",
+    "empty": "No comments yet.",
+    "body": "Comment",
+    "submit": "Post",
+    "pending": "Posting…",
+    "loginPrompt": "Sign in to comment.",
+    "login": "Sign in",
+    "register": "Register",
+    "reader": "Reader",
+    "you": "You",
+    "verifyFirst": "Verify your email to comment."
   },
   "taxonomy": {
     "categoriesTitle": "Categories",

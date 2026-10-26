@@ -324,7 +324,7 @@ Privacy и Terms — шаги **079–080**. Unit: `npm test` → `tests/unit/pa
 
 | Параметр        | Значение                                                                                                                                                                    |
 | --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Create          | Любой authenticated (`reader` / `admin`); anonymous — отказ                                                                                                                 |
+| Create          | Подтверждённый `reader` или `admin` (`isAuthenticatedAndVerified`); anonymous и неподтверждённый — отказ                                                                    |
 | Read            | Admin — все; иначе только `moderationStatus: approved`                                                                                                                      |
 | Update / Delete | Только `admin` (модерация)                                                                                                                                                  |
 | Поля            | `content` (polymorphic → `articles` \| `notes`), `author` (auto из session), `body` (textarea), `moderationStatus` (`approved` / `hidden`, default `approved`), `createdAt` |
@@ -336,8 +336,11 @@ Privacy и Terms — шаги **079–080**. Unit: `npm test` → `tests/unit/pa
 2. Убедитесь, что есть published Article или Note.
 3. **Comments** → Create: выберите `content`, введите `body` → Save. `author` подставится из текущего пользователя; `moderationStatus` по умолчанию `approved`.
 4. Anonymous create через API должен быть отклонён (интеграционный тест это фиксирует).
+5. Опубликованная статья, гость: `http://localhost:3000/uk/articles/{slug}`. Под текстом заголовок «Коментарі», при пустом списке одна фраза, ссылки «Увійти» и «Реєстрація». Поля комментария нет.
+6. Войдите как подтверждённый reader (`/uk/login`). Та же статья: textarea и «Надіслати». После отправки комментарий виден на странице, подпись «Ви», почты в подписи нет. Та же форма на `/uk/notes/{slug}`.
+7. Черновик по адресу статьи по-прежнему «не найдено», формы там нет.
 
-Публичный Comments UI — шаг **057**. Hide/approve в публичке — **058**. Unit для access helpers — **024** (done).
+Hide/approve в публичке — **058**. Unit контракта списка — `npm test` → `tests/unit/commentsQuery.test.ts`. Unit access helpers — **024** (done). E2E отправки — **061**.
 
 ## 14. Bookmarks
 

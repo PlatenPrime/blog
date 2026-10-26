@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
+import { CommentSection } from '@/components/comments/comment-section'
 import { NoteDetail } from '@/components/notes/note-detail'
 import { findPublicNote } from '@/content/notes'
 import { routing } from '@/i18n/routing'
@@ -43,6 +44,7 @@ export default async function NotePage({ params }: NotePageProps) {
           locale={locale}
           note={note}
         />
+        <CommentSection contentId={note.id} locale={locale} relationTo="notes" />
       </div>
     </div>
   )

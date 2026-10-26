@@ -368,7 +368,7 @@ export interface Comment {
   author: number | User;
   body: string;
   /**
-   * Soft moderation (public UI respects this from step 058).
+   * Soft moderation. Public pages list approved comments only (step 057). Hide and approve stay in the admin until step 058.
    */
   moderationStatus: 'approved' | 'hidden';
   updatedAt: string;

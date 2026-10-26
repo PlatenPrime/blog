@@ -83,7 +83,11 @@
     "missingResetToken": "Нет токена сброса. Запросите новую ссылку на странице <link>восстановления пароля</link>.",
     "missingVerificationToken": "Нет токена подтверждения.",
     "verificationFailed": "Не удалось подтвердить почту. Ссылка могла устареть.",
-    "oauthFailed": "Не удалось войти через Google: {code}"
+    "oauthFailed": "Не удалось войти через Google: {code}",
+    "commentEmpty": "Напишите комментарий.",
+    "commentTooLong": "Комментарий длиннее 2000 символов.",
+    "commentNotAllowed": "Оставить комментарий не получилось.",
+    "commentFailed": "Не удалось отправить комментарий."
   },
   "states": {
     "loading": "Загрузка"
@@ -127,6 +131,19 @@
     "pageStatus": "Страница {page} из {pages}",
     "categories": "Рубрики",
     "tags": "Теги"
+  },
+  "comments": {
+    "title": "Комментарии",
+    "empty": "Пока без комментариев.",
+    "body": "Комментарий",
+    "submit": "Отправить",
+    "pending": "Отправляем…",
+    "loginPrompt": "Войдите, чтобы комментировать.",
+    "login": "Войти",
+    "register": "Регистрация",
+    "reader": "Читатель",
+    "you": "Вы",
+    "verifyFirst": "Подтвердите почту, чтобы комментировать."
   },
   "taxonomy": {
     "categoriesTitle": "Рубрики",

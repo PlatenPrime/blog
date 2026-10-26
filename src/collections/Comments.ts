@@ -89,7 +89,8 @@ export const Comments: CollectionConfig = {
       },
       admin: {
         position: 'sidebar',
-        description: 'Soft moderation (public UI respects this from step 058).',
+        description:
+          'Soft moderation. Public pages list approved comments only (step 057). Hide and approve stay in the admin until step 058.',
       },
     },
   ],

@@ -107,6 +107,7 @@ describe('toPublicNote', () => {
     const note = toPublicNote({
       body,
       categories: [{ slug: 'city', title: 'City' }, 4, { title: '' }, { title: 'No slug' }, null],
+      id: 7,
       publishedAt: '2026-06-01T00:00:00.000Z',
       seo: { metaDescription: ' A line ', metaTitle: ' Thought ' },
       tags: [9, { slug: '', title: 'Night' }, { slug: 'live', title: 'Live' }],
@@ -116,6 +117,7 @@ describe('toPublicNote', () => {
     expect(note).toEqual({
       body,
       categories: [{ slug: 'city', title: 'City' }],
+      id: 7,
       metaDescription: 'A line',
       metaTitle: 'Thought',
       publishedAt: '2026-06-01T00:00:00.000Z',
@@ -129,6 +131,7 @@ describe('toPublicNote', () => {
     expect(
       toPublicNote({
         body,
+        id: 3,
         seo: { metaDescription: '   ', metaTitle: '' },
         title: 'Untitled note',
       }),
@@ -138,6 +141,7 @@ describe('toPublicNote', () => {
       title: 'Untitled note',
     })
 
+    expect(toPublicNote({ body, title: 'Missing id' })).toBeNull()
     expect(toPublicNote({ body, title: '' })).toBeNull()
     expect(toPublicNote({ body: null, title: 'No body' })).toBeNull()
     expect(toPublicNote({ body: 'plain', title: 'Plain' })).toBeNull()
