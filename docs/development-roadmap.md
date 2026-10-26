@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked`.
 
-**Baseline Status:** следующий шаг — `056` (Public site Playwright visual/interaction suite). Шаги `001`–`055` и `083` (test policy) — `done`.
+**Baseline Status:** следующий шаг — `057` (Comments UI). Шаги `001`–`056` и `083` (test policy) — `done`.
 
 **Правила ведения**
 
@@ -558,11 +558,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 056 — Public site Playwright visual/interaction suite
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Регрессия разметки и кликов.
 - **Deliverables:** E2E nav, theme toggle, open article/note.
 - **Verify:** Suite green.
 - **DoD:** Дизайн-критичные flows под контролем.
+- **Notes:** `tests/e2e/public-content.setup.ts` перед сьютом перезаписывает только три своих слага (`public-fixtures.ts`): опубликованные `e2e-public-article` и `e2e-public-note` (`publishedAt` `2020-01-15T12:00:00.000Z`), черновик `e2e-draft-article`. `draft: false` на update пишет основную строку; `draft: true` оставил бы опубликованную копию. Чужие документы не трогаем. `tests/e2e/public-site.e2e.spec.ts`: с `/uk` клики шапки (стрічка, статті, нотатки, рубрики, про автора). У автора — URL и шапка; `h1` либо CMS, либо `errors.notFoundTitle`, не заголовок другой комнаты. Со списка — клик по заголовку фикстуры (лист «давніші», если строка не на первой странице) на статью и заметку; у заметки кикер, заголовка статьи нет. Черновик по адресу статьи — локализованный 404. Скриншоты: `banner` light/dark, `main` `/dev/design` light/dark, колонка `article` статьи и заметки (light, `time` под маской), `main` 404. На снимках `main` скрыт `nextjs-portal`: бейдж `next dev` не часть страницы. Списки, полки и `/about` в пиксели не снимаются. Toggle `localStorage` остаётся в `theme.e2e`; hero — в `home.e2e`. Setup-проект матчит `*.setup.ts`. axe — **085**, e2e в CI — **086**, фабрики — **087**.
 
 ---
 
