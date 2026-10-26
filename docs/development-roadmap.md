@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked`.
 
-**Baseline Status:** следующий шаг — `058` (Comment moderation basics). Шаги `001`–`057` и `083` (test policy) — `done`.
+**Baseline Status:** следующий шаг — `059` (Bookmarks UI). Шаги `001`–`058` и `083` (test policy) — `done`.
 
 **Правила ведения**
 
@@ -580,11 +580,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 058 — Comment moderation basics
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Admin может скрыть токсичное.
 - **Deliverables:** Hide/approve в admin или flag; публичка уважает статус.
 - **Verify:** Hidden comment не виден readers.
 - **DoD:** Минимальный контроль без сложного workflow.
+- **Notes:** Контроль — селект `moderationStatus` в сайдбаре Comments (`approved` / `hidden`, default `approved`). Отдельной кнопки, жалобы читателя и статуса `pending` нет. `hidden` снимает строку с публичной страницы и с API не-админа, включая автора: `approvedOrAdmin` плюс `commentsFindArgs` (`overrideAccess: false`, без `user` — админ на сайте скрытое не видит). Соседний `approved` на той же статье остаётся. `approved` возвращает строку. Плашки «удалён» нет. Reader статус не выбирает: `update` документа — admin only; create с `hidden` не сохраняет этот статус. Int: `tests/int/comments.int.spec.ts`. Unit контракта `where` — **057**. E2E отправки — **061**. Rate limit — **074**. Turnstile — **075**.
 
 ### 059 — Bookmarks UI
 

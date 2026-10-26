@@ -274,4 +274,4 @@ Drafts, access, taxonomy, `publishedAt`, SEO — те же.
 - Поле `role` меняет только admin; публичный `create` users — self-register readers (`/uk/register`, ADR-004) + first-user admin bootstrap.
 - Comments/Bookmarks create: `isAuthenticatedAndVerified` (ADR-002). Полная матрица — [`security/access-matrix.md`](./security/access-matrix.md).
 - Schedule: query-time visibility по `publishedAt` (ADR-003), без cron.
-- Публичный список комментариев показывает только `approved` (шаг 057). Кнопки скрыть/одобрить — шаг 058.
+- Публичный список комментариев показывает только `approved` (шаг 057). Скрыть и вернуть — селект `moderationStatus` в админке (шаг 058): `hidden` не читается не-админом, в том числе автором; `approved` возвращает на страницу. Очереди и жалоб нет.

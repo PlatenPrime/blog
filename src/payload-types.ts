@@ -368,7 +368,7 @@ export interface Comment {
   author: number | User;
   body: string;
   /**
-   * Soft moderation. Public pages list approved comments only (step 057). Hide and approve stay in the admin until step 058.
+   * This select is the moderation control. Hidden removes the comment from the public page and from the API for anyone who is not an admin. Approved puts it back. There is no pending queue.
    */
   moderationStatus: 'approved' | 'hidden';
   updatedAt: string;

@@ -339,8 +339,9 @@ Privacy и Terms — шаги **079–080**. Unit: `npm test` → `tests/unit/pa
 5. Опубликованная статья, гость: `http://localhost:3000/uk/articles/{slug}`. Под текстом заголовок «Коментарі», при пустом списке одна фраза, ссылки «Увійти» и «Реєстрація». Поля комментария нет.
 6. Войдите как подтверждённый reader (`/uk/login`). Та же статья: textarea и «Надіслати». После отправки комментарий виден на странице, подпись «Ви», почты в подписи нет. Та же форма на `/uk/notes/{slug}`.
 7. Черновик по адресу статьи по-прежнему «не найдено», формы там нет.
+8. Войдите в `/admin` как admin → **Comments** → откройте комментарий → в сайдбаре `moderationStatus` = Hidden → Save. Обновите `/uk/articles/{slug}` (и ту же заметку, если комментарий к ней) гостем и автором: этого текста нет, соседний одобренный остаётся, плашки «удалён» нет. Верните Approved → Save: текст снова на странице. Админ на сайте скрытое тоже не видит — только в `/admin`.
 
-Hide/approve в публичке — **058**. Unit контракта списка — `npm test` → `tests/unit/commentsQuery.test.ts`. Unit access helpers — **024** (done). E2E отправки — **061**.
+Unit контракта списка — `npm test` → `tests/unit/commentsQuery.test.ts`. Круг hide/approve — `npm run test:int` → `tests/int/comments.int.spec.ts`. Unit access helpers — **024** (done). E2E отправки — **061**.
 
 ## 14. Bookmarks
 
