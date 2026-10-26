@@ -99,5 +99,15 @@
     "previous": "Новіші",
     "next": "Давніші",
     "pageStatus": "Сторінка {page} з {pages}"
+  },
+  "articles": {
+    "title": "Статті",
+    "empty": "Поки що тут тихо.",
+    "pagination": "Сторінки статей",
+    "previous": "Новіші",
+    "next": "Давніші",
+    "pageStatus": "Сторінка {page} з {pages}",
+    "categories": "Рубрики",
+    "tags": "Теги"
   }
 }

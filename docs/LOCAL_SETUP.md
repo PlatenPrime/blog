@@ -222,7 +222,7 @@ Relation к Articles/Notes — шаги **018** / **019** (оба done). Unit-т
    `http://localhost:3000/uk/dev/rich-text/article/{slug}`  
    для **published** статьи — ожидайте картинку и iframe `youtube-nocookie`. Draft без preview mode → 404.
 
-Unit sanitize: `npm test` → `tests/unit/youtube.test.ts`. Продуктовые article routes — **051**.
+Unit sanitize: `npm test` → `tests/unit/youtube.test.ts`. Продуктовые маршруты — ниже, шаг **051**.
 
 ### Draft Preview (шаг 035)
 
@@ -244,12 +244,22 @@ Unit allowlist: `npm test` → `tests/unit/previewPaths.test.ts`.
 Отложенная видимость без cron (ADR-003): Publish + будущий `publishedAt` → скрыто для anonymous до наступления времени.
 
 1. Article → Publish, в sidebar `publishedAt` поставьте **завтра** (или +1 час) → Save.
-2. Incognito / без admin: `http://localhost:3000/uk/dev/rich-text/article/{slug}` → **404**; `GET /api/articles` не возвращает этот doc.
+2. Incognito / без admin: `http://localhost:3000/uk/dev/rich-text/article/{slug}` и `http://localhost:3000/uk/articles/{slug}` → **404**; `GET /api/articles` не возвращает этот doc.
 3. В admin тот же документ виден; Preview (035) тоже показывает.
 4. Смените `publishedAt` на прошлое (или очистите и Publish снова — hook проставит `now`) → публичный URL / API отдают документ.
 5. Publish без `publishedAt`: после сохранения поле заполнено текущим временем.
 
 Unit: `npm test` → visibility / `publishedOrAdmin` / `applyPublishedAtOnPublish`.
+
+### Публичный список и страница (шаг 051)
+
+1. `http://localhost:3000/uk/articles` (и `/ru/articles`, `/en/articles`) — список опубликованных статей. Пусто — одна фраза, без карточек. Черновик и будущий `publishedAt` в список не попадают.
+2. `http://localhost:3000/uk/articles/{slug}` — заголовок, дата, обложка если она есть, названия рубрик и тегов без ссылок, тело Lexical. Вкладка берёт `seo.metaTitle`, иначе `title`.
+3. Неизвестный slug, draft и будущая дата в инкогнито → локализованный 404. Адрес заметки этот маршрут не открывает.
+4. `http://localhost:3000/uk/articles?page=0` → редирект на `/uk/articles`.
+5. Preview черновика остаётся на `/uk/dev/rich-text/article/{slug}`, не на продуктовом адресе.
+
+Unit: `npm test` → `tests/unit/articlesQuery.test.ts`.
 
 ## 11. Notes
 

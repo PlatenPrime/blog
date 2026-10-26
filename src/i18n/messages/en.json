@@ -99,5 +99,15 @@
     "previous": "Newer",
     "next": "Older",
     "pageStatus": "Page {page} of {pages}"
+  },
+  "articles": {
+    "title": "Articles",
+    "empty": "Nothing here yet.",
+    "pagination": "Article pages",
+    "previous": "Newer",
+    "next": "Older",
+    "pageStatus": "Page {page} of {pages}",
+    "categories": "Categories",
+    "tags": "Tags"
   }
 }

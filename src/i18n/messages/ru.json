@@ -99,5 +99,15 @@
     "previous": "Новее",
     "next": "Раньше",
     "pageStatus": "Страница {page} из {pages}"
+  },
+  "articles": {
+    "title": "Статьи",
+    "empty": "Пока здесь тихо.",
+    "pagination": "Страницы статей",
+    "previous": "Новее",
+    "next": "Раньше",
+    "pageStatus": "Страница {page} из {pages}",
+    "categories": "Рубрики",
+    "tags": "Теги"
   }
 }

@@ -59,7 +59,7 @@ export function latestPublicFindArgs(args: {
   }
 }
 
-/** Canonical public path. Detail routes arrive in steps 051 and 052. */
+/** Canonical public path. Article detail is `/articles/[slug]`. Note detail arrives in step 052. */
 export function latestPublicPath(collection: LatestPublicCollection, slug: string): string {
   return `/${collection}/${slug}`
 }

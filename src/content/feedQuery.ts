@@ -5,13 +5,19 @@ import {
   type LatestPublicDoc,
   type LatestPublicFindArgs,
 } from '@/content/latestPublicQuery'
+import {
+  numberedPageHref,
+  pageCount,
+  readPageParam,
+  resolveNumberedPage,
+  type NumberedPageHref,
+  type NumberedPageResolution,
+} from '@/content/numberedPage'
 import { resolveContentLocale } from '@/i18n/contentLocale'
 import type { AppLocale } from '@/i18n/routing'
 
 /** Titles per feed page. The find window is this many times the page number. */
 export const FEED_PAGE_SIZE = 10
-
-const pagePattern = /^[1-9]\d*$/
 
 export type FeedItem = LatestPublicDoc & {
   collection: LatestPublicCollection
@@ -24,10 +30,9 @@ export type FeedCountArgs = {
   where: ReturnType<typeof publicContentWhere>
 }
 
-export type FeedPageHref = '/feed' | { pathname: '/feed'; query: { page: string } }
+export type FeedPageHref = NumberedPageHref<'/feed'>
 
-export type FeedPageResolution =
-  { kind: 'redirect'; page: number | null } | { kind: 'render'; page: number }
+export type FeedPageResolution = NumberedPageResolution
 
 /**
  * Count arguments for one public collection.
@@ -67,14 +72,12 @@ export function feedFindArgs(args: {
 }
 
 export function feedPageCount(total: number): number {
-  if (total <= 0) return 0
-  return Math.ceil(total / FEED_PAGE_SIZE)
+  return pageCount(total, FEED_PAGE_SIZE)
 }
 
 /** First query value. A repeated `page` param does not become a second page. */
 export function readFeedPageParam(page: string | string[] | undefined): string | undefined {
-  if (Array.isArray(page)) return page[0]
-  return page
+  return readPageParam(page)
 }
 
 /**
@@ -83,26 +86,12 @@ export function readFeedPageParam(page: string | string[] | undefined): string |
  * A page past the end redirects to the last real page.
  */
 export function resolveFeedPage(raw: string | undefined, total: number): FeedPageResolution {
-  if (raw === undefined) return { kind: 'render', page: 1 }
-
-  if (!pagePattern.test(raw)) return { kind: 'redirect', page: null }
-
-  const requested = Number(raw)
-  if (!Number.isSafeInteger(requested)) return { kind: 'redirect', page: null }
-  if (requested === 1) return { kind: 'redirect', page: null }
-
-  const pages = feedPageCount(total)
-  if (pages === 0 || requested > pages) {
-    return { kind: 'redirect', page: pages > 1 ? pages : null }
-  }
-
-  return { kind: 'render', page: requested }
+  return resolveNumberedPage(raw, total, FEED_PAGE_SIZE)
 }
 
 /** Page 1 has no query, so the first page has one URL. */
 export function feedPageHref(page: number): FeedPageHref {
-  if (page <= 1) return '/feed'
-  return { pathname: '/feed', query: { page: String(page) } }
+  return numberedPageHref('/feed', page)
 }
 
 /**

@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked`.
 
-**Baseline Status:** следующий шаг — `051` (Articles list + detail). Шаги `001`–`050` и `083` (test policy) — `done`.
+**Baseline Status:** следующий шаг — `052` (Notes list + detail). Шаги `001`–`051` и `083` (test policy) — `done`.
 
 **Правила ведения**
 
@@ -513,11 +513,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 051 — Articles list + detail
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Полноценные статьи.
 - **Deliverables:** List/filter; detail с Lexical render, hero, meta.
 - **Verify:** Slug route; 404 на unknown.
 - **DoD:** Article reading UX готов (TOC/related — Track 7 добьют).
+- **Notes:** `/uk|ru|en/articles` и `/articles/[slug]`. Список — только статьи: `count`, затем `find` с `page` и `limit: 10` (`articlesCountArgs` / `articlesListFindArgs`: `publicContentWhere`, `draft: false`, `overrideAccess: false`, `fallbackLocale: 'uk'`, без `user` и без `req`). `sort: '-publishedAt'` совпадает с `DESC NULLS FIRST` у ленты. Контракт `?page=` общий с лентой (`numberedPage`): `?page=1`, мусор и `page < 1` снимаются; страница дальше последней — на последнюю. Пустой список — одна фраза, без скелета (**055**). Деталь: `slug` плюс `publicContentWhere`, `depth: 1`, без `draftMode`. Чужой slug, черновик и будущая дата — локализованный 404. Обложка — `img` с `alt` (локальный файл и R2); `next/image` — **105**. Рубрики и теги — названия без ссылок (**053**). `<title>` — `seo.metaTitle` или `title`; `description` — только если задан `seo.metaDescription`. Тело — `PayloadRichText`. Preview админки остаётся `/dev/rich-text/article/[slug]`. TOC — **063**, related — **065**, reading time — **062**, подсветка кода — **064**, `og:image` — **069**. Unit: `tests/unit/articlesQuery.test.ts`. E2E: `tests/e2e/articles.e2e.spec.ts` (список, `?page=0`, неизвестный slug). Живую статью без сида браузер не проверяет: контракт запроса — unit, poke — админка.
 
 ### 052 — Notes list + detail
 
