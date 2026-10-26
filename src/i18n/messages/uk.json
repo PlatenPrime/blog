@@ -131,5 +131,8 @@
     "previous": "Новіші",
     "next": "Давніші",
     "pageStatus": "Сторінка {page} з {pages}"
+  },
+  "about": {
+    "contact": "Написати мені"
   }
 }

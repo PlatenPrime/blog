@@ -308,12 +308,15 @@ Unit: `npm test` → `tests/unit/notesQuery.test.ts`. Draft Preview (кнопк�
 Проверка:
 
 1. Войдите в `/admin` как admin.
-2. **Pages** → Create: `title` = About (или любой), `slug` = `about` (или оставьте пустым для auto), наберите `body` → **Save Draft**. Ожидание: draft, slug заполнен.
+2. **Pages** → Create: `title` любой, `slug` = `about` в каждой локали (пустая локаль падает на `uk`), наберите `body` → **Save Draft**. Ожидание: draft. Автослаг из переведённого заголовка адрес `/about` не откроет.
 3. **Publish** ту же страницу; при желании — `publishedAt`, SEO.
 4. `GET /api/pages` — published pages видны; draft page не видна anonymous.
 5. Write — только admin.
+6. `http://localhost:3000/uk/about` — заголовок и тело из Payload. Черновик, будущая `publishedAt` и отсутствие slug `about` — локализованная страница «не найдено».
+7. Необязательно: `CONTACT_EMAIL=you@example.com` в `.env`, перезапуск `npm run dev`. Под текстом ссылка «Написати мені» с `mailto:`. Пустая переменная — ссылки нет. Формы нет.
+8. Preview черновика остаётся на `/uk/dev/rich-text/page/{slug}`, не на продуктовом адресе.
 
-Публичный рендер page by slug — шаг **054**. Unit access/slugify — **024** (done).
+Privacy и Terms — шаги **079–080**. Unit: `npm test` → `tests/unit/pagesQuery.test.ts`. Unit access/slugify — **024** (done).
 
 ## 13. Comments
 

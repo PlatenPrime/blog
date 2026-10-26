@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked`.
 
-**Baseline Status:** следующий шаг — `054` (About + Contact-ish page). Шаги `001`–`053` и `083` (test policy) — `done`.
+**Baseline Status:** следующий шаг — `055` (Empty / error / loading states). Шаги `001`–`054` и `083` (test policy) — `done`.
 
 **Правила ведения**
 
@@ -540,11 +540,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 054 — About + Contact-ish page
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Страница автора из CMS Pages.
 - **Deliverables:** Render Page by slug; optional simple contact mailto (без newsletter).
 - **Verify:** Контент из Payload отображается.
 - **DoD:** About не захардкожен навсегда без CMS.
+- **Notes:** `/uk|ru|en/about`. Документ коллекции `pages` со slug `about`: `pageDetailFindArgs` / `findPublicPage` (`publicContentWhere`, `draft: false`, `overrideAccess: false`, `fallbackLocale: 'uk'`, `depth: 1`, без `user` и без `req`). `where` по слагу не видит запасную локаль: если в `en`/`ru` слаг пуст, страница читается по id украинского документа, и пустые поля падают на `uk`. Свой другой слаг в локали этот путь не открывает. Чужой документ, черновик, будущая дата и пустые title/body — локализованный 404. `<title>` — `seo.metaTitle` или `title`; `description` — только если задан `seo.metaDescription`. Колонка чтения как у статьи, без даты, обложки и таксономии. Путь фиксированный: слаг в каждой локали должен быть буквально `about` (пустая локаль падает на `uk`); ремапа нет. `CONTACT_EMAIL` — одна ссылка `mailto` под текстом, если адрес обычный; пусто, перевод строки, `?` и не-адрес ссылку не рисуют. Формы и newsletter нет. Privacy/Terms — **079–080**, тот же find, свои маршруты. Preview остаётся `/dev/rich-text/page/[slug]`. Unit: `tests/unit/pagesQuery.test.ts`. E2E: `tests/e2e/about.e2e.spec.ts` (клик из шапки на `/about`, шапка и `aria-current`). Живое тело без сида браузер не проверяет: poke — админка. Пустые состояния и отдельная 404 — **055**. Скриншоты — **056**.
 
 ### 055 — Empty / error / loading states
 
