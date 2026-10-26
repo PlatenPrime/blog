@@ -4,6 +4,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
 import { FeedList } from '@/components/feed/feed-list'
+import { EmptyState } from '@/components/states/empty-state'
 import {
   findPublicTaxonomyFeed,
   findPublicTaxonomyIndex,
@@ -91,7 +92,7 @@ export async function TaxonomyIndexPage({
           </Link>
         </p>
         {terms.length === 0 ? (
-          <p className="mt-14 mb-0 text-body text-muted-foreground">{t('empty')}</p>
+          <EmptyState>{t('empty')}</EmptyState>
         ) : (
           <TaxonomyIndexList collection={collection} terms={terms} />
         )}
@@ -145,7 +146,7 @@ export async function TaxonomyTermPage({
       <div className={columnClassName}>
         <h1 className="m-0 font-serif text-h1 text-foreground">{result.title}</h1>
         {result.items.length === 0 ? (
-          <p className="mt-14 mb-0 text-body text-muted-foreground">{t('empty')}</p>
+          <EmptyState>{t('empty')}</EmptyState>
         ) : (
           <FeedList
             items={result.items}

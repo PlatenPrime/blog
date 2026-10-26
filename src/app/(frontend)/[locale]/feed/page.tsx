@@ -4,6 +4,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
 import { FeedList } from '@/components/feed/feed-list'
+import { EmptyState } from '@/components/states/empty-state'
 import { findPublicFeed } from '@/content/feed'
 import { feedPageHref, readFeedPageParam } from '@/content/feedQuery'
 import { redirect } from '@/i18n/navigation'
@@ -49,7 +50,7 @@ export default async function FeedPage({ params, searchParams }: FeedPageProps) 
       <div className="mx-auto w-full max-w-measure px-5 pt-16 pb-24 sm:px-6 sm:pt-24">
         <h1 className="m-0 font-serif text-h1 text-foreground">{t('title')}</h1>
         {result.items.length === 0 ? (
-          <p className="mt-14 mb-0 text-body text-muted-foreground">{t('empty')}</p>
+          <EmptyState>{t('empty')}</EmptyState>
         ) : (
           <FeedList
             items={result.items}

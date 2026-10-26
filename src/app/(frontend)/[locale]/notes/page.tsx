@@ -4,6 +4,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
 import { NoteList } from '@/components/notes/note-list'
+import { EmptyState } from '@/components/states/empty-state'
 import { findPublicNotes } from '@/content/notes'
 import { notesPageHref, readNotesPageParam } from '@/content/notesQuery'
 import { redirect } from '@/i18n/navigation'
@@ -49,7 +50,7 @@ export default async function NotesPage({ params, searchParams }: NotesPageProps
       <div className="mx-auto w-full max-w-measure px-5 pt-16 pb-24 sm:px-6 sm:pt-24">
         <h1 className="m-0 font-sans text-h2 text-foreground">{t('title')}</h1>
         {result.items.length === 0 ? (
-          <p className="mt-14 mb-0 text-body text-muted-foreground">{t('empty')}</p>
+          <EmptyState>{t('empty')}</EmptyState>
         ) : (
           <NoteList
             items={result.items}

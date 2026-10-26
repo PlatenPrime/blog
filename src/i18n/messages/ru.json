@@ -63,7 +63,11 @@
   },
   "errors": {
     "notFoundTitle": "Страница не найдена",
+    "notFoundBody": "Этого адреса на сайте нет.",
     "notFoundHome": "На главную",
+    "serverTitle": "Что-то пошло не так",
+    "serverBody": "Страница не открылась.",
+    "tryAgain": "Попробовать ещё раз",
     "emailAndPasswordRequired": "Нужны электронная почта и пароль.",
     "passwordTooShort": "Пароль должен содержать не меньше 8 символов.",
     "tooManyRegistrations": "Слишком много попыток регистрации. Попробуйте чуть позже.",
@@ -80,6 +84,9 @@
     "missingVerificationToken": "Нет токена подтверждения.",
     "verificationFailed": "Не удалось подтвердить почту. Ссылка могла устареть.",
     "oauthFailed": "Не удалось войти через Google: {code}"
+  },
+  "states": {
+    "loading": "Загрузка"
   },
   "cookies": {
     "title": "Файлы cookie",

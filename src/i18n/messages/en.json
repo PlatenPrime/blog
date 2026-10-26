@@ -63,7 +63,11 @@
   },
   "errors": {
     "notFoundTitle": "Page not found",
+    "notFoundBody": "This address is not on the site.",
     "notFoundHome": "Back home",
+    "serverTitle": "Something went wrong",
+    "serverBody": "This page did not open.",
+    "tryAgain": "Try again",
     "emailAndPasswordRequired": "Email and password are required.",
     "passwordTooShort": "Password must be at least 8 characters.",
     "tooManyRegistrations": "Too many registration attempts. Try again shortly.",
@@ -80,6 +84,9 @@
     "missingVerificationToken": "Missing verification token.",
     "verificationFailed": "Verification failed. The link may have expired.",
     "oauthFailed": "Google sign-in failed: {code}"
+  },
+  "states": {
+    "loading": "Loading"
   },
   "cookies": {
     "title": "Cookies",

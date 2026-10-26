@@ -63,7 +63,11 @@
   },
   "errors": {
     "notFoundTitle": "Сторінку не знайдено",
+    "notFoundBody": "Цієї адреси на сайті немає.",
     "notFoundHome": "На головну",
+    "serverTitle": "Щось пішло не так",
+    "serverBody": "Сторінка не відкрилася.",
+    "tryAgain": "Спробувати ще раз",
     "emailAndPasswordRequired": "Потрібні електронна пошта і пароль.",
     "passwordTooShort": "Пароль має містити щонайменше 8 символів.",
     "tooManyRegistrations": "Забагато спроб реєстрації. Спробуйте трохи згодом.",
@@ -80,6 +84,9 @@
     "missingVerificationToken": "Немає токена підтвердження.",
     "verificationFailed": "Не вдалося підтвердити пошту. Посилання могло втратити чинність.",
     "oauthFailed": "Не вдалося увійти через Google: {code}"
+  },
+  "states": {
+    "loading": "Завантаження"
   },
   "cookies": {
     "title": "Файли cookie",

@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked`.
 
-**Baseline Status:** следующий шаг — `055` (Empty / error / loading states). Шаги `001`–`054` и `083` (test policy) — `done`.
+**Baseline Status:** следующий шаг — `056` (Public site Playwright visual/interaction suite). Шаги `001`–`055` и `083` (test policy) — `done`.
 
 **Правила ведения**
 
@@ -549,11 +549,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 055 — Empty / error / loading states
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Взрослый UX краевых случаев.
 - **Deliverables:** 404, 500, empty feed, loading skeletons.
 - **Verify:** Playwright 404 page.
 - **DoD:** Нет «белого экрана» на типовых ошибках.
+- **Notes:** Локализованный `not-found` в колонке ленты (`StateColumn`): заголовок, `errors.notFoundBody`, ссылка домой. Шапка остаётся: `[...rest]` по-прежнему вызывает `notFound()` внутри locale layout. `error.tsx` того же сегмента ловит сбой страницы и не пишет `error.message`; `digest` — мелкая строка. `reset` и ссылка домой — текстовые, как chrome. `src/app/global-error.tsx` — последний рубеж без каталога и без CSS приложения (uk + en, ссылка на `/uk`): каталог мог быть причиной падения layout. Потыкать 500: `/uk|ru|en/dev/error` в `next dev`; в production этот адрес — 404. Playwright его не открывает: поверх boundary в dev ещё оверлей Next. Пустой ответ — `EmptyState` (`role="status"`) и прежние ключи `*.empty` на главной, ленте, статьях, заметках, индексе и полке таксономии. Скелет — только пока сегмент не ответил: `ListRouteLoading` у ленты, списков и полок (полка термина — та же лента, не колонка чтения), `ReadingRouteLoading` у статьи, заметки и `/about`. `[locale]/loading` нет: он накрыл бы вход и всех детей. Главная рисует hero сразу, списки ждут в `<Suspense>` (`EmbeddedListSkeleton`). Ключ `states.loading` — sr-only; полоски `aria-hidden`, `motion-reduce:animate-none`. E2E: `tests/e2e/not-found.e2e.spec.ts` (статус 404, uk/ru/en, шапка). Скриншоты — **056**. Сбор ошибок — позже.
 
 ### 056 — Public site Playwright visual/interaction suite
 
