@@ -222,7 +222,7 @@ Relation к Articles/Notes — шаги **018** / **019** (оба done). Unit-т
    `http://localhost:3000/uk/dev/rich-text/article/{slug}`  
    для **published** статьи — ожидайте картинку и iframe `youtube-nocookie`. Draft без preview mode → 404.
 
-Unit sanitize: `npm test` → `tests/unit/youtube.test.ts`. Продуктовые article routes — **051**.
+Unit sanitize: `npm test` → `tests/unit/youtube.test.ts`. Продуктовые маршруты — ниже, шаг **051**.
 
 ### Draft Preview (шаг 035)
 
@@ -244,12 +244,22 @@ Unit allowlist: `npm test` → `tests/unit/previewPaths.test.ts`.
 Отложенная видимость без cron (ADR-003): Publish + будущий `publishedAt` → скрыто для anonymous до наступления времени.
 
 1. Article → Publish, в sidebar `publishedAt` поставьте **завтра** (или +1 час) → Save.
-2. Incognito / без admin: `http://localhost:3000/uk/dev/rich-text/article/{slug}` → **404**; `GET /api/articles` не возвращает этот doc.
+2. Incognito / без admin: `http://localhost:3000/uk/dev/rich-text/article/{slug}` и `http://localhost:3000/uk/articles/{slug}` → **404**; `GET /api/articles` не возвращает этот doc.
 3. В admin тот же документ виден; Preview (035) тоже показывает.
 4. Смените `publishedAt` на прошлое (или очистите и Publish снова — hook проставит `now`) → публичный URL / API отдают документ.
 5. Publish без `publishedAt`: после сохранения поле заполнено текущим временем.
 
 Unit: `npm test` → visibility / `publishedOrAdmin` / `applyPublishedAtOnPublish`.
+
+### Публичный список и страница (шаг 051)
+
+1. `http://localhost:3000/uk/articles` (и `/ru/articles`, `/en/articles`) — список опубликованных статей. Пусто — одна фраза, без карточек. Черновик и будущий `publishedAt` в список не попадают.
+2. `http://localhost:3000/uk/articles/{slug}` — заголовок, дата, обложка если она есть, названия рубрик и тегов без ссылок, тело Lexical. Вкладка берёт `seo.metaTitle`, иначе `title`.
+3. Неизвестный slug, draft и будущая дата в инкогнито → локализованный 404. Адрес заметки этот маршрут не открывает.
+4. `http://localhost:3000/uk/articles?page=0` → редирект на `/uk/articles`.
+5. Preview черновика остаётся на `/uk/dev/rich-text/article/{slug}`, не на продуктовом адресе.
+
+Unit: `npm test` → `tests/unit/articlesQuery.test.ts`.
 
 ## 11. Notes
 
@@ -272,7 +282,15 @@ Unit: `npm test` → visibility / `publishedOrAdmin` / `applyPublishedAtOnPublis
 4. Сравните API: `GET /api/notes` и `GET /api/articles` — разные коллекции; draft note не виден anonymous.
 5. Write — только admin.
 
-Публичные роуты notes — шаг **052**. Draft Preview (кнопка в admin) — § выше (шаг **035**). Unit access/slugify — **024** (done).
+### Публичный список и страница (шаг 052)
+
+1. `http://localhost:3000/uk/notes` (и `/ru/notes`, `/en/notes`) — список опубликованных заметок. Пусто — одна фраза, без карточек. Черновик и будущий `publishedAt` в список не попадают. Заголовок и строки — гротеск, мельче, чем у статей.
+2. `http://localhost:3000/uk/notes/{slug}` — кикер «Нотатка», заголовок, дата, названия рубрик и тегов без ссылок, тело Lexical. Обложки нет. Вкладка берёт `seo.metaTitle`, иначе `title`.
+3. Неизвестный slug, draft, будущая дата и slug статьи в инкогнито → локализованный 404. Адрес статьи этот маршрут не открывает.
+4. `http://localhost:3000/uk/notes?page=0` → редирект на `/uk/notes`.
+5. Preview черновика остаётся на `/uk/dev/rich-text/note/{slug}`, не на продуктовом адресе.
+
+Unit: `npm test` → `tests/unit/notesQuery.test.ts`. Draft Preview (кнопка в admin) — § выше (шаг **035**). Unit access/slugify — **024** (done).
 
 ## 12. Pages
 
@@ -290,12 +308,15 @@ Unit: `npm test` → visibility / `publishedOrAdmin` / `applyPublishedAtOnPublis
 Проверка:
 
 1. Войдите в `/admin` как admin.
-2. **Pages** → Create: `title` = About (или любой), `slug` = `about` (или оставьте пустым для auto), наберите `body` → **Save Draft**. Ожидание: draft, slug заполнен.
+2. **Pages** → Create: `title` любой, `slug` = `about` в каждой локали (пустая локаль падает на `uk`), наберите `body` → **Save Draft**. Ожидание: draft. Автослаг из переведённого заголовка адрес `/about` не откроет.
 3. **Publish** ту же страницу; при желании — `publishedAt`, SEO.
 4. `GET /api/pages` — published pages видны; draft page не видна anonymous.
 5. Write — только admin.
+6. `http://localhost:3000/uk/about` — заголовок и тело из Payload. Черновик, будущая `publishedAt` и отсутствие slug `about` — локализованная страница «не найдено».
+7. Необязательно: `CONTACT_EMAIL=you@example.com` в `.env`, перезапуск `npm run dev`. Под текстом ссылка «Написати мені» с `mailto:`. Пустая переменная — ссылки нет. Формы нет.
+8. Preview черновика остаётся на `/uk/dev/rich-text/page/{slug}`, не на продуктовом адресе.
 
-Публичный рендер page by slug — шаг **054**. Unit access/slugify — **024** (done).
+Privacy и Terms — шаги **079–080**. Unit: `npm test` → `tests/unit/pagesQuery.test.ts`. Unit access/slugify — **024** (done).
 
 ## 13. Comments
 

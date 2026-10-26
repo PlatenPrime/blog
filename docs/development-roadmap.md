@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked`.
 
-**Baseline Status:** следующий шаг — `050` (Лента). Шаги `001`–`049` и `083` (test policy) — `done`.
+**Baseline Status:** следующий шаг — `057` (Comments UI). Шаги `001`–`056` и `083` (test policy) — `done`.
 
 **Правила ведения**
 
@@ -504,59 +504,66 @@ v1 считается завершённым, когда одновременн�
 
 ### 050 — Лента (mixed feed)
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Общая лента notes + articles.
 - **Deliverables:** Pagination, type badges, dates.
 - **Verify:** Published items видны; drafts нет.
 - **DoD:** Лента — основной browsing mode.
+- **Notes:** `/uk|ru|en/feed`. Окно: `count` обеих коллекций, затем `find` с `limit = page * 10` через `latestPublicFindArgs` (`publicContentWhere`, `draft: false`, `overrideAccess: false`, без `user` и без `req`). Склейка в памяти: дата по убыванию, пустая дата раньше любой (как `NULLS FIRST` у `DESC`), при равенстве slug и коллекция. `?page=1`, мусор и `page < 1` снимаются редиректом на `/feed`; страница дальше последней — на последнюю. Бейдж `outline`, дата как на главной. Пустая лента — одна фраза, без скелета (**055**). Ссылки `/articles/[slug]` и `/notes/[slug]` до **051–052** — локализованный 404. Главная остаётся витриной и, если тексты есть, ссылается на ленту. Unit: `tests/unit/feedQuery.test.ts`. E2E: `tests/e2e/feed.e2e.spec.ts` (маршрут и `?page=0`). Черновик в браузере без сида не проверяется: контракт запроса — unit, живой poke — админка. Скриншоты — **056**.
 
 ### 051 — Articles list + detail
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Полноценные статьи.
 - **Deliverables:** List/filter; detail с Lexical render, hero, meta.
 - **Verify:** Slug route; 404 на unknown.
 - **DoD:** Article reading UX готов (TOC/related — Track 7 добьют).
+- **Notes:** `/uk|ru|en/articles` и `/articles/[slug]`. Список — только статьи: `count`, затем `find` с `page` и `limit: 10` (`articlesCountArgs` / `articlesListFindArgs`: `publicContentWhere`, `draft: false`, `overrideAccess: false`, `fallbackLocale: 'uk'`, без `user` и без `req`). `sort: '-publishedAt'` совпадает с `DESC NULLS FIRST` у ленты. Контракт `?page=` общий с лентой (`numberedPage`): `?page=1`, мусор и `page < 1` снимаются; страница дальше последней — на последнюю. Пустой список — одна фраза, без скелета (**055**). Деталь: `slug` плюс `publicContentWhere`, `depth: 1`, без `draftMode`. Чужой slug, черновик и будущая дата — локализованный 404. Обложка — `img` с `alt` (локальный файл и R2); `next/image` — **105**. Рубрики и теги — названия без ссылок (**053**). `<title>` — `seo.metaTitle` или `title`; `description` — только если задан `seo.metaDescription`. Тело — `PayloadRichText`. Preview админки остаётся `/dev/rich-text/article/[slug]`. TOC — **063**, related — **065**, reading time — **062**, подсветка кода — **064**, `og:image` — **069**. Unit: `tests/unit/articlesQuery.test.ts`. E2E: `tests/e2e/articles.e2e.spec.ts` (список, `?page=0`, неизвестный slug). Живую статью без сида браузер не проверяет: контракт запроса — unit, poke — админка.
 
 ### 052 — Notes list + detail
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Короткие мысли отдельным разделом.
 - **Deliverables:** `/notes` list + detail; визуально легче articles.
 - **Verify:** Note не смешивается с article URL namespace.
 - **DoD:** Два формата различимы в IA.
+- **Notes:** `/uk|ru|en/notes` и `/notes/[slug]`. Список — только заметки: `count`, затем `find` с `page` и `limit: 10` (`notesCountArgs` / `notesListFindArgs`: `publicContentWhere`, `draft: false`, `overrideAccess: false`, `fallbackLocale: 'uk'`, без `user` и без `req`). `sort: '-publishedAt'` совпадает с `DESC NULLS FIRST` у ленты и статей. Контракт `?page=` общий (`numberedPage`): `?page=1`, мусор и `page < 1` снимаются; страница дальше последней — на последнюю. Пустой список — одна фраза, без скелета (**055**). Деталь: `slug` плюс `publicContentWhere`, `depth: 1`, без `draftMode` и без `heroImage`. Чужой slug, черновик, будущая дата и slug статьи — локализованный 404. Рубрики и теги — названия без ссылок (**053**). `<title>` — `seo.metaTitle` или `title`; `description` — только если задан `seo.metaDescription`. Тело — `PayloadRichText`. Визуально легче статьи: sans, `text-h2`, кикер формата, без обложки. Preview админки остаётся `/dev/rich-text/note/[slug]`. TOC — **063**, related — **065**, reading time — **062**, подсветка кода — **064**, `og:image` — **069**. Unit: `tests/unit/notesQuery.test.ts`. E2E: `tests/e2e/notes.e2e.spec.ts` (список, `?page=0`, неизвестный slug; заголовок не статьи). Живую заметку без сида браузер не проверяет: контракт запроса — unit, poke — админка.
 
 ### 053 — Categories / tags browsing
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Навигация по структуре.
 - **Deliverables:** Category pages; tag pages; filters.
 - **Verify:** Фильтр сужает ленту корректно.
 - **DoD:** Таксономия публично usable.
+- **Notes:** `/uk|ru|en/categories` и `/tags`, плюс `/categories/[slug]` и `/tags/[slug]`. Индекс: `find` с `sort: 'title'`, `limit: 100` (`TAXONOMY_INDEX_LIMIT`), `fallbackLocale: 'uk'`, `overrideAccess: false`, без `user` и без `req`. Пагинации индекса нет. Со страницы рубрик есть ссылка на индекс тегов и обратно; пункт «Теги» в шапку не добавлялся (канон путей **048**). Страница термина — смешанная лента: `count` обеих коллекций, затем `find` с `limit = page * 10`, склейка `mergePublicFeed`. `where` — `and` из `publicContentWhere` и `{ categories|tags: { in: [id] } }`. `draft: false`, `overrideAccess: false`, `fallbackLocale: 'uk'`, без `user` и без `req`. Чужой slug — локализованный 404. Термин без опубликованных текстов — заголовок и пустая фраза, без скелета (**055**). `?page=` общий (`numberedPage`): `?page=1`, мусор и `page < 1` снимаются; страница дальше последней — на последнюю. Href пагинации несёт slug термина. На статье и заметке рубрика и тег — ссылки (`taxonomyLinks`: нужны title и slug, голый id отбрасывается). Ремап slug между локалями не делали. Related — **065**. Сид — **087**. Скриншоты — **056**. Unit: `tests/unit/taxonomyQuery.test.ts` плюс ожидания ссылок в articles/notes. E2E: `tests/e2e/taxonomy.e2e.spec.ts` (индексы вместо 404, переход на теги, неизвестный slug). Живое сужение без сида браузер не проверяет: контракт `where` — unit, poke — админка.
 
 ### 054 — About + Contact-ish page
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Страница автора из CMS Pages.
 - **Deliverables:** Render Page by slug; optional simple contact mailto (без newsletter).
 - **Verify:** Контент из Payload отображается.
 - **DoD:** About не захардкожен навсегда без CMS.
+- **Notes:** `/uk|ru|en/about`. Документ коллекции `pages` со slug `about`: `pageDetailFindArgs` / `findPublicPage` (`publicContentWhere`, `draft: false`, `overrideAccess: false`, `fallbackLocale: 'uk'`, `depth: 1`, без `user` и без `req`). `where` по слагу не видит запасную локаль: если в `en`/`ru` слаг пуст, страница читается по id украинского документа, и пустые поля падают на `uk`. Свой другой слаг в локали этот путь не открывает. Чужой документ, черновик, будущая дата и пустые title/body — локализованный 404. `<title>` — `seo.metaTitle` или `title`; `description` — только если задан `seo.metaDescription`. Колонка чтения как у статьи, без даты, обложки и таксономии. Путь фиксированный: слаг в каждой локали должен быть буквально `about` (пустая локаль падает на `uk`); ремапа нет. `CONTACT_EMAIL` — одна ссылка `mailto` под текстом, если адрес обычный; пусто, перевод строки, `?` и не-адрес ссылку не рисуют. Формы и newsletter нет. Privacy/Terms — **079–080**, тот же find, свои маршруты. Preview остаётся `/dev/rich-text/page/[slug]`. Unit: `tests/unit/pagesQuery.test.ts`. E2E: `tests/e2e/about.e2e.spec.ts` (клик из шапки на `/about`, шапка и `aria-current`). Живое тело без сида браузер не проверяет: poke — админка. Пустые состояния и отдельная 404 — **055**. Скриншоты — **056**.
 
 ### 055 — Empty / error / loading states
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Взрослый UX краевых случаев.
 - **Deliverables:** 404, 500, empty feed, loading skeletons.
 - **Verify:** Playwright 404 page.
 - **DoD:** Нет «белого экрана» на типовых ошибках.
+- **Notes:** Локализованный `not-found` в колонке ленты (`StateColumn`): заголовок, `errors.notFoundBody`, ссылка домой. Шапка остаётся: `[...rest]` по-прежнему вызывает `notFound()` внутри locale layout. `error.tsx` того же сегмента ловит сбой страницы и не пишет `error.message`; `digest` — мелкая строка. `reset` и ссылка домой — текстовые, как chrome. `src/app/global-error.tsx` — последний рубеж без каталога и без CSS приложения (uk + en, ссылка на `/uk`): каталог мог быть причиной падения layout. Потыкать 500: `/uk|ru|en/dev/error` в `next dev`; в production этот адрес — 404. Playwright его не открывает: поверх boundary в dev ещё оверлей Next. Пустой ответ — `EmptyState` (`role="status"`) и прежние ключи `*.empty` на главной, ленте, статьях, заметках, индексе и полке таксономии. Скелет — только пока сегмент не ответил: `ListRouteLoading` у ленты, списков и полок (полка термина — та же лента, не колонка чтения), `ReadingRouteLoading` у статьи, заметки и `/about`. `[locale]/loading` нет: он накрыл бы вход и всех детей. Главная рисует hero сразу, списки ждут в `<Suspense>` (`EmbeddedListSkeleton`). Ключ `states.loading` — sr-only; полоски `aria-hidden`, `motion-reduce:animate-none`. E2E: `tests/e2e/not-found.e2e.spec.ts` (статус 404, uk/ru/en, шапка). Скриншоты — **056**. Сбор ошибок — позже.
 
 ### 056 — Public site Playwright visual/interaction suite
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Регрессия разметки и кликов.
 - **Deliverables:** E2E nav, theme toggle, open article/note.
 - **Verify:** Suite green.
 - **DoD:** Дизайн-критичные flows под контролем.
+- **Notes:** `tests/e2e/public-content.setup.ts` перед сьютом перезаписывает только три своих слага (`public-fixtures.ts`): опубликованные `e2e-public-article` и `e2e-public-note` (`publishedAt` `2020-01-15T12:00:00.000Z`), черновик `e2e-draft-article`. `draft: false` на update пишет основную строку; `draft: true` оставил бы опубликованную копию. Чужие документы не трогаем. `tests/e2e/public-site.e2e.spec.ts`: с `/uk` клики шапки (стрічка, статті, нотатки, рубрики, про автора). У автора — URL и шапка; `h1` либо CMS, либо `errors.notFoundTitle`, не заголовок другой комнаты. Со списка — клик по заголовку фикстуры (лист «давніші», если строка не на первой странице) на статью и заметку; у заметки кикер, заголовка статьи нет. Черновик по адресу статьи — локализованный 404. Скриншоты: `banner` light/dark, `main` `/dev/design` light/dark, колонка `article` статьи и заметки (light, `time` под маской), `main` 404. На снимках `main` скрыт `nextjs-portal`: бейдж `next dev` не часть страницы. Списки, полки и `/about` в пиксели не снимаются. Toggle `localStorage` остаётся в `theme.e2e`; hero — в `home.e2e`. Setup-проект матчит `*.setup.ts`. axe — **085**, e2e в CI — **086**, фабрики — **087**.
 
 ---
 

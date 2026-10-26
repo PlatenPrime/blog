@@ -63,7 +63,11 @@
   },
   "errors": {
     "notFoundTitle": "Сторінку не знайдено",
+    "notFoundBody": "Цієї адреси на сайті немає.",
     "notFoundHome": "На головну",
+    "serverTitle": "Щось пішло не так",
+    "serverBody": "Сторінка не відкрилася.",
+    "tryAgain": "Спробувати ще раз",
     "emailAndPasswordRequired": "Потрібні електронна пошта і пароль.",
     "passwordTooShort": "Пароль має містити щонайменше 8 символів.",
     "tooManyRegistrations": "Забагато спроб реєстрації. Спробуйте трохи згодом.",
@@ -81,6 +85,9 @@
     "verificationFailed": "Не вдалося підтвердити пошту. Посилання могло втратити чинність.",
     "oauthFailed": "Не вдалося увійти через Google: {code}"
   },
+  "states": {
+    "loading": "Завантаження"
+  },
   "cookies": {
     "title": "Файли cookie",
     "body": "Сайт використовує cookie для входу та, за вашою згодою, для аналітики.",
@@ -89,5 +96,50 @@
   },
   "home": {
     "empty": "Поки що тут тихо."
+  },
+  "feed": {
+    "title": "Стрічка",
+    "article": "Стаття",
+    "note": "Нотатка",
+    "empty": "Поки що тут тихо.",
+    "pagination": "Сторінки стрічки",
+    "previous": "Новіші",
+    "next": "Давніші",
+    "pageStatus": "Сторінка {page} з {pages}"
+  },
+  "articles": {
+    "title": "Статті",
+    "empty": "Поки що тут тихо.",
+    "pagination": "Сторінки статей",
+    "previous": "Новіші",
+    "next": "Давніші",
+    "pageStatus": "Сторінка {page} з {pages}",
+    "categories": "Рубрики",
+    "tags": "Теги"
+  },
+  "notes": {
+    "title": "Нотатки",
+    "kicker": "Нотатка",
+    "empty": "Поки що тут тихо.",
+    "pagination": "Сторінки нотаток",
+    "previous": "Новіші",
+    "next": "Давніші",
+    "pageStatus": "Сторінка {page} з {pages}",
+    "categories": "Рубрики",
+    "tags": "Теги"
+  },
+  "taxonomy": {
+    "categoriesTitle": "Рубрики",
+    "tagsTitle": "Теги",
+    "empty": "Поки що тут тихо.",
+    "article": "Стаття",
+    "note": "Нотатка",
+    "pagination": "Сторінки",
+    "previous": "Новіші",
+    "next": "Давніші",
+    "pageStatus": "Сторінка {page} з {pages}"
+  },
+  "about": {
+    "contact": "Написати мені"
   }
 }

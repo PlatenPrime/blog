@@ -63,7 +63,11 @@
   },
   "errors": {
     "notFoundTitle": "Страница не найдена",
+    "notFoundBody": "Этого адреса на сайте нет.",
     "notFoundHome": "На главную",
+    "serverTitle": "Что-то пошло не так",
+    "serverBody": "Страница не открылась.",
+    "tryAgain": "Попробовать ещё раз",
     "emailAndPasswordRequired": "Нужны электронная почта и пароль.",
     "passwordTooShort": "Пароль должен содержать не меньше 8 символов.",
     "tooManyRegistrations": "Слишком много попыток регистрации. Попробуйте чуть позже.",
@@ -81,6 +85,9 @@
     "verificationFailed": "Не удалось подтвердить почту. Ссылка могла устареть.",
     "oauthFailed": "Не удалось войти через Google: {code}"
   },
+  "states": {
+    "loading": "Загрузка"
+  },
   "cookies": {
     "title": "Файлы cookie",
     "body": "Сайт использует cookie для входа и, с вашего согласия, для аналитики.",
@@ -89,5 +96,50 @@
   },
   "home": {
     "empty": "Пока здесь тихо."
+  },
+  "feed": {
+    "title": "Лента",
+    "article": "Статья",
+    "note": "Заметка",
+    "empty": "Пока здесь тихо.",
+    "pagination": "Страницы ленты",
+    "previous": "Новее",
+    "next": "Раньше",
+    "pageStatus": "Страница {page} из {pages}"
+  },
+  "articles": {
+    "title": "Статьи",
+    "empty": "Пока здесь тихо.",
+    "pagination": "Страницы статей",
+    "previous": "Новее",
+    "next": "Раньше",
+    "pageStatus": "Страница {page} из {pages}",
+    "categories": "Рубрики",
+    "tags": "Теги"
+  },
+  "notes": {
+    "title": "Заметки",
+    "kicker": "Заметка",
+    "empty": "Пока здесь тихо.",
+    "pagination": "Страницы заметок",
+    "previous": "Новее",
+    "next": "Раньше",
+    "pageStatus": "Страница {page} из {pages}",
+    "categories": "Рубрики",
+    "tags": "Теги"
+  },
+  "taxonomy": {
+    "categoriesTitle": "Рубрики",
+    "tagsTitle": "Теги",
+    "empty": "Пока здесь тихо.",
+    "article": "Статья",
+    "note": "Заметка",
+    "pagination": "Страницы",
+    "previous": "Новее",
+    "next": "Раньше",
+    "pageStatus": "Страница {page} из {pages}"
+  },
+  "about": {
+    "contact": "Написать мне"
   }
 }

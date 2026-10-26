@@ -1,3 +1,4 @@
+import { formatPublishedOn } from '@/content/formatPublishedOn'
 import {
   latestPublicPath,
   type LatestPublicCollection,
@@ -10,17 +11,6 @@ type HomeLatestProps = {
   heading: string
   items: LatestPublicDoc[]
   locale: string
-}
-
-function formatPublishedOn(iso: string, locale: string): string | null {
-  const date = new Date(iso)
-  if (Number.isNaN(date.getTime())) return null
-
-  return new Intl.DateTimeFormat(locale, {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  }).format(date)
 }
 
 /**

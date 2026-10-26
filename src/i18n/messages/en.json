@@ -63,7 +63,11 @@
   },
   "errors": {
     "notFoundTitle": "Page not found",
+    "notFoundBody": "This address is not on the site.",
     "notFoundHome": "Back home",
+    "serverTitle": "Something went wrong",
+    "serverBody": "This page did not open.",
+    "tryAgain": "Try again",
     "emailAndPasswordRequired": "Email and password are required.",
     "passwordTooShort": "Password must be at least 8 characters.",
     "tooManyRegistrations": "Too many registration attempts. Try again shortly.",
@@ -81,6 +85,9 @@
     "verificationFailed": "Verification failed. The link may have expired.",
     "oauthFailed": "Google sign-in failed: {code}"
   },
+  "states": {
+    "loading": "Loading"
+  },
   "cookies": {
     "title": "Cookies",
     "body": "This site uses cookies for sign-in and, with your consent, for analytics.",
@@ -89,5 +96,50 @@
   },
   "home": {
     "empty": "Nothing here yet."
+  },
+  "feed": {
+    "title": "Feed",
+    "article": "Article",
+    "note": "Note",
+    "empty": "Nothing here yet.",
+    "pagination": "Feed pages",
+    "previous": "Newer",
+    "next": "Older",
+    "pageStatus": "Page {page} of {pages}"
+  },
+  "articles": {
+    "title": "Articles",
+    "empty": "Nothing here yet.",
+    "pagination": "Article pages",
+    "previous": "Newer",
+    "next": "Older",
+    "pageStatus": "Page {page} of {pages}",
+    "categories": "Categories",
+    "tags": "Tags"
+  },
+  "notes": {
+    "title": "Notes",
+    "kicker": "Note",
+    "empty": "Nothing here yet.",
+    "pagination": "Note pages",
+    "previous": "Newer",
+    "next": "Older",
+    "pageStatus": "Page {page} of {pages}",
+    "categories": "Categories",
+    "tags": "Tags"
+  },
+  "taxonomy": {
+    "categoriesTitle": "Categories",
+    "tagsTitle": "Tags",
+    "empty": "Nothing here yet.",
+    "article": "Article",
+    "note": "Note",
+    "pagination": "Pages",
+    "previous": "Newer",
+    "next": "Older",
+    "pageStatus": "Page {page} of {pages}"
+  },
+  "about": {
+    "contact": "Email me"
   }
 }
