@@ -4,6 +4,8 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
 import { ArticleDetail } from '@/components/articles/article-detail'
+import { BookmarkControl } from '@/components/bookmarks/bookmark-control'
+import { CommentSection } from '@/components/comments/comment-section'
 import { findPublicArticle } from '@/content/articles'
 import { routing } from '@/i18n/routing'
 
@@ -43,6 +45,8 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           labels={{ categories: t('categories'), tags: t('tags') }}
           locale={locale}
         />
+        <BookmarkControl contentId={article.id} relationTo="articles" />
+        <CommentSection contentId={article.id} locale={locale} relationTo="articles" />
       </div>
     </div>
   )

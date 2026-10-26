@@ -97,6 +97,8 @@ export type PublicArticle = {
   body: SerializedEditorState
   categories: TaxonomyLink[]
   hero: ArticleHeroImage | null
+  /** Payload id. Comments attach to it; it is not a selected field. */
+  id: number
   metaDescription: string | null
   metaTitle: string | null
   publishedAt: string | null
@@ -118,6 +120,7 @@ export type ArticleDetailSource = {
   body?: unknown
   categories?: readonly TaxonomyRelationLike[] | null
   heroImage?: HeroLike
+  id?: number | null
   publishedAt?: string | null
   seo?: { metaDescription?: string | null; metaTitle?: string | null } | null
   tags?: readonly TaxonomyRelationLike[] | null
@@ -220,6 +223,7 @@ export function toArticleHero(image: HeroLike | undefined): ArticleHeroImage | n
  * A document without a title or a Lexical body is not a page.
  */
 export function toPublicArticle(doc: ArticleDetailSource): PublicArticle | null {
+  if (typeof doc.id !== 'number') return null
   if (typeof doc.title !== 'string' || doc.title.length === 0) return null
   if (!isEditorState(doc.body)) return null
 
@@ -230,6 +234,7 @@ export function toPublicArticle(doc: ArticleDetailSource): PublicArticle | null 
     body: doc.body,
     categories: taxonomyLinks(doc.categories),
     hero: toArticleHero(doc.heroImage),
+    id: doc.id,
     metaDescription: blankToNull(doc.seo?.metaDescription),
     metaTitle: blankToNull(doc.seo?.metaTitle),
     publishedAt,

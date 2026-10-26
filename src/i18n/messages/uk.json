@@ -6,6 +6,7 @@
     "login": "Увійти",
     "register": "Реєстрація",
     "logout": "Вийти",
+    "bookmarks": "Закладки",
     "logoutEverywhere": "Вийти всюди",
     "openAdmin": "Адмінка",
     "signedInAs": "Ви увійшли як",
@@ -83,7 +84,13 @@
     "missingResetToken": "Немає токена скидання. Запросіть нове посилання на сторінці <link>відновлення пароля</link>.",
     "missingVerificationToken": "Немає токена підтвердження.",
     "verificationFailed": "Не вдалося підтвердити пошту. Посилання могло втратити чинність.",
-    "oauthFailed": "Не вдалося увійти через Google: {code}"
+    "oauthFailed": "Не вдалося увійти через Google: {code}",
+    "commentEmpty": "Напишіть коментар.",
+    "commentTooLong": "Коментар довший за 2000 символів.",
+    "commentNotAllowed": "Залишити коментар не вийшло.",
+    "commentFailed": "Не вдалося надіслати коментар.",
+    "bookmarkNotAllowed": "Зберегти не вийшло.",
+    "bookmarkFailed": "Не вдалося змінити закладку."
   },
   "states": {
     "loading": "Завантаження"
@@ -127,6 +134,32 @@
     "pageStatus": "Сторінка {page} з {pages}",
     "categories": "Рубрики",
     "tags": "Теги"
+  },
+  "comments": {
+    "title": "Коментарі",
+    "empty": "Поки що без коментарів.",
+    "body": "Коментар",
+    "submit": "Надіслати",
+    "pending": "Надсилаємо…",
+    "loginPrompt": "Увійдіть, щоб коментувати.",
+    "login": "Увійти",
+    "register": "Реєстрація",
+    "reader": "Читач",
+    "you": "Ви",
+    "verifyFirst": "Підтвердьте пошту, щоб коментувати."
+  },
+  "bookmarks": {
+    "title": "Мої закладки",
+    "article": "Стаття",
+    "note": "Нотатка",
+    "empty": "Поки що немає закладок.",
+    "save": "Зберегти",
+    "saved": "Збережено",
+    "pending": "Зберігаємо…",
+    "loginPrompt": "Увійдіть, щоб зберігати.",
+    "login": "Увійти",
+    "register": "Реєстрація",
+    "verifyFirst": "Підтвердьте пошту, щоб зберігати."
   },
   "taxonomy": {
     "categoriesTitle": "Рубрики",

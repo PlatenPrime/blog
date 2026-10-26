@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked`.
 
-**Baseline Status:** следующий шаг — `057` (Comments UI). Шаги `001`–`056` и `083` (test policy) — `done`.
+**Baseline Status:** следующий шаг — `060` (Reader account page). Шаги `001`–`059` и `083` (test policy) — `done`.
 
 **Правила ведения**
 
@@ -571,27 +571,30 @@ v1 считается завершённым, когда одновременн�
 
 ### 057 — Comments UI
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Комментирование авторизованными.
 - **Deliverables:** List + form на Article/Note; login CTA для anonymous.
 - **Verify:** Anonymous не отправит; reader отправит; видно на странице.
 - **DoD:** Comments product-complete для v1.
+- **Notes:** Блок под колонкой чтения, сосед `<article>`, не внутри: снимки `getByRole('article')` шага 056 не сдвигаются. Список — `commentsFindArgs`: `moderationStatus: approved`, `content.relationTo` + `content.value`, `sort: '-createdAt'`, `limit: 100`, `depth: 0`, `overrideAccess: false`, без `user` и без `req`. На странице окно переворачивается: новые 100 в хронологическом порядке. Пусто — одна фраза, без скелета. Подпись `you` или `reader`; почта автора не читается (`users.read` — self/admin, find без сессии). Гость видит ссылки на вход и регистрацию, формы нет. Неподтверждённая сессия видит фразу про почту, формы нет. Подтверждённый reader и admin — textarea. `createCommentAction`: тело trim, не пустое, максимум 2000; цель перепроверяется `commentTargetFindArgs` (`publicContentWhere`, `draft: false`); `payload.create` с `user` сессии и `overrideAccess: false`. `author` берётся из сессии, hook перезаписывает его; `moderationStatus` с формы не читается (в create уходит литерал `approved`, поле по-прежнему admin-only на чужое значение). Текст ошибки Payload на страницу не попадает. Тело — текст, не HTML. `id` публичной статьи и заметки — цель комментария. `getCurrentUser` в `cache` на запрос. Unit: `tests/unit/commentsQuery.test.ts`. E2E — **061**. Скрыть/одобрить — **058**. Rate limit — **074**. Turnstile — **075**. Страницы не комментируются.
 
 ### 058 — Comment moderation basics
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Admin может скрыть токсичное.
 - **Deliverables:** Hide/approve в admin или flag; публичка уважает статус.
 - **Verify:** Hidden comment не виден readers.
 - **DoD:** Минимальный контроль без сложного workflow.
+- **Notes:** Контроль — селект `moderationStatus` в сайдбаре Comments (`approved` / `hidden`, default `approved`). Отдельной кнопки, жалобы читателя и статуса `pending` нет. `hidden` снимает строку с публичной страницы и с API не-админа, включая автора: `approvedOrAdmin` плюс `commentsFindArgs` (`overrideAccess: false`, без `user` — админ на сайте скрытое не видит). Соседний `approved` на той же статье остаётся. `approved` возвращает строку. Плашки «удалён» нет. Reader статус не выбирает: `update` документа — admin only; create с `hidden` не сохраняет этот статус. Int: `tests/int/comments.int.spec.ts`. Unit контракта `where` — **057**. E2E отправки — **061**. Rate limit — **074**. Turnstile — **075**.
 
 ### 059 — Bookmarks UI
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Сохранение статей/заметок.
 - **Deliverables:** Toggle bookmark; страница «Мои закладки».
 - **Verify:** Toggle idempotent; список только свои.
 - **DoD:** Bookmarks usable end-to-end.
+- **Notes:** Кнопка снаружи `<article>`, между колонкой чтения и комментариями, на `/articles/[slug]` и `/notes/[slug]`: снимок колонки **056** не сдвигается. Подтверждённый reader и admin: одна кнопка, `aria-pressed`. Нет строки — `payload.create` с `user` сессии и `overrideAccess: false` (hook снова ставит `user`). Есть строка — `delete` этой строки. Повторный create, который хук отклонит 409, для страницы уже «сохранено». Delete отсутствующей строки (404) — уже «не сохранено». Текст ошибки Payload на страницу не попадает. `user` из формы не читается. Цель — `readCommentTarget` и `commentTargetFindArgs` (`publicContentWhere`, `draft: false`, без `user`): черновик, будущая дата и pages не становятся целью. Гость видит вход и регистрацию, кнопки нет. Неподтверждённая сессия видит фразу про почту, кнопки нет: action требует `isAuthenticatedAndVerified` и на create, и на delete. Access коллекции не меняли. Страница `/uk|ru|en/bookmarks`. В `siteNavItems` пункта нет. Ссылка только у вошедшего, рядом с «Выйти». Гость на странице видит то же приглашение, не 404. Список: `bookmarksListFindArgs` — `where.user = id сессии`, `sort: '-createdAt'`, `limit: 100`, `depth: 0`, `overrideAccess: false`, `user` сессии. Фильтр по `user` обязателен: у admin `isOwnerOrAdmin` возвращает все документы. Заголовки — `bookmarkTitlesFindArgs` без `user` и без `req`. Нет публичного title/slug — строка пропускается, закладка в базе остаётся. Пусто — одна фраза, без скелета. Окно 100, без пагинации. На строке списка та же кнопка снимает закладку, если почта подтверждена. Unit: `tests/unit/bookmarksQuery.test.ts`. E2E — **061**. Страница аккаунта — **060**.
 
 ### 060 — Reader account page (minimal)
 

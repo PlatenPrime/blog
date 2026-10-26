@@ -106,6 +106,7 @@ describe('toPublicArticle', () => {
       body,
       categories: [{ slug: 'notes', title: 'Notes' }, 4, { title: '' }, { title: 'No slug' }, null],
       heroImage: { alt: 'Cover', height: 600, url: '/api/media/file/cover.webp', width: 1200 },
+      id: 12,
       publishedAt: '2026-06-01T00:00:00.000Z',
       seo: { metaDescription: ' A lead ', metaTitle: ' Essay ' },
       tags: [9, { slug: '', title: 'Payload' }, { slug: 'live', title: 'Live' }],
@@ -116,6 +117,7 @@ describe('toPublicArticle', () => {
       body,
       categories: [{ slug: 'notes', title: 'Notes' }],
       hero: { alt: 'Cover', height: 600, url: '/api/media/file/cover.webp', width: 1200 },
+      id: 12,
       metaDescription: 'A lead',
       metaTitle: 'Essay',
       publishedAt: '2026-06-01T00:00:00.000Z',
@@ -129,6 +131,7 @@ describe('toPublicArticle', () => {
       toPublicArticle({
         body,
         heroImage: 3,
+        id: 8,
         seo: { metaDescription: '   ', metaTitle: '' },
         title: 'Untitled cover',
       }),
@@ -139,6 +142,7 @@ describe('toPublicArticle', () => {
       title: 'Untitled cover',
     })
 
+    expect(toPublicArticle({ body, title: 'Missing id' })).toBeNull()
     expect(toPublicArticle({ body, title: '' })).toBeNull()
     expect(toPublicArticle({ body: null, title: 'No body' })).toBeNull()
     expect(toPublicArticle({ body: 'plain', title: 'Plain' })).toBeNull()

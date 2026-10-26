@@ -89,7 +89,8 @@ export const Comments: CollectionConfig = {
       },
       admin: {
         position: 'sidebar',
-        description: 'Soft moderation (public UI respects this from step 058).',
+        description:
+          'This select is the moderation control. Hidden removes the comment from the public page and from the API for anyone who is not an admin. Approved puts it back. There is no pending queue.',
       },
     },
   ],

@@ -3,6 +3,8 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
+import { BookmarkControl } from '@/components/bookmarks/bookmark-control'
+import { CommentSection } from '@/components/comments/comment-section'
 import { NoteDetail } from '@/components/notes/note-detail'
 import { findPublicNote } from '@/content/notes'
 import { routing } from '@/i18n/routing'
@@ -43,6 +45,8 @@ export default async function NotePage({ params }: NotePageProps) {
           locale={locale}
           note={note}
         />
+        <BookmarkControl contentId={note.id} relationTo="notes" />
+        <CommentSection contentId={note.id} locale={locale} relationTo="notes" />
       </div>
     </div>
   )
