@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked`.
 
-**Baseline Status:** следующий шаг — `059` (Bookmarks UI). Шаги `001`–`058` и `083` (test policy) — `done`.
+**Baseline Status:** следующий шаг — `060` (Reader account page). Шаги `001`–`059` и `083` (test policy) — `done`.
 
 **Правила ведения**
 
@@ -589,11 +589,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 059 — Bookmarks UI
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Сохранение статей/заметок.
 - **Deliverables:** Toggle bookmark; страница «Мои закладки».
 - **Verify:** Toggle idempotent; список только свои.
 - **DoD:** Bookmarks usable end-to-end.
+- **Notes:** Кнопка снаружи `<article>`, между колонкой чтения и комментариями, на `/articles/[slug]` и `/notes/[slug]`: снимок колонки **056** не сдвигается. Подтверждённый reader и admin: одна кнопка, `aria-pressed`. Нет строки — `payload.create` с `user` сессии и `overrideAccess: false` (hook снова ставит `user`). Есть строка — `delete` этой строки. Повторный create, который хук отклонит 409, для страницы уже «сохранено». Delete отсутствующей строки (404) — уже «не сохранено». Текст ошибки Payload на страницу не попадает. `user` из формы не читается. Цель — `readCommentTarget` и `commentTargetFindArgs` (`publicContentWhere`, `draft: false`, без `user`): черновик, будущая дата и pages не становятся целью. Гость видит вход и регистрацию, кнопки нет. Неподтверждённая сессия видит фразу про почту, кнопки нет: action требует `isAuthenticatedAndVerified` и на create, и на delete. Access коллекции не меняли. Страница `/uk|ru|en/bookmarks`. В `siteNavItems` пункта нет. Ссылка только у вошедшего, рядом с «Выйти». Гость на странице видит то же приглашение, не 404. Список: `bookmarksListFindArgs` — `where.user = id сессии`, `sort: '-createdAt'`, `limit: 100`, `depth: 0`, `overrideAccess: false`, `user` сессии. Фильтр по `user` обязателен: у admin `isOwnerOrAdmin` возвращает все документы. Заголовки — `bookmarkTitlesFindArgs` без `user` и без `req`. Нет публичного title/slug — строка пропускается, закладка в базе остаётся. Пусто — одна фраза, без скелета. Окно 100, без пагинации. На строке списка та же кнопка снимает закладку, если почта подтверждена. Unit: `tests/unit/bookmarksQuery.test.ts`. E2E — **061**. Страница аккаунта — **060**.
 
 ### 060 — Reader account page (minimal)
 

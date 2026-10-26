@@ -20,10 +20,15 @@ export async function SiteAuthLinks({ isAdminUser, isAuthenticated }: SiteAuthLi
   return (
     <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
       {isAuthenticated ? (
-        // Route handler, not a page: a client Link fetches an RSC payload and never hits GET.
-        <a className={linkClassName} href={logoutHref}>
-          {t('logout')}
-        </a>
+        <>
+          <Link className={linkClassName} href="/bookmarks">
+            {t('bookmarks')}
+          </Link>
+          {/* Route handler, not a page: a client Link fetches an RSC payload and never hits GET. */}
+          <a className={linkClassName} href={logoutHref}>
+            {t('logout')}
+          </a>
+        </>
       ) : (
         <>
           <Link className={linkClassName} href="/login">
