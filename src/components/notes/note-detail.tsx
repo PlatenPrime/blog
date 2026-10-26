@@ -1,4 +1,5 @@
 import { PayloadRichText } from '@/components/rich-text/PayloadRichText'
+import { TaxonomyLine } from '@/components/taxonomy/taxonomy-line'
 import { formatPublishedOn } from '@/content/formatPublishedOn'
 import type { PublicNote } from '@/content/notesQuery'
 
@@ -30,7 +31,7 @@ const bodyClassName = [
 
 /**
  * Reading column for one note. Lighter than an article: sans, a smaller title,
- * no cover. Category and tag names are text; their routes arrive with taxonomy browsing.
+ * no cover. Category and tag names link to their shelves.
  */
 export function NoteDetail({ labels, locale, note }: NoteDetailProps) {
   const publishedOn = note.publishedAt ? formatPublishedOn(note.publishedAt, locale) : null
@@ -50,22 +51,11 @@ export function NoteDetail({ labels, locale, note }: NoteDetailProps) {
       ) : null}
       {hasTaxonomy ? (
         <div className="mt-4 flex flex-col gap-1">
-          <TaxonomyLine label={labels.categories} titles={note.categories} />
-          <TaxonomyLine label={labels.tags} titles={note.tags} />
+          <TaxonomyLine kind="categories" label={labels.categories} links={note.categories} />
+          <TaxonomyLine kind="tags" label={labels.tags} links={note.tags} />
         </div>
       ) : null}
       <PayloadRichText className={bodyClassName} data={note.body} />
     </article>
-  )
-}
-
-function TaxonomyLine({ label, titles }: { label: string; titles: string[] }) {
-  if (titles.length === 0) return null
-
-  return (
-    <p className="m-0 font-sans text-small text-muted-foreground">
-      {label}
-      <span className="text-foreground"> {titles.join(' · ')}</span>
-    </p>
   )
 }

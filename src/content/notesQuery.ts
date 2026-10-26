@@ -10,6 +10,11 @@ import {
   type NumberedPageHref,
   type NumberedPageResolution,
 } from '@/content/numberedPage'
+import {
+  taxonomyLinks,
+  type TaxonomyLink,
+  type TaxonomyRelationLike,
+} from '@/content/taxonomyLinks'
 import { resolveContentLocale } from '@/i18n/contentLocale'
 import type { AppLocale } from '@/i18n/routing'
 
@@ -82,22 +87,20 @@ export type NotesPageResolution = NumberedPageResolution
 
 export type PublicNote = {
   body: SerializedEditorState
-  categories: string[]
+  categories: TaxonomyLink[]
   metaDescription: string | null
   metaTitle: string | null
   publishedAt: string | null
-  tags: string[]
+  tags: TaxonomyLink[]
   title: string
 }
 
-type RelationLike = number | { title?: string | null } | null
-
 export type NoteDetailSource = {
   body?: unknown
-  categories?: readonly RelationLike[] | null
+  categories?: readonly TaxonomyRelationLike[] | null
   publishedAt?: string | null
   seo?: { metaDescription?: string | null; metaTitle?: string | null } | null
-  tags?: readonly RelationLike[] | null
+  tags?: readonly TaxonomyRelationLike[] | null
   title?: string | null
 }
 
@@ -137,7 +140,7 @@ export function notesListFindArgs(args: {
 
 /**
  * One public note by its localized slug.
- * `depth: 1` populates taxonomy titles. An id-only relation is dropped later.
+ * `depth: 1` populates taxonomy links. An id-only relation is dropped later.
  * Notes have no cover: that field belongs to articles.
  */
 export function notesDetailFindArgs(args: {
@@ -177,17 +180,6 @@ export function notesPageHref(page: number): NotesPageHref {
   return numberedPageHref('/notes', page)
 }
 
-/** Populated relation titles, in CMS order. A bare id is not a name. */
-function relationTitles(values: readonly RelationLike[] | null | undefined): string[] {
-  if (!values) return []
-
-  return values.flatMap((value) => {
-    if (typeof value !== 'object' || value === null) return []
-    if (typeof value.title !== 'string' || value.title.length === 0) return []
-    return [value.title]
-  })
-}
-
 /**
  * A row the reading page can render.
  * Blank SEO text is unset, so the visible title and the site description stay in charge.
@@ -202,11 +194,11 @@ export function toPublicNote(doc: NoteDetailSource): PublicNote | null {
 
   return {
     body: doc.body,
-    categories: relationTitles(doc.categories),
+    categories: taxonomyLinks(doc.categories),
     metaDescription: blankToNull(doc.seo?.metaDescription),
     metaTitle: blankToNull(doc.seo?.metaTitle),
     publishedAt,
-    tags: relationTitles(doc.tags),
+    tags: taxonomyLinks(doc.tags),
     title: doc.title,
   }
 }

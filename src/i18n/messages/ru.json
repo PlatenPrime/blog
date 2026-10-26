@@ -120,5 +120,16 @@
     "pageStatus": "Страница {page} из {pages}",
     "categories": "Рубрики",
     "tags": "Теги"
+  },
+  "taxonomy": {
+    "categoriesTitle": "Рубрики",
+    "tagsTitle": "Теги",
+    "empty": "Пока здесь тихо.",
+    "article": "Статья",
+    "note": "Заметка",
+    "pagination": "Страницы",
+    "previous": "Новее",
+    "next": "Раньше",
+    "pageStatus": "Страница {page} из {pages}"
   }
 }

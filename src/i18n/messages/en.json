@@ -120,5 +120,16 @@
     "pageStatus": "Page {page} of {pages}",
     "categories": "Categories",
     "tags": "Tags"
+  },
+  "taxonomy": {
+    "categoriesTitle": "Categories",
+    "tagsTitle": "Tags",
+    "empty": "Nothing here yet.",
+    "article": "Article",
+    "note": "Note",
+    "pagination": "Pages",
+    "previous": "Newer",
+    "next": "Older",
+    "pageStatus": "Page {page} of {pages}"
   }
 }

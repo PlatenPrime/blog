@@ -101,25 +101,25 @@ describe('articlesPageHref', () => {
 })
 
 describe('toPublicArticle', () => {
-  it('keeps cover, taxonomy titles, and seo text', () => {
+  it('keeps cover, taxonomy links, and seo text', () => {
     const article = toPublicArticle({
       body,
-      categories: [{ title: 'Notes' }, 4, { title: '' }, null],
+      categories: [{ slug: 'notes', title: 'Notes' }, 4, { title: '' }, { title: 'No slug' }, null],
       heroImage: { alt: 'Cover', height: 600, url: '/api/media/file/cover.webp', width: 1200 },
       publishedAt: '2026-06-01T00:00:00.000Z',
       seo: { metaDescription: ' A lead ', metaTitle: ' Essay ' },
-      tags: [9, { title: 'Payload' }],
+      tags: [9, { slug: '', title: 'Payload' }, { slug: 'live', title: 'Live' }],
       title: 'First essay',
     })
 
     expect(article).toEqual({
       body,
-      categories: ['Notes'],
+      categories: [{ slug: 'notes', title: 'Notes' }],
       hero: { alt: 'Cover', height: 600, url: '/api/media/file/cover.webp', width: 1200 },
       metaDescription: 'A lead',
       metaTitle: 'Essay',
       publishedAt: '2026-06-01T00:00:00.000Z',
-      tags: ['Payload'],
+      tags: [{ slug: 'live', title: 'Live' }],
       title: 'First essay',
     })
   })

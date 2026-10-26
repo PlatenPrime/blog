@@ -1,4 +1,5 @@
 import { PayloadRichText } from '@/components/rich-text/PayloadRichText'
+import { TaxonomyLine } from '@/components/taxonomy/taxonomy-line'
 import type { ArticleHeroImage, PublicArticle } from '@/content/articlesQuery'
 import { formatPublishedOn } from '@/content/formatPublishedOn'
 
@@ -28,8 +29,7 @@ const bodyClassName = [
 ].join(' ')
 
 /**
- * Reading column for one article. Category and tag names are text:
- * their routes arrive with taxonomy browsing.
+ * Reading column for one article. Category and tag names link to their shelves.
  */
 export function ArticleDetail({ article, labels, locale }: ArticleDetailProps) {
   const publishedOn = article.publishedAt ? formatPublishedOn(article.publishedAt, locale) : null
@@ -49,8 +49,8 @@ export function ArticleDetail({ article, labels, locale }: ArticleDetailProps) {
       ) : null}
       {hasTaxonomy ? (
         <div className="mt-4 flex flex-col gap-1">
-          <TaxonomyLine label={labels.categories} titles={article.categories} />
-          <TaxonomyLine label={labels.tags} titles={article.tags} />
+          <TaxonomyLine kind="categories" label={labels.categories} links={article.categories} />
+          <TaxonomyLine kind="tags" label={labels.tags} links={article.tags} />
         </div>
       ) : null}
       <PayloadRichText className={bodyClassName} data={article.body} />
@@ -69,16 +69,5 @@ function ArticleHero({ hero }: { hero: ArticleHeroImage }) {
       src={hero.url}
       width={hero.width ?? undefined}
     />
-  )
-}
-
-function TaxonomyLine({ label, titles }: { label: string; titles: string[] }) {
-  if (titles.length === 0) return null
-
-  return (
-    <p className="m-0 font-sans text-small text-muted-foreground">
-      {label}
-      <span className="text-foreground"> {titles.join(' · ')}</span>
-    </p>
   )
 }

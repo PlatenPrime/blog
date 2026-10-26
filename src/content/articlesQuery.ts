@@ -10,6 +10,11 @@ import {
   type NumberedPageHref,
   type NumberedPageResolution,
 } from '@/content/numberedPage'
+import {
+  taxonomyLinks,
+  type TaxonomyLink,
+  type TaxonomyRelationLike,
+} from '@/content/taxonomyLinks'
 import { resolveContentLocale } from '@/i18n/contentLocale'
 import type { AppLocale } from '@/i18n/routing'
 
@@ -90,16 +95,14 @@ export type ArticleHeroImage = {
 
 export type PublicArticle = {
   body: SerializedEditorState
-  categories: string[]
+  categories: TaxonomyLink[]
   hero: ArticleHeroImage | null
   metaDescription: string | null
   metaTitle: string | null
   publishedAt: string | null
-  tags: string[]
+  tags: TaxonomyLink[]
   title: string
 }
-
-type RelationLike = number | { title?: string | null } | null
 
 type HeroLike =
   | number
@@ -113,11 +116,11 @@ type HeroLike =
 
 export type ArticleDetailSource = {
   body?: unknown
-  categories?: readonly RelationLike[] | null
+  categories?: readonly TaxonomyRelationLike[] | null
   heroImage?: HeroLike
   publishedAt?: string | null
   seo?: { metaDescription?: string | null; metaTitle?: string | null } | null
-  tags?: readonly RelationLike[] | null
+  tags?: readonly TaxonomyRelationLike[] | null
   title?: string | null
 }
 
@@ -157,7 +160,7 @@ export function articlesListFindArgs(args: {
 
 /**
  * One public article by its localized slug.
- * `depth: 1` populates the cover and taxonomy titles. An id-only relation is dropped later.
+ * `depth: 1` populates the cover and taxonomy links. An id-only relation is dropped later.
  */
 export function articlesDetailFindArgs(args: {
   locale: string
@@ -199,17 +202,6 @@ export function articlesPageHref(page: number): ArticlesPageHref {
   return numberedPageHref('/articles', page)
 }
 
-/** Populated relation titles, in CMS order. A bare id is not a name. */
-export function relationTitles(values: readonly RelationLike[] | null | undefined): string[] {
-  if (!values) return []
-
-  return values.flatMap((value) => {
-    if (typeof value !== 'object' || value === null) return []
-    if (typeof value.title !== 'string' || value.title.length === 0) return []
-    return [value.title]
-  })
-}
-
 export function toArticleHero(image: HeroLike | undefined): ArticleHeroImage | null {
   if (typeof image !== 'object' || image === null) return null
   if (typeof image.url !== 'string' || image.url.length === 0) return null
@@ -236,12 +228,12 @@ export function toPublicArticle(doc: ArticleDetailSource): PublicArticle | null 
 
   return {
     body: doc.body,
-    categories: relationTitles(doc.categories),
+    categories: taxonomyLinks(doc.categories),
     hero: toArticleHero(doc.heroImage),
     metaDescription: blankToNull(doc.seo?.metaDescription),
     metaTitle: blankToNull(doc.seo?.metaTitle),
     publishedAt,
-    tags: relationTitles(doc.tags),
+    tags: taxonomyLinks(doc.tags),
     title: doc.title,
   }
 }

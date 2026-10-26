@@ -1,8 +1,9 @@
 /**
  * Canonical public sections.
  * `/feed` is the mixed list. `/articles` and `/notes` are each a list and a reading page.
- * Categories and about open in steps 053–054.
- * Until then a click on those two hits the localized not-found page.
+ * `/categories` is the category index and its shelves. `/tags` is the tag index,
+ * linked from the category index and from reading pages, and stays out of this list.
+ * About opens in step 054. Until then a click on it hits the localized not-found page.
  */
 export const siteNavItems = [
   { href: '/feed', labelKey: 'feed' },

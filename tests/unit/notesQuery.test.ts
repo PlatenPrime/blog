@@ -103,23 +103,23 @@ describe('notesPageHref', () => {
 })
 
 describe('toPublicNote', () => {
-  it('keeps taxonomy titles and seo text, and has no cover', () => {
+  it('keeps taxonomy links and seo text, and has no cover', () => {
     const note = toPublicNote({
       body,
-      categories: [{ title: 'City' }, 4, { title: '' }, null],
+      categories: [{ slug: 'city', title: 'City' }, 4, { title: '' }, { title: 'No slug' }, null],
       publishedAt: '2026-06-01T00:00:00.000Z',
       seo: { metaDescription: ' A line ', metaTitle: ' Thought ' },
-      tags: [9, { title: 'Night' }],
+      tags: [9, { slug: '', title: 'Night' }, { slug: 'live', title: 'Live' }],
       title: 'Short thought',
     })
 
     expect(note).toEqual({
       body,
-      categories: ['City'],
+      categories: [{ slug: 'city', title: 'City' }],
       metaDescription: 'A line',
       metaTitle: 'Thought',
       publishedAt: '2026-06-01T00:00:00.000Z',
-      tags: ['Night'],
+      tags: [{ slug: 'live', title: 'Live' }],
       title: 'Short thought',
     })
     expect(note).not.toHaveProperty('hero')

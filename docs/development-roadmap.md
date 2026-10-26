@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked`.
 
-**Baseline Status:** следующий шаг — `053` (Categories / tags browsing). Шаги `001`–`052` и `083` (test policy) — `done`.
+**Baseline Status:** следующий шаг — `054` (About + Contact-ish page). Шаги `001`–`053` и `083` (test policy) — `done`.
 
 **Правила ведения**
 
@@ -531,11 +531,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 053 — Categories / tags browsing
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Навигация по структуре.
 - **Deliverables:** Category pages; tag pages; filters.
 - **Verify:** Фильтр сужает ленту корректно.
 - **DoD:** Таксономия публично usable.
+- **Notes:** `/uk|ru|en/categories` и `/tags`, плюс `/categories/[slug]` и `/tags/[slug]`. Индекс: `find` с `sort: 'title'`, `limit: 100` (`TAXONOMY_INDEX_LIMIT`), `fallbackLocale: 'uk'`, `overrideAccess: false`, без `user` и без `req`. Пагинации индекса нет. Со страницы рубрик есть ссылка на индекс тегов и обратно; пункт «Теги» в шапку не добавлялся (канон путей **048**). Страница термина — смешанная лента: `count` обеих коллекций, затем `find` с `limit = page * 10`, склейка `mergePublicFeed`. `where` — `and` из `publicContentWhere` и `{ categories|tags: { in: [id] } }`. `draft: false`, `overrideAccess: false`, `fallbackLocale: 'uk'`, без `user` и без `req`. Чужой slug — локализованный 404. Термин без опубликованных текстов — заголовок и пустая фраза, без скелета (**055**). `?page=` общий (`numberedPage`): `?page=1`, мусор и `page < 1` снимаются; страница дальше последней — на последнюю. Href пагинации несёт slug термина. На статье и заметке рубрика и тег — ссылки (`taxonomyLinks`: нужны title и slug, голый id отбрасывается). Ремап slug между локалями не делали. Related — **065**. Сид — **087**. Скриншоты — **056**. Unit: `tests/unit/taxonomyQuery.test.ts` плюс ожидания ссылок в articles/notes. E2E: `tests/e2e/taxonomy.e2e.spec.ts` (индексы вместо 404, переход на теги, неизвестный slug). Живое сужение без сида браузер не проверяет: контракт `where` — unit, poke — админка.
 
 ### 054 — About + Contact-ish page
 
