@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked`.
 
-**Baseline Status:** следующий шаг — `050` (Лента). Шаги `001`–`049` и `083` (test policy) — `done`.
+**Baseline Status:** следующий шаг — `051` (Articles list + detail). Шаги `001`–`050` и `083` (test policy) — `done`.
 
 **Правила ведения**
 
@@ -504,11 +504,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 050 — Лента (mixed feed)
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Общая лента notes + articles.
 - **Deliverables:** Pagination, type badges, dates.
 - **Verify:** Published items видны; drafts нет.
 - **DoD:** Лента — основной browsing mode.
+- **Notes:** `/uk|ru|en/feed`. Окно: `count` обеих коллекций, затем `find` с `limit = page * 10` через `latestPublicFindArgs` (`publicContentWhere`, `draft: false`, `overrideAccess: false`, без `user` и без `req`). Склейка в памяти: дата по убыванию, пустая дата раньше любой (как `NULLS FIRST` у `DESC`), при равенстве slug и коллекция. `?page=1`, мусор и `page < 1` снимаются редиректом на `/feed`; страница дальше последней — на последнюю. Бейдж `outline`, дата как на главной. Пустая лента — одна фраза, без скелета (**055**). Ссылки `/articles/[slug]` и `/notes/[slug]` до **051–052** — локализованный 404. Главная остаётся витриной и, если тексты есть, ссылается на ленту. Unit: `tests/unit/feedQuery.test.ts`. E2E: `tests/e2e/feed.e2e.spec.ts` (маршрут и `?page=0`). Черновик в браузере без сида не проверяется: контракт запроса — unit, живой poke — админка. Скриншоты — **056**.
 
 ### 051 — Articles list + detail
 

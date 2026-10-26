@@ -3,6 +3,7 @@ import { getLocale, getTranslations } from 'next-intl/server'
 import { getCurrentUser } from '@/auth/getCurrentUser'
 import { HomeLatest } from '@/components/home/home-latest'
 import { findLatestPublic } from '@/content/latestPublic'
+import { Link } from '@/i18n/navigation'
 
 import { logoutEverywhereFormAction } from './actions/logoutEverywhere'
 
@@ -39,7 +40,13 @@ export default async function HomePage() {
         ) : null}
         {!hasWriting ? (
           <p className="mt-14 mb-0 text-body text-muted-foreground">{home('empty')}</p>
-        ) : null}
+        ) : (
+          <p className="mt-10 mb-0 font-sans text-small">
+            <Link className="text-primary underline-offset-4 hover:underline" href="/feed">
+              {t('feed')}
+            </Link>
+          </p>
+        )}
         {user ? (
           <form action={logoutEverywhereFormAction} className="mt-16">
             <button

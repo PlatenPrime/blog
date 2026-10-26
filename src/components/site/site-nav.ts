@@ -1,6 +1,7 @@
 /**
- * Canonical public sections. Steps 050–054 fill these routes.
- * Until then a click hits the localized not-found page.
+ * Canonical public sections.
+ * `/feed` is the mixed list. Articles, notes, categories, and about open in steps 051–054.
+ * Until then a click on those four hits the localized not-found page.
  */
 export const siteNavItems = [
   { href: '/feed', labelKey: 'feed' },

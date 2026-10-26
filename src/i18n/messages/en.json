@@ -89,5 +89,15 @@
   },
   "home": {
     "empty": "Nothing here yet."
+  },
+  "feed": {
+    "title": "Feed",
+    "article": "Article",
+    "note": "Note",
+    "empty": "Nothing here yet.",
+    "pagination": "Feed pages",
+    "previous": "Newer",
+    "next": "Older",
+    "pageStatus": "Page {page} of {pages}"
   }
 }

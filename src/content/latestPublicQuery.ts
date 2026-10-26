@@ -2,7 +2,7 @@ import { publicContentWhere } from '@/access/publicContentWhere'
 import { resolveContentLocale } from '@/i18n/contentLocale'
 import type { AppLocale } from '@/i18n/routing'
 
-/** How many titles of each kind the home page shows. Pagination is step 050. */
+/** How many titles of each kind the home page shows. The mixed feed paginates separately. */
 export const LATEST_PUBLIC_LIMIT = 3
 
 export type LatestPublicCollection = 'articles' | 'notes'
