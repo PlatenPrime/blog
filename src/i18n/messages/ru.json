@@ -109,5 +109,16 @@
     "pageStatus": "Страница {page} из {pages}",
     "categories": "Рубрики",
     "tags": "Теги"
+  },
+  "notes": {
+    "title": "Заметки",
+    "kicker": "Заметка",
+    "empty": "Пока здесь тихо.",
+    "pagination": "Страницы заметок",
+    "previous": "Новее",
+    "next": "Раньше",
+    "pageStatus": "Страница {page} из {pages}",
+    "categories": "Рубрики",
+    "tags": "Теги"
   }
 }

@@ -109,5 +109,16 @@
     "pageStatus": "Сторінка {page} з {pages}",
     "categories": "Рубрики",
     "tags": "Теги"
+  },
+  "notes": {
+    "title": "Нотатки",
+    "kicker": "Нотатка",
+    "empty": "Поки що тут тихо.",
+    "pagination": "Сторінки нотаток",
+    "previous": "Новіші",
+    "next": "Давніші",
+    "pageStatus": "Сторінка {page} з {pages}",
+    "categories": "Рубрики",
+    "tags": "Теги"
   }
 }

@@ -282,7 +282,15 @@ Unit: `npm test` → `tests/unit/articlesQuery.test.ts`.
 4. Сравните API: `GET /api/notes` и `GET /api/articles` — разные коллекции; draft note не виден anonymous.
 5. Write — только admin.
 
-Публичные роуты notes — шаг **052**. Draft Preview (кнопка в admin) — § выше (шаг **035**). Unit access/slugify — **024** (done).
+### Публичный список и страница (шаг 052)
+
+1. `http://localhost:3000/uk/notes` (и `/ru/notes`, `/en/notes`) — список опубликованных заметок. Пусто — одна фраза, без карточек. Черновик и будущий `publishedAt` в список не попадают. Заголовок и строки — гротеск, мельче, чем у статей.
+2. `http://localhost:3000/uk/notes/{slug}` — кикер «Нотатка», заголовок, дата, названия рубрик и тегов без ссылок, тело Lexical. Обложки нет. Вкладка берёт `seo.metaTitle`, иначе `title`.
+3. Неизвестный slug, draft, будущая дата и slug статьи в инкогнито → локализованный 404. Адрес статьи этот маршрут не открывает.
+4. `http://localhost:3000/uk/notes?page=0` → редирект на `/uk/notes`.
+5. Preview черновика остаётся на `/uk/dev/rich-text/note/{slug}`, не на продуктовом адресе.
+
+Unit: `npm test` → `tests/unit/notesQuery.test.ts`. Draft Preview (кнопка в admin) — § выше (шаг **035**). Unit access/slugify — **024** (done).
 
 ## 12. Pages
 

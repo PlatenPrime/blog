@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked`.
 
-**Baseline Status:** следующий шаг — `052` (Notes list + detail). Шаги `001`–`051` и `083` (test policy) — `done`.
+**Baseline Status:** следующий шаг — `053` (Categories / tags browsing). Шаги `001`–`052` и `083` (test policy) — `done`.
 
 **Правила ведения**
 
@@ -522,11 +522,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 052 — Notes list + detail
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Короткие мысли отдельным разделом.
 - **Deliverables:** `/notes` list + detail; визуально легче articles.
 - **Verify:** Note не смешивается с article URL namespace.
 - **DoD:** Два формата различимы в IA.
+- **Notes:** `/uk|ru|en/notes` и `/notes/[slug]`. Список — только заметки: `count`, затем `find` с `page` и `limit: 10` (`notesCountArgs` / `notesListFindArgs`: `publicContentWhere`, `draft: false`, `overrideAccess: false`, `fallbackLocale: 'uk'`, без `user` и без `req`). `sort: '-publishedAt'` совпадает с `DESC NULLS FIRST` у ленты и статей. Контракт `?page=` общий (`numberedPage`): `?page=1`, мусор и `page < 1` снимаются; страница дальше последней — на последнюю. Пустой список — одна фраза, без скелета (**055**). Деталь: `slug` плюс `publicContentWhere`, `depth: 1`, без `draftMode` и без `heroImage`. Чужой slug, черновик, будущая дата и slug статьи — локализованный 404. Рубрики и теги — названия без ссылок (**053**). `<title>` — `seo.metaTitle` или `title`; `description` — только если задан `seo.metaDescription`. Тело — `PayloadRichText`. Визуально легче статьи: sans, `text-h2`, кикер формата, без обложки. Preview админки остаётся `/dev/rich-text/note/[slug]`. TOC — **063**, related — **065**, reading time — **062**, подсветка кода — **064**, `og:image` — **069**. Unit: `tests/unit/notesQuery.test.ts`. E2E: `tests/e2e/notes.e2e.spec.ts` (список, `?page=0`, неизвестный slug; заголовок не статьи). Живую заметку без сида браузер не проверяет: контракт запроса — unit, poke — админка.
 
 ### 053 — Categories / tags browsing
 

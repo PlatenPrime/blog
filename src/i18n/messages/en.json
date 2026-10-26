@@ -109,5 +109,16 @@
     "pageStatus": "Page {page} of {pages}",
     "categories": "Categories",
     "tags": "Tags"
+  },
+  "notes": {
+    "title": "Notes",
+    "kicker": "Note",
+    "empty": "Nothing here yet.",
+    "pagination": "Note pages",
+    "previous": "Newer",
+    "next": "Older",
+    "pageStatus": "Page {page} of {pages}",
+    "categories": "Categories",
+    "tags": "Tags"
   }
 }
