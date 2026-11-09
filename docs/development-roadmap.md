@@ -43,7 +43,7 @@ v1 считается завершённым, когда одновременн�
 - [ ] Локали `uk` / `ru` / `en` для UI и контента
 - [x] Readers: register/login (email+password + Google), verify email, password reset (Resend)
 - [ ] Comments и Bookmarks только для авторизованных
-- [ ] SEO: RSS, sitemap, OG images, JSON-LD, TOC, reading time, related, code highlight
+- [x] SEO: RSS, sitemap, OG images, JSON-LD, TOC, reading time, related, code highlight
 - [ ] Поиск по Postgres
 - [ ] Dark + light theme, shadcn UI, аккуратный editorial дизайн
 - [ ] Privacy, Terms, cookie consent
@@ -710,11 +710,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 072 — SEO checklist doc
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Операционный чеклист.
 - **Deliverables:** `docs/seo-checklist.md`.
 - **Verify:** Пункты соответствуют факту в коде.
 - **DoD:** SEO задокументирован.
+- **Notes:** [`docs/seo-checklist.md`](seo-checklist.md): инвентарь sitemap/RSS/OG/JSON-LD/metadata (+ reader TOC/reading time/related/code), checkbox verify, CMS author, явные gaps. Go-live галочки остаются в [`production-checklist.md`](production-checklist.md) (§SEO → ссылка на шпаргалку). Overview must-have SEO отмечен. `robots.ts` / BreadcrumbList / Atom / e2e XML·Rich Results — вне шага.
 
 ---
 
