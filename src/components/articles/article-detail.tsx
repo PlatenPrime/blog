@@ -1,10 +1,15 @@
+import { TableOfContents } from '@/components/reading/table-of-contents'
 import { PayloadRichText } from '@/components/rich-text/PayloadRichText'
 import { TaxonomyLine } from '@/components/taxonomy/taxonomy-line'
 import type { ArticleHeroImage, PublicArticle } from '@/content/articlesQuery'
 import { formatPublishedOn } from '@/content/formatPublishedOn'
+import { readingTimeFromLexical } from '@/lib/readingTime'
+import { extractTableOfContents, shouldShowTableOfContents } from '@/lib/tableOfContents'
 
 type ArticleDetailLabels = {
   categories: string
+  readingTime: (minutes: number) => string
+  tableOfContents: string
   tags: string
 }
 
@@ -25,7 +30,9 @@ const bodyClassName = [
   '[&_blockquote]:my-6 [&_blockquote]:border-l [&_blockquote]:border-border [&_blockquote]:pl-4 [&_blockquote]:text-muted-foreground',
   '[&_img]:my-6 [&_img]:h-auto [&_img]:max-w-full',
   '[&_.payload-richtext-youtube]:my-6',
-  '[&_pre]:my-6 [&_pre]:overflow-x-auto [&_pre]:bg-muted [&_pre]:p-4 [&_pre]:font-sans [&_pre]:text-small',
+  '[&_.payload-richtext-code]:my-6',
+  '[&_pre]:overflow-x-auto [&_pre]:rounded-md [&_pre]:p-4 [&_pre]:font-mono [&_pre]:text-small',
+  '[&_:not(pre)>code]:rounded-sm [&_:not(pre)>code]:bg-muted [&_:not(pre)>code]:px-1 [&_:not(pre)>code]:py-0.5 [&_:not(pre)>code]:font-mono [&_:not(pre)>code]:text-small',
 ].join(' ')
 
 /**
@@ -33,7 +40,15 @@ const bodyClassName = [
  */
 export function ArticleDetail({ article, labels, locale }: ArticleDetailProps) {
   const publishedOn = article.publishedAt ? formatPublishedOn(article.publishedAt, locale) : null
+  const readingMinutes = readingTimeFromLexical(article.body)
+  const readingTimeLabel = readingMinutes > 0 ? labels.readingTime(readingMinutes) : null
   const hasTaxonomy = article.categories.length > 0 || article.tags.length > 0
+  const tocEntries = extractTableOfContents(article.body)
+  const showToc = shouldShowTableOfContents({
+    entries: tocEntries,
+    surface: 'article',
+    wordCount: 0,
+  })
 
   return (
     <article>
@@ -47,12 +62,16 @@ export function ArticleDetail({ article, labels, locale }: ArticleDetailProps) {
           {publishedOn}
         </time>
       ) : null}
+      {readingTimeLabel ? (
+        <p className="mt-1 font-sans text-small text-muted-foreground">{readingTimeLabel}</p>
+      ) : null}
       {hasTaxonomy ? (
         <div className="mt-4 flex flex-col gap-1">
           <TaxonomyLine kind="categories" label={labels.categories} links={article.categories} />
           <TaxonomyLine kind="tags" label={labels.tags} links={article.tags} />
         </div>
       ) : null}
+      {showToc ? <TableOfContents entries={tocEntries} title={labels.tableOfContents} /> : null}
       <PayloadRichText className={bodyClassName} data={article.body} />
     </article>
   )

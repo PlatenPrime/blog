@@ -11,10 +11,12 @@ import {
   type NumberedPageResolution,
 } from '@/content/numberedPage'
 import {
+  taxonomyIds,
   taxonomyLinks,
   type TaxonomyLink,
   type TaxonomyRelationLike,
 } from '@/content/taxonomyLinks'
+import { toOgMediaImage, type OgMediaImage, type OgUploadLike } from '@/content/ogImage'
 import { resolveContentLocale } from '@/i18n/contentLocale'
 import type { AppLocale } from '@/i18n/routing'
 
@@ -31,9 +33,11 @@ const notesDetailSelect = {
   body: true,
   categories: true,
   publishedAt: true,
+  searchText: true,
   seo: {
     metaDescription: true,
     metaTitle: true,
+    ogImage: true,
   },
   slug: true,
   tags: true,
@@ -88,12 +92,20 @@ export type NotesPageResolution = NumberedPageResolution
 export type PublicNote = {
   body: SerializedEditorState
   categories: TaxonomyLink[]
+  /** Ids for related queries. Links use `categories`; these stay off the UI. */
+  categoryIds: number[]
   /** Payload id. Comments attach to it; it is not a selected field. */
   id: number
   metaDescription: string | null
   metaTitle: string | null
+  /** Explicit SEO image; without it OG uses the title card. */
+  ogImage: OgMediaImage | null
   publishedAt: string | null
+  /** Plaintext body for meta description fallback when SEO description is empty. */
+  searchText: string | null
   tags: TaxonomyLink[]
+  /** Ids for related queries. Links use `tags`; these stay off the UI. */
+  tagIds: number[]
   title: string
 }
 
@@ -102,7 +114,12 @@ export type NoteDetailSource = {
   categories?: readonly TaxonomyRelationLike[] | null
   id?: number | null
   publishedAt?: string | null
-  seo?: { metaDescription?: string | null; metaTitle?: string | null } | null
+  searchText?: string | null
+  seo?: {
+    metaDescription?: string | null
+    metaTitle?: string | null
+    ogImage?: OgUploadLike
+  } | null
   tags?: readonly TaxonomyRelationLike[] | null
   title?: string | null
 }
@@ -199,11 +216,15 @@ export function toPublicNote(doc: NoteDetailSource): PublicNote | null {
   return {
     body: doc.body,
     categories: taxonomyLinks(doc.categories),
+    categoryIds: taxonomyIds(doc.categories),
     id: doc.id,
     metaDescription: blankToNull(doc.seo?.metaDescription),
     metaTitle: blankToNull(doc.seo?.metaTitle),
+    ogImage: toOgMediaImage(doc.seo?.ogImage),
     publishedAt,
+    searchText: blankToNull(doc.searchText),
     tags: taxonomyLinks(doc.tags),
+    tagIds: taxonomyIds(doc.tags),
     title: doc.title,
   }
 }

@@ -7,6 +7,8 @@ import { ArticleList } from '@/components/articles/article-list'
 import { EmptyState } from '@/components/states/empty-state'
 import { findPublicArticles } from '@/content/articles'
 import { articlesPageHref, readArticlesPageParam } from '@/content/articlesQuery'
+import { buildPageMetadata } from '@/content/pageMetadata'
+import { absoluteRssFeedUrl, rssOrigin } from '@/content/rssQuery'
 import { redirect } from '@/i18n/navigation'
 import { routing } from '@/i18n/routing'
 
@@ -19,11 +21,16 @@ export async function generateMetadata({ params }: ArticlesPageProps): Promise<M
   const { locale: requested } = await params
   const locale = hasLocale(routing.locales, requested) ? requested : routing.defaultLocale
   const articles = await getTranslations({ locale, namespace: 'articles' })
-  const nav = await getTranslations({ locale, namespace: 'nav' })
 
-  return {
-    title: `${articles('title')} — ${nav('siteTitle')}`,
-  }
+  return buildPageMetadata({
+    description: articles('metaDescription'),
+    locale,
+    pathname: '/articles',
+    title: articles('title'),
+    types: {
+      'application/rss+xml': absoluteRssFeedUrl(rssOrigin(), locale, 'articles'),
+    },
+  })
 }
 
 export default async function ArticlesPage({ params, searchParams }: ArticlesPageProps) {

@@ -2,6 +2,7 @@ import type { SerializedEditorState } from 'lexical'
 import type { Where } from 'payload'
 
 import { publicContentWhere } from '@/access/publicContentWhere'
+import { toOgMediaImage, type OgMediaImage, type OgUploadLike } from '@/content/ogImage'
 import { resolveContentLocale } from '@/i18n/contentLocale'
 import type { AppLocale } from '@/i18n/routing'
 
@@ -17,6 +18,7 @@ const pageDetailSelect = {
   seo: {
     metaDescription: true,
     metaTitle: true,
+    ogImage: true,
   },
   slug: true,
   title: true,
@@ -39,12 +41,18 @@ export type PublicPage = {
   body: SerializedEditorState
   metaDescription: string | null
   metaTitle: string | null
+  /** Explicit SEO image; without it OG uses the title card. */
+  ogImage: OgMediaImage | null
   title: string
 }
 
 export type PageDetailSource = {
   body?: unknown
-  seo?: { metaDescription?: string | null; metaTitle?: string | null } | null
+  seo?: {
+    metaDescription?: string | null
+    metaTitle?: string | null
+    ogImage?: OgUploadLike
+  } | null
   slug?: string | null
   title?: string | null
 }
@@ -95,6 +103,7 @@ export function toPublicPage(doc: PageDetailSource): PublicPage | null {
     body: doc.body,
     metaDescription: blankToNull(doc.seo?.metaDescription),
     metaTitle: blankToNull(doc.seo?.metaTitle),
+    ogImage: toOgMediaImage(doc.seo?.ogImage),
     title: doc.title,
   }
 }

@@ -7,6 +7,7 @@ export type TaxonomyLink = {
 export type TaxonomyRelationLike =
   | number
   | {
+      id?: number | null
       slug?: string | null
       title?: string | null
     }
@@ -27,4 +28,31 @@ export function taxonomyLinks(
     if (typeof value.slug !== 'string' || value.slug.length === 0) return []
     return [{ slug: value.slug, title: value.title }]
   })
+}
+
+/**
+ * Numeric taxonomy ids for `in: [...]` queries.
+ * Keeps bare ids and populated docs; drops duplicates and junk.
+ */
+export function taxonomyIds(values: readonly TaxonomyRelationLike[] | null | undefined): number[] {
+  if (!values) return []
+
+  const ids: number[] = []
+  const seen = new Set<number>()
+
+  for (const value of values) {
+    const id = taxonomyId(value)
+    if (id === null || seen.has(id)) continue
+    seen.add(id)
+    ids.push(id)
+  }
+
+  return ids
+}
+
+function taxonomyId(value: TaxonomyRelationLike): number | null {
+  if (typeof value === 'number' && Number.isInteger(value)) return value
+  if (typeof value !== 'object' || value === null) return null
+  if (typeof value.id !== 'number' || !Number.isInteger(value.id)) return null
+  return value.id
 }

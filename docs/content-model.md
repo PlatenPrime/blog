@@ -28,7 +28,7 @@
 | Редактор | Заполняет локали **осознанно**: `uk` как база; `ru`/`en` — когда есть перевод; пустая локаль = сознательный fallback на `uk`, не «забыли схему» |
 | Slug     | Локализован; уникальность **per locale** `(slug, _locale)`                                                                                      |
 
-**Localized:** `title`, `slug`, `body`, `seo.metaTitle`, `seo.metaDescription` (Articles / Notes / Pages); у Categories / Tags — `title`, `slug`.
+**Localized:** `title`, `slug`, `body`, `searchText` (Articles / Notes), `seo.metaTitle`, `seo.metaDescription` (Articles / Notes / Pages); у Categories / Tags — `title`, `slug`.
 
 **Не localized (общие на документ):** `heroImage`, `categories`, `tags`, `publishedAt`, `seo.ogImage`, `_status`, timestamps.
 
@@ -78,11 +78,11 @@ URL-safe сегмент: карта кириллицы uk/ru → латиниц�
 
 Группа `seo` на Articles, Notes, Pages:
 
-| Поле              | Тип              | Notes        |
-| ----------------- | ---------------- | ------------ |
-| `metaTitle`       | text             | localized    |
-| `metaDescription` | textarea         | localized    |
-| `ogImage`         | upload → `media` | не localized |
+| Поле              | Тип              | Notes                                                                                             |
+| ----------------- | ---------------- | ------------------------------------------------------------------------------------------------- |
+| `metaTitle`       | text             | localized                                                                                         |
+| `metaDescription` | textarea         | localized                                                                                         |
+| `ogImage`         | upload → `media` | не localized; публичный OG (069): `seo.ogImage` → `heroImage` (статьи) → ImageResponse title card |
 
 ### Media limits (`mediaLimits.ts`)
 
@@ -180,23 +180,24 @@ URL-safe сегмент: карта кириллицы uk/ru → латиниц�
 
 Длинный контент с обложкой и taxonomy.
 
-|          |                                                  |
-| -------- | ------------------------------------------------ |
-| Versions | `drafts: true` → `_status` draft / published     |
-| Access   | `read`: `publishedOrAdmin`; CUD: admin only      |
-| Hooks    | `ensureSlugFromTitle`; `setPublishedAtOnPublish` |
+|          |                                                                           |
+| -------- | ------------------------------------------------------------------------- |
+| Versions | `drafts: true` → `_status` draft / published                              |
+| Access   | `read`: `publishedOrAdmin`; CUD: admin only                               |
+| Hooks    | `ensureSlugFromTitle`; `setPublishedAtOnPublish`; `setSearchTextFromBody` |
 
-| Поле          | Тип                         | Required | Localized | Notes                                                                     |
-| ------------- | --------------------------- | -------- | --------- | ------------------------------------------------------------------------- |
-| `title`       | text                        | yes      | yes       | taxonomy                                                                  |
-| `slug`        | text                        | yes      | yes       | unique, indexed                                                           |
-| `body`        | richText                    | yes      | yes       | Lexical: Media upload + block `youtube` (sanitize URL → youtube-nocookie) |
-| `heroImage`   | upload → `media`            | no       | —         | обложка                                                                   |
-| `categories`  | relationship → `categories` | no       | —         | hasMany, sidebar                                                          |
-| `tags`        | relationship → `tags`       | no       | —         | hasMany, sidebar                                                          |
-| `publishedAt` | date                        | no       | —         | dayAndTime; empty→now on Publish; future = scheduled (ADR-003)            |
-| `seo`         | group                       | —        | nested    | см. SEO group                                                             |
-| `_status`     | (drafts)                    | —        | —         | через versions                                                            |
+| Поле          | Тип                         | Required | Localized | Notes                                                                            |
+| ------------- | --------------------------- | -------- | --------- | -------------------------------------------------------------------------------- |
+| `title`       | text                        | yes      | yes       | taxonomy                                                                         |
+| `slug`        | text                        | yes      | yes       | unique, indexed                                                                  |
+| `body`        | richText                    | yes      | yes       | Lexical: Media upload + block `youtube` (sanitize URL → youtube-nocookie)        |
+| `searchText`  | textarea                    | no       | yes       | hidden; plaintext из `body` для ILIKE-поиска (066); хук + `backfill:search-text` |
+| `heroImage`   | upload → `media`            | no       | —         | обложка                                                                          |
+| `categories`  | relationship → `categories` | no       | —         | hasMany, sidebar                                                                 |
+| `tags`        | relationship → `tags`       | no       | —         | hasMany, sidebar                                                                 |
+| `publishedAt` | date                        | no       | —         | dayAndTime; empty→now on Publish; future = scheduled (ADR-003)                   |
+| `seo`         | group                       | —        | nested    | см. SEO group                                                                    |
+| `_status`     | (drafts)                    | —        | —         | через versions                                                                   |
 
 ### `notes` — Notes
 
@@ -205,7 +206,7 @@ URL-safe сегмент: карта кириллицы uk/ru → латиниц�
 - нет `heroImage`;
 - у `body` admin-описание: short-form note.
 
-Drafts, access, taxonomy, `publishedAt`, SEO — те же.
+Drafts, access, taxonomy, `publishedAt`, `searchText`, SEO — те же.
 
 ### `pages` — Pages
 
@@ -252,17 +253,17 @@ Drafts, access, taxonomy, `publishedAt`, SEO — те же.
 
 ## Сводная матрица
 
-| Collection | Auth | Drafts | Public / default read   | Localized fields         | Slug auto | CUD                           |
-| ---------- | ---- | ------ | ----------------------- | ------------------------ | --------- | ----------------------------- |
-| users      | yes  | no     | self / admin            | —                        | —         | create public; RUD self/admin |
-| media      | no   | no     | all                     | —                        | —         | default authenticated         |
-| categories | no   | no     | all                     | title, slug              | yes       | admin                         |
-| tags       | no   | no     | all                     | title, slug              | yes       | admin                         |
-| articles   | no   | yes    | published (+ admin all) | title, slug, body, seo.* | yes       | admin                         |
-| notes      | no   | yes    | published (+ admin all) | title, slug, body, seo.* | yes       | admin                         |
-| pages      | no   | yes    | published (+ admin all) | title, slug, body, seo.* | yes       | admin                         |
-| comments   | no   | no     | approved (+ admin all)  | —                        | —         | create auth; UD admin         |
-| bookmarks  | no   | no     | owner / admin           | —                        | —         | create auth; RUD owner/admin  |
+| Collection | Auth | Drafts | Public / default read   | Localized fields                     | Slug auto | CUD                           |
+| ---------- | ---- | ------ | ----------------------- | ------------------------------------ | --------- | ----------------------------- |
+| users      | yes  | no     | self / admin            | —                                    | —         | create public; RUD self/admin |
+| media      | no   | no     | all                     | —                                    | —         | default authenticated         |
+| categories | no   | no     | all                     | title, slug                          | yes       | admin                         |
+| tags       | no   | no     | all                     | title, slug                          | yes       | admin                         |
+| articles   | no   | yes    | published (+ admin all) | title, slug, body, searchText, seo.* | yes       | admin                         |
+| notes      | no   | yes    | published (+ admin all) | title, slug, body, searchText, seo.* | yes       | admin                         |
+| pages      | no   | yes    | published (+ admin all) | title, slug, body, seo.*             | yes       | admin                         |
+| comments   | no   | no     | approved (+ admin all)  | —                                    | —         | create auth; UD admin         |
+| bookmarks  | no   | no     | owner / admin           | —                                    | —         | create auth; RUD owner/admin  |
 
 **Articles vs Notes vs Pages:** Articles = Notes + `heroImage`; Pages без taxonomy-relations и без hero.
 

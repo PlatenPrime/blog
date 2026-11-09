@@ -32,6 +32,7 @@ describe('pageDetailFindArgs', () => {
         seo: {
           metaDescription: true,
           metaTitle: true,
+          ogImage: true,
         },
         slug: true,
         title: true,
@@ -65,6 +66,7 @@ describe('toPublicPage', () => {
       body,
       metaDescription: 'A line',
       metaTitle: 'Author',
+      ogImage: null,
       title: 'About',
     })
     expect(page).not.toHaveProperty('hero')
@@ -76,12 +78,13 @@ describe('toPublicPage', () => {
     expect(
       toPublicPage({
         body,
-        seo: { metaDescription: '   ', metaTitle: '' },
+        seo: { metaDescription: '   ', metaTitle: '', ogImage: 2 },
         title: 'About',
       }),
     ).toMatchObject({
       metaDescription: null,
       metaTitle: null,
+      ogImage: null,
       title: 'About',
     })
 

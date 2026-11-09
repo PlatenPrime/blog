@@ -8,7 +8,13 @@ const screenshot = {
   caret: 'hide' as const,
 }
 
-const otherRooms = [uk.feed.title, uk.articles.title, uk.notes.title, uk.taxonomy.categoriesTitle]
+const otherRooms = [
+  uk.feed.title,
+  uk.articles.title,
+  uk.notes.title,
+  uk.search.title,
+  uk.taxonomy.categoriesTitle,
+]
 
 function rootHasClass(page: Page, className: string) {
   return page.evaluate((name) => document.documentElement.classList.contains(name), className)
@@ -59,6 +65,7 @@ test.describe('Public navigation', () => {
       { heading: uk.feed.title, href: /\/uk\/feed$/, label: uk.nav.feed },
       { heading: uk.articles.title, href: /\/uk\/articles$/, label: uk.nav.articles },
       { heading: uk.notes.title, href: /\/uk\/notes$/, label: uk.nav.notes },
+      { heading: uk.search.title, href: /\/uk\/search$/, label: uk.nav.search },
       {
         heading: uk.taxonomy.categoriesTitle,
         href: /\/uk\/categories$/,

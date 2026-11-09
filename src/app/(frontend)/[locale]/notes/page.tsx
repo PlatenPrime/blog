@@ -7,6 +7,8 @@ import { NoteList } from '@/components/notes/note-list'
 import { EmptyState } from '@/components/states/empty-state'
 import { findPublicNotes } from '@/content/notes'
 import { notesPageHref, readNotesPageParam } from '@/content/notesQuery'
+import { buildPageMetadata } from '@/content/pageMetadata'
+import { absoluteRssFeedUrl, rssOrigin } from '@/content/rssQuery'
 import { redirect } from '@/i18n/navigation'
 import { routing } from '@/i18n/routing'
 
@@ -19,11 +21,16 @@ export async function generateMetadata({ params }: NotesPageProps): Promise<Meta
   const { locale: requested } = await params
   const locale = hasLocale(routing.locales, requested) ? requested : routing.defaultLocale
   const notes = await getTranslations({ locale, namespace: 'notes' })
-  const nav = await getTranslations({ locale, namespace: 'nav' })
 
-  return {
-    title: `${notes('title')} — ${nav('siteTitle')}`,
-  }
+  return buildPageMetadata({
+    description: notes('metaDescription'),
+    locale,
+    pathname: '/notes',
+    title: notes('title'),
+    types: {
+      'application/rss+xml': absoluteRssFeedUrl(rssOrigin(), locale, 'notes'),
+    },
+  })
 }
 
 export default async function NotesPage({ params, searchParams }: NotesPageProps) {

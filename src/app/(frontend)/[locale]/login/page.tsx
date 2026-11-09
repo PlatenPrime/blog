@@ -1,12 +1,20 @@
 import { getTranslations } from 'next-intl/server'
+import type { Metadata } from 'next'
 
 import { loginAction } from '@/auth/actions'
+import { authPageMetadata } from '@/content/authPageMetadata'
 import { Link } from '@/i18n/navigation'
 
 import { AuthForm } from '../components/AuthForm'
 
 type LoginPageProps = {
+  params: Promise<{ locale: string }>
   searchParams: Promise<{ error?: string }>
+}
+
+export async function generateMetadata({ params }: LoginPageProps): Promise<Metadata> {
+  const { locale } = await params
+  return authPageMetadata({ locale, pathname: '/login', titleKey: 'login.title' })
 }
 
 export default async function LoginPage({ searchParams }: LoginPageProps) {

@@ -103,25 +103,35 @@ describe('notesPageHref', () => {
 })
 
 describe('toPublicNote', () => {
-  it('keeps taxonomy links and seo text, and has no cover', () => {
+  it('keeps taxonomy links, taxonomy ids, and seo text, and has no cover', () => {
     const note = toPublicNote({
       body,
-      categories: [{ slug: 'city', title: 'City' }, 4, { title: '' }, { title: 'No slug' }, null],
+      categories: [
+        { id: 2, slug: 'city', title: 'City' },
+        4,
+        { title: '' },
+        { title: 'No slug' },
+        null,
+      ],
       id: 7,
       publishedAt: '2026-06-01T00:00:00.000Z',
       seo: { metaDescription: ' A line ', metaTitle: ' Thought ' },
-      tags: [9, { slug: '', title: 'Night' }, { slug: 'live', title: 'Live' }],
+      tags: [9, { slug: '', title: 'Night' }, { id: 5, slug: 'live', title: 'Live' }],
       title: 'Short thought',
     })
 
     expect(note).toEqual({
       body,
       categories: [{ slug: 'city', title: 'City' }],
+      categoryIds: [2, 4],
       id: 7,
       metaDescription: 'A line',
       metaTitle: 'Thought',
+      ogImage: null,
       publishedAt: '2026-06-01T00:00:00.000Z',
+      searchText: null,
       tags: [{ slug: 'live', title: 'Live' }],
+      tagIds: [9, 5],
       title: 'Short thought',
     })
     expect(note).not.toHaveProperty('hero')
@@ -132,12 +142,13 @@ describe('toPublicNote', () => {
       toPublicNote({
         body,
         id: 3,
-        seo: { metaDescription: '   ', metaTitle: '' },
+        seo: { metaDescription: '   ', metaTitle: '', ogImage: 4 },
         title: 'Untitled note',
       }),
     ).toMatchObject({
       metaDescription: null,
       metaTitle: null,
+      ogImage: null,
       title: 'Untitled note',
     })
 

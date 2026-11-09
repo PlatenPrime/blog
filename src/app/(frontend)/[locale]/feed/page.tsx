@@ -7,6 +7,7 @@ import { FeedList } from '@/components/feed/feed-list'
 import { EmptyState } from '@/components/states/empty-state'
 import { findPublicFeed } from '@/content/feed'
 import { feedPageHref, readFeedPageParam } from '@/content/feedQuery'
+import { buildPageMetadata } from '@/content/pageMetadata'
 import { redirect } from '@/i18n/navigation'
 import { routing } from '@/i18n/routing'
 
@@ -19,11 +20,13 @@ export async function generateMetadata({ params }: FeedPageProps): Promise<Metad
   const { locale: requested } = await params
   const locale = hasLocale(routing.locales, requested) ? requested : routing.defaultLocale
   const feed = await getTranslations({ locale, namespace: 'feed' })
-  const nav = await getTranslations({ locale, namespace: 'nav' })
 
-  return {
-    title: `${feed('title')} — ${nav('siteTitle')}`,
-  }
+  return buildPageMetadata({
+    description: feed('metaDescription'),
+    locale,
+    pathname: '/feed',
+    title: feed('title'),
+  })
 }
 
 export default async function FeedPage({ params, searchParams }: FeedPageProps) {

@@ -140,7 +140,7 @@ Newsletter / marketing mail — out of scope.
 | Search                               | Postgres (`ILIKE` / `tsvector`) — без Meilisearch/Algolia                                     |
 | Related posts                        | По tags/categories                                                                            |
 | Reading time / TOC                   | Вычисление на publish/render                                                                  |
-| Code highlighting                    | Shiki или rehype/highlight в Lexical→HTML pipeline                                            |
+| Code highlighting                    | Shiki dual-theme в Lexical JSX pipeline (`CodeBlock` + `PayloadRichText`)                     |
 | RSS / Sitemap / OG / JSON-LD         | Next route handlers + Metadata API                                                            |
 | Versioning / rollback                | **Не используем в v1**                                                                        |
 | Audit log CMS                        | **Не используем в v1** (один admin)                                                           |

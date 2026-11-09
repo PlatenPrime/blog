@@ -7,7 +7,7 @@
 
 ## Как читать этот документ
 
-Этот файл — чертёж: порядок работ, статусы, как проверить шаг. Ход проекта человеческим языком — зачем шаг появился и как он держится на предыдущем — в [how-we-built-the-blog.md](./how-we-built-the-blog.md). Книга дописана по сделанное; чертёж остаётся источником правды по статусам.
+Этот файл — чертёж: порядок работ, статусы, как проверить шаг. Ход проекта человеческим языком — зачем шаг появился и как он держится на предыдущем — в [how-we-built-the-blog.md](./how-we-built-the-blog.md). Книга дописывается в том же изменении, что и `done` шага (правило `.cursor/rules/roadmap-one-step.mdc`); чертёж остаётся источником правды по статусам.
 
 | Поле шага        | Смысл                                  |
 | ---------------- | -------------------------------------- |
@@ -43,7 +43,7 @@ v1 считается завершённым, когда одновременн�
 - [ ] Локали `uk` / `ru` / `en` для UI и контента
 - [x] Readers: register/login (email+password + Google), verify email, password reset (Resend)
 - [ ] Comments и Bookmarks только для авторизованных
-- [ ] SEO: RSS, sitemap, OG images, JSON-LD, TOC, reading time, related, code highlight
+- [x] SEO: RSS, sitemap, OG images, JSON-LD, TOC, reading time, related, code highlight
 - [ ] Поиск по Postgres
 - [ ] Dark + light theme, shadcn UI, аккуратный editorial дизайн
 - [ ] Privacy, Terms, cookie consent
@@ -620,91 +620,102 @@ v1 считается завершённым, когда одновременн�
 
 ### 062 — Reading time
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Meta для статей.
 - **Deliverables:** Вычисление на save/render; отображение на UI.
 - **Verify:** Unit test формулы; UI показывает значение.
 - **DoD:** Reading time must-have закрыт.
+- **Notes:** Считается на render из Lexical `body` (не persist): `readingTimeFromLexical` → `convertLexicalToPlaintext` → `countWords` / `ceil(words / 200)`, пустой текст → 0, иначе минимум 1 мин (`src/lib/readingTime.ts`). UI — под `<time>` в `ArticleDetail`; i18n `articles.readingTime` (`{minutes}`) uk/en/ru. Notes / список / лента — вне шага. Unit: `tests/unit/readingTime.test.ts`. E2E reading time нет.
 
 ### 063 — Table of contents
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Навигация по длинным статьям.
 - **Deliverables:** TOC из heading nodes Lexical; anchor links.
 - **Verify:** Клик скроллит к секции.
 - **DoD:** TOC на articles (notes — по эвристике длины).
+- **Notes:** Render-time из Lexical `body` (не persist): `extractTableOfContents` → h2/h3 document order, `headingPlainText` (text/link children), `slugify` + dedupe (`-2`, …; пустой → `section`). Gate: article ≥2 пункта; note ≥2 **и** ≥300 слов (`countWords` plaintext). UI — in-flow `<nav>` в `TableOfContents` между taxonomy и body (`ArticleDetail` / `NoteDetail`); без sticky aside и без active-section spy. Якоря — override `heading` в `PayloadRichText` (`id` + `scroll-mt-24`, тот же `allocateHeadingId`). i18n `articles.tableOfContents` / `notes.tableOfContents` (uk/en/ru). Unit: `tests/unit/tableOfContents.test.ts`. E2E scroll нет (как reading time **062**). Sticky TOC / IntersectionObserver / h4+ — вне шага.
 
 ### 064 — Code highlighting
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Читаемые code blocks.
 - **Deliverables:** Shiki (или выбранный highlighter) в render pipeline; dark/light themes.
 - **Verify:** Fenced code в статье подсвечен.
 - **DoD:** Code UX взрослый.
+- **Notes:** Editor — premade `CodeBlock()` в `BlocksFeature` (slug `Code`) рядом с YouTube; curated langs в `CODE_BLOCK_LANGUAGES` (`src/lib/codeLanguages.ts`). Render — `blocks.Code` → async RSC `HighlightedCode` → `highlightCode` (Shiki singleton, dual `github-light`/`github-dark`, `defaultColor: false`). Тема — CSS vars + `html.dark` в `globals.css`, без server theme cookie. Inline `<code>` — лёгкий muted/mono, без Shiki. Unit: `tests/unit/codeHighlight.test.ts` (normalize + HTML smoke). Copy button / line numbers / e2e — вне шага.
 
 ### 065 — Related content
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Удержание читателя.
 - **Deliverables:** Related by tags/categories; блок в конце.
 - **Verify:** Related не включает текущий пост; только published.
 - **DoD:** Related must-have закрыт.
+- **Notes:** Смешанный related (articles + notes) по общим category/tag ids: `taxonomyIds` → `relatedContentWhere` (`publicContentWhere` + `id not_equals` только в своей коллекции + `or` categories/tags `in`) → два `relatedFindArgs` (`RELATED_LIMIT = 3`) → `mergeRelatedContent`. Пустая таксономия / 0 соседей — блока нет. UI — `RelatedContent` снаружи `<article>`, после detail, перед закладкой и комментариями; badge через `feed.article`/`feed.note`; i18n `articles.related` / `notes.related`. Public types несут `categoryIds`/`tagIds` для запроса. Unit: `tests/unit/relatedContentQuery.test.ts` (+ mapping в articles/notes query). Overlap scoring / e2e / CMS related — вне шага.
 
 ### 066 — Simple search (Postgres)
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Поиск без внешнего сервиса.
 - **Deliverables:** Search page/API; `tsvector` или аккуратный `ILIKE`; locale-aware.
 - **Verify:** Query находит title/body; пустой query UX ok.
 - **DoD:** Поиск v1 достаточен.
+- **Notes:** Locale-aware `/{locale}/search` (GET `?q=` + `?page=`). Lexical `body` jsonb → скрытый localized `searchText` (`setSearchTextFromBody` + `npm run backfill:search-text`); where = `publicContentWhere` + `or` `title`/`searchText` `like`. Dual find articles+notes, merge как feed (`SEARCH_PAGE_SIZE = 10`). Пустой/whitespace `q` — без БД, copy `search.emptyQuery`. UI — форма + `FeedList`; пункт в `siteNavItems`. Unit: `tests/unit/searchQuery.test.ts`. `tsvector`/Meilisearch/snippets/REST API/e2e «нашёл по body» — вне шага.
 
 ### 067 — Sitemap
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Индексация.
 - **Deliverables:** `sitemap.xml` (все локали + published URLs).
 - **Verify:** XML валиден; drafts отсутствуют.
 - **DoD:** Sitemap в production checklist.
+- **Notes:** Next Metadata API — `src/app/sitemap.ts` (`force-dynamic`) → `/sitemap.xml`. Absolute URL = `getServerUrl` + `prefixPublicPath`. Чистая сборка — `sitemapQuery` (`publicContentWhere`, `draft: false`, без session): статика (`/`, feed, articles, notes, categories, tags, search) × uk/ru/en + hreflang/`x-default=uk`; `/about` только если published page; articles/notes/categories/tags по slug, группировка по `id` для localized slugs. Auth/dev/admin/`?page=`/`?q=` вне карты. Стартовый [`docs/production-checklist.md`](production-checklist.md) (пункт Sitemap; полный gate — 108). Unit: `tests/unit/sitemapQuery.test.ts`. `robots.ts` / RSS / OG / canonical / e2e XML — вне шага.
 
 ### 068 — RSS feeds
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Подписка на обновления.
 - **Deliverables:** RSS/Atom на articles, notes, optional all; per-locale strategy.
 - **Verify:** Feed валиден; новые посты появляются.
 - **DoD:** RSS must-have закрыт.
+- **Notes:** RSS 2.0 (не Atom), без npm-lib. Per-locale: `/{locale}/rss.xml` (mixed), `/{locale}/articles/rss.xml`, `/{locale}/notes/rss.xml`; `force-dynamic` route handlers; видимость = `rssContentFindArgs` (`publicContentWhere`, `draft: false`, без session). Лимит `RSS_ITEM_LIMIT = 50`; mixed — dual find + `mergeRssItems` (сорт как лента). Excerpt: `seo.metaDescription` → усечённый `searchText` → пусто; Lexical body не в фиде. Absolute URL = `getServerUrl` + `prefixPublicPath`. Discovery: `alternates.types['application/rss+xml']` в locale layout (mixed) и на list articles/notes; футер — `<a href="/{locale}/rss.xml">` (`nav.rss`). Checklist: пункт RSS. Unit: `tests/unit/rssQuery.test.ts`. Atom / full HTML / category feeds / e2e XML — вне шага.
 
 ### 069 — Open Graph images
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Превью в соцсетях.
 - **Deliverables:** OG image generation (Next Image Response) или static template + hero fallback.
 - **Verify:** `og:image` meta присутствует; URL отдаёт image.
 - **DoD:** OG must-have закрыт.
+- **Notes:** File convention Next `opengraph-image.tsx` + `ImageResponse` (`next/og`), без `/api/og`. Locale default — брендовая карточка PlatenPrime; детали articles/notes/about — свои генераторы. Цепочка media: `seo.ogImage` → `heroImage` (только статьи) → title card; media рисуется в карточке (фон + overlay), один `og:image` URL на страницу. Helpers: `absoluteMediaUrl` / `resolveOgMediaUrl` / `toOgMediaImage` в `ogImage.ts`; шаблон — `ogImageResponse.tsx`; шрифты Source Serif 4 latin+cyrillic в `src/assets/fonts/`. Detail select articles/notes/pages тянет `seo.ogImage`; `metadataBase` из `getServerUrl()` в locale layout. Checklist: пункт OG. Unit: `tests/unit/ogImage.test.ts` (+ mapping в articles/notes/pages). JSON-LD / canonical completeness / Playwright meta / static PNG — вне шага (070–071).
 
 ### 070 — JSON-LD structured data
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Rich results readiness.
 - **Deliverables:** Article/Person/WebSite schema; locale-aware URLs.
 - **Verify:** JSON-LD валиден (smoke parser test).
 - **DoD:** JSON-LD must-have закрыт.
+- **Notes:** Чистые builders в `jsonLd.ts` + server `<script type="application/ld+json">` (`JsonLd`). Locale layout — `@graph` WebSite+Person (`nav.siteTitle` / `siteDescription`, Person `url` → `/{locale}/about`, `email` только через `contactMailto(CONTACT_EMAIL)`). Стабильные `@id` `{origin}/#website` и `{origin}/#person`. Articles и notes — `Article` (notes без отдельного BlogPosting): `absolutePublicUrl`, image = `resolveOgMediaUrl` → `absoluteMediaUrl`, иначе `{pageUrl}/opengraph-image`. Checklist: пункт JSON-LD. Unit: `tests/unit/jsonLd.test.ts` (JSON.parse smoke, locale URLs, `@id` links, escape `<`). Canonical/metadata completeness / seo-checklist / BreadcrumbList / e2e Rich Results — вне шага (071–072).
 
 ### 071 — Metadata API completeness
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** title/description/canonical на всех ключевых страницах.
 - **Deliverables:** Per-page metadata; no duplicates titles.
 - **Verify:** Spot-check Playwright meta tags.
 - **DoD:** SEO foundation complete.
+- **Notes:** Shared `buildPageMetadata` / `localeTitleTemplate` в `pageMetadata.ts`: layout — `title.default` + `%s — siteTitle`; home — absolute bare title; lists/taxonomy/search/detail — segment title + i18n/`seo` description + `alternates.canonical` без query (`?page=` / `?q=` → clean path). hreflang: shared paths через `languageAlternatesForPath`; articles/notes/categories/tags — sibling slug по id (`localizedAlternates`). CMS detail description = `rssExcerpt(metaDescription, searchText)`. Auth/bookmarks/account + search с `q` — `NOINDEX_ROBOTS`; 404 — title + noindex без canonical на home. Checklist: пункт Metadata. Unit: `tests/unit/pageMetadata.test.ts`; e2e: `tests/e2e/metadata.e2e.spec.ts`. `seo-checklist.md` / `robots.ts` / BreadcrumbList — вне шага (072+).
 
 ### 072 — SEO checklist doc
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Операционный чеклист.
 - **Deliverables:** `docs/seo-checklist.md`.
 - **Verify:** Пункты соответствуют факту в коде.
 - **DoD:** SEO задокументирован.
+- **Notes:** [`docs/seo-checklist.md`](seo-checklist.md): инвентарь sitemap/RSS/OG/JSON-LD/metadata (+ reader TOC/reading time/related/code), checkbox verify, CMS author, явные gaps. Go-live галочки остаются в [`production-checklist.md`](production-checklist.md) (§SEO → ссылка на шпаргалку). Overview must-have SEO отмечен. `robots.ts` / BreadcrumbList / Atom / e2e XML·Rich Results — вне шага.
 
 ---
 

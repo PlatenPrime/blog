@@ -101,44 +101,59 @@ describe('articlesPageHref', () => {
 })
 
 describe('toPublicArticle', () => {
-  it('keeps cover, taxonomy links, and seo text', () => {
+  it('keeps cover, taxonomy links, taxonomy ids, and seo text', () => {
     const article = toPublicArticle({
       body,
-      categories: [{ slug: 'notes', title: 'Notes' }, 4, { title: '' }, { title: 'No slug' }, null],
+      categories: [
+        { id: 2, slug: 'notes', title: 'Notes' },
+        4,
+        { title: '' },
+        { title: 'No slug' },
+        null,
+      ],
       heroImage: { alt: 'Cover', height: 600, url: '/api/media/file/cover.webp', width: 1200 },
       id: 12,
       publishedAt: '2026-06-01T00:00:00.000Z',
       seo: { metaDescription: ' A lead ', metaTitle: ' Essay ' },
-      tags: [9, { slug: '', title: 'Payload' }, { slug: 'live', title: 'Live' }],
+      tags: [9, { slug: '', title: 'Payload' }, { id: 5, slug: 'live', title: 'Live' }],
       title: 'First essay',
     })
 
     expect(article).toEqual({
       body,
       categories: [{ slug: 'notes', title: 'Notes' }],
+      categoryIds: [2, 4],
       hero: { alt: 'Cover', height: 600, url: '/api/media/file/cover.webp', width: 1200 },
       id: 12,
       metaDescription: 'A lead',
       metaTitle: 'Essay',
+      ogImage: null,
       publishedAt: '2026-06-01T00:00:00.000Z',
+      searchText: null,
       tags: [{ slug: 'live', title: 'Live' }],
+      tagIds: [9, 5],
       title: 'First essay',
     })
   })
 
-  it('drops a bare upload id, blank seo, and a document that cannot be read', () => {
+  it('maps seo.ogImage and drops a bare upload id', () => {
     expect(
       toPublicArticle({
         body,
         heroImage: 3,
         id: 8,
-        seo: { metaDescription: '   ', metaTitle: '' },
+        seo: {
+          metaDescription: '   ',
+          metaTitle: '',
+          ogImage: { alt: 'OG', height: 630, url: '/api/media/file/og.webp', width: 1200 },
+        },
         title: 'Untitled cover',
       }),
     ).toMatchObject({
       hero: null,
       metaDescription: null,
       metaTitle: null,
+      ogImage: { alt: 'OG', height: 630, url: '/api/media/file/og.webp', width: 1200 },
       title: 'Untitled cover',
     })
 

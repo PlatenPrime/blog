@@ -15,10 +15,12 @@
     "feed": "Лента",
     "articles": "Статьи",
     "notes": "Заметки",
+    "search": "Поиск",
     "categories": "Рубрики",
     "about": "Об авторе",
     "primary": "Разделы",
     "footer": "Подвал",
+    "rss": "RSS",
     "skipToContent": "Перейти к содержимому",
     "language": "Язык",
     "themeToDark": "Включить тёмную тему",
@@ -107,6 +109,7 @@
   },
   "feed": {
     "title": "Лента",
+    "metaDescription": "Смешанная лента опубликованных статей и заметок.",
     "article": "Статья",
     "note": "Заметка",
     "empty": "Пока здесь тихо.",
@@ -115,18 +118,35 @@
     "next": "Раньше",
     "pageStatus": "Страница {page} из {pages}"
   },
+  "search": {
+    "title": "Поиск",
+    "metaDescription": "Поиск опубликованных статей и заметок в этом блоге.",
+    "placeholder": "Искать статьи и заметки",
+    "submit": "Искать",
+    "emptyQuery": "Введите запрос, чтобы найти опубликованные статьи и заметки.",
+    "noResults": "По этому запросу ничего не найдено.",
+    "pagination": "Страницы поиска",
+    "previous": "Новее",
+    "next": "Раньше",
+    "pageStatus": "Страница {page} из {pages}"
+  },
   "articles": {
     "title": "Статьи",
+    "metaDescription": "Длинные тексты и статьи этого блога.",
     "empty": "Пока здесь тихо.",
     "pagination": "Страницы статей",
     "previous": "Новее",
     "next": "Раньше",
     "pageStatus": "Страница {page} из {pages}",
     "categories": "Рубрики",
-    "tags": "Теги"
+    "tags": "Теги",
+    "readingTime": "{minutes} мин чтения",
+    "tableOfContents": "Содержание",
+    "related": "Ещё по теме"
   },
   "notes": {
     "title": "Заметки",
+    "metaDescription": "Короткие опубликованные заметки этого блога.",
     "kicker": "Заметка",
     "empty": "Пока здесь тихо.",
     "pagination": "Страницы заметок",
@@ -134,7 +154,9 @@
     "next": "Раньше",
     "pageStatus": "Страница {page} из {pages}",
     "categories": "Рубрики",
-    "tags": "Теги"
+    "tags": "Теги",
+    "tableOfContents": "Содержание",
+    "related": "Ещё по теме"
   },
   "comments": {
     "title": "Комментарии",
@@ -174,7 +196,9 @@
   },
   "taxonomy": {
     "categoriesTitle": "Рубрики",
+    "categoriesMetaDescription": "Обзор статей и заметок по рубрикам.",
     "tagsTitle": "Теги",
+    "tagsMetaDescription": "Обзор статей и заметок по тегам.",
     "empty": "Пока здесь тихо.",
     "article": "Статья",
     "note": "Заметка",

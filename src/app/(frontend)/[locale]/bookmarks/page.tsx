@@ -9,6 +9,7 @@ import { BookmarkList } from '@/components/bookmarks/bookmark-list'
 import { siteChromeLinkClassName } from '@/components/site/site-nav'
 import { EmptyState } from '@/components/states/empty-state'
 import { findBookmarkList } from '@/content/bookmarks'
+import { buildPageMetadata, NOINDEX_ROBOTS } from '@/content/pageMetadata'
 import { Link } from '@/i18n/navigation'
 import { routing } from '@/i18n/routing'
 
@@ -20,11 +21,13 @@ export async function generateMetadata({ params }: BookmarksPageProps): Promise<
   const { locale: requested } = await params
   const locale = hasLocale(routing.locales, requested) ? requested : routing.defaultLocale
   const bookmarks = await getTranslations({ locale, namespace: 'bookmarks' })
-  const nav = await getTranslations({ locale, namespace: 'nav' })
 
-  return {
-    title: `${bookmarks('title')} — ${nav('siteTitle')}`,
-  }
+  return buildPageMetadata({
+    locale,
+    pathname: '/bookmarks',
+    robots: NOINDEX_ROBOTS,
+    title: bookmarks('title'),
+  })
 }
 
 export default async function BookmarksPage({ params }: BookmarksPageProps) {

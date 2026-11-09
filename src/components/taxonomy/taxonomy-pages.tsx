@@ -5,6 +5,8 @@ import { notFound } from 'next/navigation'
 
 import { FeedList } from '@/components/feed/feed-list'
 import { EmptyState } from '@/components/states/empty-state'
+import { findTaxonomyLanguageAlternates } from '@/content/localizedAlternates'
+import { buildPageMetadata } from '@/content/pageMetadata'
 import {
   findPublicTaxonomyFeed,
   findPublicTaxonomyIndex,
@@ -35,6 +37,12 @@ function titleKey(collection: TaxonomyCollection): 'categoriesTitle' | 'tagsTitl
   return collection === 'categories' ? 'categoriesTitle' : 'tagsTitle'
 }
 
+function metaDescriptionKey(
+  collection: TaxonomyCollection,
+): 'categoriesMetaDescription' | 'tagsMetaDescription' {
+  return collection === 'categories' ? 'categoriesMetaDescription' : 'tagsMetaDescription'
+}
+
 export async function taxonomyIndexMetadata(
   collection: TaxonomyCollection,
   params: IndexPageProps['params'],
@@ -42,11 +50,13 @@ export async function taxonomyIndexMetadata(
   const { locale: requested } = await params
   const locale = hasLocale(routing.locales, requested) ? requested : routing.defaultLocale
   const taxonomy = await getTranslations({ locale, namespace: 'taxonomy' })
-  const nav = await getTranslations({ locale, namespace: 'nav' })
 
-  return {
-    title: `${taxonomy(titleKey(collection))} — ${nav('siteTitle')}`,
-  }
+  return buildPageMetadata({
+    description: taxonomy(metaDescriptionKey(collection)),
+    locale,
+    pathname: `/${collection}`,
+    title: taxonomy(titleKey(collection)),
+  })
 }
 
 export async function taxonomyTermMetadata(
@@ -59,8 +69,16 @@ export async function taxonomyTermMetadata(
   const term = await findPublicTaxonomyTerm(collection, locale, slug)
   if (!term) notFound()
 
-  const nav = await getTranslations({ locale, namespace: 'nav' })
-  return { title: `${term.title} — ${nav('siteTitle')}` }
+  const taxonomy = await getTranslations({ locale, namespace: 'taxonomy' })
+  const languages = await findTaxonomyLanguageAlternates(collection, term.id)
+
+  return buildPageMetadata({
+    description: taxonomy(metaDescriptionKey(collection)),
+    languages,
+    locale,
+    pathname: taxonomyTermPath(collection, slug),
+    title: term.title,
+  })
 }
 
 /**

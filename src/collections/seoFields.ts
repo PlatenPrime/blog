@@ -24,7 +24,8 @@ export const seoFields: Field = {
       type: 'upload',
       relationTo: 'media',
       admin: {
-        description: 'Open Graph image; falls back to hero when unset (later).',
+        description:
+          'Open Graph image. Articles fall back to hero when unset; otherwise a generated title card.',
       },
     },
   ],

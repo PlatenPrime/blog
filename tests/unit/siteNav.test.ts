@@ -9,6 +9,7 @@ describe('site nav paths', () => {
       ['/feed', 'feed'],
       ['/articles', 'articles'],
       ['/notes', 'notes'],
+      ['/search', 'search'],
       ['/categories', 'categories'],
       ['/about', 'about'],
     ])

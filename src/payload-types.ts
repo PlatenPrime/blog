@@ -159,6 +159,7 @@ export interface Article {
     };
     [k: string]: unknown;
   };
+  searchText?: string | null;
   /**
    * Cover image for the article.
    */
@@ -176,7 +177,7 @@ export interface Article {
     metaTitle?: string | null;
     metaDescription?: string | null;
     /**
-     * Open Graph image; falls back to hero when unset (later).
+     * Open Graph image. Articles fall back to hero when unset; otherwise a generated title card.
      */
     ogImage?: (number | null) | Media;
   };
@@ -271,6 +272,7 @@ export interface Note {
     };
     [k: string]: unknown;
   };
+  searchText?: string | null;
   categories?: (number | Category)[] | null;
   tags?: (number | Tag)[] | null;
   /**
@@ -284,7 +286,7 @@ export interface Note {
     metaTitle?: string | null;
     metaDescription?: string | null;
     /**
-     * Open Graph image; falls back to hero when unset (later).
+     * Open Graph image. Articles fall back to hero when unset; otherwise a generated title card.
      */
     ogImage?: (number | null) | Media;
   };
@@ -334,7 +336,7 @@ export interface Page {
     metaTitle?: string | null;
     metaDescription?: string | null;
     /**
-     * Open Graph image; falls back to hero when unset (later).
+     * Open Graph image. Articles fall back to hero when unset; otherwise a generated title card.
      */
     ogImage?: (number | null) | Media;
   };
@@ -549,6 +551,7 @@ export interface ArticlesSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
   body?: T;
+  searchText?: T;
   heroImage?: T;
   categories?: T;
   tags?: T;
@@ -572,6 +575,7 @@ export interface NotesSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
   body?: T;
+  searchText?: T;
   categories?: T;
   tags?: T;
   publishedAt?: T;
