@@ -607,11 +607,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 061 — Reader features e2e + unit
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Регрессия.
 - **Deliverables:** Playwright comments/bookmarks; Vitest access.
 - **Verify:** Green CI.
 - **DoD:** Reader track закрыт тестами.
+- **Notes:** E2E `tests/e2e/reader-features.e2e.spec.ts` (locale `uk`, лейблы из каталога): гость на `/uk/articles/e2e-public-article` — CTA comments/bookmarks без формы и без кнопки; `/uk/bookmarks` и `/uk/account` — prompt, не 404, в шапке нет «Акаунт»/«Закладки»; seed-reader из `auth.setup` — UI login → комментарий с уникальным телом и подписью `you`; toggle закладки (`aria-pressed`) → список `/uk/bookmarks` с title фикстуры → снятие; `/uk/account` показывает email, ссылка reset на `/forgot-password`, native logout. Цели контента — только публичные слаги из `public-fixtures.ts`. Vitest wiring: `tests/unit/readerAccess.test.ts` — `Comments.access` / `Bookmarks.access` и field `moderationStatus` (anonymous/unverified/verified/admin). Helpers по-прежнему `access.test.ts` (**024**); hide/approve — int **058**; e2e в CI — **086**; factories — **087**; axe — **085**. Unverified-session UI в e2e нет: password login не пускает без verify.
 
 ---
 

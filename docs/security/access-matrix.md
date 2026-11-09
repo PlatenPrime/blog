@@ -38,6 +38,7 @@ See also: [ADR-002](../adr/002-auth-verification-and-account-linking.md), [conte
 ## Verify (automated)
 
 - Unit: `tests/unit/access.test.ts` (`isVerified`, role helpers)
+- Unit: `tests/unit/readerAccess.test.ts` (Comments/Bookmarks collection + `moderationStatus` field wiring)
 - Integration: `tests/int/auth.int.spec.ts` (anonymous/reader write boundaries, verify/reset)
 - Integration: `tests/int/comments.int.spec.ts`, `tests/int/bookmarks.int.spec.ts` (verified reader create)
 - Unit: `tests/unit/mediaAccess.test.ts` (Media CUD admin-only)

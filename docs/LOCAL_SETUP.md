@@ -341,7 +341,7 @@ Privacy и Terms — шаги **079–080**. Unit: `npm test` → `tests/unit/pa
 7. Черновик по адресу статьи по-прежнему «не найдено», формы там нет.
 8. Войдите в `/admin` как admin → **Comments** → откройте комментарий → в сайдбаре `moderationStatus` = Hidden → Save. Обновите `/uk/articles/{slug}` (и ту же заметку, если комментарий к ней) гостем и автором: этого текста нет, соседний одобренный остаётся, плашки «удалён» нет. Верните Approved → Save: текст снова на странице. Админ на сайте скрытое тоже не видит — только в `/admin`.
 
-Unit контракта списка — `npm test` → `tests/unit/commentsQuery.test.ts`. Круг hide/approve — `npm run test:int` → `tests/int/comments.int.spec.ts`. Unit access helpers — **024** (done). E2E отправки — **061**.
+Unit контракта списка — `npm test` → `tests/unit/commentsQuery.test.ts`. Круг hide/approve — `npm run test:int` → `tests/int/comments.int.spec.ts`. Unit access helpers — **024** (done). Wiring Comments/Bookmarks — `npm test` → `tests/unit/readerAccess.test.ts` (**061**). E2E отправки — `npm run test:e2e` → `tests/e2e/reader-features.e2e.spec.ts` (**061**, локально; CI e2e — **086**).
 
 ## 14. Bookmarks
 
@@ -371,7 +371,7 @@ Unit контракта списка — `npm test` → `tests/unit/commentsQuer
 4. «Закладки» ведёт на `/uk/bookmarks`: в списке только что сохранённые статья и заметка, чужих строк нет. «Збережено» на строке снимает её после обновления страницы. Пустой список — одна фраза, без скелета.
 5. Черновик по адресу статьи по-прежнему «не найдено», кнопки там нет. Закладка на текст, который потом сняли с публикации, со страницы «мои» пропадает; строка в `/admin` → **Bookmarks** может остаться.
 
-Unit контракта списка — `npm test` → `tests/unit/bookmarksQuery.test.ts`. Uniqueness и чужой find — `npm run test:int` → `tests/int/bookmarks.int.spec.ts` (шаг **022**). Unit helpers — **024** (done). E2E toggle — **061**.
+Unit контракта списка — `npm test` → `tests/unit/bookmarksQuery.test.ts`. Uniqueness и чужой find — `npm run test:int` → `tests/int/bookmarks.int.spec.ts` (шаг **022**). Unit helpers — **024** (done). Wiring Comments/Bookmarks — `npm test` → `tests/unit/readerAccess.test.ts` (**061**). E2E toggle — `npm run test:e2e` → `tests/e2e/reader-features.e2e.spec.ts` (**061**, локально; CI e2e — **086**).
 
 ## Полезные команды
 
