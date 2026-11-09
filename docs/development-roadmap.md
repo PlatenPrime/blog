@@ -692,11 +692,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 070 — JSON-LD structured data
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Rich results readiness.
 - **Deliverables:** Article/Person/WebSite schema; locale-aware URLs.
 - **Verify:** JSON-LD валиден (smoke parser test).
 - **DoD:** JSON-LD must-have закрыт.
+- **Notes:** Чистые builders в `jsonLd.ts` + server `<script type="application/ld+json">` (`JsonLd`). Locale layout — `@graph` WebSite+Person (`nav.siteTitle` / `siteDescription`, Person `url` → `/{locale}/about`, `email` только через `contactMailto(CONTACT_EMAIL)`). Стабильные `@id` `{origin}/#website` и `{origin}/#person`. Articles и notes — `Article` (notes без отдельного BlogPosting): `absolutePublicUrl`, image = `resolveOgMediaUrl` → `absoluteMediaUrl`, иначе `{pageUrl}/opengraph-image`. Checklist: пункт JSON-LD. Unit: `tests/unit/jsonLd.test.ts` (JSON.parse smoke, locale URLs, `@id` links, escape `<`). Canonical/metadata completeness / seo-checklist / BreadcrumbList / e2e Rich Results — вне шага (071–072).
 
 ### 071 — Metadata API completeness
 

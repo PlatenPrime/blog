@@ -3,11 +3,14 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
+import { getServerUrl } from '@/auth/serverUrl'
 import { ArticleDetail } from '@/components/articles/article-detail'
 import { BookmarkControl } from '@/components/bookmarks/bookmark-control'
 import { CommentSection } from '@/components/comments/comment-section'
 import { RelatedContent } from '@/components/reading/related-content'
+import { JsonLd } from '@/components/seo/json-ld'
 import { findPublicArticle } from '@/content/articles'
+import { buildArticleJsonLd } from '@/content/jsonLd'
 import { findRelatedContent } from '@/content/relatedContent'
 import { routing } from '@/i18n/routing'
 
@@ -49,8 +52,20 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     }),
   ])
 
+  const jsonLd = buildArticleJsonLd({
+    description: article.metaDescription,
+    heroUrl: article.hero?.url,
+    locale,
+    ogImageUrl: article.ogImage?.url,
+    origin: getServerUrl(),
+    pathname: `/articles/${slug}`,
+    publishedAt: article.publishedAt,
+    title: article.title,
+  })
+
   return (
     <div className="bg-background font-serif text-foreground">
+      <JsonLd data={jsonLd} />
       <div className="mx-auto w-full max-w-measure px-5 pt-16 pb-24 sm:px-6 sm:pt-24">
         <ArticleDetail
           article={article}

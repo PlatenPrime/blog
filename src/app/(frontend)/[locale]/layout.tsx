@@ -6,11 +6,13 @@ import { notFound } from 'next/navigation'
 import React from 'react'
 
 import { getServerUrl } from '@/auth/serverUrl'
+import { JsonLd } from '@/components/seo/json-ld'
 import { SiteFooter } from '@/components/site/site-footer'
 import { SiteHeader } from '@/components/site/site-header'
 import { SkipLink } from '@/components/site/skip-link'
 import { themeInitScript } from '@/components/theme/theme-init-script'
 import { ThemeProvider } from '@/components/theme/theme-provider'
+import { buildLocaleShellJsonLd } from '@/content/jsonLd'
 import { absoluteRssFeedUrl, rssOrigin } from '@/content/rssQuery'
 import { routing } from '@/i18n/routing'
 
@@ -66,7 +68,14 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
   }
 
   setRequestLocale(locale)
-  const messages = await getMessages()
+  const [messages, nav] = await Promise.all([getMessages(), getTranslations('nav')])
+  const jsonLd = buildLocaleShellJsonLd({
+    contactEmail: process.env.CONTACT_EMAIL,
+    description: nav('siteDescription'),
+    locale,
+    name: nav('siteTitle'),
+    origin: getServerUrl(),
+  })
 
   return (
     <html
@@ -76,6 +85,7 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
     >
       <body>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        <JsonLd data={jsonLd} />
         <ThemeProvider>
           <NextIntlClientProvider messages={messages}>
             <div className="flex min-h-dvh flex-col">
