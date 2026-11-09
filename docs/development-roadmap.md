@@ -620,11 +620,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 062 — Reading time
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Meta для статей.
 - **Deliverables:** Вычисление на save/render; отображение на UI.
 - **Verify:** Unit test формулы; UI показывает значение.
 - **DoD:** Reading time must-have закрыт.
+- **Notes:** Считается на render из Lexical `body` (не persist): `readingTimeFromLexical` → `convertLexicalToPlaintext` → `countWords` / `ceil(words / 200)`, пустой текст → 0, иначе минимум 1 мин (`src/lib/readingTime.ts`). UI — под `<time>` в `ArticleDetail`; i18n `articles.readingTime` (`{minutes}`) uk/en/ru. Notes / список / лента — вне шага. Unit: `tests/unit/readingTime.test.ts`. E2E reading time нет.
 
 ### 063 — Table of contents
 
