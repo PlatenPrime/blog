@@ -598,19 +598,21 @@ v1 считается завершённым, когда одновременн�
 
 ### 060 — Reader account page (minimal)
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Профиль/безопасность базовая.
 - **Deliverables:** Email display, logout, link reset password.
 - **Verify:** Reader меняет сессию осознанно.
 - **DoD:** Аккаунт не «дыра» без страницы.
+- **Notes:** `/uk|ru|en/account`. Сессия — `getCurrentUser()`; новой API/коллекции нет. Гость видит вход и регистрацию, не 404 (как `/bookmarks`). Вошедший: `user.email`; неподтверждённый — пометка `nav.emailUnverified`. Сброс пароля — ссылка на `/forgot-password` (email-flow с token, не форма смены пароля в сессии). Logout — native `<a href={locale}/logout>` (route handler; client `Link` не бьёт GET). «Выйти везде» — `logoutEverywhereFormAction` на этой странице; кнопка на главной не убиралась. В `siteNavItems` пункта нет. Ссылка «Акаунт» только у вошедшего, в `SiteAuthLinks` перед закладками. i18n: `account` + `nav.account`. Unit новой логики нет (паритет ключей — `i18nMessages`). E2E — **061**.
 
 ### 061 — Reader features e2e + unit
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Регрессия.
 - **Deliverables:** Playwright comments/bookmarks; Vitest access.
 - **Verify:** Green CI.
 - **DoD:** Reader track закрыт тестами.
+- **Notes:** E2E `tests/e2e/reader-features.e2e.spec.ts` (locale `uk`, лейблы из каталога): гость на `/uk/articles/e2e-public-article` — CTA comments/bookmarks без формы и без кнопки; `/uk/bookmarks` и `/uk/account` — prompt, не 404, в шапке нет «Акаунт»/«Закладки»; seed-reader из `auth.setup` — UI login → комментарий с уникальным телом и подписью `you`; toggle закладки (`aria-pressed`) → список `/uk/bookmarks` с title фикстуры → снятие; `/uk/account` показывает email, ссылка reset на `/forgot-password`, native logout. Цели контента — только публичные слаги из `public-fixtures.ts`. Vitest wiring: `tests/unit/readerAccess.test.ts` — `Comments.access` / `Bookmarks.access` и field `moderationStatus` (anonymous/unverified/verified/admin). Helpers по-прежнему `access.test.ts` (**024**); hide/approve — int **058**; e2e в CI — **086**; factories — **087**; axe — **085**. Unverified-session UI в e2e нет: password login не пускает без verify.
 
 ---
 

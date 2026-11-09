@@ -21,6 +21,9 @@ export async function SiteAuthLinks({ isAdminUser, isAuthenticated }: SiteAuthLi
     <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
       {isAuthenticated ? (
         <>
+          <Link className={linkClassName} href="/account">
+            {t('account')}
+          </Link>
           <Link className={linkClassName} href="/bookmarks">
             {t('bookmarks')}
           </Link>

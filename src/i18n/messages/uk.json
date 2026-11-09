@@ -6,6 +6,7 @@
     "login": "Увійти",
     "register": "Реєстрація",
     "logout": "Вийти",
+    "account": "Акаунт",
     "bookmarks": "Закладки",
     "logoutEverywhere": "Вийти всюди",
     "openAdmin": "Адмінка",
@@ -160,6 +161,16 @@
     "login": "Увійти",
     "register": "Реєстрація",
     "verifyFirst": "Підтвердьте пошту, щоб зберігати."
+  },
+  "account": {
+    "title": "Акаунт",
+    "emailLabel": "Електронна пошта",
+    "resetPassword": "Скинути пароль",
+    "logout": "Вийти",
+    "logoutEverywhere": "Вийти всюди",
+    "loginPrompt": "Увійдіть, щоб керувати акаунтом.",
+    "login": "Увійти",
+    "register": "Реєстрація"
   },
   "taxonomy": {
     "categoriesTitle": "Рубрики",
