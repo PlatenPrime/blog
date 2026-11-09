@@ -159,6 +159,7 @@ export interface Article {
     };
     [k: string]: unknown;
   };
+  searchText?: string | null;
   /**
    * Cover image for the article.
    */
@@ -271,6 +272,7 @@ export interface Note {
     };
     [k: string]: unknown;
   };
+  searchText?: string | null;
   categories?: (number | Category)[] | null;
   tags?: (number | Tag)[] | null;
   /**
@@ -549,6 +551,7 @@ export interface ArticlesSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
   body?: T;
+  searchText?: T;
   heroImage?: T;
   categories?: T;
   tags?: T;
@@ -572,6 +575,7 @@ export interface NotesSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
   body?: T;
+  searchText?: T;
   categories?: T;
   tags?: T;
   publishedAt?: T;

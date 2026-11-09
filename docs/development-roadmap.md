@@ -656,11 +656,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 066 — Simple search (Postgres)
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Поиск без внешнего сервиса.
 - **Deliverables:** Search page/API; `tsvector` или аккуратный `ILIKE`; locale-aware.
 - **Verify:** Query находит title/body; пустой query UX ok.
 - **DoD:** Поиск v1 достаточен.
+- **Notes:** Locale-aware `/{locale}/search` (GET `?q=` + `?page=`). Lexical `body` jsonb → скрытый localized `searchText` (`setSearchTextFromBody` + `npm run backfill:search-text`); where = `publicContentWhere` + `or` `title`/`searchText` `like`. Dual find articles+notes, merge как feed (`SEARCH_PAGE_SIZE = 10`). Пустой/whitespace `q` — без БД, copy `search.emptyQuery`. UI — форма + `FeedList`; пункт в `siteNavItems`. Unit: `tests/unit/searchQuery.test.ts`. `tsvector`/Meilisearch/snippets/REST API/e2e «нашёл по body» — вне шага.
 
 ### 067 — Sitemap
 

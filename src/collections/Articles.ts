@@ -4,8 +4,10 @@ import { isAdmin } from '../access/isAdmin'
 import { publishedOrAdmin } from '../access/publishedOrAdmin'
 import type { AccessUser } from '../access/types'
 import { setPublishedAtOnPublish } from '../hooks/setPublishedAtOnPublish'
+import { setSearchTextFromBody } from '../hooks/setSearchTextFromBody'
 import { createPreviewUrl } from '../preview/generatePreviewUrl'
 import { adminGroups, collectionLabels } from './adminUi'
+import { searchTextField } from './searchTextField'
 import { seoFields } from './seoFields'
 import { ensureSlugFromTitle, taxonomyTitleAndSlugFields } from './taxonomyFields'
 
@@ -38,7 +40,7 @@ export const Articles: CollectionConfig = {
   },
   hooks: {
     beforeValidate: [ensureSlugFromTitle],
-    beforeChange: [setPublishedAtOnPublish],
+    beforeChange: [setPublishedAtOnPublish, setSearchTextFromBody],
   },
   fields: [
     ...taxonomyTitleAndSlugFields,
@@ -48,6 +50,7 @@ export const Articles: CollectionConfig = {
       localized: true,
       required: true,
     },
+    searchTextField,
     {
       name: 'heroImage',
       type: 'upload',

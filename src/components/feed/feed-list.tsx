@@ -2,8 +2,9 @@ import { Badge } from '@/components/ui/badge'
 import { formatPublishedOn } from '@/content/formatPublishedOn'
 import { feedPageHref, type FeedItem } from '@/content/feedQuery'
 import { latestPublicPath } from '@/content/latestPublicQuery'
-import type { NumberedPageHref } from '@/content/numberedPage'
 import { Link } from '@/i18n/navigation'
+
+type FeedListPageHref = string | { pathname: string; query?: Record<string, string> }
 
 type FeedListLabels = {
   article: string
@@ -20,7 +21,7 @@ type FeedListProps = {
   locale: string
   page: number
   pageCount: number
-  pageHref?: (page: number) => NumberedPageHref<string>
+  pageHref?: (page: number) => FeedListPageHref
 }
 
 /**

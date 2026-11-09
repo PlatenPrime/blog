@@ -1,6 +1,7 @@
 /**
  * Canonical public sections.
  * `/feed` is the mixed list. `/articles` and `/notes` are each a list and a reading page.
+ * `/search` is title/body search over published articles and notes (step 066).
  * `/categories` is the category index and its shelves. `/tags` is the tag index,
  * linked from the category index and from reading pages, and stays out of this list.
  * `/about` is the CMS page whose slug is `about` (step 054).
@@ -10,11 +11,12 @@ export const siteNavItems = [
   { href: '/feed', labelKey: 'feed' },
   { href: '/articles', labelKey: 'articles' },
   { href: '/notes', labelKey: 'notes' },
+  { href: '/search', labelKey: 'search' },
   { href: '/categories', labelKey: 'categories' },
   { href: '/about', labelKey: 'about' },
 ] as const satisfies readonly {
   href: `/${string}`
-  labelKey: 'about' | 'articles' | 'categories' | 'feed' | 'notes'
+  labelKey: 'about' | 'articles' | 'categories' | 'feed' | 'notes' | 'search'
 }[]
 
 export type SiteNavItem = (typeof siteNavItems)[number]

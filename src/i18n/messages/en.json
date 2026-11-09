@@ -15,6 +15,7 @@
     "feed": "Feed",
     "articles": "Articles",
     "notes": "Notes",
+    "search": "Search",
     "categories": "Categories",
     "about": "About",
     "primary": "Sections",
@@ -111,6 +112,17 @@
     "note": "Note",
     "empty": "Nothing here yet.",
     "pagination": "Feed pages",
+    "previous": "Newer",
+    "next": "Older",
+    "pageStatus": "Page {page} of {pages}"
+  },
+  "search": {
+    "title": "Search",
+    "placeholder": "Search articles and notes",
+    "submit": "Search",
+    "emptyQuery": "Type a query to search published articles and notes.",
+    "noResults": "Nothing matched that query.",
+    "pagination": "Search pages",
     "previous": "Newer",
     "next": "Older",
     "pageStatus": "Page {page} of {pages}"
