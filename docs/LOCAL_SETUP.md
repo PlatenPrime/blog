@@ -254,7 +254,7 @@ Unit: `npm test` → visibility / `publishedOrAdmin` / `applyPublishedAtOnPublis
 ### Публичный список и страница (шаг 051)
 
 1. `http://localhost:3000/uk/articles` (и `/ru/articles`, `/en/articles`) — список опубликованных статей. Пусто — одна фраза, без карточек. Черновик и будущий `publishedAt` в список не попадают.
-2. `http://localhost:3000/uk/articles/{slug}` — заголовок, дата, обложка если она есть, названия рубрик и тегов без ссылок, тело Lexical. Вкладка берёт `seo.metaTitle`, иначе `title`.
+2. `http://localhost:3000/uk/articles/{slug}` — заголовок, дата, время чтения под датой (шаг **062**), обложка если она есть, названия рубрик и тегов со ссылками на полки, тело Lexical. Вкладка берёт `seo.metaTitle`, иначе `title`.
 3. Неизвестный slug, draft и будущая дата в инкогнито → локализованный 404. Адрес заметки этот маршрут не открывает.
 4. `http://localhost:3000/uk/articles?page=0` → редирект на `/uk/articles`.
 5. Preview черновика остаётся на `/uk/dev/rich-text/article/{slug}`, не на продуктовом адресе.

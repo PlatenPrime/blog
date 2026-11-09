@@ -123,7 +123,8 @@
     "next": "Давніші",
     "pageStatus": "Сторінка {page} з {pages}",
     "categories": "Рубрики",
-    "tags": "Теги"
+    "tags": "Теги",
+    "readingTime": "{minutes} хв читання"
   },
   "notes": {
     "title": "Нотатки",

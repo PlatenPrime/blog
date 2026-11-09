@@ -42,7 +42,11 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       <div className="mx-auto w-full max-w-measure px-5 pt-16 pb-24 sm:px-6 sm:pt-24">
         <ArticleDetail
           article={article}
-          labels={{ categories: t('categories'), tags: t('tags') }}
+          labels={{
+            categories: t('categories'),
+            readingTime: (minutes) => t('readingTime', { minutes }),
+            tags: t('tags'),
+          }}
           locale={locale}
         />
         <BookmarkControl contentId={article.id} relationTo="articles" />

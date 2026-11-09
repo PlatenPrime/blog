@@ -123,7 +123,8 @@
     "next": "Раньше",
     "pageStatus": "Страница {page} из {pages}",
     "categories": "Рубрики",
-    "tags": "Теги"
+    "tags": "Теги",
+    "readingTime": "{minutes} мин чтения"
   },
   "notes": {
     "title": "Заметки",

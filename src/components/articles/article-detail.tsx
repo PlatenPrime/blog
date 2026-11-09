@@ -2,9 +2,11 @@ import { PayloadRichText } from '@/components/rich-text/PayloadRichText'
 import { TaxonomyLine } from '@/components/taxonomy/taxonomy-line'
 import type { ArticleHeroImage, PublicArticle } from '@/content/articlesQuery'
 import { formatPublishedOn } from '@/content/formatPublishedOn'
+import { readingTimeFromLexical } from '@/lib/readingTime'
 
 type ArticleDetailLabels = {
   categories: string
+  readingTime: (minutes: number) => string
   tags: string
 }
 
@@ -33,6 +35,8 @@ const bodyClassName = [
  */
 export function ArticleDetail({ article, labels, locale }: ArticleDetailProps) {
   const publishedOn = article.publishedAt ? formatPublishedOn(article.publishedAt, locale) : null
+  const readingMinutes = readingTimeFromLexical(article.body)
+  const readingTimeLabel = readingMinutes > 0 ? labels.readingTime(readingMinutes) : null
   const hasTaxonomy = article.categories.length > 0 || article.tags.length > 0
 
   return (
@@ -46,6 +50,9 @@ export function ArticleDetail({ article, labels, locale }: ArticleDetailProps) {
         >
           {publishedOn}
         </time>
+      ) : null}
+      {readingTimeLabel ? (
+        <p className="mt-1 font-sans text-small text-muted-foreground">{readingTimeLabel}</p>
       ) : null}
       {hasTaxonomy ? (
         <div className="mt-4 flex flex-col gap-1">

@@ -123,7 +123,8 @@
     "next": "Older",
     "pageStatus": "Page {page} of {pages}",
     "categories": "Categories",
-    "tags": "Tags"
+    "tags": "Tags",
+    "readingTime": "{minutes} min read"
   },
   "notes": {
     "title": "Notes",
