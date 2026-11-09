@@ -125,7 +125,8 @@
     "categories": "Categories",
     "tags": "Tags",
     "readingTime": "{minutes} min read",
-    "tableOfContents": "Contents"
+    "tableOfContents": "Contents",
+    "related": "More on this"
   },
   "notes": {
     "title": "Notes",
@@ -137,7 +138,8 @@
     "pageStatus": "Page {page} of {pages}",
     "categories": "Categories",
     "tags": "Tags",
-    "tableOfContents": "Contents"
+    "tableOfContents": "Contents",
+    "related": "More on this"
   },
   "comments": {
     "title": "Comments",

@@ -6,7 +6,9 @@ import { notFound } from 'next/navigation'
 import { BookmarkControl } from '@/components/bookmarks/bookmark-control'
 import { CommentSection } from '@/components/comments/comment-section'
 import { NoteDetail } from '@/components/notes/note-detail'
+import { RelatedContent } from '@/components/reading/related-content'
 import { findPublicNote } from '@/content/notes'
+import { findRelatedContent } from '@/content/relatedContent'
 import { routing } from '@/i18n/routing'
 
 type NotePageProps = {
@@ -35,7 +37,17 @@ export default async function NotePage({ params }: NotePageProps) {
   const note = await findPublicNote(locale, slug)
   if (!note) notFound()
 
-  const t = await getTranslations('notes')
+  const [t, feed, related] = await Promise.all([
+    getTranslations('notes'),
+    getTranslations('feed'),
+    findRelatedContent({
+      categoryIds: note.categoryIds,
+      excludeCollection: 'notes',
+      excludeId: note.id,
+      locale,
+      tagIds: note.tagIds,
+    }),
+  ])
 
   return (
     <div className="bg-background font-sans text-foreground">
@@ -50,6 +62,17 @@ export default async function NotePage({ params }: NotePageProps) {
           locale={locale}
           note={note}
         />
+        {related.length > 0 ? (
+          <RelatedContent
+            items={related}
+            labels={{
+              article: feed('article'),
+              heading: t('related'),
+              note: feed('note'),
+            }}
+            locale={locale}
+          />
+        ) : null}
         <BookmarkControl contentId={note.id} relationTo="notes" />
         <CommentSection contentId={note.id} locale={locale} relationTo="notes" />
       </div>

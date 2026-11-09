@@ -11,6 +11,7 @@ import {
   type NumberedPageResolution,
 } from '@/content/numberedPage'
 import {
+  taxonomyIds,
   taxonomyLinks,
   type TaxonomyLink,
   type TaxonomyRelationLike,
@@ -88,12 +89,16 @@ export type NotesPageResolution = NumberedPageResolution
 export type PublicNote = {
   body: SerializedEditorState
   categories: TaxonomyLink[]
+  /** Ids for related queries. Links use `categories`; these stay off the UI. */
+  categoryIds: number[]
   /** Payload id. Comments attach to it; it is not a selected field. */
   id: number
   metaDescription: string | null
   metaTitle: string | null
   publishedAt: string | null
   tags: TaxonomyLink[]
+  /** Ids for related queries. Links use `tags`; these stay off the UI. */
+  tagIds: number[]
   title: string
 }
 
@@ -199,11 +204,13 @@ export function toPublicNote(doc: NoteDetailSource): PublicNote | null {
   return {
     body: doc.body,
     categories: taxonomyLinks(doc.categories),
+    categoryIds: taxonomyIds(doc.categories),
     id: doc.id,
     metaDescription: blankToNull(doc.seo?.metaDescription),
     metaTitle: blankToNull(doc.seo?.metaTitle),
     publishedAt,
     tags: taxonomyLinks(doc.tags),
+    tagIds: taxonomyIds(doc.tags),
     title: doc.title,
   }
 }

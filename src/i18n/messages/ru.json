@@ -125,7 +125,8 @@
     "categories": "Рубрики",
     "tags": "Теги",
     "readingTime": "{minutes} мин чтения",
-    "tableOfContents": "Содержание"
+    "tableOfContents": "Содержание",
+    "related": "Ещё по теме"
   },
   "notes": {
     "title": "Заметки",
@@ -137,7 +138,8 @@
     "pageStatus": "Страница {page} из {pages}",
     "categories": "Рубрики",
     "tags": "Теги",
-    "tableOfContents": "Содержание"
+    "tableOfContents": "Содержание",
+    "related": "Ещё по теме"
   },
   "comments": {
     "title": "Комментарии",

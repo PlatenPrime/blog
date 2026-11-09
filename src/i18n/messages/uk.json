@@ -125,7 +125,8 @@
     "categories": "Рубрики",
     "tags": "Теги",
     "readingTime": "{minutes} хв читання",
-    "tableOfContents": "Зміст"
+    "tableOfContents": "Зміст",
+    "related": "Ще по темі"
   },
   "notes": {
     "title": "Нотатки",
@@ -137,7 +138,8 @@
     "pageStatus": "Сторінка {page} з {pages}",
     "categories": "Рубрики",
     "tags": "Теги",
-    "tableOfContents": "Зміст"
+    "tableOfContents": "Зміст",
+    "related": "Ще по темі"
   },
   "comments": {
     "title": "Коментарі",

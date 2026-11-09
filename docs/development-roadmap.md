@@ -647,11 +647,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 065 — Related content
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Удержание читателя.
 - **Deliverables:** Related by tags/categories; блок в конце.
 - **Verify:** Related не включает текущий пост; только published.
 - **DoD:** Related must-have закрыт.
+- **Notes:** Смешанный related (articles + notes) по общим category/tag ids: `taxonomyIds` → `relatedContentWhere` (`publicContentWhere` + `id not_equals` только в своей коллекции + `or` categories/tags `in`) → два `relatedFindArgs` (`RELATED_LIMIT = 3`) → `mergeRelatedContent`. Пустая таксономия / 0 соседей — блока нет. UI — `RelatedContent` снаружи `<article>`, после detail, перед закладкой и комментариями; badge через `feed.article`/`feed.note`; i18n `articles.related` / `notes.related`. Public types несут `categoryIds`/`tagIds` для запроса. Unit: `tests/unit/relatedContentQuery.test.ts` (+ mapping в articles/notes query). Overlap scoring / e2e / CMS related — вне шага.
 
 ### 066 — Simple search (Postgres)
 

@@ -6,7 +6,9 @@ import { notFound } from 'next/navigation'
 import { ArticleDetail } from '@/components/articles/article-detail'
 import { BookmarkControl } from '@/components/bookmarks/bookmark-control'
 import { CommentSection } from '@/components/comments/comment-section'
+import { RelatedContent } from '@/components/reading/related-content'
 import { findPublicArticle } from '@/content/articles'
+import { findRelatedContent } from '@/content/relatedContent'
 import { routing } from '@/i18n/routing'
 
 type ArticlePageProps = {
@@ -35,7 +37,17 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   const article = await findPublicArticle(locale, slug)
   if (!article) notFound()
 
-  const t = await getTranslations('articles')
+  const [t, feed, related] = await Promise.all([
+    getTranslations('articles'),
+    getTranslations('feed'),
+    findRelatedContent({
+      categoryIds: article.categoryIds,
+      excludeCollection: 'articles',
+      excludeId: article.id,
+      locale,
+      tagIds: article.tagIds,
+    }),
+  ])
 
   return (
     <div className="bg-background font-serif text-foreground">
@@ -50,6 +62,17 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           }}
           locale={locale}
         />
+        {related.length > 0 ? (
+          <RelatedContent
+            items={related}
+            labels={{
+              article: feed('article'),
+              heading: t('related'),
+              note: feed('note'),
+            }}
+            locale={locale}
+          />
+        ) : null}
         <BookmarkControl contentId={article.id} relationTo="articles" />
         <CommentSection contentId={article.id} locale={locale} relationTo="articles" />
       </div>

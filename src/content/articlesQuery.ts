@@ -11,6 +11,7 @@ import {
   type NumberedPageResolution,
 } from '@/content/numberedPage'
 import {
+  taxonomyIds,
   taxonomyLinks,
   type TaxonomyLink,
   type TaxonomyRelationLike,
@@ -96,6 +97,8 @@ export type ArticleHeroImage = {
 export type PublicArticle = {
   body: SerializedEditorState
   categories: TaxonomyLink[]
+  /** Ids for related queries. Links use `categories`; these stay off the UI. */
+  categoryIds: number[]
   hero: ArticleHeroImage | null
   /** Payload id. Comments attach to it; it is not a selected field. */
   id: number
@@ -103,6 +106,8 @@ export type PublicArticle = {
   metaTitle: string | null
   publishedAt: string | null
   tags: TaxonomyLink[]
+  /** Ids for related queries. Links use `tags`; these stay off the UI. */
+  tagIds: number[]
   title: string
 }
 
@@ -233,12 +238,14 @@ export function toPublicArticle(doc: ArticleDetailSource): PublicArticle | null 
   return {
     body: doc.body,
     categories: taxonomyLinks(doc.categories),
+    categoryIds: taxonomyIds(doc.categories),
     hero: toArticleHero(doc.heroImage),
     id: doc.id,
     metaDescription: blankToNull(doc.seo?.metaDescription),
     metaTitle: blankToNull(doc.seo?.metaTitle),
     publishedAt,
     tags: taxonomyLinks(doc.tags),
+    tagIds: taxonomyIds(doc.tags),
     title: doc.title,
   }
 }
