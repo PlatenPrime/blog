@@ -124,7 +124,8 @@
     "pageStatus": "Page {page} of {pages}",
     "categories": "Categories",
     "tags": "Tags",
-    "readingTime": "{minutes} min read"
+    "readingTime": "{minutes} min read",
+    "tableOfContents": "Contents"
   },
   "notes": {
     "title": "Notes",
@@ -135,7 +136,8 @@
     "next": "Older",
     "pageStatus": "Page {page} of {pages}",
     "categories": "Categories",
-    "tags": "Tags"
+    "tags": "Tags",
+    "tableOfContents": "Contents"
   },
   "comments": {
     "title": "Comments",

@@ -45,6 +45,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           labels={{
             categories: t('categories'),
             readingTime: (minutes) => t('readingTime', { minutes }),
+            tableOfContents: t('tableOfContents'),
             tags: t('tags'),
           }}
           locale={locale}

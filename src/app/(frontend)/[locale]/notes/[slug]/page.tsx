@@ -41,7 +41,12 @@ export default async function NotePage({ params }: NotePageProps) {
     <div className="bg-background font-sans text-foreground">
       <div className="mx-auto w-full max-w-measure px-5 pt-16 pb-24 sm:px-6 sm:pt-24">
         <NoteDetail
-          labels={{ categories: t('categories'), kicker: t('kicker'), tags: t('tags') }}
+          labels={{
+            categories: t('categories'),
+            kicker: t('kicker'),
+            tableOfContents: t('tableOfContents'),
+            tags: t('tags'),
+          }}
           locale={locale}
           note={note}
         />

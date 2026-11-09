@@ -1,12 +1,15 @@
+import { TableOfContents } from '@/components/reading/table-of-contents'
 import { PayloadRichText } from '@/components/rich-text/PayloadRichText'
 import { TaxonomyLine } from '@/components/taxonomy/taxonomy-line'
 import type { ArticleHeroImage, PublicArticle } from '@/content/articlesQuery'
 import { formatPublishedOn } from '@/content/formatPublishedOn'
 import { readingTimeFromLexical } from '@/lib/readingTime'
+import { extractTableOfContents, shouldShowTableOfContents } from '@/lib/tableOfContents'
 
 type ArticleDetailLabels = {
   categories: string
   readingTime: (minutes: number) => string
+  tableOfContents: string
   tags: string
 }
 
@@ -38,6 +41,12 @@ export function ArticleDetail({ article, labels, locale }: ArticleDetailProps) {
   const readingMinutes = readingTimeFromLexical(article.body)
   const readingTimeLabel = readingMinutes > 0 ? labels.readingTime(readingMinutes) : null
   const hasTaxonomy = article.categories.length > 0 || article.tags.length > 0
+  const tocEntries = extractTableOfContents(article.body)
+  const showToc = shouldShowTableOfContents({
+    entries: tocEntries,
+    surface: 'article',
+    wordCount: 0,
+  })
 
   return (
     <article>
@@ -60,6 +69,7 @@ export function ArticleDetail({ article, labels, locale }: ArticleDetailProps) {
           <TaxonomyLine kind="tags" label={labels.tags} links={article.tags} />
         </div>
       ) : null}
+      {showToc ? <TableOfContents entries={tocEntries} title={labels.tableOfContents} /> : null}
       <PayloadRichText className={bodyClassName} data={article.body} />
     </article>
   )

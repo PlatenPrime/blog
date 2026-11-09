@@ -7,7 +7,7 @@
 
 ## Как читать этот документ
 
-Этот файл — чертёж: порядок работ, статусы, как проверить шаг. Ход проекта человеческим языком — зачем шаг появился и как он держится на предыдущем — в [how-we-built-the-blog.md](./how-we-built-the-blog.md). Книга дописана по сделанное; чертёж остаётся источником правды по статусам.
+Этот файл — чертёж: порядок работ, статусы, как проверить шаг. Ход проекта человеческим языком — зачем шаг появился и как он держится на предыдущем — в [how-we-built-the-blog.md](./how-we-built-the-blog.md). Книга дописывается в том же изменении, что и `done` шага (правило `.cursor/rules/roadmap-one-step.mdc`); чертёж остаётся источником правды по статусам.
 
 | Поле шага        | Смысл                                  |
 | ---------------- | -------------------------------------- |
@@ -629,11 +629,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 063 — Table of contents
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Навигация по длинным статьям.
 - **Deliverables:** TOC из heading nodes Lexical; anchor links.
 - **Verify:** Клик скроллит к секции.
 - **DoD:** TOC на articles (notes — по эвристике длины).
+- **Notes:** Render-time из Lexical `body` (не persist): `extractTableOfContents` → h2/h3 document order, `headingPlainText` (text/link children), `slugify` + dedupe (`-2`, …; пустой → `section`). Gate: article ≥2 пункта; note ≥2 **и** ≥300 слов (`countWords` plaintext). UI — in-flow `<nav>` в `TableOfContents` между taxonomy и body (`ArticleDetail` / `NoteDetail`); без sticky aside и без active-section spy. Якоря — override `heading` в `PayloadRichText` (`id` + `scroll-mt-24`, тот же `allocateHeadingId`). i18n `articles.tableOfContents` / `notes.tableOfContents` (uk/en/ru). Unit: `tests/unit/tableOfContents.test.ts`. E2E scroll нет (как reading time **062**). Sticky TOC / IntersectionObserver / h4+ — вне шага.
 
 ### 064 — Code highlighting
 
