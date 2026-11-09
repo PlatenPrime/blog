@@ -1,9 +1,15 @@
-import { BlocksFeature, UploadFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
+import {
+  BlocksFeature,
+  CodeBlock,
+  UploadFeature,
+  lexicalEditor,
+} from '@payloadcms/richtext-lexical'
 
 import { YouTubeBlock } from '@/blocks/YouTube'
+import { CODE_BLOCK_LANGUAGES } from '@/lib/codeLanguages'
 
 /**
- * Shared Lexical editor: default features + Media uploads + YouTube block (roadmap 034).
+ * Shared Lexical editor: default features + Media uploads + YouTube + Code (034, 064).
  */
 export const editor = lexicalEditor({
   features: ({ defaultFeatures }) => [
@@ -12,7 +18,13 @@ export const editor = lexicalEditor({
       enabledCollections: ['media'],
     }),
     BlocksFeature({
-      blocks: [YouTubeBlock],
+      blocks: [
+        YouTubeBlock,
+        CodeBlock({
+          defaultLanguage: 'ts',
+          languages: { ...CODE_BLOCK_LANGUAGES },
+        }),
+      ],
     }),
   ],
 })

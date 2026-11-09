@@ -30,7 +30,9 @@ const bodyClassName = [
   '[&_blockquote]:my-6 [&_blockquote]:border-l [&_blockquote]:border-border [&_blockquote]:pl-4 [&_blockquote]:text-muted-foreground',
   '[&_img]:my-6 [&_img]:h-auto [&_img]:max-w-full',
   '[&_.payload-richtext-youtube]:my-6',
-  '[&_pre]:my-6 [&_pre]:overflow-x-auto [&_pre]:bg-muted [&_pre]:p-4 [&_pre]:font-sans [&_pre]:text-small',
+  '[&_.payload-richtext-code]:my-6',
+  '[&_pre]:overflow-x-auto [&_pre]:rounded-md [&_pre]:p-4 [&_pre]:font-mono [&_pre]:text-small',
+  '[&_:not(pre)>code]:rounded-sm [&_:not(pre)>code]:bg-muted [&_:not(pre)>code]:px-1 [&_:not(pre)>code]:py-0.5 [&_:not(pre)>code]:font-mono [&_:not(pre)>code]:text-small',
 ].join(' ')
 
 /**

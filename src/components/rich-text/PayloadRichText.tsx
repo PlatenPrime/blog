@@ -3,6 +3,7 @@ import type { JSXConvertersFunction } from '@payloadcms/richtext-lexical/react'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import type { SerializedEditorState } from 'lexical'
 
+import { HighlightedCode } from '@/components/rich-text/highlighted-code'
 import { allocateHeadingId, headingPlainText, isTocHeading } from '@/lib/tableOfContents'
 import { toYouTubeEmbedSrc } from '@/lib/youtube'
 
@@ -13,8 +14,15 @@ type YouTubeFields = {
   id?: string
 }
 
-type NodeTypes = DefaultNodeTypes | SerializedBlockNode<YouTubeFields>
+type CodeFields = {
+  blockType: 'Code'
+  code: string
+  language?: string | null
+  blockName?: string | null
+  id?: string
+}
 
+type NodeTypes = DefaultNodeTypes | SerializedBlockNode<YouTubeFields | CodeFields>
 type HeadingTag = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
 
 const ALLOWED_HEADING_TAGS = new Set<string>(['h1', 'h2', 'h3', 'h4', 'h5', 'h6'])
@@ -63,6 +71,11 @@ function createJsxConverters(): JSXConvertersFunction<NodeTypes> {
           </div>
         )
       },
+      Code: ({ node }) => {
+        const code = typeof node.fields.code === 'string' ? node.fields.code : ''
+        if (!code) return null
+        return <HighlightedCode code={code} language={node.fields.language} />
+      },
     },
   })
 }
@@ -73,7 +86,7 @@ type PayloadRichTextProps = {
 }
 
 /**
- * Lexical → JSX with Upload (default), YouTube block, and TOC heading anchors (063).
+ * Lexical → JSX with Upload (default), YouTube, Code (Shiki 064), TOC heading anchors (063).
  */
 export function PayloadRichText({ data, className }: PayloadRichTextProps) {
   return <RichText data={data} converters={createJsxConverters()} className={className} />

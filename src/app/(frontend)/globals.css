@@ -237,3 +237,16 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Shiki dual themes (roadmap 064): colors live in CSS variables on each token. */
+.shiki,
+.shiki span {
+  color: var(--shiki-light);
+  background-color: var(--shiki-light-bg);
+}
+
+html.dark .shiki,
+html.dark .shiki span {
+  color: var(--shiki-dark);
+  background-color: var(--shiki-dark-bg);
+}

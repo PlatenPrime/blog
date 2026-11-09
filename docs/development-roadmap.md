@@ -638,11 +638,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 064 — Code highlighting
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Читаемые code blocks.
 - **Deliverables:** Shiki (или выбранный highlighter) в render pipeline; dark/light themes.
 - **Verify:** Fenced code в статье подсвечен.
 - **DoD:** Code UX взрослый.
+- **Notes:** Editor — premade `CodeBlock()` в `BlocksFeature` (slug `Code`) рядом с YouTube; curated langs в `CODE_BLOCK_LANGUAGES` (`src/lib/codeLanguages.ts`). Render — `blocks.Code` → async RSC `HighlightedCode` → `highlightCode` (Shiki singleton, dual `github-light`/`github-dark`, `defaultColor: false`). Тема — CSS vars + `html.dark` в `globals.css`, без server theme cookie. Inline `<code>` — лёгкий muted/mono, без Shiki. Unit: `tests/unit/codeHighlight.test.ts` (normalize + HTML smoke). Copy button / line numbers / e2e — вне шага.
 
 ### 065 — Related content
 
