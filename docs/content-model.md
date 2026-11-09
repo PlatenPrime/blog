@@ -78,11 +78,11 @@ URL-safe сегмент: карта кириллицы uk/ru → латиниц�
 
 Группа `seo` на Articles, Notes, Pages:
 
-| Поле              | Тип              | Notes        |
-| ----------------- | ---------------- | ------------ |
-| `metaTitle`       | text             | localized    |
-| `metaDescription` | textarea         | localized    |
-| `ogImage`         | upload → `media` | не localized |
+| Поле              | Тип              | Notes                                                                                             |
+| ----------------- | ---------------- | ------------------------------------------------------------------------------------------------- |
+| `metaTitle`       | text             | localized                                                                                         |
+| `metaDescription` | textarea         | localized                                                                                         |
+| `ogImage`         | upload → `media` | не localized; публичный OG (069): `seo.ogImage` → `heroImage` (статьи) → ImageResponse title card |
 
 ### Media limits (`mediaLimits.ts`)
 

@@ -683,11 +683,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 069 — Open Graph images
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Превью в соцсетях.
 - **Deliverables:** OG image generation (Next Image Response) или static template + hero fallback.
 - **Verify:** `og:image` meta присутствует; URL отдаёт image.
 - **DoD:** OG must-have закрыт.
+- **Notes:** File convention Next `opengraph-image.tsx` + `ImageResponse` (`next/og`), без `/api/og`. Locale default — брендовая карточка PlatenPrime; детали articles/notes/about — свои генераторы. Цепочка media: `seo.ogImage` → `heroImage` (только статьи) → title card; media рисуется в карточке (фон + overlay), один `og:image` URL на страницу. Helpers: `absoluteMediaUrl` / `resolveOgMediaUrl` / `toOgMediaImage` в `ogImage.ts`; шаблон — `ogImageResponse.tsx`; шрифты Source Serif 4 latin+cyrillic в `src/assets/fonts/`. Detail select articles/notes/pages тянет `seo.ogImage`; `metadataBase` из `getServerUrl()` в locale layout. Checklist: пункт OG. Unit: `tests/unit/ogImage.test.ts` (+ mapping в articles/notes/pages). JSON-LD / canonical completeness / Playwright meta / static PNG — вне шага (070–071).
 
 ### 070 — JSON-LD structured data
 

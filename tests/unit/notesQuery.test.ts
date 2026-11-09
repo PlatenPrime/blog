@@ -127,6 +127,7 @@ describe('toPublicNote', () => {
       id: 7,
       metaDescription: 'A line',
       metaTitle: 'Thought',
+      ogImage: null,
       publishedAt: '2026-06-01T00:00:00.000Z',
       tags: [{ slug: 'live', title: 'Live' }],
       tagIds: [9, 5],
@@ -140,12 +141,13 @@ describe('toPublicNote', () => {
       toPublicNote({
         body,
         id: 3,
-        seo: { metaDescription: '   ', metaTitle: '' },
+        seo: { metaDescription: '   ', metaTitle: '', ogImage: 4 },
         title: 'Untitled note',
       }),
     ).toMatchObject({
       metaDescription: null,
       metaTitle: null,
+      ogImage: null,
       title: 'Untitled note',
     })
 

@@ -127,6 +127,7 @@ describe('toPublicArticle', () => {
       id: 12,
       metaDescription: 'A lead',
       metaTitle: 'Essay',
+      ogImage: null,
       publishedAt: '2026-06-01T00:00:00.000Z',
       tags: [{ slug: 'live', title: 'Live' }],
       tagIds: [9, 5],
@@ -134,19 +135,24 @@ describe('toPublicArticle', () => {
     })
   })
 
-  it('drops a bare upload id, blank seo, and a document that cannot be read', () => {
+  it('maps seo.ogImage and drops a bare upload id', () => {
     expect(
       toPublicArticle({
         body,
         heroImage: 3,
         id: 8,
-        seo: { metaDescription: '   ', metaTitle: '' },
+        seo: {
+          metaDescription: '   ',
+          metaTitle: '',
+          ogImage: { alt: 'OG', height: 630, url: '/api/media/file/og.webp', width: 1200 },
+        },
         title: 'Untitled cover',
       }),
     ).toMatchObject({
       hero: null,
       metaDescription: null,
       metaTitle: null,
+      ogImage: { alt: 'OG', height: 630, url: '/api/media/file/og.webp', width: 1200 },
       title: 'Untitled cover',
     })
 

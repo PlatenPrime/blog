@@ -16,6 +16,7 @@ import {
   type TaxonomyLink,
   type TaxonomyRelationLike,
 } from '@/content/taxonomyLinks'
+import { toOgMediaImage, type OgMediaImage, type OgUploadLike } from '@/content/ogImage'
 import { resolveContentLocale } from '@/i18n/contentLocale'
 import type { AppLocale } from '@/i18n/routing'
 
@@ -36,6 +37,7 @@ const articlesDetailSelect = {
   seo: {
     metaDescription: true,
     metaTitle: true,
+    ogImage: true,
   },
   slug: true,
   tags: true,
@@ -87,12 +89,7 @@ export type ArticlesPageHref = NumberedPageHref<'/articles'>
 
 export type ArticlesPageResolution = NumberedPageResolution
 
-export type ArticleHeroImage = {
-  alt: string
-  height: number | null
-  url: string
-  width: number | null
-}
+export type ArticleHeroImage = OgMediaImage
 
 export type PublicArticle = {
   body: SerializedEditorState
@@ -104,6 +101,8 @@ export type PublicArticle = {
   id: number
   metaDescription: string | null
   metaTitle: string | null
+  /** Explicit SEO image; OG falls back to `hero` when unset. */
+  ogImage: ArticleHeroImage | null
   publishedAt: string | null
   tags: TaxonomyLink[]
   /** Ids for related queries. Links use `tags`; these stay off the UI. */
@@ -111,23 +110,17 @@ export type PublicArticle = {
   title: string
 }
 
-type HeroLike =
-  | number
-  | {
-      alt?: string | null
-      height?: number | null
-      url?: string | null
-      width?: number | null
-    }
-  | null
-
 export type ArticleDetailSource = {
   body?: unknown
   categories?: readonly TaxonomyRelationLike[] | null
-  heroImage?: HeroLike
+  heroImage?: OgUploadLike
   id?: number | null
   publishedAt?: string | null
-  seo?: { metaDescription?: string | null; metaTitle?: string | null } | null
+  seo?: {
+    metaDescription?: string | null
+    metaTitle?: string | null
+    ogImage?: OgUploadLike
+  } | null
   tags?: readonly TaxonomyRelationLike[] | null
   title?: string | null
 }
@@ -210,16 +203,8 @@ export function articlesPageHref(page: number): ArticlesPageHref {
   return numberedPageHref('/articles', page)
 }
 
-export function toArticleHero(image: HeroLike | undefined): ArticleHeroImage | null {
-  if (typeof image !== 'object' || image === null) return null
-  if (typeof image.url !== 'string' || image.url.length === 0) return null
-
-  return {
-    alt: typeof image.alt === 'string' ? image.alt : '',
-    height: typeof image.height === 'number' ? image.height : null,
-    url: image.url,
-    width: typeof image.width === 'number' ? image.width : null,
-  }
+export function toArticleHero(image: OgUploadLike): ArticleHeroImage | null {
+  return toOgMediaImage(image)
 }
 
 /**
@@ -243,6 +228,7 @@ export function toPublicArticle(doc: ArticleDetailSource): PublicArticle | null 
     id: doc.id,
     metaDescription: blankToNull(doc.seo?.metaDescription),
     metaTitle: blankToNull(doc.seo?.metaTitle),
+    ogImage: toOgMediaImage(doc.seo?.ogImage),
     publishedAt,
     tags: taxonomyLinks(doc.tags),
     tagIds: taxonomyIds(doc.tags),

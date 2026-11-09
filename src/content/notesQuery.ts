@@ -16,6 +16,7 @@ import {
   type TaxonomyLink,
   type TaxonomyRelationLike,
 } from '@/content/taxonomyLinks'
+import { toOgMediaImage, type OgMediaImage, type OgUploadLike } from '@/content/ogImage'
 import { resolveContentLocale } from '@/i18n/contentLocale'
 import type { AppLocale } from '@/i18n/routing'
 
@@ -35,6 +36,7 @@ const notesDetailSelect = {
   seo: {
     metaDescription: true,
     metaTitle: true,
+    ogImage: true,
   },
   slug: true,
   tags: true,
@@ -95,6 +97,8 @@ export type PublicNote = {
   id: number
   metaDescription: string | null
   metaTitle: string | null
+  /** Explicit SEO image; without it OG uses the title card. */
+  ogImage: OgMediaImage | null
   publishedAt: string | null
   tags: TaxonomyLink[]
   /** Ids for related queries. Links use `tags`; these stay off the UI. */
@@ -107,7 +111,11 @@ export type NoteDetailSource = {
   categories?: readonly TaxonomyRelationLike[] | null
   id?: number | null
   publishedAt?: string | null
-  seo?: { metaDescription?: string | null; metaTitle?: string | null } | null
+  seo?: {
+    metaDescription?: string | null
+    metaTitle?: string | null
+    ogImage?: OgUploadLike
+  } | null
   tags?: readonly TaxonomyRelationLike[] | null
   title?: string | null
 }
@@ -208,6 +216,7 @@ export function toPublicNote(doc: NoteDetailSource): PublicNote | null {
     id: doc.id,
     metaDescription: blankToNull(doc.seo?.metaDescription),
     metaTitle: blankToNull(doc.seo?.metaTitle),
+    ogImage: toOgMediaImage(doc.seo?.ogImage),
     publishedAt,
     tags: taxonomyLinks(doc.tags),
     tagIds: taxonomyIds(doc.tags),
