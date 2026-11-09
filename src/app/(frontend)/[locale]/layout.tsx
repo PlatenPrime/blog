@@ -10,6 +10,7 @@ import { SiteHeader } from '@/components/site/site-header'
 import { SkipLink } from '@/components/site/skip-link'
 import { themeInitScript } from '@/components/theme/theme-init-script'
 import { ThemeProvider } from '@/components/theme/theme-provider'
+import { absoluteRssFeedUrl, rssOrigin } from '@/content/rssQuery'
 import { routing } from '@/i18n/routing'
 
 import '../globals.css'
@@ -46,6 +47,11 @@ export async function generateMetadata({ params }: LocaleLayoutProps): Promise<M
   const t = await getTranslations({ locale: resolved, namespace: 'nav' })
 
   return {
+    alternates: {
+      types: {
+        'application/rss+xml': absoluteRssFeedUrl(rssOrigin(), resolved, 'all'),
+      },
+    },
     description: t('siteDescription'),
     title: t('siteTitle'),
   }

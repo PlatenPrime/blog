@@ -7,6 +7,7 @@ import { ArticleList } from '@/components/articles/article-list'
 import { EmptyState } from '@/components/states/empty-state'
 import { findPublicArticles } from '@/content/articles'
 import { articlesPageHref, readArticlesPageParam } from '@/content/articlesQuery'
+import { absoluteRssFeedUrl, rssOrigin } from '@/content/rssQuery'
 import { redirect } from '@/i18n/navigation'
 import { routing } from '@/i18n/routing'
 
@@ -22,6 +23,11 @@ export async function generateMetadata({ params }: ArticlesPageProps): Promise<M
   const nav = await getTranslations({ locale, namespace: 'nav' })
 
   return {
+    alternates: {
+      types: {
+        'application/rss+xml': absoluteRssFeedUrl(rssOrigin(), locale, 'articles'),
+      },
+    },
     title: `${articles('title')} — ${nav('siteTitle')}`,
   }
 }

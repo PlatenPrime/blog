@@ -674,11 +674,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 068 — RSS feeds
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Подписка на обновления.
 - **Deliverables:** RSS/Atom на articles, notes, optional all; per-locale strategy.
 - **Verify:** Feed валиден; новые посты появляются.
 - **DoD:** RSS must-have закрыт.
+- **Notes:** RSS 2.0 (не Atom), без npm-lib. Per-locale: `/{locale}/rss.xml` (mixed), `/{locale}/articles/rss.xml`, `/{locale}/notes/rss.xml`; `force-dynamic` route handlers; видимость = `rssContentFindArgs` (`publicContentWhere`, `draft: false`, без session). Лимит `RSS_ITEM_LIMIT = 50`; mixed — dual find + `mergeRssItems` (сорт как лента). Excerpt: `seo.metaDescription` → усечённый `searchText` → пусто; Lexical body не в фиде. Absolute URL = `getServerUrl` + `prefixPublicPath`. Discovery: `alternates.types['application/rss+xml']` в locale layout (mixed) и на list articles/notes; футер — `<a href="/{locale}/rss.xml">` (`nav.rss`). Checklist: пункт RSS. Unit: `tests/unit/rssQuery.test.ts`. Atom / full HTML / category feeds / e2e XML — вне шага.
 
 ### 069 — Open Graph images
 
