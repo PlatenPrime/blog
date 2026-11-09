@@ -1,12 +1,20 @@
 import { getTranslations } from 'next-intl/server'
+import type { Metadata } from 'next'
 
 import { resetPasswordAction } from '@/auth/actions'
+import { authPageMetadata } from '@/content/authPageMetadata'
 import { Link } from '@/i18n/navigation'
 
 import { AuthForm } from '../components/AuthForm'
 
 type ResetPasswordPageProps = {
+  params: Promise<{ locale: string }>
   searchParams: Promise<{ token?: string }>
+}
+
+export async function generateMetadata({ params }: ResetPasswordPageProps): Promise<Metadata> {
+  const { locale } = await params
+  return authPageMetadata({ locale, pathname: '/reset-password', titleKey: 'reset.title' })
 }
 
 export default async function ResetPasswordPage({ searchParams }: ResetPasswordPageProps) {

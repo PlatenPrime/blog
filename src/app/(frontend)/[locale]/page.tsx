@@ -1,4 +1,6 @@
+import { hasLocale } from 'next-intl'
 import { getLocale, getTranslations } from 'next-intl/server'
+import type { Metadata } from 'next'
 import { Suspense } from 'react'
 
 import { getCurrentUser } from '@/auth/getCurrentUser'
@@ -6,9 +8,29 @@ import { HomeLatest } from '@/components/home/home-latest'
 import { EmptyState } from '@/components/states/empty-state'
 import { EmbeddedListSkeleton } from '@/components/states/list-skeleton'
 import { findLatestPublic } from '@/content/latestPublic'
+import { buildPageMetadata } from '@/content/pageMetadata'
 import { Link } from '@/i18n/navigation'
+import { routing } from '@/i18n/routing'
 
 import { logoutEverywhereFormAction } from './actions/logoutEverywhere'
+
+type HomePageProps = {
+  params: Promise<{ locale: string }>
+}
+
+export async function generateMetadata({ params }: HomePageProps): Promise<Metadata> {
+  const { locale: requested } = await params
+  const locale = hasLocale(routing.locales, requested) ? requested : routing.defaultLocale
+  const nav = await getTranslations({ locale, namespace: 'nav' })
+
+  return buildPageMetadata({
+    absoluteTitle: true,
+    description: nav('siteDescription'),
+    locale,
+    pathname: '/',
+    title: nav('siteTitle'),
+  })
+}
 
 export default async function HomePage() {
   const t = await getTranslations('nav')

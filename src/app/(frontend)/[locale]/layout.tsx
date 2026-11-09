@@ -13,6 +13,7 @@ import { SkipLink } from '@/components/site/skip-link'
 import { themeInitScript } from '@/components/theme/theme-init-script'
 import { ThemeProvider } from '@/components/theme/theme-provider'
 import { buildLocaleShellJsonLd } from '@/content/jsonLd'
+import { localeTitleTemplate } from '@/content/pageMetadata'
 import { absoluteRssFeedUrl, rssOrigin } from '@/content/rssQuery'
 import { routing } from '@/i18n/routing'
 
@@ -57,7 +58,7 @@ export async function generateMetadata({ params }: LocaleLayoutProps): Promise<M
     },
     description: t('siteDescription'),
     metadataBase: new URL(getServerUrl()),
-    title: t('siteTitle'),
+    title: localeTitleTemplate(t('siteTitle')),
   }
 }
 

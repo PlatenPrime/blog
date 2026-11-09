@@ -1,8 +1,20 @@
-import { getTranslations } from 'next-intl/server'
+import { getLocale, getTranslations } from 'next-intl/server'
+import type { Metadata } from 'next'
 
 import { siteChromeLinkClassName } from '@/components/site/site-nav'
 import { StateColumn } from '@/components/states/state-column'
+import { NOINDEX_ROBOTS } from '@/content/pageMetadata'
 import { Link } from '@/i18n/navigation'
+
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale()
+  const errors = await getTranslations({ locale, namespace: 'errors' })
+
+  return {
+    robots: NOINDEX_ROBOTS,
+    title: errors('notFoundTitle'),
+  }
+}
 
 export default async function NotFound() {
   const t = await getTranslations('errors')

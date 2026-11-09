@@ -6,8 +6,14 @@ import { notFound } from 'next/navigation'
 import { FeedList } from '@/components/feed/feed-list'
 import { SearchForm } from '@/components/search/search-form'
 import { EmptyState } from '@/components/states/empty-state'
+import { buildPageMetadata, NOINDEX_ROBOTS } from '@/content/pageMetadata'
 import { findPublicSearch } from '@/content/search'
-import { readSearchPageParam, readSearchQueryParam, searchPageHref } from '@/content/searchQuery'
+import {
+  normalizeSearchQuery,
+  readSearchPageParam,
+  readSearchQueryParam,
+  searchPageHref,
+} from '@/content/searchQuery'
 import { redirect } from '@/i18n/navigation'
 import { routing } from '@/i18n/routing'
 
@@ -16,15 +22,23 @@ type SearchPageProps = {
   searchParams: Promise<{ page?: string | string[]; q?: string | string[] }>
 }
 
-export async function generateMetadata({ params }: SearchPageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+  searchParams,
+}: SearchPageProps): Promise<Metadata> {
   const { locale: requested } = await params
   const locale = hasLocale(routing.locales, requested) ? requested : routing.defaultLocale
   const search = await getTranslations({ locale, namespace: 'search' })
-  const nav = await getTranslations({ locale, namespace: 'nav' })
+  const { q: rawQuery } = await searchParams
+  const query = normalizeSearchQuery(rawQuery)
 
-  return {
-    title: `${search('title')} — ${nav('siteTitle')}`,
-  }
+  return buildPageMetadata({
+    description: search('metaDescription'),
+    locale,
+    pathname: '/search',
+    ...(query ? { robots: NOINDEX_ROBOTS } : {}),
+    title: search('title'),
+  })
 }
 
 export default async function SearchPage({ params, searchParams }: SearchPageProps) {

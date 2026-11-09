@@ -109,6 +109,7 @@
   },
   "feed": {
     "title": "Feed",
+    "metaDescription": "Mixed feed of published articles and notes.",
     "article": "Article",
     "note": "Note",
     "empty": "Nothing here yet.",
@@ -119,6 +120,7 @@
   },
   "search": {
     "title": "Search",
+    "metaDescription": "Search published articles and notes on this blog.",
     "placeholder": "Search articles and notes",
     "submit": "Search",
     "emptyQuery": "Type a query to search published articles and notes.",
@@ -130,6 +132,7 @@
   },
   "articles": {
     "title": "Articles",
+    "metaDescription": "Long-form essays and articles from this blog.",
     "empty": "Nothing here yet.",
     "pagination": "Article pages",
     "previous": "Newer",
@@ -143,6 +146,7 @@
   },
   "notes": {
     "title": "Notes",
+    "metaDescription": "Short published notes from this blog.",
     "kicker": "Note",
     "empty": "Nothing here yet.",
     "pagination": "Note pages",
@@ -192,7 +196,9 @@
   },
   "taxonomy": {
     "categoriesTitle": "Categories",
+    "categoriesMetaDescription": "Browse articles and notes by category.",
     "tagsTitle": "Tags",
+    "tagsMetaDescription": "Browse articles and notes by tag.",
     "empty": "Nothing here yet.",
     "article": "Article",
     "note": "Note",

@@ -1,10 +1,18 @@
 import { getTranslations } from 'next-intl/server'
+import type { Metadata } from 'next'
 
 import { verifyEmailAction } from '@/auth/actions'
+import { authPageMetadata } from '@/content/authPageMetadata'
 import { Link } from '@/i18n/navigation'
 
 type VerifyPageProps = {
+  params: Promise<{ locale: string }>
   searchParams: Promise<{ token?: string }>
+}
+
+export async function generateMetadata({ params }: VerifyPageProps): Promise<Metadata> {
+  const { locale } = await params
+  return authPageMetadata({ locale, pathname: '/verify', titleKey: 'verify.title' })
 }
 
 export default async function VerifyPage({ searchParams }: VerifyPageProps) {

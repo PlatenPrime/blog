@@ -129,6 +129,7 @@ describe('toPublicNote', () => {
       metaTitle: 'Thought',
       ogImage: null,
       publishedAt: '2026-06-01T00:00:00.000Z',
+      searchText: null,
       tags: [{ slug: 'live', title: 'Live' }],
       tagIds: [9, 5],
       title: 'Short thought',

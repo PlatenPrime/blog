@@ -33,6 +33,7 @@ const notesDetailSelect = {
   body: true,
   categories: true,
   publishedAt: true,
+  searchText: true,
   seo: {
     metaDescription: true,
     metaTitle: true,
@@ -100,6 +101,8 @@ export type PublicNote = {
   /** Explicit SEO image; without it OG uses the title card. */
   ogImage: OgMediaImage | null
   publishedAt: string | null
+  /** Plaintext body for meta description fallback when SEO description is empty. */
+  searchText: string | null
   tags: TaxonomyLink[]
   /** Ids for related queries. Links use `tags`; these stay off the UI. */
   tagIds: number[]
@@ -111,6 +114,7 @@ export type NoteDetailSource = {
   categories?: readonly TaxonomyRelationLike[] | null
   id?: number | null
   publishedAt?: string | null
+  searchText?: string | null
   seo?: {
     metaDescription?: string | null
     metaTitle?: string | null
@@ -218,6 +222,7 @@ export function toPublicNote(doc: NoteDetailSource): PublicNote | null {
     metaTitle: blankToNull(doc.seo?.metaTitle),
     ogImage: toOgMediaImage(doc.seo?.ogImage),
     publishedAt,
+    searchText: blankToNull(doc.searchText),
     tags: taxonomyLinks(doc.tags),
     tagIds: taxonomyIds(doc.tags),
     title: doc.title,

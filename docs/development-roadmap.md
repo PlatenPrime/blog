@@ -701,11 +701,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 071 — Metadata API completeness
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** title/description/canonical на всех ключевых страницах.
 - **Deliverables:** Per-page metadata; no duplicates titles.
 - **Verify:** Spot-check Playwright meta tags.
 - **DoD:** SEO foundation complete.
+- **Notes:** Shared `buildPageMetadata` / `localeTitleTemplate` в `pageMetadata.ts`: layout — `title.default` + `%s — siteTitle`; home — absolute bare title; lists/taxonomy/search/detail — segment title + i18n/`seo` description + `alternates.canonical` без query (`?page=` / `?q=` → clean path). hreflang: shared paths через `languageAlternatesForPath`; articles/notes/categories/tags — sibling slug по id (`localizedAlternates`). CMS detail description = `rssExcerpt(metaDescription, searchText)`. Auth/bookmarks/account + search с `q` — `NOINDEX_ROBOTS`; 404 — title + noindex без canonical на home. Checklist: пункт Metadata. Unit: `tests/unit/pageMetadata.test.ts`; e2e: `tests/e2e/metadata.e2e.spec.ts`. `seo-checklist.md` / `robots.ts` / BreadcrumbList — вне шага (072+).
 
 ### 072 — SEO checklist doc
 

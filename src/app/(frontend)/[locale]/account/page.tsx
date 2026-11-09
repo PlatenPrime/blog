@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation'
 import { isAuthenticatedAndVerified } from '@/access/isVerified'
 import { getCurrentUser } from '@/auth/getCurrentUser'
 import { siteChromeLinkClassName } from '@/components/site/site-nav'
+import { buildPageMetadata, NOINDEX_ROBOTS } from '@/content/pageMetadata'
 import { Link } from '@/i18n/navigation'
 import { prefixPublicPath } from '@/i18n/paths'
 import { resolveAppLocale } from '@/i18n/resolveAppLocale'
@@ -21,11 +22,13 @@ export async function generateMetadata({ params }: AccountPageProps): Promise<Me
   const { locale: requested } = await params
   const locale = hasLocale(routing.locales, requested) ? requested : routing.defaultLocale
   const account = await getTranslations({ locale, namespace: 'account' })
-  const nav = await getTranslations({ locale, namespace: 'nav' })
 
-  return {
-    title: `${account('title')} — ${nav('siteTitle')}`,
-  }
+  return buildPageMetadata({
+    locale,
+    pathname: '/account',
+    robots: NOINDEX_ROBOTS,
+    title: account('title'),
+  })
 }
 
 export default async function AccountPage({ params }: AccountPageProps) {

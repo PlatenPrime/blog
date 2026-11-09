@@ -177,7 +177,7 @@ export interface Article {
     metaTitle?: string | null;
     metaDescription?: string | null;
     /**
-     * Open Graph image; falls back to hero when unset (later).
+     * Open Graph image. Articles fall back to hero when unset; otherwise a generated title card.
      */
     ogImage?: (number | null) | Media;
   };
@@ -286,7 +286,7 @@ export interface Note {
     metaTitle?: string | null;
     metaDescription?: string | null;
     /**
-     * Open Graph image; falls back to hero when unset (later).
+     * Open Graph image. Articles fall back to hero when unset; otherwise a generated title card.
      */
     ogImage?: (number | null) | Media;
   };
@@ -336,7 +336,7 @@ export interface Page {
     metaTitle?: string | null;
     metaDescription?: string | null;
     /**
-     * Open Graph image; falls back to hero when unset (later).
+     * Open Graph image. Articles fall back to hero when unset; otherwise a generated title card.
      */
     ogImage?: (number | null) | Media;
   };

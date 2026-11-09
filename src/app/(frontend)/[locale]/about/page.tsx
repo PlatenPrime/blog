@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation'
 import { PageDetail } from '@/components/pages/page-detail'
 import { findPublicPage } from '@/content/pages'
 import { ABOUT_PAGE_SLUG, contactMailto } from '@/content/pagesQuery'
+import { buildPageMetadata } from '@/content/pageMetadata'
 import { routing } from '@/i18n/routing'
 
 type AboutPageProps = {
@@ -19,11 +20,12 @@ export async function generateMetadata({ params }: AboutPageProps): Promise<Meta
   const page = await findPublicPage(locale, ABOUT_PAGE_SLUG)
   if (!page) notFound()
 
-  const nav = await getTranslations({ locale, namespace: 'nav' })
-  const title = `${page.metaTitle ?? page.title} — ${nav('siteTitle')}`
-
-  if (!page.metaDescription) return { title }
-  return { description: page.metaDescription, title }
+  return buildPageMetadata({
+    description: page.metaDescription ?? page.title,
+    locale,
+    pathname: `/${ABOUT_PAGE_SLUG}`,
+    title: page.metaTitle ?? page.title,
+  })
 }
 
 export default async function AboutPage({ params }: AboutPageProps) {

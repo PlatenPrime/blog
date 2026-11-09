@@ -11,7 +11,10 @@ import { RelatedContent } from '@/components/reading/related-content'
 import { JsonLd } from '@/components/seo/json-ld'
 import { findPublicArticle } from '@/content/articles'
 import { buildArticleJsonLd } from '@/content/jsonLd'
+import { findContentLanguageAlternates } from '@/content/localizedAlternates'
+import { buildPageMetadata } from '@/content/pageMetadata'
 import { findRelatedContent } from '@/content/relatedContent'
+import { rssExcerpt } from '@/content/rssQuery'
 import { routing } from '@/i18n/routing'
 
 type ArticlePageProps = {
@@ -25,11 +28,18 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
   const article = await findPublicArticle(locale, slug)
   if (!article) notFound()
 
-  const nav = await getTranslations({ locale, namespace: 'nav' })
-  const title = `${article.metaTitle ?? article.title} — ${nav('siteTitle')}`
+  const languages = await findContentLanguageAlternates('articles', article.id)
 
-  if (!article.metaDescription) return { title }
-  return { description: article.metaDescription, title }
+  return buildPageMetadata({
+    description: rssExcerpt({
+      metaDescription: article.metaDescription,
+      searchText: article.searchText,
+    }),
+    languages,
+    locale,
+    pathname: `/articles/${slug}`,
+    title: article.metaTitle ?? article.title,
+  })
 }
 
 export default async function ArticlePage({ params }: ArticlePageProps) {

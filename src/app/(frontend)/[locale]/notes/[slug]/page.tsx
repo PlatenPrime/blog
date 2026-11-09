@@ -10,8 +10,11 @@ import { NoteDetail } from '@/components/notes/note-detail'
 import { RelatedContent } from '@/components/reading/related-content'
 import { JsonLd } from '@/components/seo/json-ld'
 import { buildArticleJsonLd } from '@/content/jsonLd'
+import { findContentLanguageAlternates } from '@/content/localizedAlternates'
 import { findPublicNote } from '@/content/notes'
+import { buildPageMetadata } from '@/content/pageMetadata'
 import { findRelatedContent } from '@/content/relatedContent'
+import { rssExcerpt } from '@/content/rssQuery'
 import { routing } from '@/i18n/routing'
 
 type NotePageProps = {
@@ -25,11 +28,18 @@ export async function generateMetadata({ params }: NotePageProps): Promise<Metad
   const note = await findPublicNote(locale, slug)
   if (!note) notFound()
 
-  const nav = await getTranslations({ locale, namespace: 'nav' })
-  const title = `${note.metaTitle ?? note.title} — ${nav('siteTitle')}`
+  const languages = await findContentLanguageAlternates('notes', note.id)
 
-  if (!note.metaDescription) return { title }
-  return { description: note.metaDescription, title }
+  return buildPageMetadata({
+    description: rssExcerpt({
+      metaDescription: note.metaDescription,
+      searchText: note.searchText,
+    }),
+    languages,
+    locale,
+    pathname: `/notes/${slug}`,
+    title: note.metaTitle ?? note.title,
+  })
 }
 
 export default async function NotePage({ params }: NotePageProps) {
