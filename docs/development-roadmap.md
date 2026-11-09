@@ -665,11 +665,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 067 — Sitemap
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Индексация.
 - **Deliverables:** `sitemap.xml` (все локали + published URLs).
 - **Verify:** XML валиден; drafts отсутствуют.
 - **DoD:** Sitemap в production checklist.
+- **Notes:** Next Metadata API — `src/app/sitemap.ts` (`force-dynamic`) → `/sitemap.xml`. Absolute URL = `getServerUrl` + `prefixPublicPath`. Чистая сборка — `sitemapQuery` (`publicContentWhere`, `draft: false`, без session): статика (`/`, feed, articles, notes, categories, tags, search) × uk/ru/en + hreflang/`x-default=uk`; `/about` только если published page; articles/notes/categories/tags по slug, группировка по `id` для localized slugs. Auth/dev/admin/`?page=`/`?q=` вне карты. Стартовый [`docs/production-checklist.md`](production-checklist.md) (пункт Sitemap; полный gate — 108). Unit: `tests/unit/sitemapQuery.test.ts`. `robots.ts` / RSS / OG / canonical / e2e XML — вне шага.
 
 ### 068 — RSS feeds
 
