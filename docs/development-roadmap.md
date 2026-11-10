@@ -723,43 +723,48 @@ v1 считается завершённым, когда одновременн�
 
 ### 073 — Security headers
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Базовый hardening HTTP.
 - **Deliverables:** Next headers / middleware: CSP (поэтапно), frame guard, referrer, permissions.
 - **Verify:** securityheaders-like smoke; app не ломается.
 - **DoD:** Headers включены в prod.
+- **Notes:** Чистые builders в `src/security/headers.ts` + `next.config.ts` `headers()` (не proxy: `/admin` и `/api` вне matcher). Baseline: `X-Frame-Options: DENY`, `nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `Permissions-Policy` (camera/mic/geo/payment/usb off), HSTS только при `NODE_ENV=production`. CSP фаза 1 enforcing: public — `'unsafe-inline'` без eval, `frame-src` youtube-nocookie, `img-src` + `R2_PUBLIC_URL` origin; `/admin/:path*` перекрывает мягкой CSP (`'unsafe-eval'` + R2 public/endpoint в `connect-src` для client uploads). Nonce/hash, Turnstile/Analytics origins — вне шага (075/081/097). Unit: `tests/unit/securityHeaders.test.ts`. E2E: `tests/e2e/security-headers.e2e.spec.ts` (локально при Docker; CI e2e — 086).
 
 ### 074 — Rate limiting (auth + comments + reset)
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Защита от brute force и spam.
 - **Deliverables:** Limiter (Vercel KV/Upstash free или middleware strategy); ADR.
 - **Verify:** Превышение лимита → 429.
 - **DoD:** Чувствительные endpoints ограничены.
+- **Notes:** ADR-006: Upstash Redis REST + `@upstash/ratelimit` только для счётчиков; без env — memory fallback (+ warn в prod). Dual layer: `src/proxy.ts` IP → 429/`Retry-After` на POST auth pages (не articles/notes — там Next-Action общий с bookmarks); actions — email/userId/IP keys + i18n (`register`/`login`/`forgot`/`reset`/`comments`). Политики в `rateLimitPolicies.ts`. Unit: `rateLimit.test.ts`, `rateLimitMiddleware.test.ts`. Turnstile / OAuth `/api` / WAF / e2e 429 в CI — вне шага (075/086).
 
 ### 075 — Cloudflare Turnstile
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Bot protection free tier.
 - **Deliverables:** Turnstile на register/login/comment; server verify.
 - **Verify:** Без токена форма не проходит; с токеном — проходит.
 - **DoD:** Bot shield на ключевых формах.
+- **Notes:** Виджет `TurnstileWidget` (explicit `api.js`) на login/register (`AuthForm.requireTurnstile`) и comment form; forgot/reset без виджета. Server: `src/security/turnstile.ts` → Cloudflare `siteverify`; actions читают `cf-turnstile-response` до rate limit. Пустые ключи = bypass (+ warn в prod), как Upstash. CSP public: `challenges.cloudflare.com` в `script-src` / `frame-src` / `connect-src`. i18n `errors.turnstileFailed`. Unit: `tests/unit/turnstile.test.ts` (+ CSP в `securityHeaders.test.ts`). E2E с живым виджетом / CI — вне шага (086). OAuth `/api` и WAF — вне шага.
 
 ### 076 — Dependabot + secret scanning
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Supply-chain hygiene.
 - **Deliverables:** Dependabot config; GitHub secret scanning enabled (doc); ignore policy.
 - **Verify:** Dependabot PR появляется на тестовом bump или конфиг валиден.
 - **DoD:** Автообновления уязвимостей включены.
+- **Notes:** `.github/dependabot.yml` v2: `npm` + `github-actions`, weekly Monday Europe/Kyiv, open-PR limit 5; npm groups minor/patch (prod + dev). Docker ecosystem не включали (локальный Postgres). Политика ignore + secret scanning / push protection: `docs/security/supply-chain.md`. После merge — включить Dependabot updates/alerts и Secret scanning + Push protection в GitHub Settings → Code security; PR Dependabot на ближайшем bump. Threat model — **077** (done); checklist — **078**.
 
 ### 077 — Threat model stub
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Осознанные риски.
 - **Deliverables:** `docs/security/threat-model.md` (auth, XSS via Lexical, R2, comments spam).
 - **Verify:** Контрмеры ссылаются на шаги Track 8.
 - **DoD:** Threat model существует и актуален для v1.
+- **Notes:** [`docs/security/threat-model.md`](security/threat-model.md): stub v1 (один admin, readers). Assets + четыре зоны (Threat / Impact / Mitigations / Residual): auth → 074+ADR-006, 075, session-hardening, ADR-002; XSS/Lexical → JSX render, YouTube allowlist, CSP 073, MIME без SVG; R2 → Media ACL, limits, runbook CORS, CSP origins, public-read by design; comments spam → verified create, 074/075, text render, moderationStatus. Adjacent supply-chain → 076 без дубля. Checklist / waivers — **078**.
 
 ### 078 — Security checklist
 

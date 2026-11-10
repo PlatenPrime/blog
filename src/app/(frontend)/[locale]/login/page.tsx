@@ -33,6 +33,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
       ) : null}
       <AuthForm
         action={loginAction}
+        requireTurnstile
         footer={
           <>
             <p>

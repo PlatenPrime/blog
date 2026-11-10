@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl'
 import React, { useState, useTransition } from 'react'
 
 import type { AuthActionResult } from '@/auth/actions'
+import { TurnstileWidget } from '@/components/turnstile/turnstile-widget'
 import { Link, useRouter } from '@/i18n/navigation'
 
 type AuthFormProps = {
@@ -16,6 +17,8 @@ type AuthFormProps = {
   showPassword?: boolean
   /** Optional hidden token field (reset flow). */
   token?: string
+  /** Turnstile on login/register only (not forgot/reset). */
+  requireTurnstile?: boolean
   footer?: React.ReactNode
   redirectOnSuccess?: string
   successFallback?: string
@@ -28,6 +31,7 @@ export function AuthForm({
   showEmail = true,
   showPassword = true,
   token,
+  requireTurnstile = false,
   footer,
   redirectOnSuccess,
   successFallback,
@@ -37,6 +41,7 @@ export function AuthForm({
   const tNav = useTranslations('nav')
   const [error, setError] = useState<string | null>(null)
   const [message, setMessage] = useState<string | null>(null)
+  const [turnstileReset, setTurnstileReset] = useState(0)
   const [isPending, startTransition] = useTransition()
 
   return (
@@ -51,6 +56,7 @@ export function AuthForm({
           const formData = new FormData(event.currentTarget)
           startTransition(async () => {
             const result = await action(formData)
+            setTurnstileReset((n) => n + 1)
             if (!result.ok) {
               setError(result.error)
               return
@@ -84,6 +90,7 @@ export function AuthForm({
             />
           </label>
         ) : null}
+        {requireTurnstile ? <TurnstileWidget resetSignal={turnstileReset} /> : null}
         {error ? (
           <p className="auth-error" role="alert">
             {error}

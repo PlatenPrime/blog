@@ -43,7 +43,7 @@ cp .env.example .env
 | `PREVIEW_SECRET`         | Секрет кнопки Preview в admin (draftMode); длинная случайная строка |
 | `NEXT_PUBLIC_SERVER_URL` | Публичный origin app, обычно `http://localhost:3000`                |
 
-Остальные ключи в `.env.example` (R2, Resend, Google OAuth, Turnstile, `ADMIN_*`) для минимального локального старта можно оставить пустыми или как в примере. Реальные секреты не коммитьте. Без `PREVIEW_SECRET` кнопка Preview в admin скрыта (URL не генерируется).
+Остальные ключи в `.env.example` (R2, Resend, Google OAuth, Upstash rate limit, Turnstile, `ADMIN_*`) для минимального локального старта можно оставить пустыми или как в примере. Без `UPSTASH_REDIS_REST_*` лимиты работают in-memory (ADR-006). Без `NEXT_PUBLIC_TURNSTILE_SITE_KEY` / `TURNSTILE_SECRET_KEY` проверка бота пропускается (login/register/comment работают как раньше). Для poke шага 075 см. dummy keys в `.env.example` (always pass / always fail). Реальные секреты не коммитьте. Без `PREVIEW_SECRET` кнопка Preview в admin скрыта (URL не генерируется).
 
 ### Auth email (verify / password reset)
 
