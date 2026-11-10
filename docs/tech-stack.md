@@ -151,17 +151,17 @@ Newsletter / marketing mail — out of scope.
 
 ## 10. Безопасность
 
-| Технология / практика           | Назначение                                                                                |
-| ------------------------------- | ----------------------------------------------------------------------------------------- |
-| **HTTPS** (Vercel)              | Транспорт                                                                                 |
-| **Security headers**            | CSP (по мере возможности), HSTS, X-Frame-Options, Referrer-Policy и т.д.                  |
-| **Rate limiting**               | Auth, comments, password reset (Vercel / middleware / Upstash free или встроенные лимиты) |
-| **Cloudflare Turnstile** (free) | Bot protection на login/register/comments                                                 |
-| **Dependabot**                  | Автоматические PR по уязвимым зависимостям                                                |
-| **Secret scanning** (GitHub)    | Утечки ключей в git                                                                       |
-| **Env secrets**                 | Vercel Environment Variables + GitHub Actions Secrets                                     |
-| **Password hashing**            | Встроенный механизм Payload (не изобретаем свой)                                          |
-| **Cookie consent**              | Лёгкий banner под Privacy/Terms + Analytics                                               |
+| Технология / практика           | Назначение                                                                                                            |
+| ------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| **HTTPS** (Vercel)              | Транспорт                                                                                                             |
+| **Security headers**            | Next `headers()` + phased CSP (`src/security/headers.ts`); HSTS, X-Frame-Options, Referrer-Policy, Permissions-Policy |
+| **Rate limiting**               | Auth, comments, password reset (Vercel / middleware / Upstash free или встроенные лимиты)                             |
+| **Cloudflare Turnstile** (free) | Bot protection на login/register/comments                                                                             |
+| **Dependabot**                  | Автоматические PR по уязвимым зависимостям                                                                            |
+| **Secret scanning** (GitHub)    | Утечки ключей в git                                                                                                   |
+| **Env secrets**                 | Vercel Environment Variables + GitHub Actions Secrets                                                                 |
+| **Password hashing**            | Встроенный механизм Payload (не изобретаем свой)                                                                      |
+| **Cookie consent**              | Лёгкий banner под Privacy/Terms + Analytics                                                                           |
 
 WAF: использовать бесплатные возможности Vercel/Cloudflare там, где подключается без платного плана.
 

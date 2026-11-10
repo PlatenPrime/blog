@@ -723,11 +723,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 073 — Security headers
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Базовый hardening HTTP.
 - **Deliverables:** Next headers / middleware: CSP (поэтапно), frame guard, referrer, permissions.
 - **Verify:** securityheaders-like smoke; app не ломается.
 - **DoD:** Headers включены в prod.
+- **Notes:** Чистые builders в `src/security/headers.ts` + `next.config.ts` `headers()` (не proxy: `/admin` и `/api` вне matcher). Baseline: `X-Frame-Options: DENY`, `nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `Permissions-Policy` (camera/mic/geo/payment/usb off), HSTS только при `NODE_ENV=production`. CSP фаза 1 enforcing: public — `'unsafe-inline'` без eval, `frame-src` youtube-nocookie, `img-src` + `R2_PUBLIC_URL` origin; `/admin/:path*` перекрывает мягкой CSP (`'unsafe-eval'` + R2 public/endpoint в `connect-src` для client uploads). Nonce/hash, Turnstile/Analytics origins — вне шага (075/081/097). Unit: `tests/unit/securityHeaders.test.ts`. E2E: `tests/e2e/security-headers.e2e.spec.ts` (локально при Docker; CI e2e — 086).
 
 ### 074 — Rate limiting (auth + comments + reset)
 
