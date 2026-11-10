@@ -750,11 +750,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 076 — Dependabot + secret scanning
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Supply-chain hygiene.
 - **Deliverables:** Dependabot config; GitHub secret scanning enabled (doc); ignore policy.
 - **Verify:** Dependabot PR появляется на тестовом bump или конфиг валиден.
 - **DoD:** Автообновления уязвимостей включены.
+- **Notes:** `.github/dependabot.yml` v2: `npm` + `github-actions`, weekly Monday Europe/Kyiv, open-PR limit 5; npm groups minor/patch (prod + dev). Docker ecosystem не включали (локальный Postgres). Политика ignore + secret scanning / push protection: `docs/security/supply-chain.md`. После merge — включить Dependabot updates/alerts и Secret scanning + Push protection в GitHub Settings → Code security; PR Dependabot на ближайшем bump. Threat model / checklist — 077/078.
 
 ### 077 — Threat model stub
 
