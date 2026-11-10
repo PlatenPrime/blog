@@ -5,7 +5,9 @@ import { login as payloadLogin, logout as payloadLogout } from '@payloadcms/next
 import { getTranslations } from 'next-intl/server'
 import { getPayload } from 'payload'
 
-import { takeRateLimit } from './rateLimit'
+import { requestClientIp } from '@/security/clientIp'
+import { RATE_LIMIT_POLICIES } from '@/security/rateLimitPolicies'
+import { takeRateLimit } from '@/security/rateLimit'
 
 export type AuthActionResult = { ok: true; message?: string } | { ok: false; error: string }
 
@@ -38,7 +40,7 @@ export async function registerAction(formData: FormData): Promise<AuthActionResu
     return { ok: false, error: errors('passwordTooShort') }
   }
 
-  const limit = takeRateLimit(`register:${email}`, { limit: 5, windowMs: 60_000 })
+  const limit = await takeRateLimit(`register:${email}`, RATE_LIMIT_POLICIES.register)
   if (!limit.allowed) {
     return { ok: false, error: errors('tooManyRegistrations') }
   }
@@ -75,7 +77,7 @@ export async function loginAction(formData: FormData): Promise<AuthActionResult>
     return { ok: false, error: errors('emailAndPasswordRequired') }
   }
 
-  const limit = takeRateLimit(`login:${email}`, { limit: 10, windowMs: 60_000 })
+  const limit = await takeRateLimit(`login:${email}`, RATE_LIMIT_POLICIES.login)
   if (!limit.allowed) {
     return { ok: false, error: errors('tooManyLogins') }
   }
@@ -119,7 +121,7 @@ export async function forgotPasswordAction(formData: FormData): Promise<AuthActi
     return { ok: false, error: errors('emailRequired') }
   }
 
-  const limit = takeRateLimit(`forgot:${email}`, { limit: 3, windowMs: 15 * 60_000 })
+  const limit = await takeRateLimit(`forgot:${email}`, RATE_LIMIT_POLICIES.forgot)
   if (!limit.allowed) {
     return { ok: false, error: errors('tooManyResets') }
   }
@@ -152,6 +154,12 @@ export async function resetPasswordAction(formData: FormData): Promise<AuthActio
 
   if (password.length < 8) {
     return { ok: false, error: errors('passwordTooShort') }
+  }
+
+  const ip = await requestClientIp()
+  const limit = await takeRateLimit(`reset:${ip}`, RATE_LIMIT_POLICIES.reset)
+  if (!limit.allowed) {
+    return { ok: false, error: errors('tooManyResets') }
   }
 
   try {

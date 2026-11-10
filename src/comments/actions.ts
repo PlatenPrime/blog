@@ -12,6 +12,8 @@ import {
   readCommentTarget,
   type CommentTarget,
 } from '@/content/commentsQuery'
+import { takeRateLimit } from '@/security/rateLimit'
+import { RATE_LIMIT_POLICIES } from '@/security/rateLimitPolicies'
 
 export type CommentActionResult = { ok: true } | { ok: false; error: string }
 
@@ -68,6 +70,11 @@ export async function createCommentAction(formData: FormData): Promise<CommentAc
   const user = await getCurrentUser()
   if (!user || !isAuthenticatedAndVerified(user)) {
     return { error: errors('commentNotAllowed'), ok: false }
+  }
+
+  const limit = await takeRateLimit(`comments:${user.id}`, RATE_LIMIT_POLICIES.comments)
+  if (!limit.allowed) {
+    return { error: errors('tooManyComments'), ok: false }
   }
 
   try {

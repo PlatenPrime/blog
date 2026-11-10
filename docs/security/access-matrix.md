@@ -30,7 +30,8 @@ Verified: password users after email verify, or Google users with verified email
 | Cookie         | HttpOnly (Payload default), `SameSite=Lax`, `Secure` in production        |
 | CSRF           | Payload CSRF allowlist = `NEXT_PUBLIC_SERVER_URL`                         |
 | Logout         | `/logout` clears current session; “Log out everywhere” uses `allSessions` |
-| Password reset | Token expiry 1h; `minRequestInterval` 15s; extra action rate limits       |
+| Password reset | Token expiry 1h; `minRequestInterval` 15s; app rate limits (ADR-006)      |
+| Rate limiting  | Upstash (or memory); proxy 429 + action identity keys — see ADR-006       |
 | Email          | Resend when `RESEND_API_KEY` set; else console adapter (local)            |
 
 See also: [ADR-002](../adr/002-auth-verification-and-account-linking.md), [content-model.md](../content-model.md).

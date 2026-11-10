@@ -92,6 +92,7 @@
     "commentTooLong": "A comment can be at most 2000 characters.",
     "commentNotAllowed": "This comment cannot be posted.",
     "commentFailed": "The comment could not be posted.",
+    "tooManyComments": "Too many comments. Try again shortly.",
     "bookmarkNotAllowed": "This cannot be saved.",
     "bookmarkFailed": "The bookmark could not be changed."
   },

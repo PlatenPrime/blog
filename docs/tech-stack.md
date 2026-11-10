@@ -65,7 +65,7 @@ Vercel (Next.js SSR/ISR + Payload /admin)
 | **Drizzle ORM** (через Payload DB adapter) | Схема и migrations; **отдельный ORM-слой не вводим**                |
 | **Payload migrations**                     | Версионирование схемы для production (`src/migrations/`)            |
 
-**Почему так (лимиты Free):** личный блог с ISR/кэшем публичных страниц почти не нагружает БД. Текст и метаданные укладываются в Neon Free (~0.5 GB); тяжёлые байты живут в R2. Redis и второй ORM на v1 не нужны — они увеличивают стоимость и cold start.
+**Почему так (лимиты Free):** личный блог с ISR/кэшем публичных страниц почти не нагружает БД. Текст и метаданные укладываются в Neon Free (~0.5 GB); тяжёлые байты живут в R2. Общий Redis-кэш и второй ORM на v1 не нужны — они увеличивают стоимость и cold start. Исключение: **Upstash Redis REST только для rate-limit счётчиков** (шаг 074, ADR-006), не для сессий и не для кэша страниц.
 
 **Локально:** Docker Postgres (или Neon local connection) для быстрых schema push в dev. Выбор адаптера — `src/db/adapter.ts` (`db-postgres` по умолчанию, `db-vercel-postgres` при `VERCEL`).
 
@@ -151,17 +151,17 @@ Newsletter / marketing mail — out of scope.
 
 ## 10. Безопасность
 
-| Технология / практика           | Назначение                                                                                                            |
-| ------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| **HTTPS** (Vercel)              | Транспорт                                                                                                             |
-| **Security headers**            | Next `headers()` + phased CSP (`src/security/headers.ts`); HSTS, X-Frame-Options, Referrer-Policy, Permissions-Policy |
-| **Rate limiting**               | Auth, comments, password reset (Vercel / middleware / Upstash free или встроенные лимиты)                             |
-| **Cloudflare Turnstile** (free) | Bot protection на login/register/comments                                                                             |
-| **Dependabot**                  | Автоматические PR по уязвимым зависимостям                                                                            |
-| **Secret scanning** (GitHub)    | Утечки ключей в git                                                                                                   |
-| **Env secrets**                 | Vercel Environment Variables + GitHub Actions Secrets                                                                 |
-| **Password hashing**            | Встроенный механизм Payload (не изобретаем свой)                                                                      |
-| **Cookie consent**              | Лёгкий banner под Privacy/Terms + Analytics                                                                           |
+| Технология / практика           | Назначение                                                                                                                                 |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| **HTTPS** (Vercel)              | Транспорт                                                                                                                                  |
+| **Security headers**            | Next `headers()` + phased CSP (`src/security/headers.ts`); HSTS, X-Frame-Options, Referrer-Policy, Permissions-Policy                      |
+| **Rate limiting**               | Auth, comments, password reset: Upstash Redis REST + `@upstash/ratelimit` (только счётчики, ADR-006); memory fallback без env; proxy → 429 |
+| **Cloudflare Turnstile** (free) | Bot protection на login/register/comments                                                                                                  |
+| **Dependabot**                  | Автоматические PR по уязвимым зависимостям                                                                                                 |
+| **Secret scanning** (GitHub)    | Утечки ключей в git                                                                                                                        |
+| **Env secrets**                 | Vercel Environment Variables + GitHub Actions Secrets                                                                                      |
+| **Password hashing**            | Встроенный механизм Payload (не изобретаем свой)                                                                                           |
+| **Cookie consent**              | Лёгкий banner под Privacy/Terms + Analytics                                                                                                |
 
 WAF: использовать бесплатные возможности Vercel/Cloudflare там, где подключается без платного плана.
 

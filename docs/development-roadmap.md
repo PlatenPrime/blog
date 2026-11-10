@@ -732,11 +732,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 074 — Rate limiting (auth + comments + reset)
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Защита от brute force и spam.
 - **Deliverables:** Limiter (Vercel KV/Upstash free или middleware strategy); ADR.
 - **Verify:** Превышение лимита → 429.
 - **DoD:** Чувствительные endpoints ограничены.
+- **Notes:** ADR-006: Upstash Redis REST + `@upstash/ratelimit` только для счётчиков; без env — memory fallback (+ warn в prod). Dual layer: `src/proxy.ts` IP → 429/`Retry-After` на POST auth pages (не articles/notes — там Next-Action общий с bookmarks); actions — email/userId/IP keys + i18n (`register`/`login`/`forgot`/`reset`/`comments`). Политики в `rateLimitPolicies.ts`. Unit: `rateLimit.test.ts`, `rateLimitMiddleware.test.ts`. Turnstile / OAuth `/api` / WAF / e2e 429 в CI — вне шага (075/086).
 
 ### 075 — Cloudflare Turnstile
 
