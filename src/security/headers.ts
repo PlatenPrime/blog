@@ -25,6 +25,8 @@ export type BuildBaselineHeadersOptions = {
 export type BuildRouteSecurityHeadersOptions = BuildBaselineHeadersOptions & BuildCspOptions
 
 const YOUTUBE_NOCOOKIE_ORIGIN = 'https://www.youtube-nocookie.com'
+/** Cloudflare Turnstile (widget script + iframe + browser callbacks). */
+const TURNSTILE_ORIGIN = 'https://challenges.cloudflare.com'
 
 const PERMISSIONS_POLICY = [
   'camera=()',
@@ -81,16 +83,24 @@ export function buildContentSecurityPolicy(options: BuildCspOptions): string {
   const scriptSrc =
     options.audience === 'admin'
       ? ["'self'", "'unsafe-inline'", "'unsafe-eval'"]
-      : ["'self'", "'unsafe-inline'"]
+      : ["'self'", "'unsafe-inline'", TURNSTILE_ORIGIN]
 
   const styleSrc = ["'self'", "'unsafe-inline'"]
 
   const connectSrc = ["'self'"]
+  if (options.audience === 'public') {
+    connectSrc.push(TURNSTILE_ORIGIN)
+  }
   if (options.audience === 'admin') {
     if (r2Origin) connectSrc.push(r2Origin)
     const endpointOrigin = options.r2EndpointOrigin?.replace(/\/$/, '') || null
     if (endpointOrigin && endpointOrigin !== r2Origin) connectSrc.push(endpointOrigin)
   }
+
+  const frameSrc =
+    options.audience === 'public'
+      ? `${YOUTUBE_NOCOOKIE_ORIGIN} ${TURNSTILE_ORIGIN}`
+      : YOUTUBE_NOCOOKIE_ORIGIN
 
   const directives: string[] = [
     `default-src 'self'`,
@@ -99,7 +109,7 @@ export function buildContentSecurityPolicy(options: BuildCspOptions): string {
     `img-src ${imgSrc.join(' ')}`,
     `font-src 'self'`,
     `connect-src ${connectSrc.join(' ')}`,
-    `frame-src ${YOUTUBE_NOCOOKIE_ORIGIN}`,
+    `frame-src ${frameSrc}`,
     `object-src 'none'`,
     `base-uri 'self'`,
     `form-action 'self'`,

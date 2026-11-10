@@ -24,6 +24,7 @@ export default async function RegisterPage() {
     <div className="auth-page">
       <AuthForm
         action={registerAction}
+        requireTurnstile
         footer={
           <p>
             {tAuth('register.hasAccount')} <Link href="/login">{tNav('login')}</Link>

@@ -61,11 +61,14 @@ describe('buildBaselineHeaders', () => {
 })
 
 describe('buildContentSecurityPolicy', () => {
-  it('public CSP blocks framing and allows youtube-nocookie embeds', () => {
+  it('public CSP blocks framing and allows youtube-nocookie + Turnstile', () => {
     const csp = buildContentSecurityPolicy({ audience: 'public' })
     expect(csp).toContain("frame-ancestors 'none'")
-    expect(csp).toContain('frame-src https://www.youtube-nocookie.com')
-    expect(csp).toContain("script-src 'self' 'unsafe-inline'")
+    expect(csp).toContain(
+      'frame-src https://www.youtube-nocookie.com https://challenges.cloudflare.com',
+    )
+    expect(csp).toContain("script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com")
+    expect(csp).toContain("connect-src 'self' https://challenges.cloudflare.com")
     expect(csp).not.toContain("'unsafe-eval'")
     expect(csp).toContain("object-src 'none'")
   })

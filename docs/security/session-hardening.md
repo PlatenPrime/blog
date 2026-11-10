@@ -30,7 +30,8 @@ Step **074** / [ADR-006](../adr/006-rate-limiting.md):
 - **Store:** Upstash Redis REST when `UPSTASH_REDIS_REST_*` is set; otherwise in-memory (local/CI; per-isolate on serverless).
 - **Proxy:** IP limits on `POST` to login/register/forgot/reset → **HTTP 429** + `Retry-After` (not on article/note pages: bookmarks share Next-Action).
 - **Actions:** identity keys (email / userId / IP for reset) → i18n `{ ok: false }` (`src/security/rateLimit.ts`); comments by `userId`.
-- Payload `forgotPassword.minRequestInterval` remains 15s. Turnstile (075) and product WAF are separate.
+- Payload `forgotPassword.minRequestInterval` remains 15s. Product WAF is separate.
+- **Turnstile (075):** stacks on top of these limits on login / register / comment (`src/security/turnstile.ts` + widget). Empty keys → verify skipped (local/CI); do not remove rate limits when bots are filtered.
 
 ## Playwright smoke
 

@@ -93,6 +93,7 @@
     "commentNotAllowed": "This comment cannot be posted.",
     "commentFailed": "The comment could not be posted.",
     "tooManyComments": "Too many comments. Try again shortly.",
+    "turnstileFailed": "Bot check failed. Refresh the page and try again.",
     "bookmarkNotAllowed": "This cannot be saved.",
     "bookmarkFailed": "The bookmark could not be changed."
   },

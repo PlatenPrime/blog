@@ -741,11 +741,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 075 — Cloudflare Turnstile
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Bot protection free tier.
 - **Deliverables:** Turnstile на register/login/comment; server verify.
 - **Verify:** Без токена форма не проходит; с токеном — проходит.
 - **DoD:** Bot shield на ключевых формах.
+- **Notes:** Виджет `TurnstileWidget` (explicit `api.js`) на login/register (`AuthForm.requireTurnstile`) и comment form; forgot/reset без виджета. Server: `src/security/turnstile.ts` → Cloudflare `siteverify`; actions читают `cf-turnstile-response` до rate limit. Пустые ключи = bypass (+ warn в prod), как Upstash. CSP public: `challenges.cloudflare.com` в `script-src` / `frame-src` / `connect-src`. i18n `errors.turnstileFailed`. Unit: `tests/unit/turnstile.test.ts` (+ CSP в `securityHeaders.test.ts`). E2E с живым виджетом / CI — вне шага (086). OAuth `/api` и WAF — вне шага.
 
 ### 076 — Dependabot + secret scanning
 

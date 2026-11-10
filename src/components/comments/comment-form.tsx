@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl'
 import { useRef, useState, useTransition } from 'react'
 
 import { createCommentAction } from '@/comments/actions'
+import { TurnstileWidget } from '@/components/turnstile/turnstile-widget'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import type { CommentRelation } from '@/content/commentsQuery'
@@ -23,6 +24,7 @@ export function CommentForm({ contentId, maxLength, relationTo }: CommentFormPro
   const router = useRouter()
   const formRef = useRef<HTMLFormElement>(null)
   const [error, setError] = useState<string | null>(null)
+  const [turnstileReset, setTurnstileReset] = useState(0)
   const [isPending, startTransition] = useTransition()
 
   return (
@@ -36,6 +38,7 @@ export function CommentForm({ contentId, maxLength, relationTo }: CommentFormPro
         const formData = new FormData(form)
         startTransition(async () => {
           const result = await createCommentAction(formData)
+          setTurnstileReset((n) => n + 1)
           if (!result.ok) {
             setError(result.error)
             return
@@ -59,6 +62,7 @@ export function CommentForm({ contentId, maxLength, relationTo }: CommentFormPro
         name="body"
         required
       />
+      <TurnstileWidget resetSignal={turnstileReset} />
       {error ? (
         <p className="m-0 text-small text-destructive" id="comment-error" role="alert">
           {error}

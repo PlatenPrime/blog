@@ -12,8 +12,10 @@ import {
   readCommentTarget,
   type CommentTarget,
 } from '@/content/commentsQuery'
+import { requestClientIp } from '@/security/clientIp'
 import { takeRateLimit } from '@/security/rateLimit'
 import { RATE_LIMIT_POLICIES } from '@/security/rateLimitPolicies'
+import { TURNSTILE_RESPONSE_FIELD, verifyTurnstileToken } from '@/security/turnstile'
 
 export type CommentActionResult = { ok: true } | { ok: false; error: string }
 
@@ -70,6 +72,14 @@ export async function createCommentAction(formData: FormData): Promise<CommentAc
   const user = await getCurrentUser()
   if (!user || !isAuthenticatedAndVerified(user)) {
     return { error: errors('commentNotAllowed'), ok: false }
+  }
+
+  const turnstile = await verifyTurnstileToken({
+    ip: await requestClientIp(),
+    token: readString(formData, TURNSTILE_RESPONSE_FIELD),
+  })
+  if (!turnstile.ok) {
+    return { error: errors('turnstileFailed'), ok: false }
   }
 
   const limit = await takeRateLimit(`comments:${user.id}`, RATE_LIMIT_POLICIES.comments)

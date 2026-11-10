@@ -546,7 +546,9 @@ Payload не выбирает две коллекции одним запрос�
 
 Шаг 073. Ответ сайта перестал быть «голым» HTML. В `next.config` повесили security headers на все пути: нельзя встраивать страницу в чужой iframe, браузер не угадывает MIME, referrer режется до origin при кросс-сайтах, камера и геолокация выключены политикой, в production добавляется HSTS. CSP включили сразу enforcing, но поэтапно: на фасаде разрешён inline для темы и JSON-LD, YouTube только через youtube-nocookie, картинки с R2 — по origin из env; в `/admin` политика мягче (eval и connect к R2), иначе Payload и client uploads ломаются. Логику собрали чистыми builders, не в proxy next-intl: иначе `/admin` и `/api` остались бы без защиты. Nonce и домены Turnstile/аналитики сознательно не трогали — они появятся, когда появятся сами скрипты.
 
-Шаг 074. Ограничитель частоты перестал быть «памяткой в одном процессе». In-memory Map с шагов auth на Vercel не разделяется между isolate — brute force и spam комментариев обходили его. Ввели Upstash Redis REST только как счётчик (не кэш и не сессии), с memory fallback для local/CI. Два слоя одной политики: proxy на POST login/register/forgot/reset отдаёт HTTP 429 с Retry-After (так проверяется Verify); articles/notes в proxy не режем — там Next-Action общий у комментариев и закладок. Server actions режут по email / userId / IP и показывают i18n-ошибку; комментарии — по userId. Reset password вошёл в тот же контур. Turnstile и WAF сознательно оставили следующим шагам — сначала общий счётчик, потом «ты не скрипт».
+Шаг 074. Ограничитель частоты перестал быть «памяткой в одном процессе». In-memory Map с шагов auth на Vercel не разделяется между isolate — brute force и spam комментариев обходили его. Ввели Upstash Redis REST только как счётчик (не кэш и не сессии), с memory fallback для local/CI. Два слоя одной политики: proxy на POST login/register/forgot/reset отдаёт HTTP 429 с Retry-After (так проверяется Verify); articles/notes в proxy не режем — там Next-Action общий у комментариев и закладок. Server actions режут по email / userId / IP и показывают i18n-ошибку; комментарии — по userId. Reset password вошёл в тот же контур. Сначала общий счётчик; проверка «ты не скрипт» — следующий слой (075).
+
+Шаг 075. На login, register и форму комментария повесили Cloudflare Turnstile: виджет отдаёт одноразовый токен, сервер проверяет его у Cloudflare до rate limit — бот без токена не жрёт Redis-бюджет. Forgot/reset не трогали: там уже есть лимиты, а deliverables шага называли три поверхности. Без ключей локально и в CI формы работают как раньше (bypass + warn в production), с ключами — без токена отказ с i18n. CSP фасада открыли `challenges.cloudflare.com` под script/frame/connect, иначе виджет упирался бы в headers шага 073. WAF и e2e с живым виджетом оставили дальше.
 
 ---
 
@@ -562,6 +564,6 @@ Payload не выбирает две коллекции одним запрос�
 - Глава 7 — шаги 041–045.
 - Глава 8 — шаги 046–056.
 - Глава 9 — шаги 057–072 записаны.
-- Глава 10 — шаги 073–074 записаны; ещё не сделано: 075–082, 084–115. Шаг 083 уже вошёл в главу 3.
+- Глава 10 — шаги 073–075 записаны; ещё не сделано: 076–082, 084–115. Шаг 083 уже вошёл в главу 3.
 
 Свериться с полями и правами, не перечитывая главы: [content-model.md](./content-model.md), [security/access-matrix.md](./security/access-matrix.md). Поднять проект руками: [LOCAL_SETUP.md](./LOCAL_SETUP.md). Идти по работе: [development-roadmap.md](./development-roadmap.md).

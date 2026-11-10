@@ -8,6 +8,7 @@ import { getPayload } from 'payload'
 import { requestClientIp } from '@/security/clientIp'
 import { RATE_LIMIT_POLICIES } from '@/security/rateLimitPolicies'
 import { takeRateLimit } from '@/security/rateLimit'
+import { TURNSTILE_RESPONSE_FIELD, verifyTurnstileToken } from '@/security/turnstile'
 
 export type AuthActionResult = { ok: true; message?: string } | { ok: false; error: string }
 
@@ -38,6 +39,14 @@ export async function registerAction(formData: FormData): Promise<AuthActionResu
 
   if (password.length < 8) {
     return { ok: false, error: errors('passwordTooShort') }
+  }
+
+  const turnstile = await verifyTurnstileToken({
+    ip: await requestClientIp(),
+    token: readString(formData, TURNSTILE_RESPONSE_FIELD),
+  })
+  if (!turnstile.ok) {
+    return { ok: false, error: errors('turnstileFailed') }
   }
 
   const limit = await takeRateLimit(`register:${email}`, RATE_LIMIT_POLICIES.register)
@@ -75,6 +84,14 @@ export async function loginAction(formData: FormData): Promise<AuthActionResult>
 
   if (!email || !password) {
     return { ok: false, error: errors('emailAndPasswordRequired') }
+  }
+
+  const turnstile = await verifyTurnstileToken({
+    ip: await requestClientIp(),
+    token: readString(formData, TURNSTILE_RESPONSE_FIELD),
+  })
+  if (!turnstile.ok) {
+    return { ok: false, error: errors('turnstileFailed') }
   }
 
   const limit = await takeRateLimit(`login:${email}`, RATE_LIMIT_POLICIES.login)
