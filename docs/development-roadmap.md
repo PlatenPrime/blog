@@ -46,7 +46,7 @@ v1 считается завершённым, когда одновременн�
 - [x] SEO: RSS, sitemap, OG images, JSON-LD, TOC, reading time, related, code highlight
 - [ ] Поиск по Postgres
 - [ ] Dark + light theme, shadcn UI, аккуратный editorial дизайн
-- [ ] Privacy, Terms, cookie consent
+- [x] Privacy, Terms, cookie consent
 - [ ] CI: lint + typecheck + Vitest + Playwright; Dependabot; Preview Deploys
 - [ ] Backups Neon (+ политика R2); логи Vercel; Vercel Analytics
 - [ ] Seed + faker для локалки; документация LOCAL_SETUP / ADR / runbooks / security
@@ -799,11 +799,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 081 — Cookie consent banner
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Согласие под Analytics/cookies.
 - **Deliverables:** Лёгкий banner; persist choice; Analytics грузится по политике.
 - **Verify:** До согласия analytics не стреляет (если так решено); отказ уважается.
 - **DoD:** Consent UX есть.
+- **Notes:** `localStorage` ключ `cookie-consent` (`accepted` | `declined`); helpers `src/lib/cookie-consent.ts` (`readConsent` / `writeConsent` / `hasAnalyticsConsent` + event `cookie-consent-change`). Banner `CookieConsentBanner` + gate `ConsentAwareAnalytics` в locale layout (внутри `NextIntlClientProvider`); i18n `cookies.*` (042); ссылка на Privacy через `nav.privacy`. До Accept / после Decline gate пустой — `@vercel/analytics` и CSP origins на **097**. Unit: `tests/unit/cookieConsent.test.ts`. E2E network assert — defer **097**/**085**.
 
 ### 082 — Resend production verification
 

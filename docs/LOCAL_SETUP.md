@@ -331,7 +331,7 @@ Unit: `npm test` → `tests/unit/notesQuery.test.ts`. Draft Preview (кнопк�
 - Cloudflare Turnstile на формах (токен, опционально IP);
 - Resend для verify / reset password (email);
 - опубликованные медиа по публичному R2 URL;
-- analytics пока не подключена; согласие и загрузка — шаги **081** / **097**.
+- analytics пока не подключена (пакет — шаг **097**); согласие на analytics — баннер снизу, выбор в `localStorage` ключе `cookie-consent` (`accepted` | `declined`); до Accept / после Decline скрипты аналитики не грузятся.
 
 ### Terms (`/terms`)
 
