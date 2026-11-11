@@ -2,16 +2,17 @@
 
 Канон: что **обязано** быть под тестами, чем мы **не** гоняемся, и как это стыкуется с CI и шагами роадмапа.
 
-Стек раннеров — [`tech-stack.md`](./tech-stack.md) §12. Порядок внедрения suite — [`development-roadmap.md`](./development-roadmap.md) (024, 032, 061, 083–087).
+Стек раннеров — [`tech-stack.md`](./tech-stack.md) §12. Порядок внедрения suite — [`development-roadmap.md`](./development-roadmap.md) (024, 061, 083–087; **085** отказался от Playwright, **086** cancelled).
 
 ---
 
 ## Принцип
 
-Покрываем **критичную бизнес-логику, инварианты доступа и регрессии ключевых UX-потоков**.  
-Не целимся в процент coverage и не дублируем одно и то же на трёх слоях.
+Покрываем **критичную бизнес-логику и инварианты доступа** Vitest’ом.  
+Ключевые UX-потоки проверяем **ручным poke** (команды + клики), не браузерным e2e.  
+Не целимся в процент coverage и не дублируем одно и то же на двух слоях.
 
-Если шаг роадмапа добавляет тестируемую логику (helper, access, формула, правило slug/bookmark, auth flow) — тесты на неё появляются **в том же изменении** (или сразу в следующем dedicated test-шаге, если роадмап так разнесён: например 024 после модели).
+Если шаг роадмапа добавляет тестируемую логику (helper, access, формула, правило slug/bookmark) — тесты на неё появляются **в том же изменении** (или сразу в следующем dedicated test-шаге, если роадмап так разнесён: например 024 после модели).
 
 После каждого шага — review gate (см. ниже и правило в `.cursor/rules/roadmap-one-step.mdc`): не только «зелёный CI», но и «это здравый смысл / best practices / не переусложнили».
 
@@ -25,9 +26,10 @@
 | ----------- | ------------------- | --------------- | --------------------------------------------------------------------------------------- |
 | Unit        | Vitest              | `tests/unit/**` | Всегда локально и в CI (`npm test`)                                                     |
 | Integration | Vitest + Payload/DB | `tests/int/**`  | Локально при работе с access/API (`npm run test:int`); в CI — по мере зрелости pipeline |
-| E2E         | Playwright          | `tests/e2e/**`  | Локально для UX/auth (`npm run test:e2e`); в CI — шаг **086**                           |
 
-`npm run ci` сейчас: lint + format:check + typecheck + **unit**. E2E в CI — позже (086).
+Браузерный E2E (Playwright) **снят** шагом **085**: не держится локально и в Actions; suite удалён.
+
+`npm run ci` сейчас: lint + format:check + typecheck + **unit**.
 
 ---
 
@@ -45,7 +47,7 @@
 - Инварианты модели в helpers (например uniqueness bookmark), если вынесены из Payload hooks
 - Парсеры / сериализаторы контента (TOC из headings, JSON-LD smoke-parse и т.п.), когда появятся
 
-**Сейчас (после 070):** unit — `slugify`, `readingTime` (`tests/unit/readingTime.test.ts`: countWords, ceil/WPM, Lexical smoke), TOC из Lexical headings (`tests/unit/tableOfContents.test.ts`: h2/h3, slugify/dedupe, article vs note gate), code highlight (`tests/unit/codeHighlight.test.ts`: normalize language / aliases / plaintext fallback, Shiki dual-theme HTML smoke), поиск (`tests/unit/searchQuery.test.ts`: normalize `q`, `searchContentWhere` + `publicContentWhere`, find/count без session, href с `q`/`page`, хук `searchText`), access helpers (+ `isVerified`), wiring Comments/Bookmarks (`tests/unit/readerAccess.test.ts`), `bookmarkUniqueness`, `rateLimit` (memory path + store selection; middleware path classify — `rateLimitMiddleware.test.ts`), Turnstile siteverify (`tests/unit/turnstile.test.ts`: unset bypass, missing token, mocked success/fail), контракт префикса локали (`tests/unit/i18nRouting.test.ts`), паритет ключей словарей (`tests/unit/i18nMessages.test.ts`, включая `account` / `nav.account` / `nav.search` / `nav.rss` / `search.*` / `articles.readingTime` / `articles.tableOfContents` / `notes.tableOfContents`), `resolveContentLocale` (`tests/unit/contentLocale.test.ts`), i18n fallback / missing key no-throw (`tests/unit/i18nFallback.test.ts`, ADR-005), аргументы публичного find главной (`tests/unit/latestPublic.test.ts`), склейка и страница ленты (`tests/unit/feedQuery.test.ts`), аргументы списка и страницы статей (`tests/unit/articlesQuery.test.ts`), аргументы списка и страницы заметок (`tests/unit/notesQuery.test.ts`), полка таксономии (`tests/unit/taxonomyQuery.test.ts`: `where` с `publicContentWhere` и `in: [id]`, окно ленты, href термина, ссылка требует slug), страница автора (`tests/unit/pagesQuery.test.ts`: аргументы find Pages, маппер без обложки, `contactMailto`), комментарии на статье и заметке (`tests/unit/commentsQuery.test.ts`: `where` approved и публичная цель, лимит 100, тело, подпись без почты), закладки (`tests/unit/bookmarksQuery.test.ts`: `where.user` даже для admin, лимит 100, публичные заголовки без сессии, склейка без черновика, 409/404), related (`tests/unit/relatedContentQuery.test.ts`), sitemap (`tests/unit/sitemapQuery.test.ts`: find-args с `publicContentWhere` / без session, статика × локали, about только published, localized slug hreflang, auth/dev вне карты), RSS (`tests/unit/rssQuery.test.ts`: find-args / excerpt / merge limit / XML escape), OG helpers (`tests/unit/ogImage.test.ts`), JSON-LD (`tests/unit/jsonLd.test.ts`: JSON.parse smoke, locale URLs, `@id` links, opengraph-image fallback, escape `<`). Integration — comments (hide невидим гостю, автору и другому reader; approve возвращает; reader не ставит `moderationStatus`; публичный `commentsFindArgs` без сессии не возвращает hidden; сосед остаётся — `tests/int/comments.int.spec.ts`) / bookmarks + `tests/int/auth.int.spec.ts` (register/login/verify/reset, reader≠articles) + `tests/int/contentLocale.int.spec.ts` (uk+ru+en + fallback на `uk`). E2E auth — `tests/e2e/auth.e2e.spec.ts` (локально; CI e2e — шаг **086**), лейблы из каталога `uk`, плюс проверка `/ru/login` и `/en/login`; language switcher — `tests/e2e/language-switcher.e2e.spec.ts`; theme toggle — `tests/e2e/theme.e2e.spec.ts`; chrome landmarks — `tests/e2e/site-chrome.e2e.spec.ts`; главная — `tests/e2e/home.e2e.spec.ts` (бренд и screenshot hero); лента — `tests/e2e/feed.e2e.spec.ts` (маршрут вместо 404, `?page=0`); статьи — `tests/e2e/articles.e2e.spec.ts` (список вместо 404, `?page=0`, неизвестный slug); заметки — `tests/e2e/notes.e2e.spec.ts` (список вместо 404 и не список статей, `?page=0`, неизвестный slug); таксономия — `tests/e2e/taxonomy.e2e.spec.ts` (индексы вместо 404, переход на теги, неизвестный slug); страница автора — `tests/e2e/about.e2e.spec.ts` (клик из шапки на `/about`); неизвестный путь — `tests/e2e/not-found.e2e.spec.ts` (404 внутри шапки, uk/ru/en); публичный поток — `tests/e2e/public-site.e2e.spec.ts` (клики шапки включая `/search`, открытие фикстур статьи и заметки, черновик `e2e-draft-article` — 404) и скриншоты шапки, `/dev/design`, колонок чтения и 404; reader — `tests/e2e/reader-features.e2e.spec.ts` (guest CTA comments/bookmarks/account; verified comment; bookmark toggle + `/bookmarks`; account email/reset/logout). Фикстуры пишет `tests/e2e/public-content.setup.ts` (только свои слаги). Списки, полки и `/about` в пиксели не снимаются. Живой текст Pages и сужение ленты чужим черновиком — контракт запроса в unit, poke в админке.
+**Сейчас (после 085):** unit — `slugify`, `readingTime` (`tests/unit/readingTime.test.ts`: countWords, ceil/WPM, Lexical smoke), TOC из Lexical headings (`tests/unit/tableOfContents.test.ts`: h2/h3, slugify/dedupe, article vs note gate), code highlight (`tests/unit/codeHighlight.test.ts`: normalize language / aliases / plaintext fallback, Shiki dual-theme HTML smoke), поиск (`tests/unit/searchQuery.test.ts`: normalize `q`, `searchContentWhere` + `publicContentWhere`, find/count без session, href с `q`/`page`, хук `searchText`), access helpers (+ `isVerified`), wiring Comments/Bookmarks (`tests/unit/readerAccess.test.ts`), `bookmarkUniqueness`, `rateLimit` (memory path + store selection; middleware path classify — `rateLimitMiddleware.test.ts`), Turnstile siteverify (`tests/unit/turnstile.test.ts`: unset bypass, missing token, mocked success/fail), контракт префикса локали (`tests/unit/i18nRouting.test.ts`), паритет ключей словарей (`tests/unit/i18nMessages.test.ts`, включая `account` / `nav.account` / `nav.search` / `nav.rss` / `search.*` / `articles.readingTime` / `articles.tableOfContents` / `notes.tableOfContents`), `resolveContentLocale` (`tests/unit/contentLocale.test.ts`), i18n fallback / missing key no-throw (`tests/unit/i18nFallback.test.ts`, ADR-005), аргументы публичного find главной (`tests/unit/latestPublic.test.ts`), склейка и страница ленты (`tests/unit/feedQuery.test.ts`), аргументы списка и страницы статей (`tests/unit/articlesQuery.test.ts`), аргументы списка и страницы заметок (`tests/unit/notesQuery.test.ts`), полка таксономии (`tests/unit/taxonomyQuery.test.ts`: `where` с `publicContentWhere` и `in: [id]`, окно ленты, href термина, ссылка требует slug), страница автора (`tests/unit/pagesQuery.test.ts`: аргументы find Pages, маппер без обложки, `contactMailto`), комментарии на статье и заметке (`tests/unit/commentsQuery.test.ts`: `where` approved и публичная цель, лимит 100, тело, подпись без почты), закладки (`tests/unit/bookmarksQuery.test.ts`: `where.user` даже для admin, лимит 100, публичные заголовки без сессии, склейка без черновика, 409/404), related (`tests/unit/relatedContentQuery.test.ts`), sitemap (`tests/unit/sitemapQuery.test.ts`: find-args с `publicContentWhere` / без session, статика × локали, about только published, localized slug hreflang, auth/dev вне карты), RSS (`tests/unit/rssQuery.test.ts`: find-args / excerpt / merge limit / XML escape), OG helpers (`tests/unit/ogImage.test.ts`), JSON-LD (`tests/unit/jsonLd.test.ts`: JSON.parse smoke, locale URLs, `@id` links, opengraph-image fallback, escape `<`), cookie consent (`tests/unit/cookieConsent.test.ts`), security headers (`tests/unit/securityHeaders.test.ts`), page metadata (`tests/unit/pageMetadata.test.ts`). Integration — comments (hide невидим гостю, автору и другому reader; approve возвращает; reader не ставит `moderationStatus`; публичный `commentsFindArgs` без сессии не возвращает hidden; сосед остаётся — `tests/int/comments.int.spec.ts`) / bookmarks + `tests/int/auth.int.spec.ts` (register/login/verify/reset, reader≠articles) + `tests/int/contentLocale.int.spec.ts` (uk+ru+en + fallback на `uk`). Auth / reader / публичка UX — **ручной poke** (LOCAL_SETUP + итог шага); контракты запросов и access — unit/int.
 
 ### Integration (Payload Local API / DB) — must для границ доступа
 
@@ -58,19 +60,16 @@
 
 Не дублировать здесь полный UI admin.
 
-### E2E (Playwright) — must для продуктовых потоков
+### UX / продукт — ручной poke, не e2e
 
-- Auth: register / login / logout / reset (happy + ключевые negative) — шаг **032**
-- Reader: comments + bookmarks + account — шаг **061**
-- Публичка: nav, theme, open article/note; drafts не видны анониму — Track 5/6
-- A11y smoke (axe) на home / article / login — шаг **085**
+Playwright suite удалён (**085**). Для продуктовых потоков (auth, comments/bookmarks/account, nav/theme, drafts не видны анониму) — poke-path в LOCAL_SETUP и в итоге шага агента. A11y smoke (axe) waived вместе с e2e.
 
-Admin CMS: только точечный smoke при необходимости; не полный CRUD каждого поля.
+Admin CMS: точечный poke при необходимости; не полный CRUD каждого поля в автотестах.
 
 ### Что обычно не тестируем отдельно
 
 - Тривиальный scaffold / generated types
-- Визуальный pixel-perfect без договорённости (достаточно interaction + a11y smoke)
+- Визуальный pixel-perfect и браузерные скриншоты
 - Сторонние SDK «как работают сами по себе»
 - Каждый Lexical node в изоляции без нашей обёртки
 
@@ -82,45 +81,38 @@ Admin CMS: только точечный smoke при необходимости
 | ---------------- | ------------------------------------------------------------- |
 | % lines/branches | **Не** gate и не цель                                         |
 | Критичные модули | Нет «логики только в голове»: helpers/access/формулы — с unit |
-| Регрессии UX     | Ключевые flows — с e2e, когда feature жива                    |
-| CI               | Unit обязателен с шага 012; e2e — с 086                       |
+| Регрессии UX     | Ручной poke; контракты — unit/int                             |
+| CI               | Unit обязателен с шага 012; e2e не gate (**086** cancelled)   |
 
 ---
 
 ## Карта роадмапа → тесты
 
-| Шаги      | Фокус тестов                                                                                                                                                                                                |
-| --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 010 / 011 | Bootstrap runners (уже есть smoke)                                                                                                                                                                          |
-| 024       | Unit: slugify, role/access helpers, bookmark uniqueness helpers                                                                                                                                             |
-| 032       | E2E auth suite                                                                                                                                                                                              |
-| 039       | Integration/API: media upload 403 for reader                                                                                                                                                                |
-| 041       | Unit: locale prefix contract (ADR-004)                                                                                                                                                                      |
-| 042       | Unit: UI catalog key parity (`uk` / `ru` / `en`)                                                                                                                                                            |
-| 043       | Unit: `resolveContentLocale`; int: article uk+ru+en + fallback                                                                                                                                              |
-| 045       | Unit: i18n fallback (`i18nFallback`, ADR-005) — done                                                                                                                                                        |
-| 046       | Нет unit: визуальная система. Ручной smoke `/[locale]/dev/design`. Screenshot витрины токенов — 056. Hero главной — 049                                                                                     |
-| 047       | E2E: system theme, toggle пишет `localStorage`, reload хранит выбор (`theme.e2e`). Screenshot suite — 056                                                                                                   |
-| 048       | Unit: канон путей chrome (`siteNav`). E2E: landmarks, префикс ссылки, узкий viewport (`site-chrome.e2e`). Screenshot chrome — 056                                                                           |
-| 049       | Unit: аргументы публичного find (`latestPublicQuery`). E2E: бренд uk/ru/en и screenshot hero light/dark (`home.e2e`)                                                                                        |
-| 050       | Unit: склейка ленты, окно страницы, аргументы find/count (`feedQuery`). E2E: `/feed` вместо 404 и сброс `?page=0` (`feed.e2e`). Скриншоты — 056                                                             |
-| 053       | Unit: `where` полки, окно ленты, href термина, ссылка требует slug (`taxonomyQuery`). E2E: индексы вместо 404, переход на теги, неизвестный slug (`taxonomy.e2e`). Живое сужение — poke в админке           |
-| 054       | Unit: аргументы find Pages, маппер, `contactMailto` (`pagesQuery`). E2E: клик «Про автора» ведёт на `/about` (`about.e2e`). Живое тело — poke в админке                                                     |
-| 079       | Unit: `PRIVACY_PAGE_SLUG` / find args (`pagesQuery`). E2E: клик Privacy в footer → `/uk/privacy` (`privacy.e2e`); href в `site-chrome`. Живое тело — poke в админке                                         |
-| 080       | Unit: `TERMS_PAGE_SLUG` / find args (`pagesQuery`). E2E: клик Terms в footer → `/uk/terms` (`terms.e2e`); href в `site-chrome`. Живое тело — poke в админке                                                 |
-| 055       | Нет unit: краевые экраны без новой формулы. E2E: неизвестный путь — 404 внутри шапки, uk/ru/en (`not-found.e2e`). Скелет и 500 — poke; `/dev/error` только в dev                                            |
-| 056       | E2E: клики шапки, открытие фикстур статьи/заметки, черновик — 404 (`public-site.e2e`). Скриншоты шапки, `/dev/design`, колонок чтения (дата под маской) и 404. Списки и `/about` — не пиксели               |
-| 057       | Unit: `where` списка, публичная цель, тело, подпись без почты (`commentsQuery`). E2E отправки — **061**                                                                                                     |
-| 058       | Int: hide невидим гостю, автору и другому reader; approve возвращает; reader не ставит статус; публичный `commentsFindArgs` без сессии не возвращает hidden; сосед остаётся (`comments.int`). E2E — **061** |
-| 059       | Unit: `where.user`, лимит 100, публичные заголовки без сессии, склейка без черновика, 409/404 (`bookmarksQuery`). E2E toggle — **061**                                                                      |
-| 060       | Страница аккаунта: без новой чистой логики; паритет i18n (`account`, `nav.account`). E2E account/logout/reset UX — **061**                                                                                  |
-| 061       | E2E comments/bookmarks/account (`reader-features.e2e`) + Vitest Comments/Bookmarks access wiring (`readerAccess`) — done                                                                                    |
-| 068       | Unit: find-args / excerpt / merge limit / XML escape (`rssQuery`). E2E XML — вне шага                                                                                                                       |
-| 083       | Эта политика (`docs/testing.md`)                                                                                                                                                                            |
-| 084       | Расширение Vitest на пробелы домена                                                                                                                                                                         |
-| 085       | Playwright a11y smoke                                                                                                                                                                                       |
-| 086       | E2E в GitHub Actions                                                                                                                                                                                        |
-| 087       | Test data factories                                                                                                                                                                                         |
+| Шаги    | Фокус тестов                                                                                                                                                                                 |
+| ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 010     | Vitest bootstrap (smoke)                                                                                                                                                                     |
+| 011     | Playwright bootstrap (исторический); suite снят в **085**                                                                                                                                    |
+| 024     | Unit: slugify, role/access helpers, bookmark uniqueness helpers                                                                                                                              |
+| 032     | Auth flows: исторически e2e; сейчас unit/int + poke                                                                                                                                          |
+| 039     | Integration/API: media upload 403 for reader                                                                                                                                                 |
+| 041     | Unit: locale prefix contract (ADR-004)                                                                                                                                                       |
+| 042     | Unit: UI catalog key parity (`uk` / `ru` / `en`)                                                                                                                                             |
+| 043     | Unit: `resolveContentLocale`; int: article uk+ru+en + fallback                                                                                                                               |
+| 045     | Unit: i18n fallback (`i18nFallback`, ADR-005) — done                                                                                                                                         |
+| 046     | Нет unit: визуальная система. Ручной smoke `/[locale]/dev/design`                                                                                                                            |
+| 047–056 | Публичка/chrome/theme: unit контракты где были; UX — poke (бывшие e2e сняты в **085**)                                                                                                       |
+| 057     | Unit: `where` списка, публичная цель, тело, подпись без почты (`commentsQuery`). Отправка — poke                                                                                             |
+| 058     | Int: hide невидим гостю, автору и другому reader; approve возвращает; reader не ставит статус; публичный `commentsFindArgs` без сессии не возвращает hidden; сосед остаётся (`comments.int`) |
+| 059     | Unit: `where.user`, лимит 100, публичные заголовки без сессии, склейка без черновика, 409/404 (`bookmarksQuery`). Toggle — poke                                                              |
+| 060     | Страница аккаунта: без новой чистой логики; паритет i18n (`account`, `nav.account`). Account/logout/reset UX — poke                                                                          |
+| 061     | Vitest Comments/Bookmarks access wiring (`readerAccess`) + poke reader features; бывший e2e снят в **085**                                                                                   |
+| 068     | Unit: find-args / excerpt / merge limit / XML escape (`rssQuery`)                                                                                                                            |
+| 079–081 | Unit pages/cookie; footer Privacy/Terms и consent — poke                                                                                                                                     |
+| 083     | Эта политика (`docs/testing.md`)                                                                                                                                                             |
+| 084     | Расширение Vitest на пробелы домена                                                                                                                                                          |
+| 085     | Отказ от Playwright: удалены e2e suite/deps; канон Vitest + poke                                                                                                                             |
+| 086     | Cancelled: e2e в GitHub Actions не делаем                                                                                                                                                    |
+| 087     | Test data factories (unit/int)                                                                                                                                                               |
 
 ---
 
@@ -133,7 +125,7 @@ Admin CMS: только точечный smoke при необходимости
 3. **Best practices** — idiomatic для Next/Payload/TS; security basics (access, секреты, upload limits).
 4. **Здравый смысл** — DoD шага выполнен; Verify воспроизводим; docs не врут.
 5. **Тесты** — новая тестируемая логика покрыта или явно отложена на numbered test-шаг с ссылкой.
-6. **Отложено сознательно** — что оставлено на следующие шаги (R2, WebP, e2e в CI и т.д.).
+6. **Отложено сознательно** — что оставлено на следующие шаги (R2, WebP, factories и т.д.).
 
 Если ответ на 2–4 «сомнительно» — не закрывай шаг: поправь или зафиксируй ADR/waive.
 

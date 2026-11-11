@@ -124,7 +124,7 @@
 | AI / auto comment moderation           | Только ручной `moderationStatus`                                |
 | Multi-tenant / multi-author CMS        | Один admin                                                      |
 | Full STRIDE worksheets                 | Stub threat-model достаточно для v1                             |
-| Live Turnstile / 429 e2e в CI          | Unit + local e2e headers; CI e2e — шаг **086**                  |
+| Live Turnstile / 429 e2e в CI          | Waived (**085** / **086** cancelled); unit + ручной poke        |
 | Analytics / consent CSP origins        | Шаги **081** / **097**                                          |
 | Secret scanning на private (если plan) | Waive только с явной пометкой плана GitHub; иначе must ops выше |
 
@@ -134,10 +134,9 @@
 
 Не DoD ручной ops-проверки, но место правки при регрессии:
 
-| Область        | Тест                                                                                                                                                  |
-| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Headers / CSP  | `tests/unit/securityHeaders.test.ts`, `tests/e2e/security-headers.e2e.spec.ts` (локально; CI — 086)                                                   |
-| Rate limit     | `tests/unit/rateLimit.test.ts`, `tests/unit/rateLimitMiddleware.test.ts`                                                                              |
-| Turnstile      | `tests/unit/turnstile.test.ts` (+ CSP cases в `securityHeaders.test.ts`)                                                                              |
-| Access / auth  | `tests/unit/access.test.ts`, `readerAccess.test.ts`, `mediaAccess.test.ts`; `tests/int/auth.int.spec.ts`, `comments.int.spec.ts`, `media.int.spec.ts` |
-| Auth e2e smoke | `tests/e2e/auth.e2e.spec.ts`                                                                                                                          |
+| Область       | Тест                                                                                                                                                  |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Headers / CSP | `tests/unit/securityHeaders.test.ts`                                                                                                                  |
+| Rate limit    | `tests/unit/rateLimit.test.ts`, `tests/unit/rateLimitMiddleware.test.ts`                                                                              |
+| Turnstile     | `tests/unit/turnstile.test.ts` (+ CSP cases в `securityHeaders.test.ts`)                                                                              |
+| Access / auth | `tests/unit/access.test.ts`, `readerAccess.test.ts`, `mediaAccess.test.ts`; `tests/int/auth.int.spec.ts`, `comments.int.spec.ts`, `media.int.spec.ts` |
