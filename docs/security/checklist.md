@@ -96,20 +96,20 @@ Waiver GitHub (если нужен): _план / ограничение: _______
 
 Не считать багом этого чеклиста:
 
-| Нет / residual                   | Заметка                                                        |
-| -------------------------------- | -------------------------------------------------------------- |
-| MFA / WebAuthn                   | Out of scope v1 (threat model)                                 |
-| Product WAF                      | Бесплатные возможности платформы позже; не Track 8 deliverable |
-| Nonce / hash CSP                 | Phase 1 `'unsafe-inline'` на public; ужесточение — позже       |
-| Turnstile на forgot / reset      | Вне deliverables **075**; rate limit **074** остаётся          |
-| Private / signed R2 media        | Public-read by design для опубликованных объектов              |
-| Live Turnstile e2e / CI e2e 429  | Unit + headers e2e локально; CI e2e — **086**                  |
-| AI / auto comment moderation     | Ручной `moderationStatus`                                      |
-| Multi-tenant / multi-author CMS  | Один admin                                                     |
-| Custom R2 CDN domain             | Позже                                                          |
-| Full STRIDE worksheets           | Stub четырёх зон достаточно для v1                             |
-| Dependabot Docker ecosystem      | Локальный Postgres only                                        |
-| Cookie consent / Privacy / Terms | Track 9 (**079–081**), не Security track                       |
+| Нет / residual                   | Заметка                                                                     |
+| -------------------------------- | --------------------------------------------------------------------------- |
+| MFA / WebAuthn                   | Out of scope v1 (threat model)                                              |
+| Product WAF                      | Бесплатные возможности платформы позже; не Track 8 deliverable              |
+| Nonce / hash CSP                 | Phase 1 `'unsafe-inline'` на public; ужесточение — позже                    |
+| Turnstile на forgot / reset      | Вне deliverables **075**; rate limit **074** остаётся                       |
+| Private / signed R2 media        | Public-read by design для опубликованных объектов                           |
+| Live Turnstile e2e / CI e2e 429  | Unit + headers e2e; полный e2e gate — **086** (живой Turnstile / 429 — вне) |
+| AI / auto comment moderation     | Ручной `moderationStatus`                                                   |
+| Multi-tenant / multi-author CMS  | Один admin                                                                  |
+| Custom R2 CDN domain             | Позже                                                                       |
+| Full STRIDE worksheets           | Stub четырёх зон достаточно для v1                                          |
+| Dependabot Docker ecosystem      | Локальный Postgres only                                                     |
+| Cookie consent / Privacy / Terms | Track 9 (**079–081**), не Security track                                    |
 
 ---
 

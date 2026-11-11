@@ -201,17 +201,17 @@ OpenTelemetry full stack — не обязателен в v1.
 
 ## 13. CI/CD и релизный процесс
 
-| Технология               | Назначение                                                                         |
-| ------------------------ | ---------------------------------------------------------------------------------- |
-| **GitHub**               | Source of truth                                                                    |
-| **GitHub Actions**       | CI на каждый PR: lint, typecheck, unit, e2e (где применимо)                        |
-| **Vercel**               | Deploy production + **Preview Deployments** на каждый PR                           |
-| **Conventional Commits** | История коммитов                                                                   |
-| **Changesets**           | Версионирование / changelog релизов                                                |
-| **Dependabot**           | Обновления зависимостей ([`security/supply-chain.md`](./security/supply-chain.md)) |
-| **Environments**         | `local` · `preview` · `production`                                                 |
+| Технология               | Назначение                                                                                          |
+| ------------------------ | --------------------------------------------------------------------------------------------------- |
+| **GitHub**               | Source of truth                                                                                     |
+| **GitHub Actions**       | CI на каждый PR/push `main`: job `quality` (lint, format, typecheck, unit) + job `e2e` (Playwright) |
+| **Vercel**               | Deploy production + **Preview Deployments** на каждый PR                                            |
+| **Conventional Commits** | История коммитов                                                                                    |
+| **Changesets**           | Версионирование / changelog релизов                                                                 |
+| **Dependabot**           | Обновления зависимостей ([`security/supply-chain.md`](./security/supply-chain.md))                  |
+| **Environments**         | `local` · `preview` · `production`                                                                  |
 
-**CI skeleton (шаг 012):** [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) — job `quality` на `pull_request` и `push` в `main`; Node из [`.nvmrc`](../.nvmrc) (`node-version-file`); gate: `npm ci` → `npm run lint` → `npm run typecheck` → `npm test` (unit). E2E в pipeline — шаг 086.
+**CI (шаги 012 + 086):** [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) на `pull_request` и `push` в `main`; Node из [`.nvmrc`](../.nvmrc). Job `quality`: `npm ci` → `npm run ci` (lint + format:check + typecheck + unit). Job `e2e`: Postgres 16 service → `npm ci` → cache Playwright browsers → `playwright install` Chromium → `npm run migrate` → `npm run test:e2e`; при fail — artifact report. Шардов нет (`workers: 1` на CI).
 
 **Neon:** один production project (без сложной ветвящейся schema-стратегии на старте). Preview app может шарить осторожно настроенный DB strategy (отдельная DB/branch — по мере необходимости; дефолт роадмапа — простой prod Neon + изолированные secrets).
 

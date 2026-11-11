@@ -843,15 +843,16 @@ v1 считается завершённым, когда одновременн�
 - **Deliverables:** axe smoke на home/article/login; landmark checks.
 - **Verify:** Critical a11y violations = fail.
 - **DoD:** A11y floor установлен.
-- **Notes:** `@axe-core/playwright`; helper `tests/e2e/a11y.ts` (`expectNoCriticalA11yViolations`, cookie consent dismissed via `localStorage`); suite `tests/e2e/a11y.e2e.spec.ts` — `/uk`, `/uk/articles/e2e-public-article`, `/uk/login`: landmarks (`banner` / `main#main` / `contentinfo`) + axe filter `impact === critical`. Полный chrome nav — `site-chrome.e2e` (**048**). Serious/moderate не гейтим. E2E в CI — **086**; factories — **087**.
+- **Notes:** `@axe-core/playwright`; helper `tests/e2e/a11y.ts` (`expectNoCriticalA11yViolations`, cookie consent dismissed via `localStorage`); suite `tests/e2e/a11y.e2e.spec.ts` — `/uk`, `/uk/articles/e2e-public-article`, `/uk/login`: landmarks (`banner` / `main#main` / `contentinfo`) + axe filter `impact === critical`. Полный chrome nav — `site-chrome.e2e` (**048**). Serious/moderate не гейтим. E2E в CI — **086** (done); factories — **087**.
 
 ### 086 — CI: e2e in pipeline
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** E2E на PR.
 - **Deliverables:** GitHub Actions job Playwright (+ cache browsers); артефакты при fail.
 - **Verify:** PR показывает e2e check.
 - **DoD:** E2E — обязательный gate (или явный shard strategy).
+- **Notes:** Job `e2e` параллельно `quality` в [`.github/workflows/ci.yml`](../.github/workflows/ci.yml): Postgres 16 service (как docker-compose), `DATABASE_URL` / `PAYLOAD_SECRET` / `NEXT_PUBLIC_SERVER_URL`, cache `~/.cache/ms-playwright`, `playwright install --with-deps chromium` (или `install-deps` при cache hit), `migrate` → `test:e2e`; fail → artifact `playwright-report/` + `test-results/`. Шардов нет (`workers: 1`). `npm run ci` без e2e. Linux screenshot baselines (`*-chromium-linux.png`) рядом с win32; реген: `scripts/update-linux-snapshots.sh` в `node:24-bookworm` против свежего Postgres. Factories — **087**.
 
 ### 087 — Test data factories
 
