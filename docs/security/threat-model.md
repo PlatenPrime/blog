@@ -4,7 +4,7 @@ Stub for v1 of a personal blog: one admin/author, public reader registration, Ne
 
 **In scope:** auth abuse, stored XSS via Lexical content, R2/media misuse, comment spam.
 
-**Out of scope (v1):** MFA / WebAuthn, multi-tenant / multi-author CMS, product WAF, custom R2 CDN domain, paid content, full STRIDE worksheets. Pre-launch gate checklist is step **078**.
+**Out of scope (v1):** MFA / WebAuthn, multi-tenant / multi-author CMS, product WAF, custom R2 CDN domain, paid content, full STRIDE worksheets. Pre-launch gate: [checklist.md](./checklist.md) (step **078**).
 
 ## Assets
 
@@ -67,7 +67,7 @@ Dependency CVEs and secrets in git are outside the four app surfaces above but p
 - [ ] R2 mitigations cite Media ACL, limits, R2 runbook, and step **073** CSP origins.
 - [ ] Comments spam mitigations cite **074**, **075**, verified create, and text-safe render.
 - [ ] Gaps above are labeled residual/deferred (not silent).
-- [ ] Pre-launch checkbox list lives in step **078** (`docs/security/checklist.md`), not this stub.
+- [x] Pre-launch checkbox list lives in [checklist.md](./checklist.md) (step **078**), not this stub.
 
 ## See also
 
@@ -76,4 +76,5 @@ Dependency CVEs and secrets in git are outside the four app surfaces above but p
 - [supply-chain.md](./supply-chain.md)
 - [ADR-002](../adr/002-auth-verification-and-account-linking.md)
 - [ADR-006](../adr/006-rate-limiting.md)
+- [checklist.md](./checklist.md) (pre-launch must / waivers)
 - Track 8 in [development-roadmap.md](../development-roadmap.md) (steps 073–078)
