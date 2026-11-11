@@ -786,15 +786,16 @@ v1 считается завершённым, когда одновременн�
 - **Deliverables:** CMS Page + публичный route всех локалей (контент можно шаблонно «по приколу», но честно про cookies/analytics/auth).
 - **Verify:** Страница доступна из footer.
 - **DoD:** Privacy online.
-- **Notes:** `/uk|ru|en/privacy`. `PRIVACY_PAGE_SLUG`; тот же `findPublicPage` / `PageDetail` что about, без mailto. Ссылка только в `SiteFooter` (`nav.privacy`), не в `siteNavItems`. Sitemap: `sitemapPrivacyFindArgs` + `privacyPublished`. Контент вручную в admin (LOCAL_SETUP §Privacy). E2E: `tests/e2e/privacy.e2e.spec.ts`. Terms — **080**.
+- **Notes:** `/uk|ru|en/privacy`. `PRIVACY_PAGE_SLUG`; тот же `findPublicPage` / `PageDetail` что about, без mailto. Ссылка только в `SiteFooter` (`nav.privacy`), не в `siteNavItems`. Sitemap: `sitemapPrivacyFindArgs` + `privacyPublished`. Контент вручную в admin (LOCAL_SETUP §Privacy). E2E: `tests/e2e/privacy.e2e.spec.ts`. Terms — **080** (done).
 
 ### 080 — Terms page
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Условия использования.
 - **Deliverables:** Аналогично Privacy.
 - **Verify:** Footer link.
 - **DoD:** Terms online.
+- **Notes:** `/uk|ru|en/terms`. `TERMS_PAGE_SLUG`; тот же `findPublicPage` / `PageDetail` что privacy, без mailto. Ссылка только в `SiteFooter` (`nav.terms`), не в `siteNavItems`. Sitemap: `sitemapTermsFindArgs` + `termsPublished`. Контент вручную в admin (LOCAL_SETUP §Terms). E2E: `tests/e2e/terms.e2e.spec.ts`. Cookie consent — **081**.
 
 ### 081 — Cookie consent banner
 

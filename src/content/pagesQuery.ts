@@ -15,9 +15,14 @@ export const ABOUT_PAGE_SLUG = 'about'
 /**
  * Public path and CMS slug for the privacy policy.
  * Same contract as about: fixed path per locale; do not rename the slug from a translated title.
- * Terms gets its own constant and route later (080).
  */
 export const PRIVACY_PAGE_SLUG = 'privacy'
+
+/**
+ * Public path and CMS slug for the terms of use.
+ * Same contract as privacy: fixed path per locale; do not rename the slug from a translated title.
+ */
+export const TERMS_PAGE_SLUG = 'terms'
 
 const pageDetailSelect = {
   body: true,

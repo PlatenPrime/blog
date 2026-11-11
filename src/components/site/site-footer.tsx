@@ -1,6 +1,6 @@
 import { getLocale, getTranslations } from 'next-intl/server'
 
-import { PRIVACY_PAGE_SLUG } from '@/content/pagesQuery'
+import { PRIVACY_PAGE_SLUG, TERMS_PAGE_SLUG } from '@/content/pagesQuery'
 import { Link } from '@/i18n/navigation'
 import { prefixPublicPath } from '@/i18n/paths'
 import { resolveAppLocale } from '@/i18n/resolveAppLocale'
@@ -25,6 +25,14 @@ export async function SiteFooter() {
             href={`/${PRIVACY_PAGE_SLUG}`}
           >
             {t('privacy')}
+          </Link>
+        </p>
+        <p className="m-0">
+          <Link
+            className={`${siteChromeLinkClassName} inline-flex min-h-8 items-center`}
+            href={`/${TERMS_PAGE_SLUG}`}
+          >
+            {t('terms')}
           </Link>
         </p>
         {/* Route handler with a dotted path: client Link would miss GET. */}

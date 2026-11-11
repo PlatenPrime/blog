@@ -333,7 +333,18 @@ Unit: `npm test` → `tests/unit/notesQuery.test.ts`. Draft Preview (кнопк�
 - опубликованные медиа по публичному R2 URL;
 - analytics пока не подключена; согласие и загрузка — шаги **081** / **097**.
 
-Terms — шаг **080**. Unit pages: `npm test` → `tests/unit/pagesQuery.test.ts`. Sitemap privacy: `tests/unit/sitemapQuery.test.ts`.
+### Terms (`/terms`)
+
+Та же коллекция Pages, свой публичный путь. Слаг в каждой локали должен быть буквально `terms` (пустая локаль падает на `uk`). Ссылка только в подвале, не в шапке.
+
+1. **Pages** → Create (или отдельный документ): `slug` = `terms`, `title` / Lexical `body` → **Publish**.
+2. В каждой локали (`uk` / `ru` / `en`) слаг остаётся `terms`; автослаг из переведённого заголовка путь не откроет.
+3. `http://localhost:3000/uk/terms` — заголовок и тело из Payload. Черновик / будущая `publishedAt` / чужой слаг — локализованная «не найдено».
+4. Подвал → «Умови використання» ведёт на `/uk/terms`. Mailto на этой странице нет.
+
+Шаблонный текст можно писать «по приколу», но честно про правила пользования сайтом, комментарии, аккаунт и отказ от гарантий.
+
+Unit pages: `npm test` → `tests/unit/pagesQuery.test.ts`. Sitemap privacy/terms: `tests/unit/sitemapQuery.test.ts`.
 
 ## 13. Comments
 

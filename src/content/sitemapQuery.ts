@@ -3,7 +3,7 @@ import type { Where } from 'payload'
 
 import { publicContentWhere } from '@/access/publicContentWhere'
 import { getServerUrl } from '@/auth/serverUrl'
-import { ABOUT_PAGE_SLUG, PRIVACY_PAGE_SLUG } from '@/content/pagesQuery'
+import { ABOUT_PAGE_SLUG, PRIVACY_PAGE_SLUG, TERMS_PAGE_SLUG } from '@/content/pagesQuery'
 import { TAXONOMY_INDEX_LIMIT, type TaxonomyCollection } from '@/content/taxonomyQuery'
 import { resolveContentLocale } from '@/i18n/contentLocale'
 import { prefixPublicPath } from '@/i18n/paths'
@@ -14,7 +14,7 @@ export const SITEMAP_DOC_LIMIT = 1000
 
 /**
  * Always-indexable public paths (no query string, page 1 only).
- * `/about` and `/privacy` are separate: emit only when the CMS page is published.
+ * `/about`, `/privacy`, and `/terms` are separate: emit only when the CMS page is published.
  */
 export const SITEMAP_STATIC_PATHS = [
   '/',
@@ -189,6 +189,14 @@ export function sitemapPrivacyFindArgs(args: {
   return sitemapCmsPageFindArgs({ ...args, slug: PRIVACY_PAGE_SLUG })
 }
 
+/** Presence check for the terms of use page. */
+export function sitemapTermsFindArgs(args: {
+  locale?: string
+  now?: Date
+}): SitemapCmsPageFindArgs {
+  return sitemapCmsPageFindArgs({ ...args, slug: TERMS_PAGE_SLUG })
+}
+
 export function sitemapOrigin(explicit?: string): string {
   return explicit ?? getServerUrl()
 }
@@ -258,6 +266,7 @@ export type SitemapBuildInput = {
   origin: string
   privacyPublished: boolean
   tagsByLocale: Partial<Record<AppLocale, readonly SitemapSlugDoc[]>>
+  termsPublished: boolean
 }
 
 /**
@@ -278,6 +287,10 @@ export function buildSitemapEntries(input: SitemapBuildInput): MetadataRoute.Sit
 
   if (input.privacyPublished) {
     entries.push(...entriesForSharedPath(origin, `/${PRIVACY_PAGE_SLUG}`))
+  }
+
+  if (input.termsPublished) {
+    entries.push(...entriesForSharedPath(origin, `/${TERMS_PAGE_SLUG}`))
   }
 
   entries.push(

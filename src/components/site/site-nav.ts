@@ -5,7 +5,7 @@
  * `/categories` is the category index and its shelves. `/tags` is the tag index,
  * linked from the category index and from reading pages, and stays out of this list.
  * `/about` is the CMS page whose slug is `about` (step 054).
- * Privacy lives in the footer only (079). Terms stays out until 080.
+ * Privacy and Terms live in the footer only (079–080).
  */
 export const siteNavItems = [
   { href: '/feed', labelKey: 'feed' },

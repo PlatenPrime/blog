@@ -2,7 +2,7 @@
 import { describe, expect, it } from 'vitest'
 
 import { publicContentWhere } from '@/access/publicContentWhere'
-import { ABOUT_PAGE_SLUG, PRIVACY_PAGE_SLUG } from '@/content/pagesQuery'
+import { ABOUT_PAGE_SLUG, PRIVACY_PAGE_SLUG, TERMS_PAGE_SLUG } from '@/content/pagesQuery'
 import {
   SITEMAP_DOC_LIMIT,
   SITEMAP_EXCLUDED_PATH_FRAGMENTS,
@@ -15,6 +15,7 @@ import {
   sitemapContentFindArgs,
   sitemapPrivacyFindArgs,
   sitemapTaxonomyFindArgs,
+  sitemapTermsFindArgs,
   toSitemapSlugDoc,
 } from '@/content/sitemapQuery'
 import { TAXONOMY_INDEX_LIMIT } from '@/content/taxonomyQuery'
@@ -108,6 +109,22 @@ describe('sitemapPrivacyFindArgs', () => {
   })
 })
 
+describe('sitemapTermsFindArgs', () => {
+  it('checks the fixed terms slug under publicContentWhere', () => {
+    const args = sitemapTermsFindArgs({ now })
+
+    expect(args.collection).toBe('pages')
+    expect(args.draft).toBe(false)
+    expect(args.overrideAccess).toBe(false)
+    expect(args.locale).toBe('uk')
+    expect(args.where).toEqual({
+      and: [{ slug: { equals: TERMS_PAGE_SLUG } }, publicContentWhere(now)],
+    })
+    expect(args).not.toHaveProperty('user')
+    expect(args).not.toHaveProperty('req')
+  })
+})
+
 describe('toSitemapSlugDoc / mergeLocalizedSlugDocs', () => {
   it('drops rows without id or slug', () => {
     expect(toSitemapSlugDoc({ id: 1, slug: '' })).toBeNull()
@@ -162,6 +179,7 @@ describe('buildSitemapEntries', () => {
       origin,
       privacyPublished: false,
       tagsByLocale: {},
+      termsPublished: false,
     })
 
     const urls = entries.map((entry) => entry.url)
@@ -176,6 +194,7 @@ describe('buildSitemapEntries', () => {
       expect(urls).toContain(`${origin}/${locale}/search`)
       expect(urls).not.toContain(`${origin}/${locale}/about`)
       expect(urls).not.toContain(`${origin}/${locale}/privacy`)
+      expect(urls).not.toContain(`${origin}/${locale}/terms`)
     }
 
     for (const fragment of SITEMAP_EXCLUDED_PATH_FRAGMENTS) {
@@ -184,6 +203,7 @@ describe('buildSitemapEntries', () => {
 
     expect(SITEMAP_STATIC_PATHS).not.toContain('/about')
     expect(SITEMAP_STATIC_PATHS).not.toContain('/privacy')
+    expect(SITEMAP_STATIC_PATHS).not.toContain('/terms')
   })
 
   it('adds about only when the CMS page is published', () => {
@@ -195,6 +215,7 @@ describe('buildSitemapEntries', () => {
       origin,
       privacyPublished: false,
       tagsByLocale: {},
+      termsPublished: false,
     })
 
     const about = entries.find((entry) => entry.url === `${origin}/uk/about`)
@@ -206,6 +227,7 @@ describe('buildSitemapEntries', () => {
       'x-default': `${origin}/uk/about`,
     })
     expect(entries.some((entry) => entry.url === `${origin}/uk/privacy`)).toBe(false)
+    expect(entries.some((entry) => entry.url === `${origin}/uk/terms`)).toBe(false)
   })
 
   it('adds privacy only when the CMS page is published', () => {
@@ -217,6 +239,7 @@ describe('buildSitemapEntries', () => {
       origin,
       privacyPublished: true,
       tagsByLocale: {},
+      termsPublished: false,
     })
 
     const privacy = entries.find((entry) => entry.url === `${origin}/uk/privacy`)
@@ -226,6 +249,28 @@ describe('buildSitemapEntries', () => {
       ru: `${origin}/ru/privacy`,
       en: `${origin}/en/privacy`,
       'x-default': `${origin}/uk/privacy`,
+    })
+  })
+
+  it('adds terms only when the CMS page is published', () => {
+    const entries = buildSitemapEntries({
+      aboutPublished: false,
+      articlesByLocale: {},
+      categoriesByLocale: {},
+      notesByLocale: {},
+      origin,
+      privacyPublished: false,
+      tagsByLocale: {},
+      termsPublished: true,
+    })
+
+    const terms = entries.find((entry) => entry.url === `${origin}/uk/terms`)
+    expect(terms).toBeDefined()
+    expect(terms?.alternates?.languages).toMatchObject({
+      uk: `${origin}/uk/terms`,
+      ru: `${origin}/ru/terms`,
+      en: `${origin}/en/terms`,
+      'x-default': `${origin}/uk/terms`,
     })
   })
 
@@ -243,6 +288,7 @@ describe('buildSitemapEntries', () => {
       origin,
       privacyPublished: false,
       tagsByLocale: {},
+      termsPublished: false,
     })
 
     const ukArticle = entries.find((entry) => entry.url === `${origin}/uk/articles/persha`)
@@ -272,6 +318,7 @@ describe('buildSitemapEntries', () => {
       origin,
       privacyPublished: false,
       tagsByLocale: {},
+      termsPublished: false,
     })
 
     const articleUrls = entries
