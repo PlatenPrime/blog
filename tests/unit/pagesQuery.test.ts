@@ -5,6 +5,7 @@ import { publicContentWhere } from '@/access/publicContentWhere'
 import {
   ABOUT_PAGE_SLUG,
   PRIVACY_PAGE_SLUG,
+  TERMS_PAGE_SLUG,
   contactMailto,
   pageDetailFindArgs,
   publicPageForLocale,
@@ -59,6 +60,18 @@ describe('pageDetailFindArgs', () => {
 
     expect(args.where).toEqual({
       and: [{ slug: { equals: 'privacy' } }, publicContentWhere(now)],
+    })
+    expect(args.draft).toBe(false)
+    expect(args.overrideAccess).toBe(false)
+    expect(args).not.toHaveProperty('user')
+    expect(args).not.toHaveProperty('req')
+  })
+
+  it('loads the terms slug with the same public contract as about', () => {
+    const args = pageDetailFindArgs({ locale: 'uk', now, slug: TERMS_PAGE_SLUG })
+
+    expect(args.where).toEqual({
+      and: [{ slug: { equals: 'terms' } }, publicContentWhere(now)],
     })
     expect(args.draft).toBe(false)
     expect(args.overrideAccess).toBe(false)
@@ -121,6 +134,10 @@ describe('publicPageForLocale', () => {
     expect(
       publicPageForLocale({ body, slug: 'konfidencijnist', title: 'Privacy' }, PRIVACY_PAGE_SLUG),
     ).toBeNull()
+    expect(
+      publicPageForLocale({ body, slug: 'terms', title: 'Terms' }, TERMS_PAGE_SLUG)?.title,
+    ).toBe('Terms')
+    expect(publicPageForLocale({ body, slug: 'umovy', title: 'Terms' }, TERMS_PAGE_SLUG)).toBeNull()
   })
 })
 

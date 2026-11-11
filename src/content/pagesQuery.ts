@@ -16,6 +16,9 @@ export const ABOUT_PAGE_SLUG = 'about'
 /** Public path and CMS slug for the privacy policy. Fixed `/privacy` in every locale. */
 export const PRIVACY_PAGE_SLUG = 'privacy'
 
+/** Public path and CMS slug for the terms of use. Fixed `/terms` in every locale. */
+export const TERMS_PAGE_SLUG = 'terms'
+
 const pageDetailSelect = {
   body: true,
   seo: {

@@ -18,12 +18,18 @@ export async function SiteFooter() {
         <p className="m-0 font-medium text-foreground">{t('siteTitle')}</p>
         <p className="m-0">{t('siteDescription')}</p>
         <SiteNavLinks labelKey="footer" />
-        <p className="m-0">
+        <p className="m-0 flex flex-wrap gap-x-4 gap-y-2">
           <Link
             className={`${siteChromeLinkClassName} inline-flex min-h-8 items-center`}
             href="/privacy"
           >
             {t('privacy')}
+          </Link>
+          <Link
+            className={`${siteChromeLinkClassName} inline-flex min-h-8 items-center`}
+            href="/terms"
+          >
+            {t('terms')}
           </Link>
         </p>
         {/* Route handler with a dotted path: client Link would miss GET. */}

@@ -790,11 +790,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 080 — Terms page
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Условия использования.
 - **Deliverables:** Аналогично Privacy.
 - **Verify:** Footer link.
 - **DoD:** Terms online.
+- **Notes:** `/uk|ru|en/terms`. Тот же `findPublicPage` / `pageDetailFindArgs`, что Privacy (079) / About (054): slug `terms` в каждой локали, `draft: false`, без session. Footer-only `Link` + `nav.terms` (не в `siteNavItems`). Без mailto. OG/loading зеркало Privacy. Unit: `pagesQuery` terms slug; E2E: `terms.e2e` + footer href в `site-chrome`. Sitemap privacy/terms / consent — **081+**. Seed контента — **087** (ручной poke в LOCAL_SETUP §12).
 
 ### 081 — Cookie consent banner
 
