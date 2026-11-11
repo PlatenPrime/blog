@@ -42,7 +42,7 @@ Enable in the GitHub repo (not in YAML):
 2. Turn on **Secret scanning**.
 3. Turn on **Push protection** (blocks pushes that contain known secret patterns).
 
-Public repositories: secret scanning and push protection are available on the free plan. Private repositories: availability depends on the GitHub plan / Advanced Security — enable what the plan allows and note any gap in the security checklist (step 078).
+Public repositories: secret scanning and push protection are available on the free plan. Private repositories: availability depends on the GitHub plan / Advanced Security — enable what the plan allows and note any gap in the [security checklist](./checklist.md) (step **078**).
 
 Repo hygiene:
 

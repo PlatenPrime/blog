@@ -755,7 +755,7 @@ v1 считается завершённым, когда одновременн�
 - **Deliverables:** Dependabot config; GitHub secret scanning enabled (doc); ignore policy.
 - **Verify:** Dependabot PR появляется на тестовом bump или конфиг валиден.
 - **DoD:** Автообновления уязвимостей включены.
-- **Notes:** `.github/dependabot.yml` v2: `npm` + `github-actions`, weekly Monday Europe/Kyiv, open-PR limit 5; npm groups minor/patch (prod + dev). Docker ecosystem не включали (локальный Postgres). Политика ignore + secret scanning / push protection: `docs/security/supply-chain.md`. После merge — включить Dependabot updates/alerts и Secret scanning + Push protection в GitHub Settings → Code security; PR Dependabot на ближайшем bump. Threat model — **077** (done); checklist — **078**.
+- **Notes:** `.github/dependabot.yml` v2: `npm` + `github-actions`, weekly Monday Europe/Kyiv, open-PR limit 5; npm groups minor/patch (prod + dev). Docker ecosystem не включали (локальный Postgres). Политика ignore + secret scanning / push protection: `docs/security/supply-chain.md`. После merge — включить Dependabot updates/alerts и Secret scanning + Push protection в GitHub Settings → Code security; PR Dependabot на ближайшем bump. Threat model — **077**; pre-launch checklist — [`security/checklist.md`](security/checklist.md) (**078**).
 
 ### 077 — Threat model stub
 
@@ -764,15 +764,16 @@ v1 считается завершённым, когда одновременн�
 - **Deliverables:** `docs/security/threat-model.md` (auth, XSS via Lexical, R2, comments spam).
 - **Verify:** Контрмеры ссылаются на шаги Track 8.
 - **DoD:** Threat model существует и актуален для v1.
-- **Notes:** [`docs/security/threat-model.md`](security/threat-model.md): stub v1 (один admin, readers). Assets + четыре зоны (Threat / Impact / Mitigations / Residual): auth → 074+ADR-006, 075, session-hardening, ADR-002; XSS/Lexical → JSX render, YouTube allowlist, CSP 073, MIME без SVG; R2 → Media ACL, limits, runbook CORS, CSP origins, public-read by design; comments spam → verified create, 074/075, text render, moderationStatus. Adjacent supply-chain → 076 без дубля. Checklist / waivers — **078**.
+- **Notes:** [`docs/security/threat-model.md`](security/threat-model.md): stub v1 (один admin, readers). Assets + четыре зоны (Threat / Impact / Mitigations / Residual): auth → 074+ADR-006, 075, session-hardening, ADR-002; XSS/Lexical → JSX render, YouTube allowlist, CSP 073, MIME без SVG; R2 → Media ACL, limits, runbook CORS, CSP origins, public-read by design; comments spam → verified create, 074/075, text render, moderationStatus. Adjacent supply-chain → 076 без дубля. Checklist / waivers — [`security/checklist.md`](security/checklist.md) (**078**).
 
 ### 078 — Security checklist
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Pre-launch gate.
 - **Deliverables:** `docs/security/checklist.md`.
 - **Verify:** Все must-пункты закрыты или явно waived.
 - **DoD:** Security track формально закрыт.
+- **Notes:** [`docs/security/checklist.md`](security/checklist.md): инвентарь 073–077 (headers, rate limit, Turnstile, session/access ссылками, supply-chain, threat model); checkbox verify; ops go-live (Upstash/Turnstile keys, GitHub Dependabot/secret scanning/push protection); таблица waived/residual (MFA, WAF, nonce CSP, Turnstile forgot/reset, signed R2, CI e2e 429/Turnstile, AI moderation…). Go-live strip — [`production-checklist.md`](production-checklist.md) §Security. Threat-model/supply-chain/tech-stack указывают на чеклист. Privacy/consent/WAF product / полный **108** — вне шага.
 
 ---
 
