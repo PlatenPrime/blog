@@ -25,6 +25,10 @@ test.describe('Site chrome', () => {
       'href',
       '/uk/feed',
     )
+    await expect(footer.getByRole('link', { name: uk.nav.privacy })).toHaveAttribute(
+      'href',
+      '/uk/privacy',
+    )
 
     const header = page.getByRole('banner')
     await expect(header.getByRole('link', { name: uk.nav.login })).toBeVisible()

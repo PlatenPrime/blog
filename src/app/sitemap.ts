@@ -7,6 +7,7 @@ import {
   sitemapAboutFindArgs,
   sitemapContentFindArgs,
   sitemapOrigin,
+  sitemapPrivacyFindArgs,
   sitemapTaxonomyFindArgs,
   toSitemapSlugDoc,
   type SitemapSlugDoc,
@@ -52,7 +53,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })
   }
 
-  const about = await payload.find(sitemapAboutFindArgs({ now }))
+  const [about, privacy] = await Promise.all([
+    payload.find(sitemapAboutFindArgs({ now })),
+    payload.find(sitemapPrivacyFindArgs({ now })),
+  ])
 
   return buildSitemapEntries({
     aboutPublished: about.docs.length > 0,
@@ -60,6 +64,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     categoriesByLocale,
     notesByLocale,
     origin,
+    privacyPublished: privacy.docs.length > 0,
     tagsByLocale,
   })
 }

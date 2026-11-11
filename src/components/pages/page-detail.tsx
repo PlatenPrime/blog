@@ -6,8 +6,9 @@ type PageDetailLabels = {
 }
 
 type PageDetailProps = {
-  labels: PageDetailLabels
-  mailto: string | null
+  /** Contact chrome under the body; omit on legal pages without mailto. */
+  labels?: PageDetailLabels
+  mailto?: string | null
   page: PublicPage
 }
 
@@ -31,12 +32,12 @@ const bodyClassName = [
  * Reading column for one CMS page. Title and body come from Payload.
  * The mailto is optional chrome under the text, not a substitute for the body.
  */
-export function PageDetail({ labels, mailto, page }: PageDetailProps) {
+export function PageDetail({ labels, mailto = null, page }: PageDetailProps) {
   return (
     <article>
       <h1 className="m-0 font-serif text-h1 text-foreground">{page.title}</h1>
       <PayloadRichText className={bodyClassName} data={page.body} />
-      {mailto ? (
+      {mailto && labels ? (
         <p className="mt-12 mb-0 font-sans text-small">
           <a className="text-primary underline-offset-4 hover:underline" href={mailto}>
             {labels.contact}

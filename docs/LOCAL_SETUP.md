@@ -316,7 +316,24 @@ Unit: `npm test` → `tests/unit/notesQuery.test.ts`. Draft Preview (кнопк�
 7. Необязательно: `CONTACT_EMAIL=you@example.com` в `.env`, перезапуск `npm run dev`. Под текстом ссылка «Написати мені» с `mailto:`. Пустая переменная — ссылки нет. Формы нет.
 8. Preview черновика остаётся на `/uk/dev/rich-text/page/{slug}`, не на продуктовом адресе.
 
-Privacy и Terms — шаги **079–080**. Unit: `npm test` → `tests/unit/pagesQuery.test.ts`. Unit access/slugify — **024** (done).
+### Privacy (`/privacy`)
+
+Та же коллекция Pages, свой публичный путь. Слаг в каждой локали должен быть буквально `privacy` (пустая локаль падает на `uk`). Ссылка только в подвале, не в шапке.
+
+1. **Pages** → Create (или отдельный документ): `slug` = `privacy`, `title` / Lexical `body` → **Publish**.
+2. В каждой локали (`uk` / `ru` / `en`) слаг остаётся `privacy`; автослаг из переведённого заголовка путь не откроет.
+3. `http://localhost:3000/uk/privacy` — заголовок и тело из Payload. Черновик / будущая `publishedAt` / чужой слаг — локализованная «не найдено».
+4. Подвал → «Політика конфіденційності» ведёт на `/uk/privacy`. Mailto на этой странице нет.
+
+Шаблонный текст можно писать «по приколу», но честно:
+
+- session cookies Payload (вход / регистрация; HttpOnly, SameSite=Lax);
+- Cloudflare Turnstile на формах (токен, опционально IP);
+- Resend для verify / reset password (email);
+- опубликованные медиа по публичному R2 URL;
+- analytics пока не подключена; согласие и загрузка — шаги **081** / **097**.
+
+Terms — шаг **080**. Unit pages: `npm test` → `tests/unit/pagesQuery.test.ts`. Sitemap privacy: `tests/unit/sitemapQuery.test.ts`.
 
 ## 13. Comments
 

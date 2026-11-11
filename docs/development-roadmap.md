@@ -781,11 +781,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 079 — Privacy page
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Политика конфиденциальности.
 - **Deliverables:** CMS Page + публичный route всех локалей (контент можно шаблонно «по приколу», но честно про cookies/analytics/auth).
 - **Verify:** Страница доступна из footer.
 - **DoD:** Privacy online.
+- **Notes:** `/uk|ru|en/privacy`. `PRIVACY_PAGE_SLUG`; тот же `findPublicPage` / `PageDetail` что about, без mailto. Ссылка только в `SiteFooter` (`nav.privacy`), не в `siteNavItems`. Sitemap: `sitemapPrivacyFindArgs` + `privacyPublished`. Контент вручную в admin (LOCAL_SETUP §Privacy). E2E: `tests/e2e/privacy.e2e.spec.ts`. Terms — **080**.
 
 ### 080 — Terms page
 

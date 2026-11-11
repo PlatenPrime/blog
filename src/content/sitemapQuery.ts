@@ -3,7 +3,7 @@ import type { Where } from 'payload'
 
 import { publicContentWhere } from '@/access/publicContentWhere'
 import { getServerUrl } from '@/auth/serverUrl'
-import { ABOUT_PAGE_SLUG } from '@/content/pagesQuery'
+import { ABOUT_PAGE_SLUG, PRIVACY_PAGE_SLUG } from '@/content/pagesQuery'
 import { TAXONOMY_INDEX_LIMIT, type TaxonomyCollection } from '@/content/taxonomyQuery'
 import { resolveContentLocale } from '@/i18n/contentLocale'
 import { prefixPublicPath } from '@/i18n/paths'
@@ -14,7 +14,7 @@ export const SITEMAP_DOC_LIMIT = 1000
 
 /**
  * Always-indexable public paths (no query string, page 1 only).
- * `/about` is separate: emit only when the CMS page is published.
+ * `/about` and `/privacy` are separate: emit only when the CMS page is published.
  */
 export const SITEMAP_STATIC_PATHS = [
   '/',
@@ -63,7 +63,7 @@ const sitemapTaxonomySelect = {
   slug: true,
 } as const
 
-const sitemapAboutSelect = {
+const sitemapCmsPageSelect = {
   id: true,
   slug: true,
 } as const
@@ -94,7 +94,7 @@ export type SitemapTaxonomyFindArgs = {
   sort: 'title'
 }
 
-export type SitemapAboutFindArgs = {
+export type SitemapCmsPageFindArgs = {
   collection: 'pages'
   depth: 0
   draft: false
@@ -103,9 +103,11 @@ export type SitemapAboutFindArgs = {
   locale: AppLocale
   overrideAccess: false
   pagination: false
-  select: typeof sitemapAboutSelect
+  select: typeof sitemapCmsPageSelect
   where: Where
 }
+
+export type SitemapAboutFindArgs = SitemapCmsPageFindArgs
 
 /**
  * Published articles or notes for one locale.
@@ -150,10 +152,14 @@ export function sitemapTaxonomyFindArgs(args: {
 }
 
 /**
- * Presence check for the author page. Same visibility as the public `/about` route.
- * Depth 0: body is irrelevant for the sitemap.
+ * Presence check for a fixed-slug CMS page (about, privacy, …).
+ * Same visibility as the public route. Depth 0: body is irrelevant for the sitemap.
  */
-export function sitemapAboutFindArgs(args: { locale?: string; now?: Date }): SitemapAboutFindArgs {
+export function sitemapCmsPageFindArgs(args: {
+  locale?: string
+  now?: Date
+  slug: string
+}): SitemapCmsPageFindArgs {
   return {
     collection: 'pages',
     depth: 0,
@@ -163,11 +169,24 @@ export function sitemapAboutFindArgs(args: { locale?: string; now?: Date }): Sit
     locale: resolveContentLocale(args.locale ?? routing.defaultLocale),
     overrideAccess: false,
     pagination: false,
-    select: sitemapAboutSelect,
+    select: sitemapCmsPageSelect,
     where: {
-      and: [{ slug: { equals: ABOUT_PAGE_SLUG } }, publicContentWhere(args.now)],
+      and: [{ slug: { equals: args.slug } }, publicContentWhere(args.now)],
     },
   }
+}
+
+/** Presence check for the author page. */
+export function sitemapAboutFindArgs(args: { locale?: string; now?: Date }): SitemapAboutFindArgs {
+  return sitemapCmsPageFindArgs({ ...args, slug: ABOUT_PAGE_SLUG })
+}
+
+/** Presence check for the privacy policy page. */
+export function sitemapPrivacyFindArgs(args: {
+  locale?: string
+  now?: Date
+}): SitemapCmsPageFindArgs {
+  return sitemapCmsPageFindArgs({ ...args, slug: PRIVACY_PAGE_SLUG })
 }
 
 export function sitemapOrigin(explicit?: string): string {
@@ -237,11 +256,12 @@ export type SitemapBuildInput = {
   categoriesByLocale: Partial<Record<AppLocale, readonly SitemapSlugDoc[]>>
   notesByLocale: Partial<Record<AppLocale, readonly SitemapSlugDoc[]>>
   origin: string
+  privacyPublished: boolean
   tagsByLocale: Partial<Record<AppLocale, readonly SitemapSlugDoc[]>>
 }
 
 /**
- * Full MetadataRoute.Sitemap payload: static shells, optional about, published docs, taxonomy.
+ * Full MetadataRoute.Sitemap payload: static shells, optional CMS pages, published docs, taxonomy.
  * Drafts never arrive here when find-args used `publicContentWhere`.
  */
 export function buildSitemapEntries(input: SitemapBuildInput): MetadataRoute.Sitemap {
@@ -254,6 +274,10 @@ export function buildSitemapEntries(input: SitemapBuildInput): MetadataRoute.Sit
 
   if (input.aboutPublished) {
     entries.push(...entriesForSharedPath(origin, `/${ABOUT_PAGE_SLUG}`))
+  }
+
+  if (input.privacyPublished) {
+    entries.push(...entriesForSharedPath(origin, `/${PRIVACY_PAGE_SLUG}`))
   }
 
   entries.push(

@@ -2,7 +2,7 @@
 import { describe, expect, it } from 'vitest'
 
 import { publicContentWhere } from '@/access/publicContentWhere'
-import { ABOUT_PAGE_SLUG } from '@/content/pagesQuery'
+import { ABOUT_PAGE_SLUG, PRIVACY_PAGE_SLUG } from '@/content/pagesQuery'
 import {
   SITEMAP_DOC_LIMIT,
   SITEMAP_EXCLUDED_PATH_FRAGMENTS,
@@ -13,6 +13,7 @@ import {
   mergeLocalizedSlugDocs,
   sitemapAboutFindArgs,
   sitemapContentFindArgs,
+  sitemapPrivacyFindArgs,
   sitemapTaxonomyFindArgs,
   toSitemapSlugDoc,
 } from '@/content/sitemapQuery'
@@ -91,6 +92,22 @@ describe('sitemapAboutFindArgs', () => {
   })
 })
 
+describe('sitemapPrivacyFindArgs', () => {
+  it('checks the fixed privacy slug under publicContentWhere', () => {
+    const args = sitemapPrivacyFindArgs({ now })
+
+    expect(args.collection).toBe('pages')
+    expect(args.draft).toBe(false)
+    expect(args.overrideAccess).toBe(false)
+    expect(args.locale).toBe('uk')
+    expect(args.where).toEqual({
+      and: [{ slug: { equals: PRIVACY_PAGE_SLUG } }, publicContentWhere(now)],
+    })
+    expect(args).not.toHaveProperty('user')
+    expect(args).not.toHaveProperty('req')
+  })
+})
+
 describe('toSitemapSlugDoc / mergeLocalizedSlugDocs', () => {
   it('drops rows without id or slug', () => {
     expect(toSitemapSlugDoc({ id: 1, slug: '' })).toBeNull()
@@ -143,6 +160,7 @@ describe('buildSitemapEntries', () => {
       categoriesByLocale: {},
       notesByLocale: {},
       origin,
+      privacyPublished: false,
       tagsByLocale: {},
     })
 
@@ -157,6 +175,7 @@ describe('buildSitemapEntries', () => {
       expect(urls).toContain(`${origin}/${locale}/tags`)
       expect(urls).toContain(`${origin}/${locale}/search`)
       expect(urls).not.toContain(`${origin}/${locale}/about`)
+      expect(urls).not.toContain(`${origin}/${locale}/privacy`)
     }
 
     for (const fragment of SITEMAP_EXCLUDED_PATH_FRAGMENTS) {
@@ -164,6 +183,7 @@ describe('buildSitemapEntries', () => {
     }
 
     expect(SITEMAP_STATIC_PATHS).not.toContain('/about')
+    expect(SITEMAP_STATIC_PATHS).not.toContain('/privacy')
   })
 
   it('adds about only when the CMS page is published', () => {
@@ -173,6 +193,7 @@ describe('buildSitemapEntries', () => {
       categoriesByLocale: {},
       notesByLocale: {},
       origin,
+      privacyPublished: false,
       tagsByLocale: {},
     })
 
@@ -183,6 +204,28 @@ describe('buildSitemapEntries', () => {
       ru: `${origin}/ru/about`,
       en: `${origin}/en/about`,
       'x-default': `${origin}/uk/about`,
+    })
+    expect(entries.some((entry) => entry.url === `${origin}/uk/privacy`)).toBe(false)
+  })
+
+  it('adds privacy only when the CMS page is published', () => {
+    const entries = buildSitemapEntries({
+      aboutPublished: false,
+      articlesByLocale: {},
+      categoriesByLocale: {},
+      notesByLocale: {},
+      origin,
+      privacyPublished: true,
+      tagsByLocale: {},
+    })
+
+    const privacy = entries.find((entry) => entry.url === `${origin}/uk/privacy`)
+    expect(privacy).toBeDefined()
+    expect(privacy?.alternates?.languages).toMatchObject({
+      uk: `${origin}/uk/privacy`,
+      ru: `${origin}/ru/privacy`,
+      en: `${origin}/en/privacy`,
+      'x-default': `${origin}/uk/privacy`,
     })
   })
 
@@ -198,6 +241,7 @@ describe('buildSitemapEntries', () => {
       },
       notesByLocale: {},
       origin,
+      privacyPublished: false,
       tagsByLocale: {},
     })
 
@@ -226,6 +270,7 @@ describe('buildSitemapEntries', () => {
       categoriesByLocale: {},
       notesByLocale: {},
       origin,
+      privacyPublished: false,
       tagsByLocale: {},
     })
 
