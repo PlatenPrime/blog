@@ -316,7 +316,13 @@ Unit: `npm test` → `tests/unit/notesQuery.test.ts`. Draft Preview (кнопк�
 7. Необязательно: `CONTACT_EMAIL=you@example.com` в `.env`, перезапуск `npm run dev`. Под текстом ссылка «Написати мені» с `mailto:`. Пустая переменная — ссылки нет. Формы нет.
 8. Preview черновика остаётся на `/uk/dev/rich-text/page/{slug}`, не на продуктовом адресе.
 
-Privacy и Terms — шаги **079–080**. Unit: `npm test` → `tests/unit/pagesQuery.test.ts`. Unit access/slugify — **024** (done).
+Privacy (шаг **079**, done):
+
+9. **Pages** → Create (или второй документ): `slug` = `privacy` в каждой локали, `title` / `body` — шаблонно, но честно: cookies сессии, будущая analytics по согласию, auth (email/OAuth). Автослаг из переведённого заголовка адрес `/privacy` не откроет.
+10. **Publish** → `http://localhost:3000/uk/privacy` — заголовок и тело из Payload. Ссылка «Конфіденційність» / «Конфиденциальность» / «Privacy» в footer ведёт сюда. Черновик / чужой slug — «не найдено».
+11. Terms — шаг **080**.
+
+Unit: `npm test` → `tests/unit/pagesQuery.test.ts`. Unit access/slugify — **024** (done).
 
 ## 13. Comments
 

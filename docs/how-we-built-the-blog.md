@@ -554,7 +554,13 @@ Payload не выбирает две коллекции одним запрос�
 
 Шаг 077. Появился короткий лист «что может пойти не так» — [security/threat-model.md](./security/threat-model.md). Не полный STRIDE и не аудит на сто страниц: четыре зоны, которые реально бьют по личному блогу. Auth — brute force, CSRF, неподтверждённый ящик, ошибки OAuth; контрмеры уже в 074/075, cookie/CSRF и ADR-002. XSS через Lexical — тело как JSON и JSX, не простыня HTML; YouTube только nocookie; картинки без SVG и с CSP из 073. R2 — грузит только админ, лимиты MIME/размера, CORS в runbook, публичный URL у медиа осознанный. Комментарии — verified + Turnstile + rate limit, текст как текст, скрытие руками. Цепочка поставки только отсылкой на 076. Предзапусковые галочки собрали в 078, иначе модель угроз превращается в чеклист без смысла.
 
-Шаг 078. Track 8 закрыли документом, не новым middleware. [security/checklist.md](./security/checklist.md) фиксирует факт кода: headers и CSP, dual-layer rate limit, Turnstile на трёх формах, cookie/ACL, Lexical/R2, комментарии — и отделяет must кода (уже `[x]` после 073–077) от must оператора до публичного URL (ключи Turnstile/Upstash, тумблеры Dependabot и secret scanning, headers smoke, ACL sanity). Короткие галочки — в production checklist; здесь — инвентарь, waivers (MFA, WAF, nonce CSP, signed media, e2e в CI) и якоря тестов. Privacy, consent и полный env-gate остаются следующими треками: двери уже умеют держать удар, юридическое и выкладка — другой разговор.
+Шаг 078. Track 8 закрыли документом, не новым middleware. [security/checklist.md](./security/checklist.md) фиксирует факт кода: headers и CSP, dual-layer rate limit, Turnstile на трёх формах, cookie/ACL, Lexical/R2, комментарии — и отделяет must кода (уже `[x]` после 073–077) от must оператора до публичного URL (ключи Turnstile/Upstash, тумблеры Dependabot и secret scanning, headers smoke, ACL sanity). Короткие галочки — в production checklist; здесь — инвентарь, waivers (MFA, WAF, nonce CSP, signed media, e2e в CI) и якоря тестов. Юридическое и выкладка — другой разговор: Privacy открыли в 079, consent и полный env-gate ещё впереди.
+
+---
+
+## 11. Юридическое и взрослая почта
+
+Шаг 079. Политика конфиденциальности перестала быть обещанием в чертеже. Адрес один на все языки: `/privacy`. Тот же поиск в коллекции Pages, что у «про автора»: slug буквально `privacy`, без сессии, черновик и будущая дата — «не найдено». В шапку её не клали: юридическое живёт в подвале отдельной ссылкой. Mailto нет — это не визитка автора. Текст в CMS можно писать с ухмылкой, но честно: cookie сессии, будущая аналитика по согласию, вход по почте и OAuth. Условия использования, баннер согласия и боевой Resend — следующие шаги той же главы.
 
 ---
 
@@ -570,6 +576,7 @@ Payload не выбирает две коллекции одним запрос�
 - Глава 7 — шаги 041–045.
 - Глава 8 — шаги 046–056.
 - Глава 9 — шаги 057–072 записаны.
-- Глава 10 — шаги 073–078 записаны; ещё не сделано: 079–082, 084–115. Шаг 083 уже вошёл в главу 3.
+- Глава 10 — шаги 073–078 записаны.
+- Глава 11 — шаг 079 записан; ещё не сделано: 080–082, 084–115. Шаг 083 уже вошёл в главу 3.
 
 Свериться с полями и правами, не перечитывая главы: [content-model.md](./content-model.md), [security/access-matrix.md](./security/access-matrix.md). Поднять проект руками: [LOCAL_SETUP.md](./LOCAL_SETUP.md). Идти по работе: [development-roadmap.md](./development-roadmap.md).

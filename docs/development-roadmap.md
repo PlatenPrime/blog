@@ -781,11 +781,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 079 — Privacy page
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Политика конфиденциальности.
 - **Deliverables:** CMS Page + публичный route всех локалей (контент можно шаблонно «по приколу», но честно про cookies/analytics/auth).
 - **Verify:** Страница доступна из footer.
 - **DoD:** Privacy online.
+- **Notes:** `/uk|ru|en/privacy`. Тот же `findPublicPage` / `pageDetailFindArgs`, что About (054): slug `privacy` в каждой локали, `draft: false`, без session. Footer-only `Link` + `nav.privacy` (не в `siteNavItems`). Без mailto. OG/loading зеркало About. Unit: `pagesQuery` privacy slug; E2E: `privacy.e2e` + footer href в `site-chrome`. Sitemap / Terms / consent — **080–081**. Seed контента — **087** (ручной poke в LOCAL_SETUP §12).
 
 ### 080 — Terms page
 

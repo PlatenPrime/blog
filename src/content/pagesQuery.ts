@@ -9,9 +9,12 @@ import type { AppLocale } from '@/i18n/routing'
 /**
  * Public path and CMS slug for the author page.
  * The path stays `/about` in every locale. A translated title must not rename this slug.
- * Privacy and terms reuse this find later and get their own routes (079–080).
+ * Privacy and terms reuse the same find with their own fixed paths (079–080).
  */
 export const ABOUT_PAGE_SLUG = 'about'
+
+/** Public path and CMS slug for the privacy policy. Fixed `/privacy` in every locale. */
+export const PRIVACY_PAGE_SLUG = 'privacy'
 
 const pageDetailSelect = {
   body: true,
