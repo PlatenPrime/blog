@@ -54,6 +54,8 @@ cp .env.example .env
 
 После регистрации откройте `/uk/verify?token=…` из лога (или письма Resend). Без verify логин reader’а отклоняется.
 
+Onboarding domain, DNS и smoke forgot→inbox (local / preview) — [`runbooks/resend-email.md`](./runbooks/resend-email.md) (шаг **082**).
+
 ### Google OAuth (optional)
 
 См. [`google-oauth-setup.md`](./google-oauth-setup.md). Без `GOOGLE_CLIENT_ID` кнопка на `/uk/login` скрыта.

@@ -12,6 +12,13 @@
 - [ ] **JSON-LD:** на locale shell в DOM есть `application/ld+json` с `@graph` WebSite + Person; на деталях articles/notes — Article; `url` / `mainEntityOfPage` абсолютные с префиксом локали (`uk` / `ru` / `en`); Article `author`/`isPartOf` ссылаются на стабильные `{origin}/#person` и `{origin}/#website`; image либо абсолютный media URL, либо `{pageUrl}/opengraph-image`.
 - [ ] **Metadata:** на ключевых публичных страницах уникальный `<title>`, `meta[name=description]`, `link[rel=canonical]` без query; home — голый `nav.siteTitle`; list/detail не делят title с auth; auth/bookmarks/account и `/search?q=` — `noindex`; hreflang в `<head>` согласован с locale/slug (как в sitemap).
 
+## Email
+
+Runbook: [`runbooks/resend-email.md`](./runbooks/resend-email.md) (шаг **082**). Полный env-gate — шаг **108**.
+
+- [ ] **Resend env:** на Preview/Production заданы `RESEND_API_KEY` и `RESEND_FROM_EMAIL` (onboarding domain Resend или verified свой домен); `NEXT_PUBLIC_SERVER_URL` = origin деплоя.
+- [ ] **Reset smoke:** на preview или prod `/{locale}/forgot-password` → письмо в inbox → reset по ссылке меняет пароль (не console adapter).
+
 ## Security
 
 Детальная шпаргалка (инвентарь кода, ops, waived): [`security/checklist.md`](./security/checklist.md).

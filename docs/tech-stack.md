@@ -111,6 +111,8 @@ Upload медиа — **только admin**. Читатели не загруж
 | **Resend**   | Транзакционные письма: verification + password reset                              |
 | **Локально** | Ethereal / Mailpit / лог в console — на выбор в LOCAL_SETUP; в prod только Resend |
 
+Ops (API key, onboarding From, DNS, smoke): [`docs/runbooks/resend-email.md`](./runbooks/resend-email.md).
+
 Newsletter / marketing mail — out of scope.
 
 ---
@@ -243,7 +245,7 @@ OpenTelemetry full stack — не обязателен в v1.
 | `docs/LOCAL_SETUP.md`         | Локальный запуск, env, Docker, seed                                                                |
 | `docs/adr/`                   | Architecture Decision Records                                                                      |
 | `docs/security/`              | Access matrix, session hardening, supply-chain, threat model, [checklist](./security/checklist.md) |
-| `docs/runbooks/`              | Backup/restore Neon + R2, incident basics                                                          |
+| `docs/runbooks/`              | R2 media, Resend email; позже backup/restore Neon + incident basics                                |
 | `docs/content-model.md`       | Описание collections и полей                                                                       |
 | `README.md`                   | Точка входа в проект                                                                               |
 | Privacy / Terms pages         | Юридические страницы в продукте + краткие заметки в docs при необходимости                         |

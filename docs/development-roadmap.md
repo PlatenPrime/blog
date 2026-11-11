@@ -808,11 +808,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 082 — Resend production verification
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Письма в real prod.
 - **Deliverables:** Domain/DNS notes (даже если пока onboarding domain Resend); runbook.
 - **Verify:** Reset password на preview/prod получает письмо.
 - **DoD:** Email path проверен вне localhost.
+- **Notes:** Runbook [`docs/runbooks/resend-email.md`](./runbooks/resend-email.md): console vs Resend, API key / From, **onboarding domain** как путь v1, DNS notes для своего домена (записи только из Resend Dashboard), Vercel env после **088**, smoke **(A)** local+Resend key forgot→inbox→reset, **(B)** preview/prod — после **088/089** (галочки в `production-checklist` §Email). Ссылки: LOCAL_SETUP, `.env.example`, tech-stack §7. Код адаптера не менялся (**028**). Live deploy poke не помечен выполненным — Vercel ещё **088**. Полный env-gate — **108**.
 
 ---
 
