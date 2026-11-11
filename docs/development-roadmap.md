@@ -838,11 +838,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 085 — Playwright design & a11y smoke
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Разметка и a11y.
 - **Deliverables:** axe smoke на home/article/login; landmark checks.
 - **Verify:** Critical a11y violations = fail.
 - **DoD:** A11y floor установлен.
+- **Notes:** `@axe-core/playwright`; helper `tests/e2e/a11y.ts` (`expectNoCriticalA11yViolations`, cookie consent dismissed via `localStorage`); suite `tests/e2e/a11y.e2e.spec.ts` — `/uk`, `/uk/articles/e2e-public-article`, `/uk/login`: landmarks (`banner` / `main#main` / `contentinfo`) + axe filter `impact === critical`. Полный chrome nav — `site-chrome.e2e` (**048**). Serious/moderate не гейтим. E2E в CI — **086**; factories — **087**.
 
 ### 086 — CI: e2e in pipeline
 

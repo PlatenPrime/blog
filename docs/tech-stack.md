@@ -193,7 +193,7 @@ OpenTelemetry full stack — не обязателен в v1.
 | **Playwright**                         | E2E (`tests/e2e/**`): разметка, дизайн-критичные экраны, auth/comment/bookmark flows; `baseURL` `http://localhost:3000`, `webServer` поднимает `npm run dev`; scripts `npm run test:e2e` / `npm run test:e2e:install` (Chromium) |
 | **Testing Library** (по необходимости) | React component tests                                                                                                                                                                                                            |
 | **Typecheck** (`tsc --noEmit`)         | CI gate; script `npm run typecheck`                                                                                                                                                                                              |
-| **axe / a11y smoke**                   | Базовая доступность в Playwright                                                                                                                                                                                                 |
+| **axe / a11y smoke**                   | `@axe-core/playwright` в e2e (`tests/e2e/a11y.e2e.spec.ts`); fail только на `impact === critical`                                                                                                                                |
 
 **Политика (что must / что не гоняем):** [`testing.md`](./testing.md).
 
