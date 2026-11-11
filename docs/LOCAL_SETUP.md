@@ -325,7 +325,9 @@ Terms (шаг **080**, done):
 
 11. **Pages** → Create (или ещё один документ): `slug` = `terms` в каждой локали, `title` / `body` — условия использования (можно шаблонно). Автослаг из переведённого заголовка адрес `/terms` не откроет.
 12. **Publish** → `http://localhost:3000/uk/terms` — заголовок и тело из Payload. Ссылка «Умови» / «Условия» / «Terms» в footer ведёт сюда. Черновик / чужой slug — «не найдено».
-13. Cookie consent — шаг **081**.
+    Cookie consent (шаг **081**, done):
+
+13. Откройте `http://localhost:3000/uk` в чистом профиле / без `localStorage.cookie-consent`. Ожидание: снизу баннер «Файли cookie» с Accept / Decline и ссылкой на Privacy. Decline → баннер исчезает, `localStorage.cookie-consent === declined`, после reload баннера нет. Accept → значение `accepted` (Analytics пакет ещё не грузится — gate пустой до **097**).
 
 Unit: `npm test` → `tests/unit/pagesQuery.test.ts`. Unit access/slugify — **024** (done).
 
