@@ -4,6 +4,8 @@ import { describe, expect, it } from 'vitest'
 import { publicContentWhere } from '@/access/publicContentWhere'
 import {
   ABOUT_PAGE_SLUG,
+  PRIVACY_PAGE_SLUG,
+  TERMS_PAGE_SLUG,
   contactMailto,
   pageDetailFindArgs,
   publicPageForLocale,
@@ -50,7 +52,31 @@ describe('pageDetailFindArgs', () => {
   })
 
   it('falls an unknown locale back to uk', () => {
-    expect(pageDetailFindArgs({ locale: 'fr', slug: 'privacy' }).locale).toBe('uk')
+    expect(pageDetailFindArgs({ locale: 'fr', slug: PRIVACY_PAGE_SLUG }).locale).toBe('uk')
+  })
+
+  it('loads the privacy slug with the same public contract as about', () => {
+    const args = pageDetailFindArgs({ locale: 'uk', now, slug: PRIVACY_PAGE_SLUG })
+
+    expect(args.where).toEqual({
+      and: [{ slug: { equals: 'privacy' } }, publicContentWhere(now)],
+    })
+    expect(args.draft).toBe(false)
+    expect(args.overrideAccess).toBe(false)
+    expect(args).not.toHaveProperty('user')
+    expect(args).not.toHaveProperty('req')
+  })
+
+  it('loads the terms slug with the same public contract as about', () => {
+    const args = pageDetailFindArgs({ locale: 'uk', now, slug: TERMS_PAGE_SLUG })
+
+    expect(args.where).toEqual({
+      and: [{ slug: { equals: 'terms' } }, publicContentWhere(now)],
+    })
+    expect(args.draft).toBe(false)
+    expect(args.overrideAccess).toBe(false)
+    expect(args).not.toHaveProperty('user')
+    expect(args).not.toHaveProperty('req')
   })
 })
 
@@ -102,6 +128,16 @@ describe('publicPageForLocale', () => {
     expect(publicPageForLocale({ body, slug: '', title: 'About' }, 'about')?.title).toBe('About')
     expect(publicPageForLocale({ body, slug: null, title: 'About' }, 'about')?.title).toBe('About')
     expect(publicPageForLocale({ body, slug: 'pro-avtora', title: 'About' }, 'about')).toBeNull()
+    expect(
+      publicPageForLocale({ body, slug: 'privacy', title: 'Privacy' }, PRIVACY_PAGE_SLUG)?.title,
+    ).toBe('Privacy')
+    expect(
+      publicPageForLocale({ body, slug: 'konfidencijnist', title: 'Privacy' }, PRIVACY_PAGE_SLUG),
+    ).toBeNull()
+    expect(
+      publicPageForLocale({ body, slug: 'terms', title: 'Terms' }, TERMS_PAGE_SLUG)?.title,
+    ).toBe('Terms')
+    expect(publicPageForLocale({ body, slug: 'umovy', title: 'Terms' }, TERMS_PAGE_SLUG)).toBeNull()
   })
 })
 

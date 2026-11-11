@@ -46,7 +46,7 @@ v1 считается завершённым, когда одновременн�
 - [x] SEO: RSS, sitemap, OG images, JSON-LD, TOC, reading time, related, code highlight
 - [ ] Поиск по Postgres
 - [ ] Dark + light theme, shadcn UI, аккуратный editorial дизайн
-- [ ] Privacy, Terms, cookie consent
+- [x] Privacy, Terms, cookie consent
 - [ ] CI: lint + typecheck + Vitest + Playwright; Dependabot; Preview Deploys
 - [ ] Backups Neon (+ политика R2); логи Vercel; Vercel Analytics
 - [ ] Seed + faker для локалки; документация LOCAL_SETUP / ADR / runbooks / security
@@ -755,7 +755,7 @@ v1 считается завершённым, когда одновременн�
 - **Deliverables:** Dependabot config; GitHub secret scanning enabled (doc); ignore policy.
 - **Verify:** Dependabot PR появляется на тестовом bump или конфиг валиден.
 - **DoD:** Автообновления уязвимостей включены.
-- **Notes:** `.github/dependabot.yml` v2: `npm` + `github-actions`, weekly Monday Europe/Kyiv, open-PR limit 5; npm groups minor/patch (prod + dev). Docker ecosystem не включали (локальный Postgres). Политика ignore + secret scanning / push protection: `docs/security/supply-chain.md`. После merge — включить Dependabot updates/alerts и Secret scanning + Push protection в GitHub Settings → Code security; PR Dependabot на ближайшем bump. Threat model — **077** (done); checklist — **078**.
+- **Notes:** `.github/dependabot.yml` v2: `npm` + `github-actions`, weekly Monday Europe/Kyiv, open-PR limit 5; npm groups minor/patch (prod + dev). Docker ecosystem не включали (локальный Postgres). Политика ignore + secret scanning / push protection: `docs/security/supply-chain.md`. После merge — включить Dependabot updates/alerts и Secret scanning + Push protection в GitHub Settings → Code security; PR Dependabot на ближайшем bump. Threat model — **077**; pre-launch checklist — **078** (оба done).
 
 ### 077 — Threat model stub
 
@@ -764,15 +764,16 @@ v1 считается завершённым, когда одновременн�
 - **Deliverables:** `docs/security/threat-model.md` (auth, XSS via Lexical, R2, comments spam).
 - **Verify:** Контрмеры ссылаются на шаги Track 8.
 - **DoD:** Threat model существует и актуален для v1.
-- **Notes:** [`docs/security/threat-model.md`](security/threat-model.md): stub v1 (один admin, readers). Assets + четыре зоны (Threat / Impact / Mitigations / Residual): auth → 074+ADR-006, 075, session-hardening, ADR-002; XSS/Lexical → JSX render, YouTube allowlist, CSP 073, MIME без SVG; R2 → Media ACL, limits, runbook CORS, CSP origins, public-read by design; comments spam → verified create, 074/075, text render, moderationStatus. Adjacent supply-chain → 076 без дубля. Checklist / waivers — **078**.
+- **Notes:** [`docs/security/threat-model.md`](security/threat-model.md): stub v1 (один admin, readers). Assets + четыре зоны (Threat / Impact / Mitigations / Residual): auth → 074+ADR-006, 075, session-hardening, ADR-002; XSS/Lexical → JSX render, YouTube allowlist, CSP 073, MIME без SVG; R2 → Media ACL, limits, runbook CORS, CSP origins, public-read by design; comments spam → verified create, 074/075, text render, moderationStatus. Adjacent supply-chain → 076 без дубля. Checklist / waivers — **078** (done).
 
 ### 078 — Security checklist
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Pre-launch gate.
 - **Deliverables:** `docs/security/checklist.md`.
 - **Verify:** Все must-пункты закрыты или явно waived.
 - **DoD:** Security track формально закрыт.
+- **Notes:** [`docs/security/checklist.md`](security/checklist.md): инвентарь Track 8 (headers, rate limit, Turnstile, session/ACL, Lexical/R2, comments, supply-chain by ref) + must code `[x]` (073–077) + must ops `[ ]` (Dependabot/scanning/push protection, prod Turnstile/Upstash keys, headers smoke, ACL sanity) + waivers table (MFA, WAF, nonce CSP, Turnstile forgot/reset, signed media, AI mod, e2e CI → 086, analytics CSP → 081/097) + test anchors. Go-live галочки — [`production-checklist.md`](production-checklist.md) (§Security). Threat-model Verify → готовый checklist. Privacy/Terms/consent / Resend prod / full gate — вне шага (079–082, 108).
 
 ---
 
@@ -780,35 +781,39 @@ v1 считается завершённым, когда одновременн�
 
 ### 079 — Privacy page
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Политика конфиденциальности.
 - **Deliverables:** CMS Page + публичный route всех локалей (контент можно шаблонно «по приколу», но честно про cookies/analytics/auth).
 - **Verify:** Страница доступна из footer.
 - **DoD:** Privacy online.
+- **Notes:** `/uk|ru|en/privacy`. Тот же `findPublicPage` / `pageDetailFindArgs`, что About (054): slug `privacy` в каждой локали, `draft: false`, без session. Footer-only `Link` + `nav.privacy` (не в `siteNavItems`). Без mailto. OG/loading зеркало About. Unit: `pagesQuery` privacy slug; E2E: `privacy.e2e` + footer href в `site-chrome`. Sitemap / Terms / consent — **080–081**. Seed контента — **087** (ручной poke в LOCAL_SETUP §12).
 
 ### 080 — Terms page
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Условия использования.
 - **Deliverables:** Аналогично Privacy.
 - **Verify:** Footer link.
 - **DoD:** Terms online.
+- **Notes:** `/uk|ru|en/terms`. Тот же `findPublicPage` / `pageDetailFindArgs`, что Privacy (079) / About (054): slug `terms` в каждой локали, `draft: false`, без session. Footer-only `Link` + `nav.terms` (не в `siteNavItems`). Без mailto. OG/loading зеркало Privacy. Unit: `pagesQuery` terms slug; E2E: `terms.e2e` + footer href в `site-chrome`. Sitemap privacy/terms / consent — **081+**. Seed контента — **087** (ручной poke в LOCAL_SETUP §12).
 
 ### 081 — Cookie consent banner
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Согласие под Analytics/cookies.
 - **Deliverables:** Лёгкий banner; persist choice; Analytics грузится по политике.
 - **Verify:** До согласия analytics не стреляет (если так решено); отказ уважается.
 - **DoD:** Consent UX есть.
+- **Notes:** Opt-in: `localStorage` ключ `cookie-consent` (`accepted`|`declined`); helpers `src/lib/cookie-consent.ts`. Banner `CookieConsentBanner` + пустой gate `ConsentAwareAnalytics` в `[locale]/layout` (после footer). Тексты `cookies.*` (042); ссылка на Privacy. Session cookies вне согласия. `@vercel/analytics` и CSP origins — **097**. Unit: `cookieConsent.test.ts`. E2E: `cookie-consent.e2e.spec.ts`.
 
 ### 082 — Resend production verification
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Письма в real prod.
 - **Deliverables:** Domain/DNS notes (даже если пока onboarding domain Resend); runbook.
 - **Verify:** Reset password на preview/prod получает письмо.
 - **DoD:** Email path проверен вне localhost.
+- **Notes:** Runbook [`docs/runbooks/resend-email.md`](runbooks/resend-email.md): console vs Resend, onboarding From (`onboarding@resend.dev`), custom domain SPF/DKIM/DMARC, smoke A (local + live API) / B (после **088–089**). Ссылки: LOCAL_SETUP § Auth email, tech-stack §7, `.env.example`. Smoke A: `payload.forgotPassword` → Resend → inbox (`proshta@gmail.com`), Dashboard status Delivered, subject «Reset your Blog password», From `Blog <onboarding@resend.dev>`. Smoke B на `*.vercel.app` — после deploy. Production-checklist Resend ticks — **108**. Код адаптера не менялся (**028**).
 
 ---
 

@@ -7,6 +7,8 @@ import React from 'react'
 
 import { getServerUrl } from '@/auth/serverUrl'
 import { JsonLd } from '@/components/seo/json-ld'
+import { ConsentAwareAnalytics } from '@/components/site/consent-aware-analytics'
+import { CookieConsentBanner } from '@/components/site/cookie-consent-banner'
 import { SiteFooter } from '@/components/site/site-footer'
 import { SiteHeader } from '@/components/site/site-header'
 import { SkipLink } from '@/components/site/skip-link'
@@ -96,6 +98,8 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
                 {children}
               </main>
               <SiteFooter />
+              <CookieConsentBanner />
+              <ConsentAwareAnalytics />
             </div>
           </NextIntlClientProvider>
         </ThemeProvider>

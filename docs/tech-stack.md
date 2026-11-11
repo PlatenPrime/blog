@@ -111,7 +111,7 @@ Upload медиа — **только admin**. Читатели не загруж
 | **Resend**   | Транзакционные письма: verification + password reset                              |
 | **Локально** | Ethereal / Mailpit / лог в console — на выбор в LOCAL_SETUP; в prod только Resend |
 
-Newsletter / marketing mail — out of scope.
+Ops (API key, onboarding / custom domain, smoke): [`runbooks/resend-email.md`](./runbooks/resend-email.md). Newsletter / marketing mail — out of scope.
 
 ---
 
@@ -234,19 +234,19 @@ OpenTelemetry full stack — не обязателен в v1.
 
 На старте создаются канонические файлы стека и роадмапа. Далее по роадмапу наращиваем:
 
-| Документ                      | Назначение                                                                    |
-| ----------------------------- | ----------------------------------------------------------------------------- |
-| `docs/tech-stack.md`          | Этот файл                                                                     |
-| `docs/development-roadmap.md` | Инженерный роадмап до v1                                                      |
-| `docs/testing.md`             | Политика тестов (must-cover, слои, review gate)                               |
-| `.env.example`                | Канон переменных окружения (плейсхолдеры, без секретов)                       |
-| `docs/LOCAL_SETUP.md`         | Локальный запуск, env, Docker, seed                                           |
-| `docs/adr/`                   | Architecture Decision Records                                                 |
-| `docs/security/`              | Access matrix, session hardening, supply-chain, threat model; checklist — 078 |
-| `docs/runbooks/`              | Backup/restore Neon + R2, incident basics                                     |
-| `docs/content-model.md`       | Описание collections и полей                                                  |
-| `README.md`                   | Точка входа в проект                                                          |
-| Privacy / Terms pages         | Юридические страницы в продукте + краткие заметки в docs при необходимости    |
+| Документ                      | Назначение                                                                                         |
+| ----------------------------- | -------------------------------------------------------------------------------------------------- |
+| `docs/tech-stack.md`          | Этот файл                                                                                          |
+| `docs/development-roadmap.md` | Инженерный роадмап до v1                                                                           |
+| `docs/testing.md`             | Политика тестов (must-cover, слои, review gate)                                                    |
+| `.env.example`                | Канон переменных окружения (плейсхолдеры, без секретов)                                            |
+| `docs/LOCAL_SETUP.md`         | Локальный запуск, env, Docker, seed                                                                |
+| `docs/adr/`                   | Architecture Decision Records                                                                      |
+| `docs/security/`              | Access matrix, session hardening, supply-chain, threat model, [checklist](./security/checklist.md) |
+| `docs/runbooks/`              | Backup/restore Neon + R2, incident basics                                                          |
+| `docs/content-model.md`       | Описание collections и полей                                                                       |
+| `README.md`                   | Точка входа в проект                                                                               |
+| Privacy / Terms pages         | Юридические страницы в продукте + краткие заметки в docs при необходимости                         |
 
 Язык документации: **русский**, с EN-терминами где принято (deploy, preview, access control, ISR и т.д.).
 

@@ -52,6 +52,8 @@ cp .env.example .env
 | Local     | `RESEND_API_KEY` пустой                | Console adapter — HTML письма в лог `npm run dev`                                    |
 | Prod-like | `RESEND_API_KEY` + `RESEND_FROM_EMAIL` | [`@payloadcms/email-resend`](https://www.npmjs.com/package/@payloadcms/email-resend) |
 
+Боевой путь (onboarding domain, DNS, smoke forgot → inbox): [`runbooks/resend-email.md`](./runbooks/resend-email.md) (шаг **082**).
+
 После регистрации откройте `/uk/verify?token=…` из лога (или письма Resend). Без verify логин reader’а отклоняется.
 
 ### Google OAuth (optional)
@@ -316,7 +318,20 @@ Unit: `npm test` → `tests/unit/notesQuery.test.ts`. Draft Preview (кнопк�
 7. Необязательно: `CONTACT_EMAIL=you@example.com` в `.env`, перезапуск `npm run dev`. Под текстом ссылка «Написати мені» с `mailto:`. Пустая переменная — ссылки нет. Формы нет.
 8. Preview черновика остаётся на `/uk/dev/rich-text/page/{slug}`, не на продуктовом адресе.
 
-Privacy и Terms — шаги **079–080**. Unit: `npm test` → `tests/unit/pagesQuery.test.ts`. Unit access/slugify — **024** (done).
+Privacy (шаг **079**, done):
+
+9. **Pages** → Create (или второй документ): `slug` = `privacy` в каждой локали, `title` / `body` — шаблонно, но честно: cookies сессии, будущая analytics по согласию, auth (email/OAuth). Автослаг из переведённого заголовка адрес `/privacy` не откроет.
+10. **Publish** → `http://localhost:3000/uk/privacy` — заголовок и тело из Payload. Ссылка «Конфіденційність» / «Конфиденциальность» / «Privacy» в footer ведёт сюда. Черновик / чужой slug — «не найдено».
+
+Terms (шаг **080**, done):
+
+11. **Pages** → Create (или ещё один документ): `slug` = `terms` в каждой локали, `title` / `body` — условия использования (можно шаблонно). Автослаг из переведённого заголовка адрес `/terms` не откроет.
+12. **Publish** → `http://localhost:3000/uk/terms` — заголовок и тело из Payload. Ссылка «Умови» / «Условия» / «Terms» в footer ведёт сюда. Черновик / чужой slug — «не найдено».
+    Cookie consent (шаг **081**, done):
+
+13. Откройте `http://localhost:3000/uk` в чистом профиле / без `localStorage.cookie-consent`. Ожидание: снизу баннер «Файли cookie» с Accept / Decline и ссылкой на Privacy. Decline → баннер исчезает, `localStorage.cookie-consent === declined`, после reload баннера нет. Accept → значение `accepted` (Analytics пакет ещё не грузится — gate пустой до **097**).
+
+Unit: `npm test` → `tests/unit/pagesQuery.test.ts`. Unit access/slugify — **024** (done).
 
 ## 13. Comments
 
