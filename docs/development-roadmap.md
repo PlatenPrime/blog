@@ -829,11 +829,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 084 — Expand Vitest suite
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Закрыть пробелы домена.
 - **Deliverables:** Тесты на helpers, serializers, access, search query builder.
 - **Verify:** Coverage критичных модулей без погони за %.
 - **DoD:** Нет бизнес-логики «только в голове».
+- **Notes:** Не дублировали access/search/query suites — они уже закрыты feature-шагами. Пробелы «логика только в голове»: `ensureSlugFromTitle` (`tests/unit/ensureSlugFromTitle.test.ts`), `formatPublishedOn` (`tests/unit/formatPublishedOn.test.ts`), `getServerUrl` + verify/reset email HTML (`tests/unit/emailTemplates.test.ts`). A11y / e2e CI / factories — **085–087**.
 
 ### 085 — Playwright design & a11y smoke
 
