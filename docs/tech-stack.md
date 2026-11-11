@@ -111,7 +111,7 @@ Upload медиа — **только admin**. Читатели не загруж
 | **Resend**   | Транзакционные письма: verification + password reset                              |
 | **Локально** | Ethereal / Mailpit / лог в console — на выбор в LOCAL_SETUP; в prod только Resend |
 
-Newsletter / marketing mail — out of scope.
+Ops (API key, onboarding / custom domain, smoke): [`runbooks/resend-email.md`](./runbooks/resend-email.md). Newsletter / marketing mail — out of scope.
 
 ---
 

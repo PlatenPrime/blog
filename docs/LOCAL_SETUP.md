@@ -52,6 +52,8 @@ cp .env.example .env
 | Local     | `RESEND_API_KEY` пустой                | Console adapter — HTML письма в лог `npm run dev`                                    |
 | Prod-like | `RESEND_API_KEY` + `RESEND_FROM_EMAIL` | [`@payloadcms/email-resend`](https://www.npmjs.com/package/@payloadcms/email-resend) |
 
+Боевой путь (onboarding domain, DNS, smoke forgot → inbox): [`runbooks/resend-email.md`](./runbooks/resend-email.md) (шаг **082**).
+
 После регистрации откройте `/uk/verify?token=…` из лога (или письма Resend). Без verify логин reader’а отклоняется.
 
 ### Google OAuth (optional)

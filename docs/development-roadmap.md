@@ -808,11 +808,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 082 — Resend production verification
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Письма в real prod.
 - **Deliverables:** Domain/DNS notes (даже если пока onboarding domain Resend); runbook.
 - **Verify:** Reset password на preview/prod получает письмо.
 - **DoD:** Email path проверен вне localhost.
+- **Notes:** Runbook [`docs/runbooks/resend-email.md`](runbooks/resend-email.md): console vs Resend, onboarding From (`onboarding@resend.dev`), custom domain SPF/DKIM/DMARC, smoke A (local + live API) / B (после **088–089**). Ссылки: LOCAL_SETUP § Auth email, tech-stack §7, `.env.example`. Smoke A: `payload.forgotPassword` → Resend → inbox (`proshta@gmail.com`), Dashboard status Delivered, subject «Reset your Blog password», From `Blog <onboarding@resend.dev>`. Smoke B на `*.vercel.app` — после deploy. Production-checklist Resend ticks — **108**. Код адаптера не менялся (**028**).
 
 ---
 
