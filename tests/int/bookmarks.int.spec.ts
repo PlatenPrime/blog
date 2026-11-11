@@ -1,41 +1,8 @@
 import { getPayload, type Payload } from 'payload'
-import type { Article, User } from '@/payload-types'
 import config from '@/payload.config'
+import { createArticle, createVerifiedReader } from '../factories'
 
 import { beforeAll, describe, expect, it } from 'vitest'
-
-/** Minimal Lexical document accepted by Articles richText. */
-const lexicalParagraph = (text: string): Article['body'] => ({
-  root: {
-    type: 'root',
-    format: '',
-    indent: 0,
-    version: 1,
-    children: [
-      {
-        type: 'paragraph',
-        format: '',
-        indent: 0,
-        version: 1,
-        children: [
-          {
-            type: 'text',
-            detail: 0,
-            format: 0,
-            mode: 'normal',
-            style: '',
-            text,
-            version: 1,
-          },
-        ],
-        direction: 'ltr',
-        textFormat: 0,
-        textStyle: '',
-      },
-    ],
-    direction: 'ltr',
-  },
-})
 
 let payload: Payload
 
@@ -48,37 +15,16 @@ describe('Bookmarks access and uniqueness (Local API)', () => {
   it('allows a reader to create a bookmark and sets user from session', async () => {
     const suffix = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
 
-    const reader = (await payload.create({
-      collection: 'users',
-      data: {
-        email: `bm-reader-${suffix}@example.com`,
-        password: 'test-password-123',
-        role: 'reader',
-        _verified: true,
-      },
-      overrideAccess: true,
-    })) as User
-
-    const spoofTarget = await payload.create({
-      collection: 'users',
-      data: {
-        email: `bm-other-${suffix}@example.com`,
-        password: 'test-password-123',
-        role: 'reader',
-        _verified: true,
-      },
-      overrideAccess: true,
+    const reader = await createVerifiedReader(payload, {
+      email: `bm-reader-${suffix}@example.com`,
     })
-
-    const article = await payload.create({
-      collection: 'articles',
-      data: {
-        title: `Bookmark target ${suffix}`,
-        slug: `bookmark-target-${suffix}`,
-        body: lexicalParagraph('Article body for bookmarks test.'),
-        _status: 'published',
-      },
-      overrideAccess: true,
+    const spoofTarget = await createVerifiedReader(payload, {
+      email: `bm-other-${suffix}@example.com`,
+    })
+    const article = await createArticle(payload, {
+      title: `Bookmark target ${suffix}`,
+      slug: `bookmark-target-${suffix}`,
+      body: 'Article body for bookmarks test.',
     })
 
     const bookmark = await payload.create({
@@ -109,15 +55,10 @@ describe('Bookmarks access and uniqueness (Local API)', () => {
   it('denies anonymous create', async () => {
     const suffix = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
 
-    const article = await payload.create({
-      collection: 'articles',
-      data: {
-        title: `Anon bookmark target ${suffix}`,
-        slug: `anon-bookmark-target-${suffix}`,
-        body: lexicalParagraph('Article body for anonymous deny test.'),
-        _status: 'published',
-      },
-      overrideAccess: true,
+    const article = await createArticle(payload, {
+      title: `Anon bookmark target ${suffix}`,
+      slug: `anon-bookmark-target-${suffix}`,
+      body: 'Article body for anonymous deny test.',
     })
 
     await expect(
@@ -138,26 +79,13 @@ describe('Bookmarks access and uniqueness (Local API)', () => {
   it('blocks duplicate bookmark for the same user and content', async () => {
     const suffix = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
 
-    const reader = (await payload.create({
-      collection: 'users',
-      data: {
-        email: `bm-dup-${suffix}@example.com`,
-        password: 'test-password-123',
-        role: 'reader',
-        _verified: true,
-      },
-      overrideAccess: true,
-    })) as User
-
-    const article = await payload.create({
-      collection: 'articles',
-      data: {
-        title: `Dup bookmark target ${suffix}`,
-        slug: `dup-bookmark-target-${suffix}`,
-        body: lexicalParagraph('Article body for duplicate bookmark test.'),
-        _status: 'published',
-      },
-      overrideAccess: true,
+    const reader = await createVerifiedReader(payload, {
+      email: `bm-dup-${suffix}@example.com`,
+    })
+    const article = await createArticle(payload, {
+      title: `Dup bookmark target ${suffix}`,
+      slug: `dup-bookmark-target-${suffix}`,
+      body: 'Article body for duplicate bookmark test.',
     })
 
     const content = {
@@ -185,37 +113,16 @@ describe('Bookmarks access and uniqueness (Local API)', () => {
   it('hides another reader bookmark from find', async () => {
     const suffix = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
 
-    const owner = (await payload.create({
-      collection: 'users',
-      data: {
-        email: `bm-owner-${suffix}@example.com`,
-        password: 'test-password-123',
-        role: 'reader',
-        _verified: true,
-      },
-      overrideAccess: true,
-    })) as User
-
-    const stranger = (await payload.create({
-      collection: 'users',
-      data: {
-        email: `bm-stranger-${suffix}@example.com`,
-        password: 'test-password-123',
-        role: 'reader',
-        _verified: true,
-      },
-      overrideAccess: true,
-    })) as User
-
-    const article = await payload.create({
-      collection: 'articles',
-      data: {
-        title: `Private bookmark target ${suffix}`,
-        slug: `private-bookmark-target-${suffix}`,
-        body: lexicalParagraph('Article body for ownership read test.'),
-        _status: 'published',
-      },
-      overrideAccess: true,
+    const owner = await createVerifiedReader(payload, {
+      email: `bm-owner-${suffix}@example.com`,
+    })
+    const stranger = await createVerifiedReader(payload, {
+      email: `bm-stranger-${suffix}@example.com`,
+    })
+    const article = await createArticle(payload, {
+      title: `Private bookmark target ${suffix}`,
+      slug: `private-bookmark-target-${suffix}`,
+      body: 'Article body for ownership read test.',
     })
 
     const bookmark = await payload.create({

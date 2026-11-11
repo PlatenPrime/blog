@@ -1,16 +1,8 @@
 import { expect, test, type Page } from '@playwright/test'
-import fs from 'node:fs'
-import path from 'node:path'
 
 import uk from '../../src/i18n/messages/uk.json'
 import { publicArticle } from './public-fixtures'
-
-type SeedUser = { email: string; password: string }
-
-function readSeedUser(): SeedUser {
-  const file = path.join(process.cwd(), 'tests/e2e/.auth/reader.json')
-  return JSON.parse(fs.readFileSync(file, 'utf8')) as SeedUser
-}
+import { readSeedUser, type SeedUser } from './readSeedUser'
 
 async function loginAsSeedReader(page: Page): Promise<SeedUser> {
   const user = readSeedUser()

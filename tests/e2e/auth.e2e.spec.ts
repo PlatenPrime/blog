@@ -1,19 +1,12 @@
 import { test, expect } from '@playwright/test'
 import { getPayload } from 'payload'
-import fs from 'node:fs'
-import path from 'node:path'
 
 import en from '../../src/i18n/messages/en.json'
 import ru from '../../src/i18n/messages/ru.json'
 import uk from '../../src/i18n/messages/uk.json'
 import config from '../../src/payload.config'
-
-type SeedUser = { email: string; password: string }
-
-function readSeedUser(): SeedUser {
-  const file = path.join(process.cwd(), 'tests/e2e/.auth/reader.json')
-  return JSON.parse(fs.readFileSync(file, 'utf8')) as SeedUser
-}
+import { createVerifiedReader, uniqueSuffix } from '../factories'
+import { readSeedUser } from './readSeedUser'
 
 test.describe('Auth UI', () => {
   test('login chrome follows the locale prefix', async ({ page }) => {
@@ -27,8 +20,7 @@ test.describe('Auth UI', () => {
   })
 
   test('register shows verify message', async ({ page }) => {
-    const suffix = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
-    const email = `e2e-reg-${suffix}@example.com`
+    const email = `e2e-reg-${uniqueSuffix()}@example.com`
 
     await page.goto('/register')
     await page.getByLabel(uk.auth.email).fill(email)
@@ -78,21 +70,11 @@ test.describe('Auth UI', () => {
 
   test('reset password happy path', async ({ page }) => {
     const payload = await getPayload({ config })
-    const suffix = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
-    const email = `e2e-reset-${suffix}@example.com`
+    const email = `e2e-reset-${uniqueSuffix()}@example.com`
     const oldPassword = 'old-password-123'
     const newPassword = 'new-password-456'
 
-    await payload.create({
-      collection: 'users',
-      data: {
-        email,
-        password: oldPassword,
-        role: 'reader',
-        _verified: true,
-      },
-      overrideAccess: true,
-    })
+    await createVerifiedReader(payload, { email, password: oldPassword })
 
     const token = await payload.forgotPassword({
       collection: 'users',

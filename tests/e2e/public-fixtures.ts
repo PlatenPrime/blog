@@ -1,7 +1,7 @@
 /**
  * Stable public documents for the Playwright suite.
- * Setup overwrites only these slugs. Other rows in the database stay put.
- * Factories for arbitrary users and comments stay on step 087.
+ * Setup overwrites only these slugs via `upsertContentBySlug` (tests/factories).
+ * Other rows in the database stay put.
  */
 export const publicPublishedAt = '2020-01-15T12:00:00.000Z'
 

@@ -1,24 +1,18 @@
+/** @vitest-environment node */
 import { getPayload, type Payload } from 'payload'
 import type { User } from '@/payload-types'
 import config from '@/payload.config'
 import { isAdmin } from '@/access/isAdmin'
+import {
+  DEFAULT_TEST_PASSWORD,
+  createArticle,
+  createVerifiedReader,
+  uniqueSuffix,
+} from '../factories'
 
 import { beforeAll, describe, expect, it } from 'vitest'
 
 let payload: Payload
-
-async function createVerifiedReader(suffix: string): Promise<User> {
-  return (await payload.create({
-    collection: 'users',
-    data: {
-      email: `auth-reader-${suffix}@example.com`,
-      password: 'test-password-123',
-      role: 'reader',
-      _verified: true,
-    },
-    overrideAccess: true,
-  })) as User
-}
 
 describe('Auth Local API (register / login / verify / reset)', () => {
   beforeAll(async () => {
@@ -27,8 +21,7 @@ describe('Auth Local API (register / login / verify / reset)', () => {
   })
 
   it('public register creates a reader who cannot access admin', async () => {
-    const suffix = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
-    const email = `public-reg-${suffix}@example.com`
+    const email = `public-reg-${uniqueSuffix()}@example.com`
 
     const created = (await payload.create({
       collection: 'users',
@@ -48,14 +41,13 @@ describe('Auth Local API (register / login / verify / reset)', () => {
   })
 
   it('login succeeds for verified reader and fails for wrong password', async () => {
-    const suffix = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
-    const reader = await createVerifiedReader(suffix)
+    const reader = await createVerifiedReader(payload, { prefix: 'auth-reader' })
 
     const ok = await payload.login({
       collection: 'users',
       data: {
         email: reader.email,
-        password: 'test-password-123',
+        password: DEFAULT_TEST_PASSWORD,
       },
     })
     expect(ok.user?.email).toBe(reader.email)
@@ -72,8 +64,7 @@ describe('Auth Local API (register / login / verify / reset)', () => {
   })
 
   it('verify email then allows login', async () => {
-    const suffix = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
-    const email = `verify-${suffix}@example.com`
+    const email = `verify-${uniqueSuffix()}@example.com`
 
     const created = await payload.create({
       collection: 'users',
@@ -115,8 +106,7 @@ describe('Auth Local API (register / login / verify / reset)', () => {
   })
 
   it('password reset changes credentials', async () => {
-    const suffix = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
-    const reader = await createVerifiedReader(suffix)
+    const reader = await createVerifiedReader(payload, { prefix: 'auth-reader' })
 
     const token = await payload.forgotPassword({
       collection: 'users',
@@ -137,7 +127,7 @@ describe('Auth Local API (register / login / verify / reset)', () => {
     await expect(
       payload.login({
         collection: 'users',
-        data: { email: reader.email, password: 'test-password-123' },
+        data: { email: reader.email, password: DEFAULT_TEST_PASSWORD },
       }),
     ).rejects.toThrow()
 
@@ -149,58 +139,14 @@ describe('Auth Local API (register / login / verify / reset)', () => {
   })
 
   it('unverified reader cannot create comments', async () => {
-    const suffix = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
+    const unverified = await createVerifiedReader(payload, {
+      prefix: 'unverified',
+      verified: false,
+    })
 
-    const unverified = (await payload.create({
-      collection: 'users',
-      data: {
-        email: `unverified-${suffix}@example.com`,
-        password: 'test-password-123',
-        role: 'reader',
-        _verified: false,
-      },
-      overrideAccess: true,
-    })) as User
-
-    const article = await payload.create({
-      collection: 'articles',
-      data: {
-        title: `Auth comment target ${suffix}`,
-        slug: `auth-comment-${suffix}`,
-        body: {
-          root: {
-            type: 'root',
-            format: '',
-            indent: 0,
-            version: 1,
-            children: [
-              {
-                type: 'paragraph',
-                format: '',
-                indent: 0,
-                version: 1,
-                children: [
-                  {
-                    type: 'text',
-                    detail: 0,
-                    format: 0,
-                    mode: 'normal',
-                    style: '',
-                    text: 'body',
-                    version: 1,
-                  },
-                ],
-                direction: 'ltr',
-                textFormat: 0,
-                textStyle: '',
-              },
-            ],
-            direction: 'ltr',
-          },
-        },
-        _status: 'published',
-      },
-      overrideAccess: true,
+    const article = await createArticle(payload, {
+      prefix: 'auth-comment',
+      body: 'body',
     })
 
     await expect(
@@ -222,8 +168,7 @@ describe('Auth Local API (register / login / verify / reset)', () => {
   })
 
   it('reader cannot create articles', async () => {
-    const suffix = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
-    const reader = await createVerifiedReader(suffix)
+    const reader = await createVerifiedReader(payload, { prefix: 'auth-reader' })
 
     await expect(
       payload.create({
@@ -231,8 +176,8 @@ describe('Auth Local API (register / login / verify / reset)', () => {
         user: reader,
         overrideAccess: false,
         data: {
-          title: `Reader write ${suffix}`,
-          slug: `reader-write-${suffix}`,
+          title: `Reader write ${uniqueSuffix()}`,
+          slug: `reader-write-${uniqueSuffix()}`,
           body: {
             root: {
               type: 'root',

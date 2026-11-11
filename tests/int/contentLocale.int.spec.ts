@@ -1,41 +1,8 @@
 import { getPayload, type Payload } from 'payload'
-import type { Article } from '@/payload-types'
 import config from '@/payload.config'
+import { createArticle, lexicalParagraph } from '../factories'
 
 import { beforeAll, describe, expect, it } from 'vitest'
-
-/** Minimal Lexical document accepted by Articles richText. */
-const lexicalParagraph = (text: string): Article['body'] => ({
-  root: {
-    type: 'root',
-    format: '',
-    indent: 0,
-    version: 1,
-    children: [
-      {
-        type: 'paragraph',
-        format: '',
-        indent: 0,
-        version: 1,
-        children: [
-          {
-            type: 'text',
-            detail: 0,
-            format: 0,
-            mode: 'normal',
-            style: '',
-            text,
-            version: 1,
-          },
-        ],
-        direction: 'ltr',
-        textFormat: 0,
-        textStyle: '',
-      },
-    ],
-    direction: 'ltr',
-  },
-})
 
 let payload: Payload
 
@@ -49,16 +16,11 @@ describe('Content localization (Local API)', () => {
     const suffix = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
     const slug = `locale-triptych-${suffix}`
 
-    const created = await payload.create({
-      collection: 'articles',
+    const created = await createArticle(payload, {
+      title: `Заголовок UK ${suffix}`,
+      slug,
+      body: `Тіло UK ${suffix}`,
       locale: 'uk',
-      data: {
-        title: `Заголовок UK ${suffix}`,
-        slug,
-        body: lexicalParagraph(`Тіло UK ${suffix}`),
-        _status: 'published',
-      },
-      overrideAccess: true,
     })
 
     await payload.update({
@@ -113,16 +75,11 @@ describe('Content localization (Local API)', () => {
     const slug = `locale-fallback-${suffix}`
     const ukTitle = `Тільки UK ${suffix}`
 
-    const created = await payload.create({
-      collection: 'articles',
+    const created = await createArticle(payload, {
+      title: ukTitle,
+      slug,
+      body: `Тіло UK ${suffix}`,
       locale: 'uk',
-      data: {
-        title: ukTitle,
-        slug,
-        body: lexicalParagraph(`Тіло UK ${suffix}`),
-        _status: 'published',
-      },
-      overrideAccess: true,
     })
 
     // findByID: slug is localized; only `uk` has a row, so filter-by-slug on `en` is unreliable.

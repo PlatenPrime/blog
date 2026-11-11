@@ -856,11 +856,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 087 — Test data factories
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Стабильные тесты.
 - **Deliverables:** Factories для user/article/note/comment.
 - **Verify:** E2E не зависят от ручного seed в UI.
 - **DoD:** Тесты hermetic насколько возможно.
+- **Notes:** Общий слой [`tests/factories/`](../tests/factories/): `lexicalParagraph`, `uniqueSuffix`, `createVerifiedReader` / `createAdmin` (create→promote), `createArticle` / `createNote` / `upsertContentBySlug`, `createComment`. E2E setup (`auth.setup`, `public-content.setup`) и int (comments/bookmarks/auth/media/contentLocale) + auth e2e reset path переведены на factories; стабильные слаги остаются в `public-fixtures.ts`; credentials — `readSeedUser.ts`. Auth/media int: `/** @vitest-environment node */` (jsdom ломает jose JWT и `file-type` на Buffer). Faker seed локалки — **102**.
 
 ---
 

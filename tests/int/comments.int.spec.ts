@@ -1,42 +1,10 @@
 import { getPayload, type Payload, type Where } from 'payload'
-import type { Article, Comment, User } from '@/payload-types'
+import type { User } from '@/payload-types'
 import config from '@/payload.config'
 import { commentsFindArgs } from '@/content/commentsQuery'
+import { createAdmin, createArticle, createComment, createVerifiedReader } from '../factories'
 
 import { beforeAll, describe, expect, it } from 'vitest'
-
-/** Minimal Lexical document accepted by Articles richText. */
-const lexicalParagraph = (text: string): Article['body'] => ({
-  root: {
-    type: 'root',
-    format: '',
-    indent: 0,
-    version: 1,
-    children: [
-      {
-        type: 'paragraph',
-        format: '',
-        indent: 0,
-        version: 1,
-        children: [
-          {
-            type: 'text',
-            detail: 0,
-            format: 0,
-            mode: 'normal',
-            style: '',
-            text,
-            version: 1,
-          },
-        ],
-        direction: 'ltr',
-        textFormat: 0,
-        textStyle: '',
-      },
-    ],
-    direction: 'ltr',
-  },
-})
 
 let payload: Payload
 
@@ -47,39 +15,11 @@ describe('Comments access (Local API)', () => {
   })
 
   it('allows a reader to create a comment and sets author from session', async () => {
-    const suffix = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
-
-    const reader = (await payload.create({
-      collection: 'users',
-      data: {
-        email: `reader-${suffix}@example.com`,
-        password: 'test-password-123',
-        role: 'reader',
-        _verified: true,
-      },
-      overrideAccess: true,
-    })) as User
-
-    const spoofTarget = await payload.create({
-      collection: 'users',
-      data: {
-        email: `other-${suffix}@example.com`,
-        password: 'test-password-123',
-        role: 'reader',
-        _verified: true,
-      },
-      overrideAccess: true,
-    })
-
-    const article = await payload.create({
-      collection: 'articles',
-      data: {
-        title: `Comment target ${suffix}`,
-        slug: `comment-target-${suffix}`,
-        body: lexicalParagraph('Article body for comments test.'),
-        _status: 'published',
-      },
-      overrideAccess: true,
+    const reader = await createVerifiedReader(payload, { prefix: 'reader' })
+    const spoofTarget = await createVerifiedReader(payload, { prefix: 'other' })
+    const article = await createArticle(payload, {
+      prefix: 'comment-target',
+      body: 'Article body for comments test.',
     })
 
     const comment = await payload.create({
@@ -105,17 +45,9 @@ describe('Comments access (Local API)', () => {
   })
 
   it('denies anonymous create', async () => {
-    const suffix = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
-
-    const article = await payload.create({
-      collection: 'articles',
-      data: {
-        title: `Anon target ${suffix}`,
-        slug: `anon-target-${suffix}`,
-        body: lexicalParagraph('Article body for anonymous deny test.'),
-        _status: 'published',
-      },
-      overrideAccess: true,
+    const article = await createArticle(payload, {
+      prefix: 'anon-target',
+      body: 'Article body for anonymous deny test.',
     })
 
     // `author` is required on the type; access denies before persistence.
@@ -138,20 +70,21 @@ describe('Comments access (Local API)', () => {
 
   it('hides a comment from non-admins until an admin approves it again', async () => {
     const suffix = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
-    const author = await createUser(`author-${suffix}@example.com`, 'reader')
-    const other = await createUser(`peer-${suffix}@example.com`, 'reader')
-    const admin = await createUser(`admin-${suffix}@example.com`, 'admin')
+    const author = await createVerifiedReader(payload, {
+      email: `author-${suffix}@example.com`,
+    })
+    const other = await createVerifiedReader(payload, {
+      email: `peer-${suffix}@example.com`,
+    })
+    const admin = await createAdmin(payload, {
+      email: `admin-${suffix}@example.com`,
+    })
     expect(admin.role).toBe('admin')
 
-    const article = await payload.create({
-      collection: 'articles',
-      data: {
-        title: `Moderation target ${suffix}`,
-        slug: `moderation-target-${suffix}`,
-        body: lexicalParagraph('Article body for moderation test.'),
-        _status: 'published',
-      },
-      overrideAccess: true,
+    const article = await createArticle(payload, {
+      title: `Moderation target ${suffix}`,
+      slug: `moderation-target-${suffix}`,
+      body: 'Article body for moderation test.',
     })
 
     // Field access may strip `hidden` back to the default, or reject the create.
@@ -185,8 +118,16 @@ describe('Comments access (Local API)', () => {
       expect(stored.docs).toHaveLength(0)
     }
 
-    const toxic = await createComment(author, article.id, `Toxic ${suffix}`)
-    const sibling = await createComment(author, article.id, `Kept ${suffix}`)
+    const toxic = await createComment(payload, {
+      author,
+      content: { relationTo: 'articles', value: article.id },
+      body: `Toxic ${suffix}`,
+    })
+    const sibling = await createComment(payload, {
+      author,
+      content: { relationTo: 'articles', value: article.id },
+      body: `Kept ${suffix}`,
+    })
     expect(toxic.moderationStatus).toBe('approved')
     expect(sibling.moderationStatus).toBe('approved')
 
@@ -272,44 +213,6 @@ function articleWhere(articleId: number): Where {
       { 'content.value': { equals: articleId } },
     ],
   }
-}
-
-async function createUser(email: string, role: 'admin' | 'reader'): Promise<User> {
-  // Create always runs the users hook. Without an admin actor it forces `reader`,
-  // so an admin for this test is a reader row promoted afterwards.
-  const created = (await payload.create({
-    collection: 'users',
-    data: {
-      email,
-      password: 'test-password-123',
-      role: 'reader',
-      _verified: true,
-    },
-    overrideAccess: true,
-  })) as User
-
-  if (role === 'reader') return created
-
-  return (await payload.update({
-    collection: 'users',
-    id: created.id,
-    data: { role: 'admin' },
-    overrideAccess: true,
-  })) as User
-}
-
-async function createComment(author: User, articleId: number, body: string): Promise<Comment> {
-  return payload.create({
-    collection: 'comments',
-    user: author,
-    overrideAccess: false,
-    data: {
-      content: { relationTo: 'articles', value: articleId },
-      body,
-      author: author.id,
-      moderationStatus: 'approved',
-    },
-  })
 }
 
 async function idsOnArticle(articleId: number, user?: User): Promise<number[]> {

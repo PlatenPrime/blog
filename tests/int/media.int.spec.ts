@@ -1,6 +1,7 @@
+/** @vitest-environment node */
 import { getPayload, type Payload } from 'payload'
-import type { User } from '@/payload-types'
 import config from '@/payload.config'
+import { createAdmin, createVerifiedReader } from '../factories'
 
 import { beforeAll, describe, expect, it } from 'vitest'
 
@@ -28,16 +29,9 @@ describe('Media access (Local API)', () => {
   it('denies reader create (admin-only upload)', async () => {
     const suffix = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
 
-    const reader = (await payload.create({
-      collection: 'users',
-      data: {
-        email: `media-reader-${suffix}@example.com`,
-        password: 'test-password-123',
-        role: 'reader',
-        _verified: true,
-      },
-      overrideAccess: true,
-    })) as User
+    const reader = await createVerifiedReader(payload, {
+      email: `media-reader-${suffix}@example.com`,
+    })
 
     await expect(
       payload.create({
@@ -64,16 +58,9 @@ describe('Media access (Local API)', () => {
   it('allows admin create and stores WebP', async () => {
     const suffix = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
 
-    const admin = (await payload.create({
-      collection: 'users',
-      data: {
-        email: `media-admin-${suffix}@example.com`,
-        password: 'test-password-123',
-        role: 'admin',
-        _verified: true,
-      },
-      overrideAccess: true,
-    })) as User
+    const admin = await createAdmin(payload, {
+      email: `media-admin-${suffix}@example.com`,
+    })
 
     const doc = await payload.create({
       collection: 'media',
