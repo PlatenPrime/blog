@@ -2,7 +2,7 @@
 
 Канон: что **обязано** быть под тестами, чем мы **не** гоняемся, и как это стыкуется с CI и шагами роадмапа.
 
-Стек раннеров — [`tech-stack.md`](./tech-stack.md) §12. Порядок внедрения suite — [`development-roadmap.md`](./development-roadmap.md) (024, 061, 083–087; **085** отказался от Playwright, **086** cancelled).
+Стек раннеров — [`tech-stack.md`](./tech-stack.md) §12. Порядок внедрения suite — [`development-roadmap.md`](./development-roadmap.md) (024, 061, 083–087; **085** отказался от Playwright, **086** cancelled; **087** — factories).
 
 ---
 
@@ -28,6 +28,8 @@
 | Integration | Vitest + Payload/DB | `tests/int/**`  | Локально при работе с access/API (`npm run test:int`); в CI — по мере зрелости pipeline |
 
 Браузерный E2E (Playwright) **снят** шагом **085**: не держится локально и в Actions; suite удалён.
+
+Hermetic create для unit/int — `tests/helpers/factories/` (**087**): `user` / `article` / `note` (pure `build*Data` + Local API `createTest*`). Без comment/bookmark; без ручного seed в UI админки. Product content seed / faker — шаг **102**, не этот слой.
 
 `npm run ci` сейчас: lint + format:check + typecheck + **unit**.
 
@@ -107,7 +109,7 @@ Admin CMS: точечный poke при необходимости; не пол�
 | 084     | Unit: `numberedPage`, `formatPublishedOn`, content access wiring (Articles/Notes/Pages/Categories/Tags/Users) — done |
 | 085     | Отказ от Playwright: удалены e2e suite/deps; канон Vitest + poke                                                     |
 | 086     | Cancelled: e2e в GitHub Actions не делаем                                                                            |
-| 087     | Test data factories: user / article / note (без comment)                                                             |
+| 087     | Test data factories: `tests/helpers/factories/` — user / article / note (без comment); unit + int smoke              |
 
 ---
 
@@ -120,7 +122,7 @@ Admin CMS: точечный poke при необходимости; не пол�
 3. **Best practices** — idiomatic для Next/Payload/TS; security basics (access, секреты, upload limits).
 4. **Здравый смысл** — DoD шага выполнен; Verify воспроизводим; docs не врут.
 5. **Тесты** — новая тестируемая логика покрыта или явно отложена на numbered test-шаг с ссылкой.
-6. **Отложено сознательно** — что оставлено на следующие шаги (R2, WebP, factories и т.д.).
+6. **Отложено сознательно** — что оставлено на следующие шаги (R2 variants, content seed **102**, Vercel и т.д.).
 
 Если ответ на 2–4 «сомнительно» — не закрывай шаг: поправь или зафиксируй ADR/waive.
 

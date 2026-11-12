@@ -53,3 +53,6 @@ Desktop.ini
 # Auto-generated AI agent stubs (Next/Payload scaffold)
 AGENTS.md
 CLAUDE.md
+.env*
+!.env.example
+.neon

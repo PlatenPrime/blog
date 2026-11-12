@@ -32,21 +32,23 @@ Payload + Postgres (Drizzle) умеет два режима синхрониза
 
 - **Не смешивать** push и migrate на одной долгоживущей БД без сброса. Если локальная БД «поехала» после push, а нужна чистая миграционная история: `docker compose down -v`, затем `up -d` и `npm run migrate`.
 - **Prod без auto-push.** `push` включён только при `NODE_ENV === 'development'`.
-- **`prodMigrations` в адаптере не подключаем** на этом этапе. На Vercel serverless автозапуск миграций при cold start замедляет init; стратегия «migrate on deploy» — шаг roadmap **090**. До него схема в shared env применяется явно через `npm run migrate`.
+- **`prodMigrations` в адаптере не подключаем.** На Vercel serverless автозапуск миграций при cold start замедляет init.
+- **Migrate on deploy (шаг 090):** Vercel Build Command = `npm run build:deploy` (`migrate` → `build`). Runtime остаётся на pooled `DATABASE_URL`; CLI migrate на билде берёт `DATABASE_URL_UNPOOLED` через [`src/scripts/withDirectDatabaseUrl.ts`](../../src/scripts/withDirectDatabaseUrl.ts). Локальный `npm run build` миграции не гоняет.
 
 ### Scripts
 
-| Script                   | Команда                |
-| ------------------------ | ---------------------- |
-| `npm run migrate`        | применить pending      |
-| `npm run migrate:create` | сгенерировать миграцию |
-| `npm run migrate:status` | статус                 |
+| Script                   | Команда                                         |
+| ------------------------ | ----------------------------------------------- |
+| `npm run migrate`        | применить pending                               |
+| `npm run migrate:create` | сгенерировать миграцию                          |
+| `npm run migrate:status` | статус                                          |
+| `npm run build:deploy`   | `migrate` + `build` (Vercel Production/Preview) |
 
 ## Последствия
 
 - Пустая БД поднимается baseline-миграцией без запуска `next dev`.
 - Dev остаётся быстрым; риск schema drift в Neon/Vercel снижается.
-- Deploy-time migrate и wiring `prodMigrations` отложены до шага 090.
+- Каждый Vercel deploy применяет pending migrations до `next build`; cold-start `prodMigrations` не используются.
 
 ## Ссылки
 

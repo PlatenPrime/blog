@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked` · `cancelled`.
 
-**Baseline Status:** следующий шаг — `087` (Test data factories). Шаги `001`–`085` — `done`; `086` — `cancelled`.
+**Baseline Status:** следующий шаг — `091` (Vercel Postgres adapter). Шаги `001`–`085`, `087`–`090` — `done`; `086` — `cancelled`.
 
 **Pivot: author-only (2026-11-12).** Продуктовая модель — один admin, гости без аккаунтов; без comments/bookmarks, публичной auth, Resend/OAuth/Turnstile/Upstash как фич продукта. Канон: [ADR-007](adr/007-author-only-no-public-auth.md), миграция `src/migrations/20261112_130000_drop_reader_social.ts`. Исторические шаги **021–022**, **025–032**, **057–061**, **028–029**, **074–075**, **082** остаются **`done` как история**; их DoD описывает то, что строили тогда — **superseded** для текущего продукта. Синхронизация docs + кода pivot — **сознательный waive** правила «один PR = один шаг» (вне нумерации).
 
@@ -858,11 +858,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 087 — Test data factories
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Стабильные unit/int тесты.
 - **Deliverables:** Factories для user/article/note (Vitest unit/int; без comment/bookmark).
 - **Verify:** Int/unit не зависят от ручного seed в UI админки.
 - **DoD:** Тесты hermetic насколько возможно (без e2e).
+- **Notes:** `tests/helpers/factories/` — `uniqueSuffix`, `lexicalParagraph`, `build*Data` + `createTestUser` / `createTestArticle` / `createTestNote` (Local API, `overrideAccess: true`, defaults admin/published/uk). Unit: `tests/unit/factories.test.ts`. Int smoke: `tests/int/factories.int.spec.ts`; media/contentLocale переведены на factories. `media.int` — `@vitest-environment node` (jsdom ломает file-type на Buffer). Без comment/bookmark (ADR-007), без faker/seed контента (**102**), без e2e.
 
 ---
 
@@ -870,27 +871,30 @@ v1 считается завершённым, когда одновременн�
 
 ### 088 — Vercel project connect
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Deploy pipeline.
 - **Deliverables:** Vercel ↔ GitHub; env production; build settings; docs.
 - **Verify:** Push/PR создаёт deployment.
 - **DoD:** Хостинг подключён.
+- **Notes:** Vercel project `platenprimes-projects/blog` linked to `PlatenPrime/blog`; Framework Next.js; Install `npm ci`; Build `npm run build`. Production env: `DATABASE_URL` (Neon pooled), `PAYLOAD_SECRET`, `PREVIEW_SECRET`, `NEXT_PUBLIC_SERVER_URL`. Neon project renamed `blog` (region `aws-us-east-2` Free; EU recreate optional on **090**). Runbook [`runbooks/vercel-connect.md`](./runbooks/vercel-connect.md). `tsconfig` excludes `tests/` so `next build` typecheck не ломается на unit. R2 env и migrate-on-deploy — не этот шаг (**090**/R2 runbook). Preview strategy — **089**.
 
 ### 089 — Preview Deployments на каждый PR
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Проверка дизайна и взаимодействий на URL.
 - **Deliverables:** Preview env vars strategy; ограничения БД задокументированы.
 - **Verify:** PR комментарий/UI со ссылкой на preview.
 - **DoD:** Preview must-have включён.
+- **Notes:** Runbook [`runbooks/vercel-preview.md`](./runbooks/vercel-preview.md). Preview env: shared Neon `DATABASE_URL` + отдельные `PAYLOAD_SECRET` / `PREVIEW_SECRET`; `NEXT_PUBLIC_SERVER_URL` только Production — origin на Preview через `VERCEL_URL` в [`src/lib/serverUrl.ts`](../src/lib/serverUrl.ts) (unit `tests/unit/serverUrl.test.ts`). Neon branching не вводили. `vercel env pull` не копирует sensitive (placeholder) — брать URL из neonctl/local Neon. Migrate-on-deploy — **090**.
 
 ### 090 — Production Neon
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Одна prod БД без лишней сложности.
 - **Deliverables:** Neon project; `DATABASE_URL` в Vercel; migrations on deploy strategy.
 - **Verify:** Prod admin логинится; данные пишутся.
 - **DoD:** Neon prod жив.
+- **Notes:** Reuse Neon `blog` (`noisy-breeze-98599474`, `aws-us-east-2`; EU recreate не делали). Vercel Production+Preview: pooled `DATABASE_URL` + direct `DATABASE_URL_UNPOOLED`. Build Command `npm run build:deploy` (`migrate` → `build`); локальный `npm run build` без migrate. `prodMigrations` не включали (ADR-001). One-shot `seed:admin` локально против Neon; `ADMIN_*` не на Vercel. Runbook [`runbooks/vercel-connect.md`](./runbooks/vercel-connect.md) §6.
 
 ### 091 — Vercel Postgres adapter in prod
 

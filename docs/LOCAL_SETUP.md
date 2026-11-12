@@ -47,7 +47,9 @@ cp .env.example .env
 
 Канон имён переменных — [`.env.example`](../.env.example).
 
-## 3. Postgres (Docker)
+## 3. Postgres (Docker или Neon)
+
+**Локальный Docker (по умолчанию в `.env.example`):**
 
 ```bash
 docker compose up -d
@@ -55,6 +57,8 @@ docker compose ps
 ```
 
 Сервис `postgres` должен быть `healthy`. Подробности credentials, остановки и сброса volume — [`local-postgres.md`](./local-postgres.md).
+
+**Neon (linked project):** после `neon init` / `neon deploy` в `.env` появляются pooled `DATABASE_URL` и `DATABASE_URL_UNPOOLED`. Runtime использует pooled; `npm run migrate` — direct (unpooled). Docker тогда не обязателен. Deploy/Vercel — [`runbooks/vercel-connect.md`](./runbooks/vercel-connect.md).
 
 ## 4. Миграции
 
@@ -333,6 +337,12 @@ npm run test:int           # опционально: Vitest + Postgres (access/A
 ```
 
 Скрипты миграций: `migrate`, `migrate:create`, `migrate:status` (см. ADR выше).
+
+## Deploy (Vercel)
+
+Локальный путь выше — Docker Postgres. Production/preview хостинг — Vercel + Neon.
+
+Пошагово: [`runbooks/vercel-connect.md`](./runbooks/vercel-connect.md) (шаг **088**). Preview env — [`runbooks/vercel-preview.md`](./runbooks/vercel-preview.md) (**089**); migrate-on-deploy — **090**.
 
 ## Troubleshooting
 
