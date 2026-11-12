@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked` · `cancelled`.
 
-**Baseline Status:** следующий шаг — `089` (Preview Deployments). Шаги `001`–`085`, `087`–`088` — `done`; `086` — `cancelled`.
+**Baseline Status:** следующий шаг — `091` (Vercel Postgres adapter). Шаги `001`–`085`, `087`–`090` — `done`; `086` — `cancelled`.
 
 **Pivot: author-only (2026-11-12).** Продуктовая модель — один admin, гости без аккаунтов; без comments/bookmarks, публичной auth, Resend/OAuth/Turnstile/Upstash как фич продукта. Канон: [ADR-007](adr/007-author-only-no-public-auth.md), миграция `src/migrations/20261112_130000_drop_reader_social.ts`. Исторические шаги **021–022**, **025–032**, **057–061**, **028–029**, **074–075**, **082** остаются **`done` как история**; их DoD описывает то, что строили тогда — **superseded** для текущего продукта. Синхронизация docs + кода pivot — **сознательный waive** правила «один PR = один шаг» (вне нумерации).
 
@@ -889,11 +889,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 090 — Production Neon
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Одна prod БД без лишней сложности.
 - **Deliverables:** Neon project; `DATABASE_URL` в Vercel; migrations on deploy strategy.
 - **Verify:** Prod admin логинится; данные пишутся.
 - **DoD:** Neon prod жив.
+- **Notes:** Reuse Neon `blog` (`noisy-breeze-98599474`, `aws-us-east-2`; EU recreate не делали). Vercel Production+Preview: pooled `DATABASE_URL` + direct `DATABASE_URL_UNPOOLED`. Build Command `npm run build:deploy` (`migrate` → `build`); локальный `npm run build` без migrate. `prodMigrations` не включали (ADR-001). One-shot `seed:admin` локально против Neon; `ADMIN_*` не на Vercel. Runbook [`runbooks/vercel-connect.md`](./runbooks/vercel-connect.md) §6.
 
 ### 091 — Vercel Postgres adapter in prod
 

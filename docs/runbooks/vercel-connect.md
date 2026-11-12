@@ -1,6 +1,6 @@
-# Runbook: Vercel project connect
+# Runbook: Vercel project connect + Production Neon
 
-Шаг **088**. Подключить GitHub-репозиторий к Vercel, задать Production env и build settings. Neon Postgres создаётся здесь минимально (чтобы `DATABASE_URL` был живым); migrate-on-deploy и проверка «prod admin пишет» — шаг **090**. Preview env strategy — [vercel-preview.md](./vercel-preview.md) (**089**).
+Шаги **088** (хостинг + env) и **090** (migrate-on-deploy + prod admin smoke). Preview env strategy — [vercel-preview.md](./vercel-preview.md) (**089**).
 
 ## Prefconditions
 
@@ -29,7 +29,7 @@
 3. Root Directory: `.` (монорепо нет).
 4. **Build & Development Settings:**
    - Install Command: `npm ci` (или default Vercel)
-   - Build Command: `npm run build`
+   - Build Command: `npm run build:deploy` (migrate → build; шаг **090**)
    - Output: Next.js default (файл `vercel.json` в репо не требуется)
 5. **Node.js Version:** `24.x` (Project Settings → General → Node.js Version, либо совпадение с `.nvmrc`).
 
@@ -39,7 +39,8 @@
 
 | Variable                         | Source / notes                                                                                                        |
 | -------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| `DATABASE_URL`                   | Neon **pooled** connection string                                                                                     |
+| `DATABASE_URL`                   | Neon **pooled** connection string (runtime / serverless)                                                              |
+| `DATABASE_URL_UNPOOLED`          | Neon **direct** (без `-pooler`); нужен для `npm run migrate` на билде (**090**)                                       |
 | `PAYLOAD_SECRET`                 | длинная случайная строка (не из локального `.env` с слабым replace-me)                                                |
 | `PREVIEW_SECRET`                 | длинная случайная строка для draft preview                                                                            |
 | `NEXT_PUBLIC_SERVER_URL`         | `https://<project>.vercel.app` без trailing slash; после первого деплоя сверьте с реальным URL и при смене — Redeploy |
@@ -50,7 +51,7 @@
 | `R2_REGION`                      | обычно `auto`                                                                                                         |
 | `R2_PUBLIC_URL`                  | публичный base (r2.dev или custom)                                                                                    |
 | `CONTACT_EMAIL`                  | опционально                                                                                                           |
-| `ADMIN_EMAIL` / `ADMIN_PASSWORD` | не нужны для runtime; только `seed:admin`                                                                             |
+| `ADMIN_EMAIL` / `ADMIN_PASSWORD` | **не** на Vercel; только локальный one-shot `seed:admin` против Neon                                                  |
 
 Канон имён — [`.env.example`](../../.env.example). Полная матрица «где какой секрет» — шаг **092** (`docs/runbooks/secrets.md`).
 
@@ -62,34 +63,69 @@
 2. Project → **Deployments**: появляется новый Deployment (Building → Ready или Error).
 3. **Verify шага 088:** push или PR создаёт Deployment в UI Vercel. DoD — хостинг подключён.
 
-Ожидаемо до **090:** билд может быть зелёным при валидном `DATABASE_URL`, а runtime `/admin` без применённых миграций на Neon — сырой. Автомиграции при cold start намеренно нет (ADR-001).
+Автомиграции при cold start намеренно нет (ADR-001). Схема на Neon — через deploy-time migrate (§6).
 
-## 5. CLI (как подключили в 088)
+## 5. CLI (как подключили в 088 / 090)
 
 ```bash
 npx vercel login
 npx vercel link --yes --project blog   # создаёт project при отсутствии + GitHub connect
-npx vercel project update blog --build-command "npm run build" --install-command "npm ci" --framework nextjs
-# env: pipe из neonctl, без печати URL в argv
+npx vercel project update blog --build-command "npm run build:deploy" --install-command "npm ci" --framework nextjs
+# env: pipe из neonctl, без печати URL в argv / --value
 npx neonctl connection-string --project-id <id> --branch production --pooled \
   | npx vercel env add DATABASE_URL production --sensitive --yes
+npx neonctl connection-string --project-id <id> --branch production \
+  | npx vercel env add DATABASE_URL_UNPOOLED production --sensitive --yes
+# то же для Preview: DATABASE_URL + DATABASE_URL_UNPOOLED (см. vercel-preview.md)
 npx vercel env ls
-npx vercel deploy --yes                # Preview; Production — Deployments UI или --prod
+npx vercel deploy --prod --yes
 ```
 
 Секреты в CLI не печатайте в чат и не коммитьте. Токен Vercel — только в local auth / CI secrets позже.
 
-**Build note:** `next build` typecheck включает `tests/`. Loose Lexical types в factory-тестах сужаются явным cast (см. `tests/unit/factories.test.ts`), чтобы билд не падал на `TS7053`.
+**Build note:** `tsconfig` исключает `tests/` из `next build` typecheck (шаг **088**); unit остаётся в Vitest.
+
+## 6. Migrate-on-deploy и prod admin (шаг 090)
+
+### Стратегия
+
+| Кусок                       | Решение                                                                                            |
+| --------------------------- | -------------------------------------------------------------------------------------------------- |
+| Build Command               | `npm run build:deploy` = `npm run migrate && npm run build`                                        |
+| Runtime DB                  | pooled `DATABASE_URL` + `@payloadcms/db-vercel-postgres` при `VERCEL`                              |
+| Migrate на билде            | `DATABASE_URL_UNPOOLED` → [`withDirectDatabaseUrl.ts`](../../src/scripts/withDirectDatabaseUrl.ts) |
+| Cold-start `prodMigrations` | **не** включаем (ADR-001)                                                                          |
+| Локальный `npm run build`   | без migrate                                                                                        |
+| EU recreate Neon            | не требуется; текущий Free project `blog` (`aws-us-east-2`) reuse                                  |
+
+### One-shot admin на Neon
+
+`ADMIN_*` на Vercel не кладём. После первого успешного migrate:
+
+```bash
+# в локальном .env: DATABASE_URL / DATABASE_URL_UNPOOLED = Neon (direct предпочтителен)
+npm run migrate:status   # все applied
+npm run seed:admin       # один admin; повтор = skip
+```
+
+Либо create-first-user в UI `/admin` на пустой таблице users.
+
+### Verify 090
+
+1. Production Deployments → новый deploy; в **Build** логах есть успешный `payload migrate` / `migrate`, затем `next build`.
+2. `https://<prod>/admin` — логин admin.
+3. Создать/править черновик (article или note) → Save → данные остаются после reload.
+4. Негатив: migrate только с pooled URL (без UNPOOLED) на PgBouncer часто ломается session-level DDL — поэтому UNPOOLED обязателен на билде.
 
 ## Что не в этом шаге
 
-| Тема                                     | Шаг                                                |
-| ---------------------------------------- | -------------------------------------------------- |
-| Preview env vars / общая preview-БД      | **089** ([vercel-preview.md](./vercel-preview.md)) |
-| Neon migrate-on-deploy, prod admin smoke | **090**                                            |
-| Уточнение vercel-postgres adapter        | **091**                                            |
-| Матрица секретов                         | **092**                                            |
-| Analytics, custom domain, go-live URL    | **097+**, **109**                                  |
+| Тема                                  | Шаг                                                |
+| ------------------------------------- | -------------------------------------------------- |
+| Preview env vars / общая preview-БД   | **089** ([vercel-preview.md](./vercel-preview.md)) |
+| Уточнение vercel-postgres adapter     | **091**                                            |
+| Матрица секретов                      | **092**                                            |
+| Backup Neon                           | **100**                                            |
+| Analytics, custom domain, go-live URL | **097+**, **109**                                  |
 
 ## Связанные документы
 

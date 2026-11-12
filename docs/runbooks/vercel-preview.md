@@ -1,6 +1,6 @@
 # Runbook: Vercel Preview Deployments
 
-Шаг **089**. Preview env vars на каждый PR, ограничения shared БД и проверка ссылки в PR. Подключение проекта и Production env — [vercel-connect.md](./vercel-connect.md) (**088**). Migrate-on-deploy и «admin пишет в prod» — шаг **090**.
+Шаг **089**. Preview env vars на каждый PR, ограничения shared БД и проверка ссылки в PR. Подключение проекта, Production env и migrate-on-deploy — [vercel-connect.md](./vercel-connect.md) (**088** / **090**).
 
 ## Два «preview» — не путать
 
@@ -35,12 +35,13 @@ Project → **Settings** → **Environment Variables** → scope **Preview** (н
 | Variable                                                            | Preview                                    | Notes                                                       |
 | ------------------------------------------------------------------- | ------------------------------------------ | ----------------------------------------------------------- |
 | `DATABASE_URL`                                                      | Neon **pooled** (тот же, что Production)   | shared DB — см. ограничения ниже                            |
+| `DATABASE_URL_UNPOOLED`                                             | Neon **direct** (тот же, что Production)   | для `build:deploy` migrate на Preview билде (**090**)       |
 | `PAYLOAD_SECRET`                                                    | **новый** длинный random                   | не = Production                                             |
 | `PREVIEW_SECRET`                                                    | **новый** длинный random                   | CMS draft gate; не = Production                             |
 | `NEXT_PUBLIC_SERVER_URL`                                            | **не задавать**                            | иначе CSRF/cors/metadata смотрят на чужой origin            |
 | `R2_BUCKET` / ключи / `R2_ENDPOINT` / `R2_PUBLIC_URL` / `R2_REGION` | те же, что для prod (если медиа уже на R2) | опционально для DoD фасада; uploads загрязняют общий bucket |
 | `CONTACT_EMAIL`                                                     | опционально                                | как в Production                                            |
-| `ADMIN_EMAIL` / `ADMIN_PASSWORD`                                    | не нужны runtime                           | только `seed:admin`                                         |
+| `ADMIN_EMAIL` / `ADMIN_PASSWORD`                                    | не нужны runtime                           | только локальный `seed:admin`                               |
 
 Канон имён — [`.env.example`](../../.env.example). Полная матрица «где какой секрет» — шаг **092**.
 
@@ -48,13 +49,12 @@ Project → **Settings** → **Environment Variables** → scope **Preview** (н
 
 ## Ограничения shared БД
 
-| Правило                                                    | Почему                                                                                  |
-| ---------------------------------------------------------- | --------------------------------------------------------------------------------------- |
-| `push: false` на preview                                   | [ADR-001](../adr/001-migrations-policy.md) — только migrations                          |
-| Схему на shared Neon менять только явным `npm run migrate` | Auto-push в serverless запрещён; deploy-time migrate — **090**                          |
-| Не сидить мусорный контент «навсегда» из preview admin     | Те же строки, что Production; черновики и тестовые посты видны всем, кто смотрит эту БД |
-| Schema drift ломает **все** preview и prod                 | Одна схема на всех consumers URL                                                        |
-| До **090** `/admin` на preview/prod может быть сырым       | Билд Ready ≠ миграции применены                                                         |
+| Правило                                                | Почему                                                                                  |
+| ------------------------------------------------------ | --------------------------------------------------------------------------------------- |
+| `push: false` на preview                               | [ADR-001](../adr/001-migrations-policy.md) — только migrations                          |
+| Схему меняет `npm run build:deploy` (migrate на билде) | Auto-push запрещён; cold-start `prodMigrations` нет (**090** / vercel-connect §6)       |
+| Не сидить мусорный контент «навсегда» из preview admin | Те же строки, что Production; черновики и тестовые посты видны всем, кто смотрит эту БД |
+| Schema drift ломает **все** preview и prod             | Одна схема на всех consumers URL                                                        |
 
 Neon branching per PR — сознательно позже «по мере необходимости»; дефолт роадмапа — простой shared Neon + изолированные secrets.
 
@@ -77,6 +77,8 @@ openssl rand -base64 32 | npx vercel env add PREVIEW_SECRET preview --sensitive 
 # приходят как placeholder `[SENSITIVE]`, и такой «URL» ломает билд Invalid URL)
 npx neonctl connection-string --project-id <id> --branch production --pooled \
   | npx vercel env add DATABASE_URL preview --sensitive --yes
+npx neonctl connection-string --project-id <id> --branch production \
+  | npx vercel env add DATABASE_URL_UNPOOLED preview --sensitive --yes
 
 npx vercel env ls
 # NEXT_PUBLIC_SERVER_URL для preview быть не должно
@@ -89,22 +91,22 @@ npx vercel env ls
 1. Откройте или создайте PR в `PlatenPrime/blog` (или push в ветку с Git Integration).
 2. Дождитесь Vercel check / комментария бота со ссылкой **Visit Preview** (или Project → **Deployments** → фильтр Preview → Status Ready).
 3. Откройте URL. На Hobby / с **Deployment Protection** возможен редирект на Vercel SSO — после логина в аккаунт Vercel фасад должен открыться (`/` → locale, например `/uk`).
-4. Ожидаемо до **090:** `/admin` без применённых миграций на Neon может быть нерабочим — это не блокер Preview must-have.
+4. После **090** Preview билд тоже гоняет `build:deploy` (migrate на shared Neon) — `/admin` на Preview делит ту же схему/данные с Production.
 5. Unit origin: `npm test -- tests/unit/serverUrl.test.ts`.
 
 ## Что не в этом шаге
 
-| Тема                                     | Шаг                      |
-| ---------------------------------------- | ------------------------ |
-| Neon migrate-on-deploy, prod admin smoke | **090**                  |
-| Уточнение vercel-postgres adapter        | **091**                  |
-| Матрица секретов (Vercel + Actions)      | **092**                  |
-| Neon branch per PR                       | позже / по необходимости |
-| Custom domain, analytics                 | **097+**, **109**        |
+| Тема                                | Шаг                      |
+| ----------------------------------- | ------------------------ |
+| Prod admin smoke / connect runbook  | **090** / vercel-connect |
+| Уточнение vercel-postgres adapter   | **091**                  |
+| Матрица секретов (Vercel + Actions) | **092**                  |
+| Neon branch per PR                  | позже / по необходимости |
+| Custom domain, analytics            | **097+**, **109**        |
 
 ## Связанные документы
 
-- [vercel-connect.md](./vercel-connect.md) — Production connect (**088**)
+- [vercel-connect.md](./vercel-connect.md) — Production connect (**088**) + Neon migrate (**090**)
 - [tech-stack.md](../tech-stack.md) — environments
 - [adr/001-migrations-policy.md](../adr/001-migrations-policy.md) — push vs migrate
 - [r2-media.md](./r2-media.md) — R2 и CORS
