@@ -73,8 +73,6 @@ export interface Config {
     media: Media;
     categories: Category;
     tags: Tag;
-    comments: Comment;
-    bookmarks: Bookmark;
     users: User;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
@@ -89,8 +87,6 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     tags: TagsSelect<false> | TagsSelect<true>;
-    comments: CommentsSelect<false> | CommentsSelect<true>;
-    bookmarks: BookmarksSelect<false> | BookmarksSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -345,39 +341,7 @@ export interface Page {
   _status?: ('draft' | 'published') | null;
 }
 /**
- * Reader comments on Articles and Notes — soft-moderate here.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "comments".
- */
-export interface Comment {
-  id: number;
-  /**
-   * Article or Note this comment belongs to.
-   */
-  content:
-    | {
-        relationTo: 'articles';
-        value: number | Article;
-      }
-    | {
-        relationTo: 'notes';
-        value: number | Note;
-      };
-  /**
-   * Set automatically from the authenticated user on create.
-   */
-  author: number | User;
-  body: string;
-  /**
-   * This select is the moderation control. Hidden removes the comment from the public page and from the API for anyone who is not an admin. Approved puts it back. There is no pending queue.
-   */
-  moderationStatus: 'approved' | 'hidden';
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * Admins (CMS) and readers (site auth).
+ * Site author accounts for /admin only. No public registration.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
@@ -385,13 +349,9 @@ export interface Comment {
 export interface User {
   id: number;
   /**
-   * admin — /admin panel; reader — site only (comments/bookmarks).
+   * admin — /admin panel only. Public site has no reader accounts.
    */
-  role: 'admin' | 'reader';
-  /**
-   * OAuth subject (Google). Set by the OAuth plugin; unused for password-only users.
-   */
-  sub?: string | null;
+  role: 'admin';
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -400,8 +360,6 @@ export interface User {
   salt?: string | null;
   hash?: string | null;
   resetPasswordRequestedAt?: string | null;
-  _verified?: boolean | null;
-  _verificationToken?: string | null;
   loginAttempts?: number | null;
   lockUntil?: string | null;
   sessions?:
@@ -413,33 +371,6 @@ export interface User {
     | null;
   password?: string | null;
   collection: 'users';
-}
-/**
- * Reader bookmarks (Article or Note). Rarely edited manually.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "bookmarks".
- */
-export interface Bookmark {
-  id: number;
-  /**
-   * Set automatically from the authenticated user on create.
-   */
-  user: number | User;
-  /**
-   * Article or Note being bookmarked.
-   */
-  content:
-    | {
-        relationTo: 'articles';
-        value: number | Article;
-      }
-    | {
-        relationTo: 'notes';
-        value: number | Note;
-      };
-  updatedAt: string;
-  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -488,14 +419,6 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'tags';
         value: number | Tag;
-      } | null)
-    | ({
-        relationTo: 'comments';
-        value: number | Comment;
-      } | null)
-    | ({
-        relationTo: 'bookmarks';
-        value: number | Bookmark;
       } | null)
     | ({
         relationTo: 'users';
@@ -650,33 +573,10 @@ export interface TagsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "comments_select".
- */
-export interface CommentsSelect<T extends boolean = true> {
-  content?: T;
-  author?: T;
-  body?: T;
-  moderationStatus?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "bookmarks_select".
- */
-export interface BookmarksSelect<T extends boolean = true> {
-  user?: T;
-  content?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
   role?: T;
-  sub?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -685,8 +585,6 @@ export interface UsersSelect<T extends boolean = true> {
   salt?: T;
   hash?: T;
   resetPasswordRequestedAt?: T;
-  _verified?: T;
-  _verificationToken?: T;
   loginAttempts?: T;
   lockUntil?: T;
   sessions?:

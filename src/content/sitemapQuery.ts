@@ -2,7 +2,7 @@ import type { MetadataRoute } from 'next'
 import type { Where } from 'payload'
 
 import { publicContentWhere } from '@/access/publicContentWhere'
-import { getServerUrl } from '@/auth/serverUrl'
+import { getServerUrl } from '@/lib/serverUrl'
 import { ABOUT_PAGE_SLUG } from '@/content/pagesQuery'
 import { TAXONOMY_INDEX_LIMIT, type TaxonomyCollection } from '@/content/taxonomyQuery'
 import { resolveContentLocale } from '@/i18n/contentLocale'

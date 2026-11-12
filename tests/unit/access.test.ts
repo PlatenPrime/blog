@@ -1,96 +1,23 @@
 /** @vitest-environment node */
 import { describe, expect, it } from 'vitest'
 
-import { approvedOrAdmin } from '@/access/approvedOrAdmin'
 import { isAdmin } from '@/access/isAdmin'
-import { isAuthenticated } from '@/access/isAuthenticated'
-import { isOwnerOrAdmin } from '@/access/isOwnerOrAdmin'
-import { isSelfOrAdmin } from '@/access/isSelfOrAdmin'
-import { isAuthenticatedAndVerified, isVerified } from '@/access/isVerified'
 import { publishedOrAdmin } from '@/access/publishedOrAdmin'
 import type { AccessUser } from '@/access/types'
 
 const admin: AccessUser = { id: 1, role: 'admin' }
-const reader: AccessUser = { id: 42, role: 'reader', _verified: true }
-const unverifiedReader: AccessUser = { id: 43, role: 'reader', _verified: false }
+const nonAdmin: AccessUser = { id: 42, role: null }
 
 function accessArgs(user: AccessUser, id?: number | string) {
-  return { req: { user }, id } as Parameters<typeof isSelfOrAdmin>[0]
+  return { req: { user }, id } as Parameters<typeof publishedOrAdmin>[0]
 }
 
 describe('isAdmin', () => {
   it('returns true only for admin role', () => {
     expect(isAdmin(admin)).toBe(true)
-    expect(isAdmin(reader)).toBe(false)
+    expect(isAdmin(nonAdmin)).toBe(false)
     expect(isAdmin(null)).toBe(false)
     expect(isAdmin({ id: 1, role: null })).toBe(false)
-  })
-})
-
-describe('isAuthenticated', () => {
-  it('returns true when user has an id', () => {
-    expect(isAuthenticated(admin)).toBe(true)
-    expect(isAuthenticated(reader)).toBe(true)
-    expect(isAuthenticated(null)).toBe(false)
-  })
-})
-
-describe('isVerified', () => {
-  it('treats admins as verified', () => {
-    expect(isVerified(admin)).toBe(true)
-    expect(isVerified({ id: 1, role: 'admin', _verified: false })).toBe(true)
-  })
-
-  it('requires _verified for readers', () => {
-    expect(isVerified(reader)).toBe(true)
-    expect(isVerified(unverifiedReader)).toBe(false)
-    expect(isVerified({ id: 2, role: 'reader' })).toBe(false)
-    expect(isVerified(null)).toBe(false)
-  })
-
-  it('isAuthenticatedAndVerified combines both checks', () => {
-    expect(isAuthenticatedAndVerified(reader)).toBe(true)
-    expect(isAuthenticatedAndVerified(unverifiedReader)).toBe(false)
-    expect(isAuthenticatedAndVerified(null)).toBe(false)
-  })
-})
-
-describe('isSelfOrAdmin', () => {
-  it('denies unauthenticated users', () => {
-    expect(isSelfOrAdmin(accessArgs(null))).toBe(false)
-  })
-
-  it('allows admin unconditionally', () => {
-    expect(isSelfOrAdmin(accessArgs(admin))).toBe(true)
-    expect(isSelfOrAdmin(accessArgs(admin, 99))).toBe(true)
-  })
-
-  it('allows reader when id matches session user', () => {
-    expect(isSelfOrAdmin(accessArgs(reader, 42))).toBe(true)
-    expect(isSelfOrAdmin(accessArgs(reader, '42'))).toBe(true)
-    expect(isSelfOrAdmin(accessArgs(reader, 7))).toBe(false)
-  })
-
-  it('returns id query constraint when no document id is provided', () => {
-    expect(isSelfOrAdmin(accessArgs(reader))).toEqual({
-      id: { equals: 42 },
-    })
-  })
-})
-
-describe('isOwnerOrAdmin', () => {
-  it('denies unauthenticated users', () => {
-    expect(isOwnerOrAdmin(accessArgs(null))).toBe(false)
-  })
-
-  it('allows admin unconditionally', () => {
-    expect(isOwnerOrAdmin(accessArgs(admin))).toBe(true)
-  })
-
-  it('constrains non-admin to own user field', () => {
-    expect(isOwnerOrAdmin(accessArgs(reader))).toEqual({
-      user: { equals: 42 },
-    })
   })
 })
 
@@ -113,22 +40,7 @@ describe('publishedOrAdmin', () => {
       ],
     }
 
-    expect(publishedOrAdmin(accessArgs(reader))).toMatchObject(expectedShape)
+    expect(publishedOrAdmin(accessArgs(nonAdmin))).toMatchObject(expectedShape)
     expect(publishedOrAdmin(accessArgs(null))).toMatchObject(expectedShape)
-  })
-})
-
-describe('approvedOrAdmin', () => {
-  it('allows admin all comments', () => {
-    expect(approvedOrAdmin(accessArgs(admin))).toBe(true)
-  })
-
-  it('restricts everyone else to approved moderation status', () => {
-    expect(approvedOrAdmin(accessArgs(reader))).toEqual({
-      moderationStatus: { equals: 'approved' },
-    })
-    expect(approvedOrAdmin(accessArgs(null))).toEqual({
-      moderationStatus: { equals: 'approved' },
-    })
   })
 })

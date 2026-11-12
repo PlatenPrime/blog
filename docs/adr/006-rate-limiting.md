@@ -1,6 +1,8 @@
 # ADR-006: Rate limiting (Upstash + dual layer)
 
-- **Status:** accepted
+> **SUPERSEDED (product scope).** Public auth, comments, and Upstash/Turnstile rate limits are **out of product scope** after the author-only pivot. Current canon: [ADR-007 — Author-only, no public auth](./007-author-only-no-public-auth.md). The body below documents what was built on step 074 before supersession.
+
+- **Status:** accepted (historical; superseded by ADR-007 for product scope)
 - **Date:** 2026-11-10
 - **Step:** 074
 

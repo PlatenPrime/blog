@@ -6,13 +6,13 @@
 
 ## Контекст
 
-Личный блог / персональный сайт одного автора: статьи и заметки, admin для публикации, аккаунты читателей (комментарии, закладки). Production на бесплатном стеке (Vercel + Neon Free + Cloudflare R2).
+Личный блог / персональный сайт **одного автора**: статьи и заметки, admin для публикации; гости читают без аккаунтов (share/copy link на деталях). **Продуктовый канон после pivot:** без читательских аккаунтов, комментариев и закладок — [ADR-007](./007-author-only-no-public-auth.md). Production на бесплатном стеке (Vercel + Neon Free + Cloudflare R2).
 
 Нужны одновременно:
 
 1. Публичный сайт (SSR/ISR, SEO, локали).
 2. CMS admin с access control и медиа.
-3. Auth (admin + readers) без лишнего ops.
+3. Auth только admin (`/admin`) без лишнего ops и без публичной регистрации.
 
 Вопрос архитектуры: один deploy unit или отдельный backend API рядом с Next.
 
@@ -25,7 +25,7 @@
 | App / CMS               | Next.js App Router + Payload v3 (`/admin` + website в одном процессе)          |
 | Данные                  | Neon PostgreSQL (prod/preview); локально Docker Postgres                       |
 | Медиа                   | Cloudflare R2 (S3-compatible); upload только admin                             |
-| Auth                    | Payload Users + roles (`admin` / `reader`); без отдельного Auth.js-стека на v1 |
+| Auth                    | Payload Users, роль `admin` only; без отдельного Auth.js-стека на v1 (ADR-007) |
 | Доступ к данным из Next | Payload Local API / REST; **отдельный ORM-слой не вводим**                     |
 
 Канон имён, версий и сервисов — [`tech-stack.md`](../tech-stack.md). Политика схемы (dev push vs prod migrate) — [`001-migrations-policy.md`](./001-migrations-policy.md).
@@ -62,7 +62,7 @@ Vercel (Next.js SSR/ISR + Payload /admin)
 - Website и `/admin` деплоятся одним Next app на Vercel.
 - Схема и данные — через Payload; миграции по ADR-001.
 - Медиа — байты в R2, метаданные в Neon; читатели не загружают файлы.
-- Auth readers и admin — одна Users-модель с ролями (детали — следующие шаги roadmap).
+- Auth — одна Users-модель только для admin; публичный сайт анонимный для чтения (ADR-007).
 - Расширение стека (отдельный API, второй ORM, другой CMS) требует нового ADR, не ad-hoc в коде.
 
 ## Ссылки

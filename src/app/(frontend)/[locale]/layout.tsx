@@ -5,7 +5,7 @@ import { Source_Sans_3, Source_Serif_4 } from 'next/font/google'
 import { notFound } from 'next/navigation'
 import React from 'react'
 
-import { getServerUrl } from '@/auth/serverUrl'
+import { getServerUrl } from '@/lib/serverUrl'
 import { JsonLd } from '@/components/seo/json-ld'
 import { ConsentAwareAnalytics } from '@/components/site/consent-aware-analytics'
 import { CookieConsentBanner } from '@/components/site/cookie-consent-banner'
@@ -20,7 +20,6 @@ import { absoluteRssFeedUrl, rssOrigin } from '@/content/rssQuery'
 import { routing } from '@/i18n/routing'
 
 import '../globals.css'
-import '../styles.css'
 
 const sourceSerif = Source_Serif_4({
   subsets: ['cyrillic', 'latin'],

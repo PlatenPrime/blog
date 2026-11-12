@@ -24,8 +24,8 @@ Vercel (Next.js SSR/ISR + Payload /admin)
 | Контент      | Короткие заметки (thoughts/notes) + развёрнутые статьи (articles) |
 | Медиа        | Изображения (WebP) + видео через YouTube embed                    |
 | Локали       | `uk`, `ru`, `en`                                                  |
-| Авторы       | Один admin/author; публичная регистрация читателей                |
-| Читатели     | Аккаунт, закладки, комментарии (только для авторизованных)        |
+| Автор        | Один `admin`; публикует в `/admin`                                |
+| Гости        | Читают без аккаунта; на деталях article/note — Share / Copy link  |
 | Монетизация  | Нет (открытый контент)                                            |
 | Хостинг v1   | `*.vercel.app`, custom domain позже                               |
 
@@ -57,15 +57,15 @@ Vercel (Next.js SSR/ISR + Payload /admin)
 
 ## 4. Данные и ORM
 
-| Технология                                 | Назначение                                                          |
-| ------------------------------------------ | ------------------------------------------------------------------- |
-| **Neon PostgreSQL** (Free tier)            | Production/preview БД: users, контент, комментарии, закладки, схемы |
-| **`@payloadcms/db-postgres`**              | Локальная разработка и универсальный Postgres-адаптер               |
-| **`@payloadcms/db-vercel-postgres`**       | Оптимизированный адаптер для Vercel + Neon                          |
-| **Drizzle ORM** (через Payload DB adapter) | Схема и migrations; **отдельный ORM-слой не вводим**                |
-| **Payload migrations**                     | Версионирование схемы для production (`src/migrations/`)            |
+| Технология                                 | Назначение                                                   |
+| ------------------------------------------ | ------------------------------------------------------------ |
+| **Neon PostgreSQL** (Free tier)            | Production/preview БД: users (admin), контент, схемы Payload |
+| **`@payloadcms/db-postgres`**              | Локальная разработка и универсальный Postgres-адаптер        |
+| **`@payloadcms/db-vercel-postgres`**       | Оптимизированный адаптер для Vercel + Neon                   |
+| **Drizzle ORM** (через Payload DB adapter) | Схема и migrations; **отдельный ORM-слой не вводим**         |
+| **Payload migrations**                     | Версионирование схемы для production (`src/migrations/`)     |
 
-**Почему так (лимиты Free):** личный блог с ISR/кэшем публичных страниц почти не нагружает БД. Текст и метаданные укладываются в Neon Free (~0.5 GB); тяжёлые байты живут в R2. Общий Redis-кэш и второй ORM на v1 не нужны — они увеличивают стоимость и cold start. Исключение: **Upstash Redis REST только для rate-limit счётчиков** (шаг 074, ADR-006), не для сессий и не для кэша страниц.
+**Почему так (лимиты Free):** личный блог с ISR/кэшем публичных страниц почти не нагружает БД. Текст и метаданные укладываются в Neon Free (~0.5 GB); тяжёлые байты живут в R2. Общий Redis-кэш и второй ORM на v1 не нужны — они увеличивают стоимость и cold start. Redis/Upstash **не** входит в продукт после pivot author-only (ADR-007); исторический ADR-006 superseded.
 
 **Локально:** Docker Postgres (или Neon local connection) для быстрых schema push в dev. Выбор адаптера — `src/db/adapter.ts` (`db-postgres` по умолчанию, `db-vercel-postgres` при `VERCEL`).
 
@@ -89,29 +89,22 @@ Upload медиа — **только admin**. Читатели не загруж
 
 ## 6. Аутентификация и авторизация
 
-| Технология                   | Назначение                                                                        |
-| ---------------------------- | --------------------------------------------------------------------------------- |
-| **Payload Auth**             | Единая модель Users + sessions/cookies, лучше всего стыкуется с admin и Local API |
-| **Roles**                    | `admin` (единственный автор/админ), `reader` (читатель: закладки, комментарии)    |
-| **Email + password**         | Регистрация/логин читателей; admin создаётся seed/bootstrap                       |
-| **Google OAuth**             | Социальный вход (только Google; GitHub/Apple — out of scope)                      |
-| **Email verification**       | Подтверждение почты при регистрации                                               |
-| **Password reset**           | Сброс пароля по письму                                                            |
-| **Access Control (Payload)** | Admin panel, drafts/preview, CRUD комментариев/закладок                           |
-| **MFA (TOTP)**               | Out of scope v1 (заложено «позже»)                                                |
+| Технология                   | Назначение                                                            |
+| ---------------------------- | --------------------------------------------------------------------- |
+| **Payload Auth**             | Users + sessions/cookies только для входа в `/admin` и Local API      |
+| **Roles**                    | `admin` only (ADR-007)                                                |
+| **Email + password**         | Логин автора в `/admin`; bootstrap `seed:admin` или create-first-user |
+| **Password change**          | В `/admin` или прямое обновление в БД; **без** email reset            |
+| **Access Control (Payload)** | Admin panel, drafts/preview; публичное чтение `publishedOrAdmin`      |
+| **MFA (TOTP)**               | Out of scope v1 (заложено «позже»)                                    |
 
-Предпочтение: **не** плодить гибрид Auth.js + Payload без нужды. Auth читателей и admin — через Payload Users с разными ролями и UI (публичные `/{locale}/login` vs `/admin`, ADR-004).
+Публичный сайт **без** login/register. Канон pivot — [ADR-007](./adr/007-author-only-no-public-auth.md).
 
 ---
 
 ## 7. Email
 
-| Технология   | Назначение                                                                        |
-| ------------ | --------------------------------------------------------------------------------- |
-| **Resend**   | Транзакционные письма: verification + password reset                              |
-| **Локально** | Ethereal / Mailpit / лог в console — на выбор в LOCAL_SETUP; в prod только Resend |
-
-Ops (API key, onboarding / custom domain, smoke): [`runbooks/resend-email.md`](./runbooks/resend-email.md). Newsletter / marketing mail — out of scope.
+**Out of scope / removed (ADR-007).** Транзакционная почта (Resend, verify, password reset) была в раннем роадмапе (шаги 028, 082) и снята вместе с публичной auth. Newsletter / marketing mail — по-прежнему out of scope.
 
 ---
 
@@ -135,8 +128,7 @@ Ops (API key, onboarding / custom domain, smoke): [`runbooks/resend-email.md`](.
 | Возможность                          | Реализация (ориентир)                                                                         |
 | ------------------------------------ | --------------------------------------------------------------------------------------------- |
 | Drafts / Preview / Scheduled publish | Payload drafts + preview URL; schedule = query-time (`publishedAt <= now`, ADR-003) — не cron |
-| Comments                             | Collection + auth-only create; moderation hooks по необходимости                              |
-| Bookmarks                            | Collection `bookmarks` (user ↔ post/note)                                                     |
+| Share / Copy link                    | UI на деталях article/note для гостей (`ShareActions`)                                        |
 | Search                               | Postgres (`ILIKE` / `tsvector`) — без Meilisearch/Algolia                                     |
 | Related posts                        | По tags/categories                                                                            |
 | Reading time / TOC                   | Вычисление на publish/render                                                                  |
@@ -145,23 +137,23 @@ Ops (API key, onboarding / custom domain, smoke): [`runbooks/resend-email.md`](.
 | Versioning / rollback                | **Не используем в v1**                                                                        |
 | Audit log CMS                        | **Не используем в v1** (один admin)                                                           |
 
-**Стержневые collections (v1):** Users, Media, Categories, Tags, Articles, Notes, Pages, Comments, Bookmarks.
+**Стержневые collections (v1):** Users, Media, Categories, Tags, Articles, Notes, Pages.
 
 ---
 
 ## 10. Безопасность
 
-| Технология / практика           | Назначение                                                                                                                                 |
-| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| **HTTPS** (Vercel)              | Транспорт                                                                                                                                  |
-| **Security headers**            | Next `headers()` + phased CSP (`src/security/headers.ts`); HSTS, X-Frame-Options, Referrer-Policy, Permissions-Policy                      |
-| **Rate limiting**               | Auth, comments, password reset: Upstash Redis REST + `@upstash/ratelimit` (только счётчики, ADR-006); memory fallback без env; proxy → 429 |
-| **Cloudflare Turnstile** (free) | Bot protection на login/register/comments                                                                                                  |
-| **Dependabot**                  | Автоматические PR по зависимостям (`npm` + Actions); политика — [`security/supply-chain.md`](./security/supply-chain.md)                   |
-| **Secret scanning** (GitHub)    | Утечки ключей в git + push protection; включение в Settings, процедура — [`security/supply-chain.md`](./security/supply-chain.md)          |
-| **Env secrets**                 | Vercel Environment Variables + GitHub Actions Secrets                                                                                      |
-| **Password hashing**            | Встроенный механизм Payload (не изобретаем свой)                                                                                           |
-| **Cookie consent**              | Лёгкий banner под Privacy/Terms + Analytics                                                                                                |
+| Технология / практика        | Назначение                                                                                                                        |
+| ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| **HTTPS** (Vercel)           | Транспорт                                                                                                                         |
+| **Security headers**         | Next `headers()` + phased CSP (`src/security/headers.ts`); HSTS, X-Frame-Options, Referrer-Policy, Permissions-Policy             |
+| **Rate limiting**            | **Removed** из продукта (исторически шаг 074 / ADR-006, superseded ADR-007)                                                       |
+| **Cloudflare Turnstile**     | **Removed** из продукта (исторически шаг 075, superseded ADR-007)                                                                 |
+| **Dependabot**               | Автоматические PR по зависимостям (`npm` + Actions); политика — [`security/supply-chain.md`](./security/supply-chain.md)          |
+| **Secret scanning** (GitHub) | Утечки ключей в git + push protection; включение в Settings, процедура — [`security/supply-chain.md`](./security/supply-chain.md) |
+| **Env secrets**              | Vercel Environment Variables + GitHub Actions Secrets                                                                             |
+| **Password hashing**         | Встроенный механизм Payload (не изобретаем свой)                                                                                  |
+| **Cookie consent**           | Лёгкий banner под Privacy/Terms + Analytics                                                                                       |
 
 WAF: использовать бесплатные возможности Vercel/Cloudflare там, где подключается без платного плана.
 
@@ -220,9 +212,10 @@ OpenTelemetry full stack — не обязателен в v1.
 | **Vercel**               | App hosting, previews, analytics, logs | Hobby / Free     |
 | **Neon**                 | PostgreSQL                             | Free             |
 | **Cloudflare R2**        | Media storage                          | Free tier        |
-| **Resend**               | Auth email                             | Free tier        |
-| **Google Cloud Console** | OAuth client (Google login)            | Free             |
-| **Cloudflare Turnstile** | Bot protection                         | Free             |
+| ~~Resend~~               | _(removed)_                            | —                |
+| ~~Google OAuth~~         | _(removed)_                            | —                |
+| ~~Cloudflare Turnstile~~ | _(removed)_                            | —                |
+| ~~Upstash Redis~~        | _(removed)_                            | —                |
 | **Sentry** (optional)    | Errors                                 | Free tier        |
 | **Docker** (local)       | Postgres для разработки                | Local            |
 
@@ -271,8 +264,8 @@ OpenTelemetry full stack — не обязателен в v1.
 
 1. Один Next.js + Payload app деплоится на Vercel.
 2. Neon хранит схему и данные; R2 — медиа.
-3. Auth (email+password + Google) работает для readers; admin пишет контент в `/admin`.
+3. Только admin входит в `/admin` и пишет контент; гости читают без аккаунтов.
 4. CI (lint/typecheck/test) и Preview Deployments зелёные.
-5. Публичный сайт отдаёт uk/ru/en контент с SEO-артефактами и reader-features.
+5. Публичный сайт отдаёт uk/ru/en контент с SEO-артефактами и share на деталях.
 
 Детальная последовательность шагов — в [`development-roadmap.md`](./development-roadmap.md).

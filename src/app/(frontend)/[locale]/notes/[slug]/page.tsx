@@ -3,11 +3,9 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
-import { getServerUrl } from '@/auth/serverUrl'
-import { BookmarkControl } from '@/components/bookmarks/bookmark-control'
-import { CommentSection } from '@/components/comments/comment-section'
 import { NoteDetail } from '@/components/notes/note-detail'
 import { RelatedContent } from '@/components/reading/related-content'
+import { ShareActions } from '@/components/share/share-actions'
 import { JsonLd } from '@/components/seo/json-ld'
 import { buildArticleJsonLd } from '@/content/jsonLd'
 import { findContentLanguageAlternates } from '@/content/localizedAlternates'
@@ -15,7 +13,9 @@ import { findPublicNote } from '@/content/notes'
 import { buildPageMetadata } from '@/content/pageMetadata'
 import { findRelatedContent } from '@/content/relatedContent'
 import { rssExcerpt } from '@/content/rssQuery'
+import { prefixPublicPath } from '@/i18n/paths'
 import { routing } from '@/i18n/routing'
+import { getServerUrl } from '@/lib/serverUrl'
 
 type NotePageProps = {
   params: Promise<{ locale: string; slug: string }>
@@ -50,9 +50,10 @@ export default async function NotePage({ params }: NotePageProps) {
   const note = await findPublicNote(locale, slug)
   if (!note) notFound()
 
-  const [t, feed, related] = await Promise.all([
+  const [t, feed, share, related] = await Promise.all([
     getTranslations('notes'),
     getTranslations('feed'),
+    getTranslations('share'),
     findRelatedContent({
       categoryIds: note.categoryIds,
       excludeCollection: 'notes',
@@ -62,12 +63,15 @@ export default async function NotePage({ params }: NotePageProps) {
     }),
   ])
 
+  const pathname = `/notes/${slug}` as `/notes/${string}`
+  const shareUrl = `${getServerUrl()}${prefixPublicPath(pathname, locale)}`
+
   const jsonLd = buildArticleJsonLd({
     description: note.metaDescription,
     locale,
     ogImageUrl: note.ogImage?.url,
     origin: getServerUrl(),
-    pathname: `/notes/${slug}`,
+    pathname,
     publishedAt: note.publishedAt,
     title: note.title,
   })
@@ -86,6 +90,19 @@ export default async function NotePage({ params }: NotePageProps) {
           locale={locale}
           note={note}
         />
+        <ShareActions
+          labels={{
+            copied: share('copied'),
+            copy: share('copy'),
+            facebook: share('facebook'),
+            heading: share('heading'),
+            native: share('native'),
+            telegram: share('telegram'),
+            x: share('x'),
+          }}
+          title={note.title}
+          url={shareUrl}
+        />
         {related.length > 0 ? (
           <RelatedContent
             items={related}
@@ -97,8 +114,6 @@ export default async function NotePage({ params }: NotePageProps) {
             locale={locale}
           />
         ) : null}
-        <BookmarkControl contentId={note.id} relationTo="notes" />
-        <CommentSection contentId={note.id} locale={locale} relationTo="notes" />
       </div>
     </div>
   )

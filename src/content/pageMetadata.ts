@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import type { Where } from 'payload'
 
 import { publicContentWhere } from '@/access/publicContentWhere'
-import { getServerUrl } from '@/auth/serverUrl'
+import { getServerUrl } from '@/lib/serverUrl'
 import { absolutePublicUrl, languageAlternatesForPath } from '@/content/sitemapQuery'
 import { resolveContentLocale } from '@/i18n/contentLocale'
 import { routing, type AppLocale } from '@/i18n/routing'

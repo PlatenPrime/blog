@@ -43,22 +43,7 @@ cp .env.example .env
 | `PREVIEW_SECRET`         | Секрет кнопки Preview в admin (draftMode); длинная случайная строка |
 | `NEXT_PUBLIC_SERVER_URL` | Публичный origin app, обычно `http://localhost:3000`                |
 
-Остальные ключи в `.env.example` (R2, Resend, Google OAuth, Upstash rate limit, Turnstile, `ADMIN_*`) для минимального локального старта можно оставить пустыми или как в примере. Без `UPSTASH_REDIS_REST_*` лимиты работают in-memory (ADR-006). Без `NEXT_PUBLIC_TURNSTILE_SITE_KEY` / `TURNSTILE_SECRET_KEY` проверка бота пропускается (login/register/comment работают как раньше). Для poke шага 075 см. dummy keys в `.env.example` (always pass / always fail). Реальные секреты не коммитьте. Без `PREVIEW_SECRET` кнопка Preview в admin скрыта (URL не генерируется).
-
-### Auth email (verify / password reset)
-
-| Режим     | Условие                                | Поведение                                                                            |
-| --------- | -------------------------------------- | ------------------------------------------------------------------------------------ |
-| Local     | `RESEND_API_KEY` пустой                | Console adapter — HTML письма в лог `npm run dev`                                    |
-| Prod-like | `RESEND_API_KEY` + `RESEND_FROM_EMAIL` | [`@payloadcms/email-resend`](https://www.npmjs.com/package/@payloadcms/email-resend) |
-
-Боевой путь (onboarding domain, DNS, smoke forgot → inbox): [`runbooks/resend-email.md`](./runbooks/resend-email.md) (шаг **082**).
-
-После регистрации откройте `/uk/verify?token=…` из лога (или письма Resend). Без verify логин reader’а отклоняется.
-
-### Google OAuth (optional)
-
-См. [`google-oauth-setup.md`](./google-oauth-setup.md). Без `GOOGLE_CLIENT_ID` кнопка на `/uk/login` скрыта.
+Остальные ключи в `.env.example` (R2, `ADMIN_*`) для минимального локального старта можно оставить пустыми или как в примере. Resend, Google OAuth, Upstash и Turnstile **не нужны** — публичной auth нет (ADR-007). Реальные секреты не коммитьте. Без `PREVIEW_SECRET` кнопка Preview в admin скрыта (URL не генерируется).
 
 Канон имён переменных — [`.env.example`](../.env.example).
 
@@ -111,13 +96,13 @@ npm run migrate
 npm run seed:admin
 ```
 
-Ожидание: лог `seed:admin — created admin …` при первой чистой БД. Повторный запуск — `skip` (уже есть admin или тот же email). Hook Users выставляет `_verified: true` для admin.
+Ожидание: лог `seed:admin — created admin …` при первой чистой БД. Повторный запуск — `skip` (уже есть admin или тот же email). Роль всегда `admin` (ADR-007).
 
 Fallback без seed: первый заход на `/admin` → форма create-first-user (тоже получит `role: admin`).
 
-Роли (`admin` | `reader`): только `admin` проходит в `/admin`. Публичная регистрация: `/uk/register` → verify email → `/uk/login`. Reader на `/admin` получает отказ.
+Вход **только** в [`/admin`](http://localhost:3000/admin). Публичных `/login` / `/register` нет. Смена пароля — в UI Payload в `/admin` или прямое обновление в БД; email reset не используется.
 
-Полезные URL: `/uk/login`, `/uk/register`, `/uk/forgot-password`, `/uk/reset-password`, `/uk/verify`, `/uk/logout`. Те же пути с префиксом `/ru` или `/en`. Голые `/login` и `/` редиректят на default locale `uk`. В шапке публичных страниц — language switcher (`УК` / `РУ` / `EN`): меняет префикс локали, сохраняя путь и query (шаг **044**). OAuth/письма по-прежнему ведут на `/uk/...`; после возврата язык можно сменить свитчером. Матрица доступа — [`security/access-matrix.md`](./security/access-matrix.md).
+Публичный сайт: `/` редиректит на default locale `uk`; в шапке — language switcher (`УК` / `РУ` / `EN`). Матрица доступа — [`security/access-matrix.md`](./security/access-matrix.md).
 
 Unit helpers: `npm test` → `tests/unit/adminSeed.test.ts`.
 
@@ -127,14 +112,14 @@ Unit helpers: `npm test` → `tests/unit/adminSeed.test.ts`.
 
 Предусловия: `docker compose up -d`, `.env`, `npm run migrate`, `npm run dev`, admin из §6.
 
-| #   | Действие                                                                  | Ожидание                                                                                                                             |
-| --- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| 1   | Открыть [http://localhost:3000/admin](http://localhost:3000/admin), войти | Dashboard; title вкладки с суффиксом `— Blog Admin`                                                                                  |
-| 2   | Посмотреть левый сайдбар                                                  | Группы **Content / Taxonomy / Community / System** (или RU: Контент / Таксономия / Сообщество / Система — зависит от языка admin UI) |
-| 3   | Content → **Articles** (Статьи) → Create New                              | Форма edit; description коллекции видна                                                                                              |
-| 4   | Заполнить `title`, `body` (Lexical)                                       | Slug подставится из title (hook)                                                                                                     |
-| 5   | Save Draft                                                                | Документ в `_status: draft`                                                                                                          |
-| 6   | Publish                                                                   | `_status: published`; запись в списке Articles с колонками title / slug / status / publishedAt                                       |
+| #   | Действие                                                                  | Ожидание                                                                                                    |
+| --- | ------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| 1   | Открыть [http://localhost:3000/admin](http://localhost:3000/admin), войти | Dashboard; title вкладки с суффиксом `— Blog Admin`                                                         |
+| 2   | Посмотреть левый сайдбар                                                  | Группы **Content / Taxonomy / System** (или RU: Контент / Таксономия / Система — зависит от языка admin UI) |
+| 3   | Content → **Articles** (Статьи) → Create New                              | Форма edit; description коллекции видна                                                                     |
+| 4   | Заполнить `title`, `body` (Lexical)                                       | Slug подставится из title (hook)                                                                            |
+| 5   | Save Draft                                                                | Документ в `_status: draft`                                                                                 |
+| 6   | Publish                                                                   | `_status: published`; запись в списке Articles с колонками title / slug / status / publishedAt              |
 
 Бюджет кликов (после login): **сайдбар Articles → Create → title/body → Save Draft → Publish** ≈ 5–6 осознанных действий. Lexical images / YouTube — шаг **034**; preview URL — **035**.
 
@@ -165,7 +150,7 @@ Env (уже в `.env.example`): `R2_BUCKET`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCE
 Проверка с R2: см. runbook [`runbooks/r2-media.md`](./runbooks/r2-media.md); объект в bucket тоже WebP.  
 GIF → WebP: анимация не гарантируется.
 
-**Access (шаг 039):** create/update/delete Media — только `admin`. Reader/anonymous upload через API → отказ.  
+**Access (шаг 039):** create/update/delete Media — только `admin`. Anonymous upload через API → отказ.  
 Unit (без БД): `npm test` → `tests/unit/mediaAccess.test.ts`.  
 Int (нужен Postgres: `docker compose up -d`): `npm run test:int` → `tests/int/media.int.spec.ts`.
 
@@ -185,7 +170,7 @@ Int (нужен Postgres: `docker compose up -d`): `npm run test:int` → `tests
 2. **Categories** → Create: заполните `title` (например «Інженерія»), оставьте `slug` пустым → Save. Ожидание: slug вроде `inzheneriya`.
 3. Переключите locale в admin на `en`, задайте English title/slug → Save. То же для `ru`, если нужен перевод.
 4. То же для **Tags**.
-5. Reader (если создан) не должен иметь write-доступ к этим коллекциям.
+5. Anonymous не должен иметь write-доступ к этим коллекциям (проверка через API без сессии).
 
 Редактура (шаг **043**): переключатель locale в admin заполняет **ту же** запись, не создаёт вторую. Незаполненная локаль на сайте/preview отдаёт `uk` (Payload fallback), а не пустой заголовок.
 
@@ -211,7 +196,7 @@ Relation к Articles/Notes — шаги **018** / **019** (оба done). Unit-т
 4. Переключите locale на `ru`, затем `en`: задайте свои `title` / `slug` / `body` (и SEO text) → Save на каждой локали. Обложка, categories/tags, `publishedAt` — общие.
 5. **Publish** ту же статью; при желании задайте `publishedAt` и SEO.
 6. Preview по префиксу: `/uk/dev/rich-text/article/<slug>`, `/ru/...`, `/en/...` — разные заголовки/тело при заполненных локалях.
-7. Reader / anonymous не должны видеть drafts через API (`read` фильтрует `_status`); write — только admin.
+7. Anonymous не должен видеть drafts через API (`read` фильтрует `_status`); write — только admin.
 
 ### Lexical: image + YouTube (шаг 034)
 
@@ -320,7 +305,7 @@ Unit: `npm test` → `tests/unit/notesQuery.test.ts`. Draft Preview (кнопк�
 
 Privacy (шаг **079**, done):
 
-9. **Pages** → Create (или второй документ): `slug` = `privacy` в каждой локали, `title` / `body` — шаблонно, но честно: cookies сессии, будущая analytics по согласию, auth (email/OAuth). Автослаг из переведённого заголовка адрес `/privacy` не откроет.
+9. **Pages** → Create (или второй документ): `slug` = `privacy` в каждой локали, `title` / `body` — шаблонно, но честно: cookies сессии admin, будущая analytics по согласию, отсутствие публичной регистрации (ADR-007). Автослаг из переведённого заголовка адрес `/privacy` не откроет.
 10. **Publish** → `http://localhost:3000/uk/privacy` — заголовок и тело из Payload. Ссылка «Конфіденційність» / «Конфиденциальность» / «Privacy» в footer ведёт сюда. Черновик / чужой slug — «не найдено».
 
 Terms (шаг **080**, done):
@@ -333,60 +318,9 @@ Terms (шаг **080**, done):
 
 Unit: `npm test` → `tests/unit/pagesQuery.test.ts`. Unit access/slugify — **024** (done).
 
-## 13. Comments
+## 13. Share (гости)
 
-В `/admin` доступна коллекция **Comments** (комментарии к Article или Note).
-
-| Параметр        | Значение                                                                                                                                                                    |
-| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Create          | Подтверждённый `reader` или `admin` (`isAuthenticatedAndVerified`); anonymous и неподтверждённый — отказ                                                                    |
-| Read            | Admin — все; иначе только `moderationStatus: approved`                                                                                                                      |
-| Update / Delete | Только `admin` (модерация)                                                                                                                                                  |
-| Поля            | `content` (polymorphic → `articles` \| `notes`), `author` (auto из session), `body` (textarea), `moderationStatus` (`approved` / `hidden`, default `approved`), `createdAt` |
-| API             | Collection slug `comments` → REST `/api/comments`                                                                                                                           |
-
-Проверка:
-
-1. Войдите в `/admin` как admin (или создайте comment через Local API как reader — см. `npm run test:int`).
-2. Убедитесь, что есть published Article или Note.
-3. **Comments** → Create: выберите `content`, введите `body` → Save. `author` подставится из текущего пользователя; `moderationStatus` по умолчанию `approved`.
-4. Anonymous create через API должен быть отклонён (интеграционный тест это фиксирует).
-5. Опубликованная статья, гость: `http://localhost:3000/uk/articles/{slug}`. Под текстом заголовок «Коментарі», при пустом списке одна фраза, ссылки «Увійти» и «Реєстрація». Поля комментария нет.
-6. Войдите как подтверждённый reader (`/uk/login`). Та же статья: textarea и «Надіслати». После отправки комментарий виден на странице, подпись «Ви», почты в подписи нет. Та же форма на `/uk/notes/{slug}`.
-7. Черновик по адресу статьи по-прежнему «не найдено», формы там нет.
-8. Войдите в `/admin` как admin → **Comments** → откройте комментарий → в сайдбаре `moderationStatus` = Hidden → Save. Обновите `/uk/articles/{slug}` (и ту же заметку, если комментарий к ней) гостем и автором: этого текста нет, соседний одобренный остаётся, плашки «удалён» нет. Верните Approved → Save: текст снова на странице. Админ на сайте скрытое тоже не видит — только в `/admin`.
-
-Unit контракта списка — `npm test` → `tests/unit/commentsQuery.test.ts`. Круг hide/approve — `npm run test:int` → `tests/int/comments.int.spec.ts`. Unit access helpers — **024** (done). Wiring Comments/Bookmarks — `npm test` → `tests/unit/readerAccess.test.ts` (**061**). Отправка комментария в UI — ручной poke выше (Playwright снят в **085**).
-
-## 14. Bookmarks
-
-В `/admin` доступна коллекция **Bookmarks** (закладки читателя на Article или Note).
-
-| Параметр               | Значение                                                                                             |
-| ---------------------- | ---------------------------------------------------------------------------------------------------- |
-| Create                 | Любой authenticated (`reader` / `admin`); anonymous — отказ                                          |
-| Read / Update / Delete | Владелец документа (поле `user`) или `admin`                                                         |
-| Поля                   | `user` (auto из session), `content` (polymorphic → `articles` \| `notes`), `createdAt` / `updatedAt` |
-| Уникальность           | Пара `(user, content)` — повторный create отклоняется (409)                                          |
-| API                    | Collection slug `bookmarks` → REST `/api/bookmarks`                                                  |
-
-Проверка:
-
-1. Войдите в `/admin` как admin (или создайте bookmark через Local API как reader — см. `npm run test:int`).
-2. Убедитесь, что есть published Article или Note.
-3. **Bookmarks** → Create: выберите `content` → Save. `user` подставится из текущего пользователя.
-4. Повторное создание закладки тем же user на тот же content должно быть отклонено (интеграционный тест это фиксирует).
-5. Anonymous create через API должен быть отклонён.
-
-Публичный UI (шаг **059**):
-
-1. Гость открывает опубликованную статью или заметку: под колонкой чтения есть «Увійдіть, щоб зберігати» и ссылки на вход и регистрацию, кнопки «Зберегти» нет. `/uk/bookmarks` показывает то же приглашение, не «не найдено». В шапке у гостя пункта «Закладки» нет.
-2. Войдите как reader, у которого почта ещё не подтверждена. На статье и на `/uk/bookmarks` — фраза про почту, кнопки нет.
-3. Войдите как подтверждённый reader (`/uk/login`). В шапке рядом с «Вийти» — «Закладки». На статье «Зберегти»: после клика кнопка становится «Збережено» (`aria-pressed`). Повторный клик снимает закладку. То же на `/uk/notes/{slug}`.
-4. «Закладки» ведёт на `/uk/bookmarks`: в списке только что сохранённые статья и заметка, чужих строк нет. «Збережено» на строке снимает её после обновления страницы. Пустой список — одна фраза, без скелета.
-5. Черновик по адресу статьи по-прежнему «не найдено», кнопки там нет. Закладка на текст, который потом сняли с публикации, со страницы «мои» пропадает; строка в `/admin` → **Bookmarks** может остаться.
-
-Unit контракта списка — `npm test` → `tests/unit/bookmarksQuery.test.ts`. Uniqueness и чужой find — `npm run test:int` → `tests/int/bookmarks.int.spec.ts` (шаг **022**). Unit helpers — **024** (done). Wiring Comments/Bookmarks — `npm test` → `tests/unit/readerAccess.test.ts` (**061**). Toggle закладки в UI — ручной poke выше (Playwright снят в **085**).
+На опубликованных `http://localhost:3000/uk/articles/{slug}` и `/uk/notes/{slug}` гость видит блок **Share**: копирование ссылки, при поддержке браузера — `navigator.share`, плюс ссылки на X / Telegram / Facebook. Аккаунт не нужен. Collections comments/bookmarks **нет** (ADR-007).
 
 ## Полезные команды
 

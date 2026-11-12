@@ -3,7 +3,6 @@ import { getLocale, getTranslations } from 'next-intl/server'
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
 
-import { getCurrentUser } from '@/auth/getCurrentUser'
 import { HomeLatest } from '@/components/home/home-latest'
 import { EmptyState } from '@/components/states/empty-state'
 import { EmbeddedListSkeleton } from '@/components/states/list-skeleton'
@@ -11,8 +10,6 @@ import { findLatestPublic } from '@/content/latestPublic'
 import { buildPageMetadata } from '@/content/pageMetadata'
 import { Link } from '@/i18n/navigation'
 import { routing } from '@/i18n/routing'
-
-import { logoutEverywhereFormAction } from './actions/logoutEverywhere'
 
 type HomePageProps = {
   params: Promise<{ locale: string }>
@@ -47,7 +44,7 @@ export default async function HomePage() {
         </header>
         {/*
           The hero is already the heading. A `[locale]/loading` skeleton would
-          cover login and every child route, so only the lists wait here.
+          cover every child route, so only the lists wait here.
         */}
         <Suspense fallback={<EmbeddedListSkeleton label={states('loading')} />}>
           <HomeWriting />
@@ -61,7 +58,6 @@ async function HomeWriting() {
   const locale = await getLocale()
   const t = await getTranslations('nav')
   const home = await getTranslations('home')
-  const user = await getCurrentUser()
   const [articles, notes] = await Promise.all([
     findLatestPublic('articles', locale),
     findLatestPublic('notes', locale),
@@ -90,16 +86,6 @@ async function HomeWriting() {
           </Link>
         </p>
       )}
-      {user ? (
-        <form action={logoutEverywhereFormAction} className="mt-16">
-          <button
-            className="cursor-pointer border-0 bg-transparent p-0 font-sans text-small text-primary underline-offset-4 hover:underline"
-            type="submit"
-          >
-            {t('logoutEverywhere')}
-          </button>
-        </form>
-      ) : null}
     </>
   )
 }

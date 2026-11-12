@@ -10,20 +10,16 @@ import { Tags } from './collections/Tags'
 import { Articles } from './collections/Articles'
 import { Notes } from './collections/Notes'
 import { Pages } from './collections/Pages'
-import { Comments } from './collections/Comments'
-import { Bookmarks } from './collections/Bookmarks'
 import { MEDIA_MAX_FILE_SIZE } from './collections/mediaLimits'
 import { getDatabaseAdapter } from './db/adapter'
-import { createEmailAdapter } from './auth/emailAdapter'
-import { googleOAuthPlugin } from './auth/googleOAuth'
-import { getServerUrl } from './auth/serverUrl'
+import { getServerUrl } from './lib/serverUrl'
 import { editor } from './editor/lexical'
 import { createR2StoragePlugin } from './storage/r2'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 const serverURL = getServerUrl()
-const emailAdapter = createEmailAdapter()
+
 export default buildConfig({
   serverURL,
   admin: {
@@ -36,8 +32,8 @@ export default buildConfig({
       description: 'CMS for the personal blog — one-author publishing workflow.',
     },
   },
-  // Order within admin.group: Content → Taxonomy → Community → System (step 033).
-  collections: [Articles, Notes, Pages, Media, Categories, Tags, Comments, Bookmarks, Users],
+  // Order within admin.group: Content → Taxonomy → System.
+  collections: [Articles, Notes, Pages, Media, Categories, Tags, Users],
   localization: {
     locales: [
       { code: 'uk', label: 'Ukrainian' },
@@ -53,9 +49,8 @@ export default buildConfig({
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
   db: getDatabaseAdapter(),
-  ...(emailAdapter ? { email: emailAdapter } : {}),
   sharp,
-  // Same-origin Next app: CSRF allowlist + CORS for the public origin (step 030).
+  // Same-origin Next app: CSRF allowlist + CORS for the public origin.
   csrf: [serverURL],
   cors: [serverURL],
   // Collection UploadConfig has no per-collection fileSize; Busboy limit is global.
@@ -64,5 +59,5 @@ export default buildConfig({
       fileSize: MEDIA_MAX_FILE_SIZE,
     },
   },
-  plugins: [googleOAuthPlugin, createR2StoragePlugin()],
+  plugins: [createR2StoragePlugin()],
 })

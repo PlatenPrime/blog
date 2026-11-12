@@ -1,6 +1,8 @@
 # ADR-002: Email verification policy & Google account linking
 
-- **Status:** accepted
+> **SUPERSEDED (product scope).** Reader registration, email verification, Google OAuth, and verify-gated comments/bookmarks are **removed** from the product. Current canon: [ADR-007 — Author-only, no public auth](./007-author-only-no-public-auth.md). The body below is kept for historical context only.
+
+- **Status:** accepted (historical; superseded by ADR-007 for product scope)
 - **Date:** 2026-10-20
 - **Steps:** 026, 029
 

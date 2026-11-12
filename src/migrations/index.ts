@@ -9,6 +9,7 @@ import * as migration_20261020_113306_bookmarks from './20261020_113306_bookmark
 import * as migration_20261020_161000_users_auth_verify_oauth from './20261020_161000_users_auth_verify_oauth'
 import * as migration_20261020_163500_fix_verificationtoken_column from './20261020_163500_fix_verificationtoken_column'
 import * as migration_20261109_150000_search_text from './20261109_150000_search_text'
+import * as migration_20261112_130000_drop_reader_social from './20261112_130000_drop_reader_social'
 
 export const migrations = [
   {
@@ -65,5 +66,10 @@ export const migrations = [
     up: migration_20261109_150000_search_text.up,
     down: migration_20261109_150000_search_text.down,
     name: '20261109_150000_search_text',
+  },
+  {
+    up: migration_20261112_130000_drop_reader_social.up,
+    down: migration_20261112_130000_drop_reader_social.down,
+    name: '20261112_130000_drop_reader_social',
   },
 ]

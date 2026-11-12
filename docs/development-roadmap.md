@@ -18,7 +18,9 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked` · `cancelled`.
 
-**Baseline Status:** следующий шаг — `084` (Expand Vitest suite). Шаги `001`–`083` и `085` (отказ от Playwright) — `done`; `086` — `cancelled`.
+**Baseline Status:** следующий шаг — `087` (Test data factories). Шаги `001`–`085` — `done`; `086` — `cancelled`.
+
+**Pivot: author-only (2026-11-12).** Продуктовая модель — один admin, гости без аккаунтов; без comments/bookmarks, публичной auth, Resend/OAuth/Turnstile/Upstash как фич продукта. Канон: [ADR-007](adr/007-author-only-no-public-auth.md), миграция `src/migrations/20261112_130000_drop_reader_social.ts`. Исторические шаги **021–022**, **025–032**, **057–061**, **028–029**, **074–075**, **082** остаются **`done` как история**; их DoD описывает то, что строили тогда — **superseded** для текущего продукта. Синхронизация docs + кода pivot — **сознательный waive** правила «один PR = один шаг» (вне нумерации).
 
 **Правила ведения**
 
@@ -41,8 +43,8 @@ v1 считается завершённым, когда одновременн�
 - [ ] Admin на `/admin`: один admin публикует Articles и Notes (draft / preview / schedule)
 - [ ] Медиа: изображения в R2 (WebP); видео — YouTube embed
 - [ ] Локали `uk` / `ru` / `en` для UI и контента
-- [x] Readers: register/login (email+password + Google), verify email, password reset (Resend)
-- [ ] Comments и Bookmarks только для авторизованных
+- [x] Author-only: один admin в `/admin`; гости читают без аккаунтов; share/copy link на article/note (ADR-007)
+- [x] ~~Readers / Comments / Bookmarks~~ — снято с продукта (история шагов 021–032, 057–061; superseded ADR-007)
 - [x] SEO: RSS, sitemap, OG images, JSON-LD, TOC, reading time, related, code highlight
 - [ ] Поиск по Postgres
 - [ ] Dark + light theme, shadcn UI, аккуратный editorial дизайн
@@ -309,7 +311,7 @@ v1 считается завершённым, когда одновременн�
 - **Deliverables:** OAuth app setup docs; callback; link/create reader user; ADR по account linking.
 - **Verify:** Google login создаёт/логинит reader.
 - **DoD:** Credentials + Google сосуществуют.
-- **Notes:** `payload-oauth2`; `docs/google-oauth-setup.md`; account linking in ADR-002; `users.sub` field.
+- **Notes:** `payload-oauth2`; `google-oauth-setup.md` (удалён); account linking in ADR-002 (superseded ADR-007); `users.sub` field (удалён).
 
 ### 030 — Session security hardening
 
@@ -813,7 +815,7 @@ v1 считается завершённым, когда одновременн�
 - **Deliverables:** Domain/DNS notes (даже если пока onboarding domain Resend); runbook.
 - **Verify:** Reset password на preview/prod получает письмо.
 - **DoD:** Email path проверен вне localhost.
-- **Notes:** Runbook [`docs/runbooks/resend-email.md`](runbooks/resend-email.md): console vs Resend, onboarding From (`onboarding@resend.dev`), custom domain SPF/DKIM/DMARC, smoke A (local + live API) / B (после **088–089**). Ссылки: LOCAL_SETUP § Auth email, tech-stack §7, `.env.example`. Smoke A: `payload.forgotPassword` → Resend → inbox (`proshta@gmail.com`), Dashboard status Delivered, subject «Reset your Blog password», From `Blog <onboarding@resend.dev>`. Smoke B на `*.vercel.app` — после deploy. Production-checklist Resend ticks — **108**. Код адаптера не менялся (**028**).
+- **Notes:** Runbook `resend-email.md` (удалён; superseded ADR-007): console vs Resend, onboarding From (`onboarding@resend.dev`), custom domain SPF/DKIM/DMARC, smoke A (local + live API) / B (после **088–089**). Ссылки: LOCAL_SETUP § Auth email, tech-stack §7, `.env.example`. Smoke A: `payload.forgotPassword` → Resend → inbox (`proshta@gmail.com`), Dashboard status Delivered, subject «Reset your Blog password», From `Blog <onboarding@resend.dev>`. Smoke B на `*.vercel.app` — после deploy. Production-checklist Resend ticks — **108**. Код адаптера не менялся (**028**).
 
 ---
 
@@ -858,7 +860,7 @@ v1 считается завершённым, когда одновременн�
 
 - **Статус:** todo
 - **Цель:** Стабильные unit/int тесты.
-- **Deliverables:** Factories для user/article/note/comment (Vitest unit/int).
+- **Deliverables:** Factories для user/article/note (Vitest unit/int; без comment/bookmark).
 - **Verify:** Int/unit не зависят от ручного seed в UI админки.
 - **DoD:** Тесты hermetic насколько возможно (без e2e).
 
