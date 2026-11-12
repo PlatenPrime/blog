@@ -536,6 +536,8 @@ Payload не выбирает две коллекции одним запрос�
 
 Шаг 088. Хостинг перестал быть абзацем в tech-stack. В Vercel появился project `blog`, привязанный к GitHub `PlatenPrime/blog`: Install `npm ci`, Build `npm run build`, Framework Next.js. В Production легли `DATABASE_URL` (Neon pooled), `PAYLOAD_SECRET`, `PREVIEW_SECRET`, `NEXT_PUBLIC_SERVER_URL`. Neon завели раньше полного шага 090 — без живой строки Payload на serverless не соберётся; migrate-on-deploy и «admin пишет в prod» сознательно оставили на 090. Region Free-tier вышел `aws-us-east-2`; имя проекта `blog`. Инструкция — [runbooks/vercel-connect.md](./runbooks/vercel-connect.md). Заодно `tsconfig` перестал typecheck-ать `tests/` в `next build`: unit живёт в Vitest, а красный билд из‑за тестового индекса `children[0]` не должен держать деплой. Preview-стратегия env — 089; R2 ключи на Vercel — когда медиа поедут в бой.
 
+Шаг 089. Preview на каждый PR перестал быть «включим потом». В Vercel для Preview легли своя пара `PAYLOAD_SECRET` / `PREVIEW_SECRET` и тот же pooled `DATABASE_URL`, что у Production — одна Neon без ветвления на PR. `NEXT_PUBLIC_SERVER_URL` на Preview не ставим: иначе CSRF и абсолютные ссылки смотрят на прод-origin, а у каждого PR свой `*.vercel.app`. `getServerUrl()` берёт явный env или `https://${VERCEL_URL}`. Ограничения shared БД, путаница с draft/CMS preview и Verify по ссылке в Deployments/PR — в [runbooks/vercel-preview.md](./runbooks/vercel-preview.md). Миграции на эту базу по-прежнему руками до 090.
+
 Рядом с выкладкой — операционка (097–103). Аналитика, которая уважает согласие на куки. Логи, по которым видно, что вход сломался. Осознанное «подключаем ли сбор ошибок» или честный отказ. Записки, как не потерять базу и бакет картинок. Сид с правдоподобными статьями, чтобы локальный сайт не зиял пустотой. Указатель на эти записки, потому что runbook, который нельзя найти, равен отсутствующему.
 
 Последний заход перед тем, как дать ссылку людям (104–110 и хвост документации 111–115). Кэш публичных страниц и способ сбрасывать его в момент публикации — вот где вспоминают, что отложенный пост не имеет крона. Картинки, которые не тянут первый экран. Вычищение лишнего JavaScript. Настоящий текст «обо мне» вместо рыбы. Чеклист выкладки. Адрес `*.vercel.app`. И отдельно, уже после запуска: свой домен, свой домен для картинок, второй фактор, поиск взрослее. Это не забытые задачи v1. Это сознательная граница, чтобы v1 имел конец.
@@ -598,6 +600,6 @@ Payload не выбирает две коллекции одним запрос�
 - Глава 11 — шаги 079–082 записаны (Resend runbook — история; почта снята с продукта).
 - Pivot author-only — глава выше (ADR-007); `086` cancelled.
 - Качество / factories — шаги **083–087** (в обзоре выше; Track 10).
-- Выход с ноутбука / Vercel connect — шаг **088** (в обзоре выше; Track 11); следующий по чертежу: **089**.
+- Выход с ноутбука / Vercel connect — шаг **088**; Preview Deployments — шаг **089** (в обзоре выше; Track 11); следующий по чертежу: **090**.
 
 Свериться с полями и правами, не перечитывая главы: [content-model.md](./content-model.md), [security/access-matrix.md](./security/access-matrix.md). Поднять проект руками: [LOCAL_SETUP.md](./LOCAL_SETUP.md). Идти по работе: [development-roadmap.md](./development-roadmap.md).

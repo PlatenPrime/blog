@@ -1,6 +1,6 @@
 # Runbook: Vercel project connect
 
-Шаг **088**. Подключить GitHub-репозиторий к Vercel, задать Production env и build settings. Neon Postgres создаётся здесь минимально (чтобы `DATABASE_URL` был живым); migrate-on-deploy и проверка «prod admin пишет» — шаг **090**. Preview env strategy — **089**.
+Шаг **088**. Подключить GitHub-репозиторий к Vercel, задать Production env и build settings. Neon Postgres создаётся здесь минимально (чтобы `DATABASE_URL` был живым); migrate-on-deploy и проверка «prod admin пишет» — шаг **090**. Preview env strategy — [vercel-preview.md](./vercel-preview.md) (**089**).
 
 ## Prefconditions
 
@@ -35,7 +35,7 @@
 
 ## 3. Production Environment Variables
 
-В Project → **Settings** → **Environment Variables** → scope **Production** (Preview — стратегия на **089**).
+В Project → **Settings** → **Environment Variables** → scope **Production** (Preview — [vercel-preview.md](./vercel-preview.md), шаг **089**).
 
 | Variable                         | Source / notes                                                                                                        |
 | -------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
@@ -83,13 +83,13 @@ npx vercel deploy --yes                # Preview; Production — Deployments UI 
 
 ## Что не в этом шаге
 
-| Тема                                     | Шаг               |
-| ---------------------------------------- | ----------------- |
-| Preview env vars / общая preview-БД      | **089**           |
-| Neon migrate-on-deploy, prod admin smoke | **090**           |
-| Уточнение vercel-postgres adapter        | **091**           |
-| Матрица секретов                         | **092**           |
-| Analytics, custom domain, go-live URL    | **097+**, **109** |
+| Тема                                     | Шаг                                                |
+| ---------------------------------------- | -------------------------------------------------- |
+| Preview env vars / общая preview-БД      | **089** ([vercel-preview.md](./vercel-preview.md)) |
+| Neon migrate-on-deploy, prod admin smoke | **090**                                            |
+| Уточнение vercel-postgres adapter        | **091**                                            |
+| Матрица секретов                         | **092**                                            |
+| Analytics, custom domain, go-live URL    | **097+**, **109**                                  |
 
 ## Связанные документы
 

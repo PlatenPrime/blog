@@ -38,11 +38,13 @@ S3 endpoint **не** отдаёт файлы публично. Нужен оди
 
 При включённом R2 plugin использует `clientUploads: true` (лимит тела на Vercel ~4.5MB; наш max 5 MiB).
 
-В R2 bucket → **Settings** → **CORS policy** разрешите для origin сайта (`NEXT_PUBLIC_SERVER_URL`):
+В R2 bucket → **Settings** → **CORS policy** разрешите для origin сайта (`NEXT_PUBLIC_SERVER_URL` на Production / local):
 
 - Methods: `GET`, `PUT`, `HEAD`
 - Headers: `*` или как минимум `Content-Type`, `Authorization` / те, что шлёт Payload client upload
 - Max Age: по желанию
+
+На **Vercel Preview** origin другой на каждый PR (`https://${VERCEL_URL}`). Если грузите медиа из preview `/admin`, добавьте в CORS нужные `*.vercel.app` hosts (или ваш процесс для временных origin). Политика Preview env — [vercel-preview.md](./vercel-preview.md).
 
 Без CORS upload из браузера на Vercel/local с R2 упадёт.
 

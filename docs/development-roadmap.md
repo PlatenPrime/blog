@@ -880,11 +880,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 089 — Preview Deployments на каждый PR
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Проверка дизайна и взаимодействий на URL.
 - **Deliverables:** Preview env vars strategy; ограничения БД задокументированы.
 - **Verify:** PR комментарий/UI со ссылкой на preview.
 - **DoD:** Preview must-have включён.
+- **Notes:** Runbook [`runbooks/vercel-preview.md`](./runbooks/vercel-preview.md). Preview env: shared Neon `DATABASE_URL` + отдельные `PAYLOAD_SECRET` / `PREVIEW_SECRET`; `NEXT_PUBLIC_SERVER_URL` только Production — origin на Preview через `VERCEL_URL` в [`src/lib/serverUrl.ts`](../src/lib/serverUrl.ts) (unit `tests/unit/serverUrl.test.ts`). Neon branching не вводили. `vercel env pull` не копирует sensitive (placeholder) — брать URL из neonctl/local Neon. Migrate-on-deploy — **090**.
 
 ### 090 — Production Neon
 

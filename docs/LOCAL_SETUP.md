@@ -342,7 +342,7 @@ npm run test:int           # опционально: Vitest + Postgres (access/A
 
 Локальный путь выше — Docker Postgres. Production/preview хостинг — Vercel + Neon.
 
-Пошагово: [`runbooks/vercel-connect.md`](./runbooks/vercel-connect.md) (шаг **088**). Preview env — **089**; migrate-on-deploy — **090**.
+Пошагово: [`runbooks/vercel-connect.md`](./runbooks/vercel-connect.md) (шаг **088**). Preview env — [`runbooks/vercel-preview.md`](./runbooks/vercel-preview.md) (**089**); migrate-on-deploy — **090**.
 
 ## Troubleshooting
 
