@@ -2,7 +2,7 @@ import config from '@payload-config'
 import { cache } from 'react'
 import { getPayload } from 'payload'
 
-import { getServerUrl } from '@/auth/serverUrl'
+import { getServerUrl } from '@/lib/serverUrl'
 import {
   languageAlternatesFromSlugs,
   localizedContentSlugFindArgs,

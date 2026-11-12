@@ -3,11 +3,9 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
-import { getServerUrl } from '@/auth/serverUrl'
 import { ArticleDetail } from '@/components/articles/article-detail'
-import { BookmarkControl } from '@/components/bookmarks/bookmark-control'
-import { CommentSection } from '@/components/comments/comment-section'
 import { RelatedContent } from '@/components/reading/related-content'
+import { ShareActions } from '@/components/share/share-actions'
 import { JsonLd } from '@/components/seo/json-ld'
 import { findPublicArticle } from '@/content/articles'
 import { buildArticleJsonLd } from '@/content/jsonLd'
@@ -15,7 +13,9 @@ import { findContentLanguageAlternates } from '@/content/localizedAlternates'
 import { buildPageMetadata } from '@/content/pageMetadata'
 import { findRelatedContent } from '@/content/relatedContent'
 import { rssExcerpt } from '@/content/rssQuery'
+import { prefixPublicPath } from '@/i18n/paths'
 import { routing } from '@/i18n/routing'
+import { getServerUrl } from '@/lib/serverUrl'
 
 type ArticlePageProps = {
   params: Promise<{ locale: string; slug: string }>
@@ -50,9 +50,10 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   const article = await findPublicArticle(locale, slug)
   if (!article) notFound()
 
-  const [t, feed, related] = await Promise.all([
+  const [t, feed, share, related] = await Promise.all([
     getTranslations('articles'),
     getTranslations('feed'),
+    getTranslations('share'),
     findRelatedContent({
       categoryIds: article.categoryIds,
       excludeCollection: 'articles',
@@ -62,13 +63,16 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     }),
   ])
 
+  const pathname = `/articles/${slug}` as `/articles/${string}`
+  const shareUrl = `${getServerUrl()}${prefixPublicPath(pathname, locale)}`
+
   const jsonLd = buildArticleJsonLd({
     description: article.metaDescription,
     heroUrl: article.hero?.url,
     locale,
     ogImageUrl: article.ogImage?.url,
     origin: getServerUrl(),
-    pathname: `/articles/${slug}`,
+    pathname,
     publishedAt: article.publishedAt,
     title: article.title,
   })
@@ -87,6 +91,19 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           }}
           locale={locale}
         />
+        <ShareActions
+          labels={{
+            copied: share('copied'),
+            copy: share('copy'),
+            facebook: share('facebook'),
+            heading: share('heading'),
+            native: share('native'),
+            telegram: share('telegram'),
+            x: share('x'),
+          }}
+          title={article.title}
+          url={shareUrl}
+        />
         {related.length > 0 ? (
           <RelatedContent
             items={related}
@@ -98,8 +115,6 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             locale={locale}
           />
         ) : null}
-        <BookmarkControl contentId={article.id} relationTo="articles" />
-        <CommentSection contentId={article.id} locale={locale} relationTo="articles" />
       </div>
     </div>
   )

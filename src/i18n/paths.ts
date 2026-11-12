@@ -4,8 +4,8 @@ import { routing, type AppLocale } from './routing'
 
 /**
  * Root-relative public path with an explicit locale prefix.
- * Emails and OAuth returns use this so the URL does not depend on a redirect
- * from an unprefixed path (which always lands on the default locale).
+ * Absolute links (share, RSS, OG) use this so the URL does not depend on a
+ * redirect from an unprefixed path (which always lands on the default locale).
  */
 export function prefixPublicPath(
   pathname: string,

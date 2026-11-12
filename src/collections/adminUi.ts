@@ -6,7 +6,6 @@
 export const adminGroups = {
   content: { en: 'Content', ru: 'Контент' },
   taxonomy: { en: 'Taxonomy', ru: 'Таксономия' },
-  community: { en: 'Community', ru: 'Сообщество' },
   system: { en: 'System', ru: 'Система' },
 } as const
 

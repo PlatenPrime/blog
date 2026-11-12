@@ -25,31 +25,6 @@ describe('Media access (Local API)', () => {
     payload = await getPayload({ config: payloadConfig })
   })
 
-  it('denies reader create (admin-only upload)', async () => {
-    const suffix = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
-
-    const reader = (await payload.create({
-      collection: 'users',
-      data: {
-        email: `media-reader-${suffix}@example.com`,
-        password: 'test-password-123',
-        role: 'reader',
-        _verified: true,
-      },
-      overrideAccess: true,
-    })) as User
-
-    await expect(
-      payload.create({
-        collection: 'media',
-        user: reader,
-        overrideAccess: false,
-        data: { alt: 'reader should not upload' },
-        file: pngFile,
-      }),
-    ).rejects.toThrow()
-  })
-
   it('denies anonymous create', async () => {
     await expect(
       payload.create({
@@ -70,7 +45,6 @@ describe('Media access (Local API)', () => {
         email: `media-admin-${suffix}@example.com`,
         password: 'test-password-123',
         role: 'admin',
-        _verified: true,
       },
       overrideAccess: true,
     })) as User

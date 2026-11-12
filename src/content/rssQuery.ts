@@ -1,5 +1,5 @@
 import { publicContentWhere } from '@/access/publicContentWhere'
-import { getServerUrl } from '@/auth/serverUrl'
+import { getServerUrl } from '@/lib/serverUrl'
 import { absolutePublicUrl } from '@/content/sitemapQuery'
 import { resolveContentLocale } from '@/i18n/contentLocale'
 import type { AppLocale } from '@/i18n/routing'

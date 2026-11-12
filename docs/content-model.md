@@ -4,6 +4,8 @@
 
 **Источник правды в коде:** [`src/payload.config.ts`](../src/payload.config.ts), коллекции в [`src/collections/`](../src/collections/), access-хелперы в [`src/access/`](../src/access/). Сгенерированные типы — [`src/payload-types.ts`](../src/payload-types.ts) (не дублируем здесь целиком).
 
+**Продукт (author-only):** один admin, гости без аккаунтов — [ADR-007](./adr/007-author-only-no-public-auth.md). Collections `comments` / `bookmarks` удалены миграцией `20261112_130000_drop_reader_social`.
+
 ## Глобальные настройки
 
 | Параметр     | Значение                                                                                       |
@@ -11,11 +13,11 @@
 | Locales      | `uk` (default), `ru`, `en`; `fallback: true`                                                   |
 | Rich text    | Lexical (`src/editor/lexical.ts`): default features + `UploadFeature(media)` + block `youtube` |
 | Upload limit | `MEDIA_MAX_FILE_SIZE` = 5 MiB (глобальный `upload.limits.fileSize`)                            |
-| Admin users  | коллекция `users`                                                                              |
+| Admin users  | коллекция `users` (`admin` only)                                                               |
 | Timestamps   | Payload default: `createdAt` / `updatedAt` на всех коллекциях                                  |
 | Trash        | не используется                                                                                |
 
-Порядок регистрации коллекций (admin.group UX, шаг **033**): `articles` → `notes` → `pages` → `media` → `categories` → `tags` → `comments` → `bookmarks` → `users`.
+Порядок регистрации коллекций (admin.group UX): `articles` → `notes` → `pages` → `media` → `categories` → `tags` → `users`.
 
 ### Editorial localization + fallback (шаг **043**)
 
@@ -38,12 +40,6 @@
 
 ```mermaid
 erDiagram
-  Users ||--o{ Comments : author
-  Users ||--o{ Bookmarks : user
-  Articles ||--o{ Comments : content
-  Notes ||--o{ Comments : content
-  Articles ||--o{ Bookmarks : content
-  Notes ||--o{ Bookmarks : content
   Articles }o--o{ Categories : categories
   Articles }o--o{ Tags : tags
   Notes }o--o{ Categories : categories
@@ -54,8 +50,8 @@ erDiagram
   Pages }o--o| Media : seo_ogImage
 ```
 
-- Comments и Bookmarks ссылаются на контент **полиморфно**: только `articles` \| `notes` (не `pages`).
 - Pages — статические страницы без taxonomy (`categories` / `tags`) и без `heroImage`.
+- Публичный UI: гости делятся ссылкой на article/note (`ShareActions`); отдельной коллекции под share нет.
 
 ## Shared building blocks
 
@@ -92,22 +88,16 @@ URL-safe сегмент: карта кириллицы uk/ru → латиниц�
 | `MEDIA_MIME_TYPES`       | Input: `image/jpeg`, `image/png`, `image/webp`, `image/gif` |
 | `mediaWebpFormatOptions` | Sharp → `webp` quality `MEDIA_WEBP_QUALITY` (80)            |
 
-### Bookmark uniqueness (`bookmarkUniqueness.ts`)
-
-Хелперы для проверки дубликата `(user, content.relationTo, content.value)` на уровне приложения (не DB unique index). При конфликте hook бросает `APIError` **409**.
-
 ## Access helpers (`src/access/`)
 
 | Helper             | Поведение                                                                                           |
 | ------------------ | --------------------------------------------------------------------------------------------------- |
 | `isAdmin`          | `user.role === 'admin'`                                                                             |
-| `isAuthenticated`  | есть `user.id`                                                                                      |
-| `isSelfOrAdmin`    | admin → все; auth → свой документ по `id`; иначе deny                                               |
-| `isOwnerOrAdmin`   | admin → все; auth → документы, где поле `user` = session; иначе deny                                |
 | `publishedOrAdmin` | admin → все; иначе `publicContentWhere` (`_status published` + `publishedAt` не в будущем, ADR-003) |
-| `approvedOrAdmin`  | admin → все; иначе `moderationStatus equals approved`                                               |
 
-Роли пользователя: `admin` \| `reader` (`AccessUser` / `UserRole` в `types.ts`).
+Вспомогательный where-фрагмент: `publicContentWhere` в [`src/access/publicContentWhere.ts`](../src/access/publicContentWhere.ts).
+
+Роль: `admin` only (`AccessUser` / `UserRole` в `types.ts`).
 
 ### Draft Preview (шаг 035)
 
@@ -134,20 +124,19 @@ URL-safe сегмент: карта кириллицы uk/ru → латиниц�
 
 ### `users` — Users
 
-Аккаунты: один admin в админке + будущие readers на сайте.
+Аккаунты **только admin** для `/admin`. Публичной регистрации нет (ADR-007).
 
 |                |                                                                                                          |
 | -------------- | -------------------------------------------------------------------------------------------------------- |
-| Auth           | email/password + verify + forgotPassword; cookies SameSite=Lax; Google OAuth optional (`payload-oauth2`) |
+| Auth           | email/password в Payload; cookies SameSite=Lax; без verify / forgot email / OAuth                        |
 | Drafts / trash | нет                                                                                                      |
-| Access         | `admin`: только admin; `create`: public (self-register); `read` / `update` / `delete`: `isSelfOrAdmin`   |
-| Hooks          | first user → `role: admin` + `_verified: true`; non-admin create → force `role: reader`                  |
+| Access         | `admin` panel + create/read/update/delete — **только admin**; bootstrap через seed или create-first-user |
+| Hooks          | create → force `role: admin`                                                                             |
 
-| Поле     | Тип                | Notes                                                                                  |
-| -------- | ------------------ | -------------------------------------------------------------------------------------- |
-| _(auth)_ | email, password, … | Payload auth + `_verified` / verification & reset tokens                               |
-| `role`   | select             | required; default `reader`; `admin` \| `reader`; create/update поля — **только admin** |
-| `sub`    | text               | OAuth subject (Google); set by plugin                                                  |
+| Поле     | Тип             | Notes                                                    |
+| -------- | --------------- | -------------------------------------------------------- |
+| _(auth)_ | email, password | Payload auth                                             |
+| `role`   | select          | required; default `admin`; единственное значение `admin` |
 
 ### `media` — Media
 
@@ -221,58 +210,25 @@ Drafts, access, taxonomy, `publishedAt`, `searchText`, SEO — те же.
 Поля: taxonomy `title`/`slug` + localized required `body` + `publishedAt` + `seo`.  
 **Нет** `heroImage`, `categories`, `tags`.
 
-### `comments` — Comments
-
-|        |                                                                                                |
-| ------ | ---------------------------------------------------------------------------------------------- |
-| Access | `read`: `approvedOrAdmin`; `create`: authenticated **and** verified; update/delete: admin only |
-| Hooks  | `setAuthorFromUser`: на create `author = req.user.id` (anti-spoof)                             |
-
-| Поле               | Тип                    | Required | Notes                                                                       |
-| ------------------ | ---------------------- | -------- | --------------------------------------------------------------------------- |
-| `content`          | relationship           | yes      | polymorphic → `articles` \| `notes`                                         |
-| `author`           | relationship → `users` | yes      | readOnly в admin; ставит hook                                               |
-| `body`             | textarea               | yes      |                                                                             |
-| `moderationStatus` | select                 | yes      | default `approved`; `approved` \| `hidden`; create/update поля — admin only |
-
-### `bookmarks` — Bookmarks
-
-|        |                                                                                                         |
-| ------ | ------------------------------------------------------------------------------------------------------- |
-| Access | `read` / `update` / `delete`: `isOwnerOrAdmin`; `create`: authenticated **and** verified                |
-| Hooks  | (1) `setUserFromSession` на create; (2) `rejectDuplicateBookmark` → 409 при дубликате `(user, content)` |
-
-| Поле      | Тип                    | Required | Notes                               |
-| --------- | ---------------------- | -------- | ----------------------------------- |
-| `user`    | relationship → `users` | yes      | readOnly; ставит hook               |
-| `content` | relationship           | yes      | polymorphic → `articles` \| `notes` |
-
-Уникальность — **application-level** (hook), не unique index в БД.
-
 ---
 
 ## Сводная матрица
 
-| Collection | Auth | Drafts | Public / default read   | Localized fields                     | Slug auto | CUD                           |
-| ---------- | ---- | ------ | ----------------------- | ------------------------------------ | --------- | ----------------------------- |
-| users      | yes  | no     | self / admin            | —                                    | —         | create public; RUD self/admin |
-| media      | no   | no     | all                     | —                                    | —         | default authenticated         |
-| categories | no   | no     | all                     | title, slug                          | yes       | admin                         |
-| tags       | no   | no     | all                     | title, slug                          | yes       | admin                         |
-| articles   | no   | yes    | published (+ admin all) | title, slug, body, searchText, seo.* | yes       | admin                         |
-| notes      | no   | yes    | published (+ admin all) | title, slug, body, searchText, seo.* | yes       | admin                         |
-| pages      | no   | yes    | published (+ admin all) | title, slug, body, seo.*             | yes       | admin                         |
-| comments   | no   | no     | approved (+ admin all)  | —                                    | —         | create auth; UD admin         |
-| bookmarks  | no   | no     | owner / admin           | —                                    | —         | create auth; RUD owner/admin  |
+| Collection | Auth | Drafts | Public / default read   | Localized fields                     | Slug auto | CUD   |
+| ---------- | ---- | ------ | ----------------------- | ------------------------------------ | --------- | ----- |
+| users      | yes  | no     | admin only              | —                                    | —         | admin |
+| media      | no   | no     | all                     | —                                    | —         | admin |
+| categories | no   | no     | all                     | title, slug                          | yes       | admin |
+| tags       | no   | no     | all                     | title, slug                          | yes       | admin |
+| articles   | no   | yes    | published (+ admin all) | title, slug, body, searchText, seo.* | yes       | admin |
+| notes      | no   | yes    | published (+ admin all) | title, slug, body, searchText, seo.* | yes       | admin |
+| pages      | no   | yes    | published (+ admin all) | title, slug, body, seo.*             | yes       | admin |
 
 **Articles vs Notes vs Pages:** Articles = Notes + `heroImage`; Pages без taxonomy-relations и без hero.
 
 ## Сознательные ограничения v1
 
-- Bookmark uniqueness на hook, не на DB constraint (гонка возможна теоретически; усиление — отдельный шаг при необходимости).
-- Comments / Bookmarks не цепляются к `pages`.
 - Media: local disk или R2; originals → WebP; CUD admin-only (**039**).
-- Поле `role` меняет только admin; публичный `create` users — self-register readers (`/uk/register`, ADR-004) + first-user admin bootstrap.
-- Comments/Bookmarks create: `isAuthenticatedAndVerified` (ADR-002). Полная матрица — [`security/access-matrix.md`](./security/access-matrix.md).
+- Нет reader accounts, comments, bookmarks (ADR-007).
 - Schedule: query-time visibility по `publishedAt` (ADR-003), без cron.
-- Публичный список комментариев показывает только `approved` (шаг 057). Скрыть и вернуть — селект `moderationStatus` в админке (шаг 058): `hidden` не читается не-админом, в том числе автором; `approved` возвращает на страницу. Очереди и жалоб нет.
+- Полная матрица ACL — [`security/access-matrix.md`](./security/access-matrix.md).

@@ -1,7 +1,7 @@
 import { hasLocale } from 'next-intl'
 import { getTranslations } from 'next-intl/server'
 
-import { getServerUrl } from '@/auth/serverUrl'
+import { getServerUrl } from '@/lib/serverUrl'
 import {
   OG_CONTENT_TYPE,
   OG_SIZE,

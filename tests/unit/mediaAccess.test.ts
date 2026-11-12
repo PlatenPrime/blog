@@ -6,7 +6,7 @@ import type { AccessUser } from '@/access/types'
 import { Media } from '@/collections/Media'
 
 const admin: AccessUser = { id: 1, role: 'admin' }
-const reader: AccessUser = { id: 42, role: 'reader', _verified: true }
+const stranger: AccessUser = { id: 42, role: null }
 
 function args(user: AccessUser): AccessArgs {
   return { req: { user } } as AccessArgs
@@ -15,7 +15,7 @@ function args(user: AccessUser): AccessArgs {
 describe('Media access (roadmap 039)', () => {
   it('allows public read', () => {
     expect(Media.access?.read?.(args(null))).toBe(true)
-    expect(Media.access?.read?.(args(reader))).toBe(true)
+    expect(Media.access?.read?.(args(stranger))).toBe(true)
   })
 
   it('allows only admin to create, update, and delete', () => {
@@ -23,9 +23,9 @@ describe('Media access (roadmap 039)', () => {
     expect(Media.access?.update?.(args(admin))).toBe(true)
     expect(Media.access?.delete?.(args(admin))).toBe(true)
 
-    expect(Media.access?.create?.(args(reader))).toBe(false)
-    expect(Media.access?.update?.(args(reader))).toBe(false)
-    expect(Media.access?.delete?.(args(reader))).toBe(false)
+    expect(Media.access?.create?.(args(stranger))).toBe(false)
+    expect(Media.access?.update?.(args(stranger))).toBe(false)
+    expect(Media.access?.delete?.(args(stranger))).toBe(false)
 
     expect(Media.access?.create?.(args(null))).toBe(false)
     expect(Media.access?.update?.(args(null))).toBe(false)

@@ -16,29 +16,29 @@ describe('routing contract', () => {
 describe('prefixPublicPath', () => {
   it('prefixes the default locale when none is given', () => {
     expect(prefixPublicPath('/')).toBe('/uk')
-    expect(prefixPublicPath('/login')).toBe('/uk/login')
-    expect(prefixPublicPath('/verify')).toBe('/uk/verify')
-    expect(prefixPublicPath('/reset-password')).toBe('/uk/reset-password')
+    expect(prefixPublicPath('/feed')).toBe('/uk/feed')
+    expect(prefixPublicPath('/articles')).toBe('/uk/articles')
+    expect(prefixPublicPath('/notes/hello')).toBe('/uk/notes/hello')
   })
 
   it('keeps an explicit locale', () => {
-    expect(prefixPublicPath('/login', 'ru')).toBe('/ru/login')
+    expect(prefixPublicPath('/feed', 'ru')).toBe('/ru/feed')
     expect(prefixPublicPath('/', 'en')).toBe('/en')
   })
 
   it('rejects paths that are not root-relative', () => {
-    expect(() => prefixPublicPath('login')).toThrow(/root-relative/)
+    expect(() => prefixPublicPath('feed')).toThrow(/root-relative/)
     expect(() => prefixPublicPath('//evil.example')).toThrow(/root-relative/)
   })
 })
 
 describe('localeFromPathname', () => {
   it('reads a known prefix and falls back otherwise', () => {
-    expect(localeFromPathname('/ru/login')).toBe('ru')
+    expect(localeFromPathname('/ru/feed')).toBe('ru')
     expect(localeFromPathname('/en')).toBe('en')
     expect(localeFromPathname('/uk/dev/rich-text/article/hello')).toBe('uk')
-    expect(localeFromPathname('/login')).toBe('uk')
-    expect(localeFromPathname('/fr/login')).toBe('uk')
+    expect(localeFromPathname('/feed')).toBe('uk')
+    expect(localeFromPathname('/fr/feed')).toBe('uk')
     expect(localeFromPathname('/')).toBe('uk')
   })
 })

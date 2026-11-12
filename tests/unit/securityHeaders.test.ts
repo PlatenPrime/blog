@@ -61,14 +61,13 @@ describe('buildBaselineHeaders', () => {
 })
 
 describe('buildContentSecurityPolicy', () => {
-  it('public CSP blocks framing and allows youtube-nocookie + Turnstile', () => {
+  it('public CSP blocks framing and allows youtube-nocookie only', () => {
     const csp = buildContentSecurityPolicy({ audience: 'public' })
     expect(csp).toContain("frame-ancestors 'none'")
-    expect(csp).toContain(
-      'frame-src https://www.youtube-nocookie.com https://challenges.cloudflare.com',
-    )
-    expect(csp).toContain("script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com")
-    expect(csp).toContain("connect-src 'self' https://challenges.cloudflare.com")
+    expect(csp).toContain('frame-src https://www.youtube-nocookie.com')
+    expect(csp).not.toContain('challenges.cloudflare.com')
+    expect(csp).toContain("script-src 'self' 'unsafe-inline'")
+    expect(csp).toContain("connect-src 'self'")
     expect(csp).not.toContain("'unsafe-eval'")
     expect(csp).toContain("object-src 'none'")
   })
@@ -99,14 +98,14 @@ describe('buildRouteSecurityHeaders', () => {
     const headers = buildRouteSecurityHeaders({
       audience: 'public',
       isProduction: true,
-      r2PublicOrigin: 'https://cdn.example.com',
     })
-    const keys = headers.map((h) => h.key)
-    expect(keys).toContain('X-Frame-Options')
-    expect(keys).toContain('Strict-Transport-Security')
-    expect(keys).toContain('Content-Security-Policy')
-    expect(headers.find((h) => h.key === 'Content-Security-Policy')?.value).toContain(
-      'https://cdn.example.com',
-    )
+    expect(headers.map((h) => h.key)).toEqual([
+      'X-Frame-Options',
+      'X-Content-Type-Options',
+      'Referrer-Policy',
+      'Permissions-Policy',
+      'Strict-Transport-Security',
+      'Content-Security-Policy',
+    ])
   })
 })

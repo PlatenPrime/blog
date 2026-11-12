@@ -1,5 +1,7 @@
 # Session security (step 030)
 
+Admin sessions only at `/admin` (ADR-007). No public login routes.
+
 ## Cookies
 
 Configured on `Users.auth.cookies`:
@@ -18,21 +20,16 @@ Token expiration: 7 days (`tokenExpiration`). Max login attempts: 8 with lockout
 
 ## Logout
 
-| Path                        | Behavior                                    |
-| --------------------------- | ------------------------------------------- |
-| `GET/POST /logout`          | Clears current session cookie               |
-| Home → “Log out everywhere” | `logout({ allSessions: true })` via Payload |
+| Path            | Behavior                                    |
+| --------------- | ------------------------------------------- |
+| `/admin` logout | Clears current session via Payload admin UI |
 
-## Rate limits
+Historical `/logout` and “log out everywhere” on the public site were removed with reader auth (ADR-007).
 
-Step **074** / [ADR-006](../adr/006-rate-limiting.md):
+## Rate limits / Turnstile
 
-- **Store:** Upstash Redis REST when `UPSTASH_REDIS_REST_*` is set; otherwise in-memory (local/CI; per-isolate on serverless).
-- **Proxy:** IP limits on `POST` to login/register/forgot/reset → **HTTP 429** + `Retry-After` (not on article/note pages: bookmarks share Next-Action).
-- **Actions:** identity keys (email / userId / IP for reset) → i18n `{ ok: false }` (`src/security/rateLimit.ts`); comments by `userId`.
-- Payload `forgotPassword.minRequestInterval` remains 15s. Product WAF is separate.
-- **Turnstile (075):** stacks on top of these limits on login / register / comment (`src/security/turnstile.ts` + widget). Empty keys → verify skipped (local/CI); do not remove rate limits when bots are filtered.
+**Not product features** after author-only pivot (ADR-007). Historical step **074** / ADR-006 and step **075** Turnstile may still appear in old commits; do not treat Upstash/Turnstile env vars as go-live requirements.
 
 ## Auth smoke
 
-Playwright e2e снят в **085**. Регрессия сессии: `tests/int/auth.int.spec.ts` + ручной poke login → session visible → logout (LOCAL_SETUP).
+Playwright e2e снят в **085**. Регрессия admin-сессии: ручной poke — `seed:admin` → `/admin` login → publish smoke → logout (LOCAL_SETUP §6).

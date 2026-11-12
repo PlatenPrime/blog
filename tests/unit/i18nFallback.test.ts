@@ -22,7 +22,7 @@ describe('resolveAppLocale (ADR-005)', () => {
     for (const input of ['uk', 'ru', 'en', 'fr', '', null, undefined] as const) {
       const locale = resolveAppLocale(input)
       expect(messagesByLocale[locale]).toBeDefined()
-      expect(typeof messagesByLocale[locale].nav.login).toBe('string')
+      expect(typeof messagesByLocale[locale].nav.feed).toBe('string')
     }
   })
 })
@@ -32,7 +32,7 @@ describe('missing chrome translation key (ADR-005)', () => {
     // Silence default MISSING_MESSAGE console noise; production still logs (ADR-005).
     const t = createTranslator({
       locale: 'uk',
-      messages: { nav: { login: 'Вхід' } },
+      messages: { nav: { feed: 'Стрічка' } },
       namespace: 'nav',
       onError: () => undefined,
     })

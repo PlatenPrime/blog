@@ -21,10 +21,14 @@ describe('UI message catalogs', () => {
     expect(leafPaths(messagesByLocale[locale]).sort()).toEqual(ukKeys)
   })
 
-  it('includes the four chrome namespaces', () => {
+  it('includes public chrome namespaces without auth', () => {
     expect(ukKeys.some((key) => key.startsWith('nav.'))).toBe(true)
-    expect(ukKeys.some((key) => key.startsWith('auth.'))).toBe(true)
     expect(ukKeys.some((key) => key.startsWith('errors.'))).toBe(true)
+    expect(ukKeys.some((key) => key.startsWith('share.'))).toBe(true)
+    expect(ukKeys.some((key) => key.startsWith('auth.'))).toBe(false)
+    expect(ukKeys.some((key) => key.startsWith('comments.'))).toBe(false)
+    expect(ukKeys.some((key) => key.startsWith('bookmarks.'))).toBe(false)
+    expect(ukKeys.some((key) => key.startsWith('account.'))).toBe(false)
     expect(ukKeys.filter((key) => key.startsWith('cookies.'))).toEqual([
       'cookies.accept',
       'cookies.body',
@@ -34,12 +38,12 @@ describe('UI message catalogs', () => {
   })
 
   it('sentinel chrome strings differ across locales', () => {
-    const logins = new Set(routing.locales.map((locale) => messagesByLocale[locale].nav.login))
+    const feeds = new Set(routing.locales.map((locale) => messagesByLocale[locale].nav.feed))
     const notFound = new Set(
       routing.locales.map((locale) => messagesByLocale[locale].errors.notFoundTitle),
     )
 
-    expect(logins.size).toBe(routing.locales.length)
+    expect(feeds.size).toBe(routing.locales.length)
     expect(notFound.size).toBe(routing.locales.length)
   })
 })
