@@ -829,11 +829,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 084 — Expand Vitest suite
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Закрыть пробелы домена.
 - **Deliverables:** Тесты на helpers, serializers, access, search query builder.
 - **Verify:** Coverage критичных модулей без погони за %.
 - **DoD:** Нет бизнес-логики «только в голове».
+- **Notes:** Именованные deliverables (search / readingTime / i18n / serializers / access helpers) уже были закрыты feature-шагами. Дыры: `numberedPage` (`tests/unit/numberedPage.test.ts`), `formatPublishedOn` (`tests/unit/formatPublishedOn.test.ts`), wiring Articles/Notes/Pages/Categories/Tags/Users (`tests/unit/contentAccess.test.ts`; Media/Comments/Bookmarks не дублировали). Без %-coverage и без factories (**087**).
 
 ### 085 — Отказ от Playwright / упрощение политики тестов
 
