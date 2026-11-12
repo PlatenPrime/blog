@@ -33,6 +33,6 @@ Step **074** / [ADR-006](../adr/006-rate-limiting.md):
 - Payload `forgotPassword.minRequestInterval` remains 15s. Product WAF is separate.
 - **Turnstile (075):** stacks on top of these limits on login / register / comment (`src/security/turnstile.ts` + widget). Empty keys → verify skipped (local/CI); do not remove rate limits when bots are filtered.
 
-## Playwright smoke
+## Auth smoke
 
-`tests/e2e/auth.e2e.spec.ts`: login → session visible → logout.
+Playwright e2e снят в **085**. Регрессия сессии: `tests/int/auth.int.spec.ts` + ручной poke login → session visible → logout (LOCAL_SETUP).

@@ -16,9 +16,9 @@
 | **Verify**       | Как проверить                          |
 | **DoD**          | Definition of Done шага                |
 
-**Статусы шагов:** `todo` · `doing` · `done` · `blocked`.
+**Статусы шагов:** `todo` · `doing` · `done` · `blocked` · `cancelled`.
 
-**Baseline Status:** следующий шаг — `060` (Reader account page). Шаги `001`–`059` и `083` (test policy) — `done`.
+**Baseline Status:** следующий шаг — `084` (Expand Vitest suite). Шаги `001`–`083` и `085` (отказ от Playwright) — `done`; `086` — `cancelled`.
 
 **Правила ведения**
 
@@ -27,7 +27,7 @@
 3. Секреты не коммитятся; только `.env.example` + описание в LOCAL_SETUP.
 4. Conventional Commits + Changesets с момента появления релизного трека.
 5. Preview Deployment на каждый PR после подключения Vercel.
-6. Тесты — по [`testing.md`](./testing.md): критичная логика и ключевые UX-flows; не гонка за % coverage.
+6. Тесты — по [`testing.md`](./testing.md): критичная логика Vitest’ом; UX — ручной poke; не гонка за % coverage.
 7. После каждого шага — **review gate**: архитектура, оптимальность, best practices, здравый смысл, тесты/docs (детали в `.cursor/rules/roadmap-one-step.mdc` и в `testing.md`).
 8. После каждого шага агент даёт человеку: **как проверить** (команды + клики) и **что вынести** (смысл, инварианты, best practices) — формат в `.cursor/rules/roadmap-one-step.mdc`.
 
@@ -47,7 +47,7 @@ v1 считается завершённым, когда одновременн�
 - [ ] Поиск по Postgres
 - [ ] Dark + light theme, shadcn UI, аккуратный editorial дизайн
 - [x] Privacy, Terms, cookie consent
-- [ ] CI: lint + typecheck + Vitest + Playwright; Dependabot; Preview Deploys
+- [ ] CI: lint + format + typecheck + Vitest; Dependabot; Preview Deploys
 - [ ] Backups Neon (+ политика R2); логи Vercel; Vercel Analytics
 - [ ] Seed + faker для локалки; документация LOCAL_SETUP / ADR / runbooks / security
 
@@ -829,35 +829,38 @@ v1 считается завершённым, когда одновременн�
 
 ### 084 — Expand Vitest suite
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Закрыть пробелы домена.
 - **Deliverables:** Тесты на helpers, serializers, access, search query builder.
 - **Verify:** Coverage критичных модулей без погони за %.
 - **DoD:** Нет бизнес-логики «только в голове».
+- **Notes:** Именованные deliverables (search / readingTime / i18n / serializers / access helpers) уже были закрыты feature-шагами. Дыры: `numberedPage` (`tests/unit/numberedPage.test.ts`), `formatPublishedOn` (`tests/unit/formatPublishedOn.test.ts`), wiring Articles/Notes/Pages/Categories/Tags/Users (`tests/unit/contentAccess.test.ts`; Media/Comments/Bookmarks не дублировали). Без %-coverage и без factories (**087**).
 
-### 085 — Playwright design & a11y smoke
+### 085 — Отказ от Playwright / упрощение политики тестов
 
-- **Статус:** todo
-- **Цель:** Разметка и a11y.
-- **Deliverables:** axe smoke на home/article/login; landmark checks.
-- **Verify:** Critical a11y violations = fail.
-- **DoD:** A11y floor установлен.
+- **Статус:** done
+- **Цель:** Убрать нестабильный браузерный слой; канон — Vitest + lint/format/typecheck + ручной poke.
+- **Deliverables:** Удалены `tests/e2e/**`, `playwright.config.ts`, `@playwright/test` и scripts `test:e2e*`; обновлены `testing.md`, `tech-stack.md`, LOCAL_SETUP; шаг **086** cancelled.
+- **Verify:** `npm run ci` green; `npm run test:e2e` отсутствует; в репо нет `@playwright/test`.
+- **DoD:** Политика и CI согласованы без Playwright; UX-регрессии — poke, не e2e.
+- **Notes:** Playwright не держался ни локально, ни в Actions. Unit (`tests/unit/**`) остаётся must в CI; int (`tests/int/**`) — локально при работе с access/API. A11y axe smoke и e2e-in-CI waived. Расширение Vitest — **084**; factories для unit/int — **087**.
 
 ### 086 — CI: e2e in pipeline
 
-- **Статус:** todo
-- **Цель:** E2E на PR.
-- **Deliverables:** GitHub Actions job Playwright (+ cache browsers); артефакты при fail.
-- **Verify:** PR показывает e2e check.
-- **DoD:** E2E — обязательный gate (или явный shard strategy).
+- **Статус:** cancelled
+- **Цель:** ~~E2E на PR.~~
+- **Deliverables:** ~~GitHub Actions job Playwright.~~
+- **Verify:** —
+- **DoD:** —
+- **Notes:** Waive вместе с **085**: браузерный gate не нужен; CI остаётся lint + format:check + typecheck + unit.
 
 ### 087 — Test data factories
 
 - **Статус:** todo
-- **Цель:** Стабильные тесты.
-- **Deliverables:** Factories для user/article/note/comment.
-- **Verify:** E2E не зависят от ручного seed в UI.
-- **DoD:** Тесты hermetic насколько возможно.
+- **Цель:** Стабильные unit/int тесты.
+- **Deliverables:** Factories для user/article/note/comment (Vitest unit/int).
+- **Verify:** Int/unit не зависят от ручного seed в UI админки.
+- **DoD:** Тесты hermetic насколько возможно (без e2e).
 
 ---
 

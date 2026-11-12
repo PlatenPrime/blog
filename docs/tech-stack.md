@@ -182,16 +182,14 @@ OpenTelemetry full stack — не обязателен в v1.
 
 ## 12. Тестирование и качество кода
 
-| Технология                             | Назначение                                                                                                                                                                                                                       |
-| -------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **ESLint** (flat config)               | Lint TypeScript/React/Next через `eslint-config-next` + `eslint-config-prettier`; script `npm run lint`                                                                                                                          |
-| **Prettier**                           | Форматирование (`.prettierrc.json`); script `npm run format`                                                                                                                                                                     |
-| **Vitest**                             | Unit / component tests (`tests/unit/**`); CI-ready script `npm test` / `npm run test:unit`                                                                                                                                       |
-| **Vitest (integration)**               | Payload/DB smoke в `tests/int/**`; script `npm run test:int` (нужна БД)                                                                                                                                                          |
-| **Playwright**                         | E2E (`tests/e2e/**`): разметка, дизайн-критичные экраны, auth/comment/bookmark flows; `baseURL` `http://localhost:3000`, `webServer` поднимает `npm run dev`; scripts `npm run test:e2e` / `npm run test:e2e:install` (Chromium) |
-| **Testing Library** (по необходимости) | React component tests                                                                                                                                                                                                            |
-| **Typecheck** (`tsc --noEmit`)         | CI gate; script `npm run typecheck`                                                                                                                                                                                              |
-| **axe / a11y smoke**                   | Базовая доступность в Playwright                                                                                                                                                                                                 |
+| Технология                             | Назначение                                                                                              |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| **ESLint** (flat config)               | Lint TypeScript/React/Next через `eslint-config-next` + `eslint-config-prettier`; script `npm run lint` |
+| **Prettier**                           | Форматирование (`.prettierrc.json`); script `npm run format`                                            |
+| **Vitest**                             | Unit / component tests (`tests/unit/**`); CI-ready script `npm test` / `npm run test:unit`              |
+| **Vitest (integration)**               | Payload/DB smoke в `tests/int/**`; script `npm run test:int` (нужна БД)                                 |
+| **Testing Library** (по необходимости) | React component tests                                                                                   |
+| **Typecheck** (`tsc --noEmit`)         | CI gate; script `npm run typecheck`                                                                     |
 
 **Политика (что must / что не гоняем):** [`testing.md`](./testing.md).
 
@@ -202,14 +200,14 @@ OpenTelemetry full stack — не обязателен в v1.
 | Технология               | Назначение                                                                         |
 | ------------------------ | ---------------------------------------------------------------------------------- |
 | **GitHub**               | Source of truth                                                                    |
-| **GitHub Actions**       | CI на каждый PR: lint, typecheck, unit, e2e (где применимо)                        |
+| **GitHub Actions**       | CI на каждый PR: lint, format:check, typecheck, unit                               |
 | **Vercel**               | Deploy production + **Preview Deployments** на каждый PR                           |
 | **Conventional Commits** | История коммитов                                                                   |
 | **Changesets**           | Версионирование / changelog релизов                                                |
 | **Dependabot**           | Обновления зависимостей ([`security/supply-chain.md`](./security/supply-chain.md)) |
 | **Environments**         | `local` · `preview` · `production`                                                 |
 
-**CI skeleton (шаг 012):** [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) — job `quality` на `pull_request` и `push` в `main`; Node из [`.nvmrc`](../.nvmrc) (`node-version-file`); gate: `npm ci` → `npm run lint` → `npm run typecheck` → `npm test` (unit). E2E в pipeline — шаг 086.
+**CI skeleton (шаг 012):** [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) — job `quality` на `pull_request` и `push` в `main`; Node из [`.nvmrc`](../.nvmrc) (`node-version-file`); gate: `npm ci` → `npm run ci` (lint + format:check + typecheck + unit). Playwright / e2e в pipeline — waived (**085** / **086** cancelled).
 
 **Neon:** один production project (без сложной ветвящейся schema-стратегии на старте). Preview app может шарить осторожно настроенный DB strategy (отдельная DB/branch — по мере необходимости; дефолт роадмапа — простой prod Neon + изолированные secrets).
 
