@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked` · `cancelled`.
 
-**Baseline Status:** следующий шаг — `087` (Test data factories). Шаги `001`–`085` — `done`; `086` — `cancelled`.
+**Baseline Status:** следующий шаг — `088` (Vercel project connect). Шаги `001`–`085`, `087` — `done`; `086` — `cancelled`.
 
 **Pivot: author-only (2026-11-12).** Продуктовая модель — один admin, гости без аккаунтов; без comments/bookmarks, публичной auth, Resend/OAuth/Turnstile/Upstash как фич продукта. Канон: [ADR-007](adr/007-author-only-no-public-auth.md), миграция `src/migrations/20261112_130000_drop_reader_social.ts`. Исторические шаги **021–022**, **025–032**, **057–061**, **028–029**, **074–075**, **082** остаются **`done` как история**; их DoD описывает то, что строили тогда — **superseded** для текущего продукта. Синхронизация docs + кода pivot — **сознательный waive** правила «один PR = один шаг» (вне нумерации).
 
@@ -858,11 +858,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 087 — Test data factories
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Стабильные unit/int тесты.
 - **Deliverables:** Factories для user/article/note (Vitest unit/int; без comment/bookmark).
 - **Verify:** Int/unit не зависят от ручного seed в UI админки.
 - **DoD:** Тесты hermetic насколько возможно (без e2e).
+- **Notes:** `tests/helpers/factories/` — `uniqueSuffix`, `lexicalParagraph`, `build*Data` + `createTestUser` / `createTestArticle` / `createTestNote` (Local API, `overrideAccess: true`, defaults admin/published/uk). Unit: `tests/unit/factories.test.ts`. Int smoke: `tests/int/factories.int.spec.ts`; media/contentLocale переведены на factories. `media.int` — `@vitest-environment node` (jsdom ломает file-type на Buffer). Без comment/bookmark (ADR-007), без faker/seed контента (**102**), без e2e.
 
 ---
 

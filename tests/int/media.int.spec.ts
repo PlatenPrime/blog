@@ -1,8 +1,11 @@
+/** @vitest-environment node */
 import { getPayload, type Payload } from 'payload'
-import type { User } from '@/payload-types'
+
 import config from '@/payload.config'
 
 import { beforeAll, describe, expect, it } from 'vitest'
+
+import { createTestUser, uniqueSuffix } from '../helpers/factories'
 
 /** 1×1 PNG — valid image/png for Media upload + WebP conversion. */
 const TINY_PNG = Buffer.from(
@@ -37,17 +40,10 @@ describe('Media access (Local API)', () => {
   })
 
   it('allows admin create and stores WebP', async () => {
-    const suffix = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
-
-    const admin = (await payload.create({
-      collection: 'users',
-      data: {
-        email: `media-admin-${suffix}@example.com`,
-        password: 'test-password-123',
-        role: 'admin',
-      },
-      overrideAccess: true,
-    })) as User
+    const suffix = uniqueSuffix()
+    const admin = await createTestUser(payload, {
+      email: `media-admin-${suffix}@example.com`,
+    })
 
     const doc = await payload.create({
       collection: 'media',
