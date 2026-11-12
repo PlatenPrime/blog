@@ -234,7 +234,7 @@ OpenTelemetry full stack — не обязателен в v1.
 | `docs/LOCAL_SETUP.md`         | Локальный запуск, env, Docker, seed                                                                |
 | `docs/adr/`                   | Architecture Decision Records                                                                      |
 | `docs/security/`              | Access matrix, session hardening, supply-chain, threat model, [checklist](./security/checklist.md) |
-| `docs/runbooks/`              | Backup/restore Neon + R2, incident basics                                                          |
+| `docs/runbooks/`              | Vercel connect (**088**), R2 media, backup/restore Neon + R2, incident basics                      |
 | `docs/content-model.md`       | Описание collections и полей                                                                       |
 | `README.md`                   | Точка входа в проект                                                                               |
 | Privacy / Terms pages         | Юридические страницы в продукте + краткие заметки в docs при необходимости                         |

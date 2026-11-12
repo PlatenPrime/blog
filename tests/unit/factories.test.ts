@@ -21,10 +21,11 @@ describe('test data factories (pure)', () => {
   it('lexicalParagraph builds a root paragraph with the given text', () => {
     const doc = lexicalParagraph('hello factories')
     expect(doc.root.type).toBe('root')
-    const paragraph = doc.root.children[0]
+    // Article['body'] Lexical children are loosely typed; narrow for the assertion.
+    const paragraph = doc.root.children[0] as
+      { type?: string; children?: Array<{ text?: string }> } | undefined
     expect(paragraph?.type).toBe('paragraph')
-    const textNode = paragraph?.children?.[0] as { text?: string } | undefined
-    expect(textNode?.text).toBe('hello factories')
+    expect(paragraph?.children?.[0]?.text).toBe('hello factories')
   })
 
   it('buildUserData defaults to admin with unique email', () => {

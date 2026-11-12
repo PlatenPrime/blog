@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked` · `cancelled`.
 
-**Baseline Status:** следующий шаг — `088` (Vercel project connect). Шаги `001`–`085`, `087` — `done`; `086` — `cancelled`.
+**Baseline Status:** следующий шаг — `089` (Preview Deployments). Шаги `001`–`085`, `087`–`088` — `done`; `086` — `cancelled`.
 
 **Pivot: author-only (2026-11-12).** Продуктовая модель — один admin, гости без аккаунтов; без comments/bookmarks, публичной auth, Resend/OAuth/Turnstile/Upstash как фич продукта. Канон: [ADR-007](adr/007-author-only-no-public-auth.md), миграция `src/migrations/20261112_130000_drop_reader_social.ts`. Исторические шаги **021–022**, **025–032**, **057–061**, **028–029**, **074–075**, **082** остаются **`done` как история**; их DoD описывает то, что строили тогда — **superseded** для текущего продукта. Синхронизация docs + кода pivot — **сознательный waive** правила «один PR = один шаг» (вне нумерации).
 
@@ -871,11 +871,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 088 — Vercel project connect
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Deploy pipeline.
 - **Deliverables:** Vercel ↔ GitHub; env production; build settings; docs.
 - **Verify:** Push/PR создаёт deployment.
 - **DoD:** Хостинг подключён.
+- **Notes:** Vercel project `platenprimes-projects/blog` linked to `PlatenPrime/blog`; Framework Next.js; Install `npm ci`; Build `npm run build`. Production env: `DATABASE_URL` (Neon pooled), `PAYLOAD_SECRET`, `PREVIEW_SECRET`, `NEXT_PUBLIC_SERVER_URL`. Neon project renamed `blog` (region `aws-us-east-2` Free; EU recreate optional on **090**). Runbook [`runbooks/vercel-connect.md`](./runbooks/vercel-connect.md). `tsconfig` excludes `tests/` so `next build` typecheck не ломается на unit. R2 env и migrate-on-deploy — не этот шаг (**090**/R2 runbook). Preview strategy — **089**.
 
 ### 089 — Preview Deployments на каждый PR
 
