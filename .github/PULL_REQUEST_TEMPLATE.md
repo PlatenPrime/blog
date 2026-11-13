@@ -14,6 +14,8 @@ Examples: `feat: …`, `fix: …`, `docs: …`, `chore: …`
 
 CI job `commitlint` checks every commit on the PR range.
 
+For **user-facing** `feat` / `fix` / breaking changes, add a Changesets file (`npm run changeset`) — see [docs/versioning.md](docs/versioning.md). Pure docs/chore/Dependabot usually skip it.
+
 ## Test plan
 
 - [ ]

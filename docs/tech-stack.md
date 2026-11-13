@@ -195,13 +195,15 @@ OpenTelemetry full stack — не обязателен в v1.
 | **GitHub Actions**       | CI на каждый PR: lint, format:check, typecheck, unit                                 |
 | **Vercel**               | Deploy production + **Preview Deployments** на каждый PR                             |
 | **Conventional Commits** | История коммитов; Commitlint + CI ([`commit-convention.md`](./commit-convention.md)) |
-| **Changesets**           | Версионирование / changelog релизов                                                  |
+| **Changesets**           | Версионирование / changelog ([`versioning.md`](./versioning.md))                     |
 | **Dependabot**           | Обновления зависимостей ([`security/supply-chain.md`](./security/supply-chain.md))   |
 | **Environments**         | `local` · `preview` · `production`                                                   |
 
 **CI skeleton (шаг 012):** [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) — job `quality` на `pull_request` и `push` в `main`; Node из [`.nvmrc`](../.nvmrc) (`node-version-file`); gate: `npm ci` → `npm run ci` (lint + format:check + typecheck + unit). Playwright / e2e в pipeline — waived (**085** / **086** cancelled).
 
 **Conventional Commits (шаг 093):** `@commitlint/config-conventional`; job `commitlint` на `pull_request` проверяет range base…head; канон — [`commit-convention.md`](./commit-convention.md); hint в [`.github/PULL_REQUEST_TEMPLATE.md`](../.github/PULL_REQUEST_TEMPLATE.md). Husky не используем.
+
+**Changesets (шаг 094):** `@changesets/cli`; single-package `blog` (`private` + `privatePackages.version: true`); scripts `changeset` / `changeset:version` / `release` (bump + `CHANGELOG.md`, без npm publish); канон — [`versioning.md`](./versioning.md).
 
 **Neon:** один production project (без сложной ветвящейся schema-стратегии на старте). Preview шарит ту же БД; Neon branch per PR — по мере необходимости. Схема на Vercel: `npm run build:deploy` (migrate до `next build`) с `DATABASE_URL_UNPOOLED`; runtime — pooled `DATABASE_URL` (ADR-001; без cold-start `prodMigrations`).
 
