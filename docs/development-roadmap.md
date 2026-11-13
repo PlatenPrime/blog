@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked` · `cancelled`.
 
-**Baseline Status:** следующий шаг — `091` (Vercel Postgres adapter). Шаги `001`–`085`, `087`–`090` — `done`; `086` — `cancelled`.
+**Baseline Status:** следующий шаг — `092` (Secrets matrix doc). Шаги `001`–`085`, `087`–`091` — `done`; `086` — `cancelled`.
 
 **Pivot: author-only (2026-11-12).** Продуктовая модель — один admin, гости без аккаунтов; без comments/bookmarks, публичной auth, Resend/OAuth/Turnstile/Upstash как фич продукта. Канон: [ADR-007](adr/007-author-only-no-public-auth.md), миграция `src/migrations/20261112_130000_drop_reader_social.ts`. Исторические шаги **021–022**, **025–032**, **057–061**, **028–029**, **074–075**, **082** остаются **`done` как история**; их DoD описывает то, что строили тогда — **superseded** для текущего продукта. Синхронизация docs + кода pivot — **сознательный waive** правила «один PR = один шаг» (вне нумерации).
 
@@ -898,11 +898,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 091 — Vercel Postgres adapter in prod
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Оптимальный DB driver path на Vercel.
 - **Deliverables:** `@payloadcms/db-vercel-postgres` в prod config.
 - **Verify:** Serverless functions стабильно коннектятся.
 - **DoD:** Prod DB adapter корректный.
+- **Notes:** Switch уже с **008** в [`src/db/adapter.ts`](../src/db/adapter.ts): `process.env.VERCEL` → `vercelPostgresAdapter` (Preview+Production), иначе `postgresAdapter` (Docker/local). Не сужали до `VERCEL_ENV=production` — Preview тоже serverless + Neon pooler. Unit: `tests/unit/dbAdapter.test.ts` (выбор адаптера, `push` только в development, throw без `DATABASE_URL`). Не ставить `VERCEL=1` в локальный `.env`. Migrate path (`DATABASE_URL_UNPOOLED`) — **090**, без изменений.
 
 ### 092 — Secrets matrix doc
 

@@ -61,7 +61,7 @@ docker compose exec postgres psql -U postgres -d blog -c 'select 1'
 
 ## Связь с Payload
 
-Локально Payload использует `@payloadcms/db-postgres` и тот же `DATABASE_URL`. На Vercel заготовка выбирает `@payloadcms/db-vercel-postgres` (см. `src/db/adapter.ts`).
+Локально Payload использует `@payloadcms/db-postgres` и тот же `DATABASE_URL`. На Vercel (`VERCEL`) — `@payloadcms/db-vercel-postgres` (см. `src/db/adapter.ts`). Не ставьте `VERCEL=1` в локальный `.env`.
 
 Перед `npm run dev`:
 

@@ -67,7 +67,7 @@ Vercel (Next.js SSR/ISR + Payload /admin)
 
 **Почему так (лимиты Free):** личный блог с ISR/кэшем публичных страниц почти не нагружает БД. Текст и метаданные укладываются в Neon Free (~0.5 GB); тяжёлые байты живут в R2. Общий Redis-кэш и второй ORM на v1 не нужны — они увеличивают стоимость и cold start. Redis/Upstash **не** входит в продукт после pivot author-only (ADR-007); исторический ADR-006 superseded.
 
-**Локально:** Docker Postgres (или Neon local connection) для быстрых schema push в dev. Выбор адаптера — `src/db/adapter.ts` (`db-postgres` по умолчанию, `db-vercel-postgres` при `VERCEL`).
+**Локально:** Docker Postgres (или Neon local connection) для быстрых schema push в dev. Выбор адаптера — `src/db/adapter.ts` (`db-postgres` по умолчанию; `db-vercel-postgres` при `VERCEL` — Preview и Production). Не ставить `VERCEL=1` в локальный `.env`.
 
 **Политика схемы:** dev — Drizzle push; prod/preview/CI — только migrations. Детали — [`docs/adr/001-migrations-policy.md`](./adr/001-migrations-policy.md).
 
