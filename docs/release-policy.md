@@ -1,6 +1,6 @@
 # Release policy
 
-Канон: как код попадает в production. Версии и changelog — в [`versioning.md`](./versioning.md). Сообщения коммитов — в [`commit-convention.md`](./commit-convention.md). Ручная настройка защиты ветки в GitHub — шаг **096**.
+Канон: как код попадает в production. Версии и changelog — в [`versioning.md`](./versioning.md). Сообщения коммитов — в [`commit-convention.md`](./commit-convention.md). Ручная настройка защиты ветки в GitHub — [`runbooks/branch-protection.md`](./runbooks/branch-protection.md).
 
 ## Инварианты
 
@@ -11,7 +11,7 @@
 | **Checks перед merge**   | PR мержим только когда зелёные обязательные CI jobs (ниже). Hotfix — тот же путь, без обхода checks.                                                      |
 | **Preview ≠ Production** | Каждый PR получает Vercel **Preview**. Shared Neon и отличи Preview env — [`runbooks/vercel-preview.md`](./runbooks/vercel-preview.md).                   |
 
-Enforce «no direct push» и «required status checks» в UI GitHub — чеклист шага **096**. Этот документ фиксирует _политику_ и _какие_ checks считать обязательными.
+Enforce «no direct push» и «required status checks» в UI GitHub — [`runbooks/branch-protection.md`](./runbooks/branch-protection.md). Этот документ фиксирует _политику_ и _какие_ checks считать обязательными.
 
 ## Обязательные checks (до merge в `main`)
 
@@ -22,7 +22,7 @@ Workflow: [`.github/workflows/ci.yml`](../.github/workflows/ci.yml).
 | `quality`    | `pull_request` (+ `push` на `main`) | `npm ci` → `npm run ci` (lint, format:check, typecheck, unit) |
 | `commitlint` | только `pull_request`               | Conventional Commits на range base…head                       |
 
-Перед merge оба job’а на PR должны быть зелёными. Имена для GitHub «Require status checks» — в **096**.
+Перед merge оба job’а на PR должны быть зелёными. Имена для GitHub «Require status checks» — в [`runbooks/branch-protection.md`](./runbooks/branch-protection.md).
 
 **Changeset на каждый PR CI не требует** — дисциплина и hint в PR template ([`versioning.md`](./versioning.md)). Gate в Actions сознательно не ставим (как без husky на 093).
 
@@ -62,14 +62,13 @@ Semver и `CHANGELOG.md` — [`versioning.md`](./versioning.md). Кратко д
 
 ## Вне scope этого документа
 
-| Тема                                                      | Куда                                                                |
-| --------------------------------------------------------- | ------------------------------------------------------------------- |
-| Require status checks / restrict who can push в GitHub UI | шаг **096**                                                         |
-| Changeset CI gate                                         | не делаем; политика в [`versioning.md`](./versioning.md)            |
-| Auto-release bot / Changesets GitHub Action               | не используем                                                       |
-| npm publish                                               | нет (`private`)                                                     |
-| Go-live checklist (SEO smoke, env gate, публичный URL)    | [`production-checklist.md`](./production-checklist.md), шаг **108** |
-| Secrets на Vercel / Actions                               | [`runbooks/secrets.md`](./runbooks/secrets.md)                      |
+| Тема                                                   | Куда                                                                |
+| ------------------------------------------------------ | ------------------------------------------------------------------- |
+| Changeset CI gate                                      | не делаем; политика в [`versioning.md`](./versioning.md)            |
+| Auto-release bot / Changesets GitHub Action            | не используем                                                       |
+| npm publish                                            | нет (`private`)                                                     |
+| Go-live checklist (SEO smoke, env gate, публичный URL) | [`production-checklist.md`](./production-checklist.md), шаг **108** |
+| Secrets на Vercel / Actions                            | [`runbooks/secrets.md`](./runbooks/secrets.md)                      |
 
 ## Связанное
 
@@ -78,4 +77,4 @@ Semver и `CHANGELOG.md` — [`versioning.md`](./versioning.md). Кратко д
 - Стек / CI: [`tech-stack.md`](./tech-stack.md) §13
 - Vercel connect: [`runbooks/vercel-connect.md`](./runbooks/vercel-connect.md)
 - Preview: [`runbooks/vercel-preview.md`](./runbooks/vercel-preview.md)
-- Branch protection (чеклист UI) — шаг **096**
+- Branch protection (чеклист UI): [`runbooks/branch-protection.md`](./runbooks/branch-protection.md)

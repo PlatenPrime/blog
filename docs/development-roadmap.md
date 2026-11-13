@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked` · `cancelled`.
 
-**Baseline Status:** следующий шаг — `096` (Branch protection notes). Шаги `001`–`085`, `087`–`095` — `done`; `086` — `cancelled`.
+**Baseline Status:** следующий шаг — `097` (Vercel Analytics). Шаги `001`–`085`, `087`–`096` — `done`; `086` — `cancelled`.
 
 **Pivot: author-only (2026-11-12).** Продуктовая модель — один admin, гости без аккаунтов; без comments/bookmarks, публичной auth, Resend/OAuth/Turnstile/Upstash как фич продукта. Канон: [ADR-007](adr/007-author-only-no-public-auth.md), миграция `src/migrations/20261112_130000_drop_reader_social.ts`. Исторические шаги **021–022**, **025–032**, **057–061**, **028–029**, **074–075**, **082** остаются **`done` как история**; их DoD описывает то, что строили тогда — **superseded** для текущего продукта. Синхронизация docs + кода pivot — **сознательный waive** правила «один PR = один шаг» (вне нумерации).
 
@@ -943,11 +943,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 096 — Branch protection notes
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Защита main.
 - **Deliverables:** Doc checklist: required checks, no direct push (насколько GitHub free позволяет).
 - **Verify:** Список шагов для ручной настройки GitHub.
 - **DoD:** Защита main описана и выполнима.
+- **Notes:** Runbook [`runbooks/branch-protection.md`](./runbooks/branch-protection.md): Ruleset на `main` — Restrict deletions, Block force pushes, Require PR (0 approvals), required status checks `quality` + `commitlint`, up to date, без bypass. Имена checks = job names из [`ci.yml`](../.github/workflows/ci.yml). Public Free — полный набор; private Free — оговорка + ссылка на GitHub docs. Verify: push в `main` отклонён; merge без зелёных checks заблокирован. Связки из release-policy, tech-stack, vercel-connect. GitHub UI не меняли из агента — ручная настройка по чеклисту.
 
 ---
 
