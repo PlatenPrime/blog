@@ -1,7 +1,7 @@
 # Как мы делали блог
 
 Книга дописывается по закрытым шагам; канон продукта после pivot — [ADR-007](./adr/007-author-only-no-public-auth.md).
-Дата этой редакции: 12 ноября 2026.
+Дата этой редакции: 13 ноября 2026.
 
 Это не чертёж. Чертёж лежит рядом: [development-roadmap.md](./development-roadmap.md). Там у каждого шага есть цель, список того, что должно появиться, и способ проверить, что оно появилось. По чертежу можно работать. Понять, _зачем_ шаг вообще случился, по нему трудно: ранние пункты выглядят как ритуал, поздние — как внезапные фичи.
 
@@ -540,6 +540,18 @@ Payload не выбирает две коллекции одним запрос�
 
 Шаг 090. Neon перестал быть «строка для билда» и стал боевой базой с понятным ритуалом схемы. Тот же Free project `blog` (`aws-us-east-2`) — без EU recreate. На Vercel рядом с pooled `DATABASE_URL` легла direct `DATABASE_URL_UNPOOLED`: PgBouncer ломает session-level migrate, а runtime serverless хочет pooler. Build Command сменили на `npm run build:deploy` — pending миграции до `next build`; локальный `npm run build` по-прежнему чистый. Cold-start `prodMigrations` не включали: latency на каждом isolate дороже минуты на деплое. Первый admin — one-shot `seed:admin` с машины против Neon, не секреты `ADMIN_*` в Vercel. Smoke: prod `/admin` логинится и пишет. Инструкция — [runbooks/vercel-connect.md](./runbooks/vercel-connect.md) §6; политика — [ADR-001](./adr/001-migrations-policy.md).
 
+Шаг 091. Адаптер для serverless перестал быть «заготовкой на потом». Переключатель в `src/db/adapter.ts` остался тем же, что заложили на 008: платформа Vercel сама выставляет `VERCEL`, и тогда Payload берёт `@payloadcms/db-vercel-postgres` с `VercelPool` — обычный `pg.Pool` плохо живёт в коротких изолятах. Preview и Production оба на этом пути: Preview тоже serverless и тот же Neon pooler. Локально без `VERCEL` — `db-postgres` и Docker; `VERCEL=1` в `.env` на ноутбуке ломает выбор. Unit фиксирует ветки и отказ без `DATABASE_URL`. Migrate по-прежнему через unpooled URL с 090 — адаптер runtime и CLI схема не смешиваем.
+
+Шаг 092. Секреты перестали жить в трёх абзацах connect/preview и голове оператора. Появилась одна карта — [runbooks/secrets.md](./runbooks/secrets.md): каждый ключ из `.env.example` размечен по local, Vercel Production, Preview и GitHub Actions. Preview держит свои `PAYLOAD_SECRET` / `PREVIEW_SECRET`; `ADMIN_*` на хостинг не едут; `NEXT_PUBLIC_SERVER_URL` на Preview не ставим. Actions честно пусты — текущий CI не тянет app-секреты. Ротация: revoke у провайдера → новый ключ → все клетки матрицы. Соседние runbook и supply-chain только ссылаются сюда, а не дублируют таблицу.
+
+Шаг 093. Сообщения коммитов сначала пытались дисциплинировать Commitlint’ом: `@commitlint/config-conventional` и отдельный CI job на PR (range base…head). Husky не ставили. Позже enforcement сняли целиком — job, пакеты и канон `commit-convention.md` мешали больше, чем помогали на соло-репо. Dependabot по-прежнему пишет `chore(deps): …`. Обязательный gate перед merge — только `quality`.
+
+Шаг 094. Номер версии перестал быть цифрой «из головы». Поставили `@changesets/cli` на single-package `blog` (`private`): pending-файлы в `.changeset/`, bump через `npm run release` (alias `changeset:version`) пишет `package.json` и корневой `CHANGELOG.md`. Publish в npm не делаем — это приложение, не библиотека. В конфиге явно `privatePackages.version: true`: иначе Changesets 3 молча считает private неversionable. Канон — [versioning.md](./versioning.md); в PR template — hint для user-facing изменений.
+
+Шаг 095. «Как катим в prod» перестало быть устным договором. В [release-policy.md](./release-policy.md) зафиксировали: `main` = Vercel Production; в `main` только через PR; перед merge зелёный `quality`; Preview на каждый PR — не prod. Hotfix тем же путём. `npm run release` и tag `vX.Y.Z` осознанно после merge’ей с changesets — номер версии не блокирует уже случившийся deploy кода. Changeset в Actions не gate’им. Кнопки branch protection в GitHub — на шаге 096.
+
+Шаг 096. Договор «не пушить в main» перестал быть честью. В [runbooks/branch-protection.md](./runbooks/branch-protection.md) — чеклист Ruleset: только PR, запрет force-push и удаления, обязательный check `quality` (имя job’а из `ci.yml`), ветка up to date, без bypass для админа и без required approvals (соло). Public Free это закрывает целиком; private Free — оговорка. Сам UI GitHub агент не крутит: оператор проходит список и проверяет отклонённым push’ем. Если в Ruleset ещё числится старый `commitlint` — его надо убрать вручную. Политика релиза осталась в release-policy; здесь — как её включить кнопками.
+
 Рядом с выкладкой — операционка (097–103). Аналитика, которая уважает согласие на куки. Логи, по которым видно, что вход сломался. Осознанное «подключаем ли сбор ошибок» или честный отказ. Записки, как не потерять базу и бакет картинок. Сид с правдоподобными статьями, чтобы локальный сайт не зиял пустотой. Указатель на эти записки, потому что runbook, который нельзя найти, равен отсутствующему.
 
 Последний заход перед тем, как дать ссылку людям (104–110 и хвост документации 111–115). Кэш публичных страниц и способ сбрасывать его в момент публикации — вот где вспоминают, что отложенный пост не имеет крона. Картинки, которые не тянут первый экран. Вычищение лишнего JavaScript. Настоящий текст «обо мне» вместо рыбы. Чеклист выкладки. Адрес `*.vercel.app`. И отдельно, уже после запуска: свой домен, свой домен для картинок, второй фактор, поиск взрослее. Это не забытые задачи v1. Это сознательная граница, чтобы v1 имел конец.
@@ -602,6 +614,6 @@ Payload не выбирает две коллекции одним запрос�
 - Глава 11 — шаги 079–082 записаны (Resend runbook — история; почта снята с продукта).
 - Pivot author-only — глава выше (ADR-007); `086` cancelled.
 - Качество / factories — шаги **083–087** (в обзоре выше; Track 10).
-- Выход с ноутбука / Vercel connect — шаг **088**; Preview Deployments — шаг **089**; Production Neon / migrate-on-deploy — шаг **090** (в обзоре выше; Track 11); следующий по чертежу: **091**.
+- Выход с ноутбука / Vercel connect — шаг **088**; Preview Deployments — шаг **089**; Production Neon / migrate-on-deploy — шаг **090**; Vercel Postgres adapter — шаг **091**; Secrets matrix — шаг **092**; Conventional Commits (enforcement снят) — шаг **093**; Changesets — шаг **094**; Release policy — шаг **095**; Branch protection — шаг **096** (в обзоре выше; Track 11); следующий по чертежу: **097**.
 
 Свериться с полями и правами, не перечитывая главы: [content-model.md](./content-model.md), [security/access-matrix.md](./security/access-matrix.md). Поднять проект руками: [LOCAL_SETUP.md](./LOCAL_SETUP.md). Идти по работе: [development-roadmap.md](./development-roadmap.md).

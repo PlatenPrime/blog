@@ -53,7 +53,7 @@
 | `CONTACT_EMAIL`                  | опционально                                                                                                           |
 | `ADMIN_EMAIL` / `ADMIN_PASSWORD` | **не** на Vercel; только локальный one-shot `seed:admin` против Neon                                                  |
 
-Канон имён — [`.env.example`](../../.env.example). Полная матрица «где какой секрет» — шаг **092** (`docs/runbooks/secrets.md`).
+Канон имён — [`.env.example`](../../.env.example). Полная матрица «где какой секрет» — [secrets.md](./secrets.md) (шаг **092**).
 
 На Vercel платформа сама выставляет `VERCEL` → адаптер `@payloadcms/db-vercel-postgres` ([`src/db/adapter.ts`](../../src/db/adapter.ts)).
 
@@ -123,12 +123,15 @@ npm run seed:admin       # один admin; повтор = skip
 | ------------------------------------- | -------------------------------------------------- |
 | Preview env vars / общая preview-БД   | **089** ([vercel-preview.md](./vercel-preview.md)) |
 | Уточнение vercel-postgres adapter     | **091**                                            |
-| Матрица секретов                      | **092**                                            |
+| Матрица секретов                      | **092** ([secrets.md](./secrets.md))               |
 | Backup Neon                           | **100**                                            |
 | Analytics, custom domain, go-live URL | **097+**, **109**                                  |
 
 ## Связанные документы
 
+- [secrets.md](./secrets.md) — матрица «где какой секрет» (**092**)
+- [release-policy.md](../release-policy.md) — `main` = Production, PR + checks (**095**)
+- [branch-protection.md](./branch-protection.md) — Ruleset / required checks на `main` (**096**)
 - [tech-stack.md](../tech-stack.md) — хостинг и env
 - [LOCAL_SETUP.md](../LOCAL_SETUP.md) — локальный путь (Docker Postgres)
 - [r2-media.md](./r2-media.md) — R2 ключи и CORS

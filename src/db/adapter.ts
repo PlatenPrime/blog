@@ -9,11 +9,13 @@ const dirname = path.dirname(fileURLToPath(import.meta.url))
 
 /**
  * Selects the Payload Postgres adapter for the current runtime.
- * Local/dev: `@payloadcms/db-postgres`. Vercel: `@payloadcms/db-vercel-postgres` (prod path refined in step 091).
+ * Local/CI (no `VERCEL`): `@payloadcms/db-postgres`.
+ * Vercel Preview + Production (`process.env.VERCEL`): `@payloadcms/db-vercel-postgres` (VercelPool).
+ * Do not set `VERCEL=1` in local `.env` — that forces the serverless adapter against Docker.
  *
- * Neon (neon-postgres skill): prefer pooled `DATABASE_URL` for app traffic (serverless / Vercel).
- * Use `DATABASE_URL_UNPOOLED` only for migrations (`npm run migrate` via `withDirectDatabaseUrl`).
- * Do not swap Payload adapters for `@neondatabase/serverless` — Payload owns the pool.
+ * Neon: pooled `DATABASE_URL` for app traffic; `DATABASE_URL_UNPOOLED` only for migrations
+ * (`npm run migrate` via `withDirectDatabaseUrl`). Payload owns the pool — do not swap in
+ * `@neondatabase/serverless`.
  *
  * Schema policy (step 009 / docs/adr/001-migrations-policy.md):
  * - push only in development

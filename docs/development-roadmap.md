@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked` · `cancelled`.
 
-**Baseline Status:** следующий шаг — `091` (Vercel Postgres adapter). Шаги `001`–`085`, `087`–`090` — `done`; `086` — `cancelled`.
+**Baseline Status:** следующий шаг — `097` (Vercel Analytics). Шаги `001`–`085`, `087`–`096` — `done`; `086` — `cancelled`.
 
 **Pivot: author-only (2026-11-12).** Продуктовая модель — один admin, гости без аккаунтов; без comments/bookmarks, публичной auth, Resend/OAuth/Turnstile/Upstash как фич продукта. Канон: [ADR-007](adr/007-author-only-no-public-auth.md), миграция `src/migrations/20261112_130000_drop_reader_social.ts`. Исторические шаги **021–022**, **025–032**, **057–061**, **028–029**, **074–075**, **082** остаются **`done` как история**; их DoD описывает то, что строили тогда — **superseded** для текущего продукта. Синхронизация docs + кода pivot — **сознательный waive** правила «один PR = один шаг» (вне нумерации).
 
@@ -898,51 +898,57 @@ v1 считается завершённым, когда одновременн�
 
 ### 091 — Vercel Postgres adapter in prod
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Оптимальный DB driver path на Vercel.
 - **Deliverables:** `@payloadcms/db-vercel-postgres` в prod config.
 - **Verify:** Serverless functions стабильно коннектятся.
 - **DoD:** Prod DB adapter корректный.
+- **Notes:** Switch уже с **008** в [`src/db/adapter.ts`](../src/db/adapter.ts): `process.env.VERCEL` → `vercelPostgresAdapter` (Preview+Production), иначе `postgresAdapter` (Docker/local). Не сужали до `VERCEL_ENV=production` — Preview тоже serverless + Neon pooler. Unit: `tests/unit/dbAdapter.test.ts` (выбор адаптера, `push` только в development, throw без `DATABASE_URL`). Не ставить `VERCEL=1` в локальный `.env`. Migrate path (`DATABASE_URL_UNPOOLED`) — **090**, без изменений.
 
 ### 092 — Secrets matrix doc
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Где какой секрет лежит.
 - **Deliverables:** `docs/runbooks/secrets.md` (Vercel + GitHub Actions).
 - **Verify:** Все ключи из `.env.example` размечены.
 - **DoD:** Секреты управляемы.
+- **Notes:** Runbook [`runbooks/secrets.md`](./runbooks/secrets.md): матрица всех ключей `.env.example` × local / Vercel Production / Preview / GitHub Actions. Preview ≠ Production для `PAYLOAD_SECRET`/`PREVIEW_SECRET`; `ADMIN_*` никогда на Vercel; `NEXT_PUBLIC_SERVER_URL` только Prod (+ local). CI без app-секретов (`ci.yml`). Платформенные `VERCEL*` отдельно. Ссылки из connect/preview, tech-stack, supply-chain.
 
 ### 093 — Conventional Commits
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Чистая история.
 - **Deliverables:** Commitlint или documented convention + PR template hint.
 - **Verify:** Плохой commit message ловится (hook или CI).
 - **DoD:** Convention enforced.
+- **Notes:** Изначально: `@commitlint/cli` + `@commitlint/config-conventional`, CI job `commitlint` на PR, канон `commit-convention.md`, hint в PR template; husky не вводили. **Enforcement снят (ops-fix):** job, пакеты, config и канон удалены — формат сообщений больше не gate. Dependabot `commit-message` prefix `chore` + scope оставлен. Changesets — **094**.
 
 ### 094 — Changesets
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Версии и changelog.
 - **Deliverables:** Changesets setup; release script; `CHANGELOG.md` policy.
 - **Verify:** changeset file → version bump flow documented.
 - **DoD:** Релизы не «из головы».
+- **Notes:** `@changesets/cli`; [`.changeset/config.json`](../.changeset/config.json) — `baseBranch: main`, `access: restricted`, `commit: false`, `privatePackages.version: true` (CLI 3 иначе пропускает `private`). Scripts: `changeset`, `changeset:version`, `release` (= version bump + `CHANGELOG.md`, без npm publish). Канон [`versioning.md`](./versioning.md); hint в PR template; tech-stack §13. Changeset на PR — дисциплина (не CI gate); процесс выкладки — [`release-policy.md`](./release-policy.md) (**095**).
 
 ### 095 — Release policy
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Как катим в production.
 - **Deliverables:** `docs/release-policy.md` (main = prod, PR checks required).
 - **Verify:** Согласовано с branch protection notes.
 - **DoD:** Релизный процесс явный.
+- **Notes:** Канон [`release-policy.md`](./release-policy.md): `main` = Vercel Production; в `main` только через PR; перед merge зелёный `quality` (commitlint снят); Preview на PR; hotfix тем же путём. Version bump / tag `vX.Y.Z` после `npm run release` — не блокер деплоя кода; GitHub Release опционален; npm publish нет. Changeset CI gate не вводили (как в `versioning.md`). Enforce в GitHub UI (required checks, no direct push) — **096**.
 
 ### 096 — Branch protection notes
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Защита main.
 - **Deliverables:** Doc checklist: required checks, no direct push (насколько GitHub free позволяет).
 - **Verify:** Список шагов для ручной настройки GitHub.
 - **DoD:** Защита main описана и выполнима.
+- **Notes:** Runbook [`runbooks/branch-protection.md`](./runbooks/branch-protection.md): Ruleset на `main` — Restrict deletions, Block force pushes, Require PR (0 approvals), required status check `quality` (commitlint снят — убрать из Ruleset, если ещё числится), up to date, без bypass. Имена checks = job names из [`ci.yml`](../.github/workflows/ci.yml). Public Free — полный набор; private Free — оговорка + ссылка на GitHub docs. Verify: push в `main` отклонён; merge без зелёного `quality` заблокирован. Связки из release-policy, tech-stack, vercel-connect. GitHub UI не меняли из агента — ручная настройка по чеклисту.
 
 ---
 

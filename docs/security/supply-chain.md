@@ -47,7 +47,7 @@ Public repositories: secret scanning and push protection are available on the fr
 Repo hygiene:
 
 - Commit **only** [`.env.example`](../../.env.example); never `.env` or real keys.
-- App/runtime secrets live in Vercel Environment Variables and GitHub Actions Secrets.
+- App/runtime secrets live in Vercel Environment Variables and GitHub Actions Secrets. Matrix (which key where): [runbooks/secrets.md](../runbooks/secrets.md).
 
 ### If scanning alerts
 

@@ -43,7 +43,7 @@ Project → **Settings** → **Environment Variables** → scope **Preview** (н
 | `CONTACT_EMAIL`                                                     | опционально                                | как в Production                                            |
 | `ADMIN_EMAIL` / `ADMIN_PASSWORD`                                    | не нужны runtime                           | только локальный `seed:admin`                               |
 
-Канон имён — [`.env.example`](../../.env.example). Полная матрица «где какой секрет» — шаг **092**.
+Канон имён — [`.env.example`](../../.env.example). Полная матрица «где какой секрет» — [secrets.md](./secrets.md) (шаг **092**).
 
 На Vercel платформа выставляет `VERCEL` → адаптер `@payloadcms/db-vercel-postgres` ([`src/db/adapter.ts`](../../src/db/adapter.ts)). Также доступны `VERCEL_URL` и `VERCEL_ENV=preview`.
 
@@ -96,16 +96,17 @@ npx vercel env ls
 
 ## Что не в этом шаге
 
-| Тема                                | Шаг                      |
-| ----------------------------------- | ------------------------ |
-| Prod admin smoke / connect runbook  | **090** / vercel-connect |
-| Уточнение vercel-postgres adapter   | **091**                  |
-| Матрица секретов (Vercel + Actions) | **092**                  |
-| Neon branch per PR                  | позже / по необходимости |
-| Custom domain, analytics            | **097+**, **109**        |
+| Тема                                | Шаг                                  |
+| ----------------------------------- | ------------------------------------ |
+| Prod admin smoke / connect runbook  | **090** / vercel-connect             |
+| Уточнение vercel-postgres adapter   | **091**                              |
+| Матрица секретов (Vercel + Actions) | **092** ([secrets.md](./secrets.md)) |
+| Neon branch per PR                  | позже / по необходимости             |
+| Custom domain, analytics            | **097+**, **109**                    |
 
 ## Связанные документы
 
+- [secrets.md](./secrets.md) — матрица «где какой секрет» (**092**)
 - [vercel-connect.md](./vercel-connect.md) — Production connect (**088**) + Neon migrate (**090**)
 - [tech-stack.md](../tech-stack.md) — environments
 - [adr/001-migrations-policy.md](../adr/001-migrations-policy.md) — push vs migrate

@@ -9,6 +9,9 @@ updates:
       time: '09:00'
       timezone: Europe/Kyiv
     open-pull-requests-limit: 5
+    commit-message:
+      prefix: chore
+      include: scope
     groups:
       production-minor-patch:
         dependency-type: production
@@ -29,3 +32,6 @@ updates:
       time: '09:00'
       timezone: Europe/Kyiv
     open-pull-requests-limit: 5
+    commit-message:
+      prefix: chore
+      include: scope

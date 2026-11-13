@@ -67,7 +67,7 @@ Vercel (Next.js SSR/ISR + Payload /admin)
 
 **Почему так (лимиты Free):** личный блог с ISR/кэшем публичных страниц почти не нагружает БД. Текст и метаданные укладываются в Neon Free (~0.5 GB); тяжёлые байты живут в R2. Общий Redis-кэш и второй ORM на v1 не нужны — они увеличивают стоимость и cold start. Redis/Upstash **не** входит в продукт после pivot author-only (ADR-007); исторический ADR-006 superseded.
 
-**Локально:** Docker Postgres (или Neon local connection) для быстрых schema push в dev. Выбор адаптера — `src/db/adapter.ts` (`db-postgres` по умолчанию, `db-vercel-postgres` при `VERCEL`).
+**Локально:** Docker Postgres (или Neon local connection) для быстрых schema push в dev. Выбор адаптера — `src/db/adapter.ts` (`db-postgres` по умолчанию; `db-vercel-postgres` при `VERCEL` — Preview и Production). Не ставить `VERCEL=1` в локальный `.env`.
 
 **Политика схемы:** dev — Drizzle push; prod/preview/CI — только migrations. Детали — [`docs/adr/001-migrations-policy.md`](./adr/001-migrations-policy.md).
 
@@ -189,17 +189,24 @@ OpenTelemetry full stack — не обязателен в v1.
 
 ## 13. CI/CD и релизный процесс
 
-| Технология               | Назначение                                                                         |
-| ------------------------ | ---------------------------------------------------------------------------------- |
-| **GitHub**               | Source of truth                                                                    |
-| **GitHub Actions**       | CI на каждый PR: lint, format:check, typecheck, unit                               |
-| **Vercel**               | Deploy production + **Preview Deployments** на каждый PR                           |
-| **Conventional Commits** | История коммитов                                                                   |
-| **Changesets**           | Версионирование / changelog релизов                                                |
-| **Dependabot**           | Обновления зависимостей ([`security/supply-chain.md`](./security/supply-chain.md)) |
-| **Environments**         | `local` · `preview` · `production`                                                 |
+| Технология         | Назначение                                                                         |
+| ------------------ | ---------------------------------------------------------------------------------- |
+| **GitHub**         | Source of truth                                                                    |
+| **GitHub Actions** | CI на каждый PR: lint, format:check, typecheck, unit                               |
+| **Vercel**         | Deploy production + **Preview Deployments** на каждый PR                           |
+| **Changesets**     | Версионирование / changelog ([`versioning.md`](./versioning.md))                   |
+| **Dependabot**     | Обновления зависимостей ([`security/supply-chain.md`](./security/supply-chain.md)) |
+| **Environments**   | `local` · `preview` · `production`                                                 |
 
 **CI skeleton (шаг 012):** [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) — job `quality` на `pull_request` и `push` в `main`; Node из [`.nvmrc`](../.nvmrc) (`node-version-file`); gate: `npm ci` → `npm run ci` (lint + format:check + typecheck + unit). Playwright / e2e в pipeline — waived (**085** / **086** cancelled).
+
+**Conventional Commits (шаг 093, enforcement снят):** CI job `commitlint` и пакеты Commitlint убраны — формат сообщений больше не gate. Dependabot по-прежнему пишет `chore(deps): …`. Husky не используем.
+
+**Changesets (шаг 094):** `@changesets/cli`; single-package `blog` (`private` + `privatePackages.version: true`); scripts `changeset` / `changeset:version` / `release` (bump + `CHANGELOG.md`, без npm publish); канон — [`versioning.md`](./versioning.md).
+
+**Release policy (шаг 095):** `main` = Vercel Production; merge только через PR с зелёным `quality`; bump/tag не блокер деплоя; канон — [`release-policy.md`](./release-policy.md).
+
+**Branch protection (шаг 096):** Ruleset на `main` — PR-only, required check `quality`; чеклист UI — [`runbooks/branch-protection.md`](./runbooks/branch-protection.md).
 
 **Neon:** один production project (без сложной ветвящейся schema-стратегии на старте). Preview шарит ту же БД; Neon branch per PR — по мере необходимости. Схема на Vercel: `npm run build:deploy` (migrate до `next build`) с `DATABASE_URL_UNPOOLED`; runtime — pooled `DATABASE_URL` (ADR-001; без cold-start `prodMigrations`).
 
@@ -225,19 +232,20 @@ OpenTelemetry full stack — не обязателен в v1.
 
 На старте создаются канонические файлы стека и роадмапа. Далее по роадмапу наращиваем:
 
-| Документ                      | Назначение                                                                                         |
-| ----------------------------- | -------------------------------------------------------------------------------------------------- |
-| `docs/tech-stack.md`          | Этот файл                                                                                          |
-| `docs/development-roadmap.md` | Инженерный роадмап до v1                                                                           |
-| `docs/testing.md`             | Политика тестов (must-cover, слои, review gate)                                                    |
-| `.env.example`                | Канон переменных окружения (плейсхолдеры, без секретов)                                            |
-| `docs/LOCAL_SETUP.md`         | Локальный запуск, env, Docker, seed                                                                |
-| `docs/adr/`                   | Architecture Decision Records                                                                      |
-| `docs/security/`              | Access matrix, session hardening, supply-chain, threat model, [checklist](./security/checklist.md) |
-| `docs/runbooks/`              | Vercel connect (**088**), R2 media, backup/restore Neon + R2, incident basics                      |
-| `docs/content-model.md`       | Описание collections и полей                                                                       |
-| `README.md`                   | Точка входа в проект                                                                               |
-| Privacy / Terms pages         | Юридические страницы в продукте + краткие заметки в docs при необходимости                         |
+| Документ                      | Назначение                                                                                                                                                                                                          |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `docs/tech-stack.md`          | Этот файл                                                                                                                                                                                                           |
+| `docs/development-roadmap.md` | Инженерный роадмап до v1                                                                                                                                                                                            |
+| `docs/testing.md`             | Политика тестов (must-cover, слои, review gate)                                                                                                                                                                     |
+| `.env.example`                | Канон переменных окружения (плейсхолдеры, без секретов)                                                                                                                                                             |
+| `docs/LOCAL_SETUP.md`         | Локальный запуск, env, Docker, seed                                                                                                                                                                                 |
+| `docs/adr/`                   | Architecture Decision Records                                                                                                                                                                                       |
+| `docs/security/`              | Access matrix, session hardening, supply-chain, threat model, [checklist](./security/checklist.md)                                                                                                                  |
+| `docs/runbooks/`              | Vercel connect (**088**), Preview (**089**), [secrets matrix](./runbooks/secrets.md) (**092**), [branch protection](./runbooks/branch-protection.md) (**096**), R2 media, backup/restore Neon + R2, incident basics |
+| `docs/release-policy.md`      | Как катим в production: `main` = prod, PR + required checks (**095**); enforce UI — [`runbooks/branch-protection.md`](./runbooks/branch-protection.md) (**096**)                                                    |
+| `docs/content-model.md`       | Описание collections и полей                                                                                                                                                                                        |
+| `README.md`                   | Точка входа в проект                                                                                                                                                                                                |
+| Privacy / Terms pages         | Юридические страницы в продукте + краткие заметки в docs при необходимости                                                                                                                                          |
 
 Язык документации: **русский**, с EN-терминами где принято (deploy, preview, access control, ISR и т.д.).
 
