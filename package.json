@@ -24,7 +24,6 @@
     "format:check": "prettier --check .",
     "typecheck": "cross-env NODE_OPTIONS=--no-deprecation tsc --noEmit",
     "ci": "npm run lint && npm run format:check && npm run typecheck && npm test",
-    "commitlint": "commitlint",
     "migrate": "cross-env NODE_OPTIONS=\"--no-deprecation --import=tsx/esm\" tsx --import ./src/scripts/withDirectDatabaseUrl.ts ./node_modules/payload/bin.js migrate",
     "migrate:create": "cross-env NODE_OPTIONS=--no-deprecation payload migrate:create",
     "migrate:status": "cross-env NODE_OPTIONS=\"--no-deprecation --import=tsx/esm\" tsx --import ./src/scripts/withDirectDatabaseUrl.ts ./node_modules/payload/bin.js migrate:status",
@@ -66,8 +65,6 @@
   },
   "devDependencies": {
     "@changesets/cli": "^3.0.3",
-    "@commitlint/cli": "^21.2.4",
-    "@commitlint/config-conventional": "^21.2.4",
     "@testing-library/react": "16.3.3",
     "@types/node": "^26.6.6",
     "@types/react": "19.3.0",

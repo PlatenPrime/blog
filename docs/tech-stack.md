@@ -189,25 +189,24 @@ OpenTelemetry full stack — не обязателен в v1.
 
 ## 13. CI/CD и релизный процесс
 
-| Технология               | Назначение                                                                           |
-| ------------------------ | ------------------------------------------------------------------------------------ |
-| **GitHub**               | Source of truth                                                                      |
-| **GitHub Actions**       | CI на каждый PR: lint, format:check, typecheck, unit                                 |
-| **Vercel**               | Deploy production + **Preview Deployments** на каждый PR                             |
-| **Conventional Commits** | История коммитов; Commitlint + CI ([`commit-convention.md`](./commit-convention.md)) |
-| **Changesets**           | Версионирование / changelog ([`versioning.md`](./versioning.md))                     |
-| **Dependabot**           | Обновления зависимостей ([`security/supply-chain.md`](./security/supply-chain.md))   |
-| **Environments**         | `local` · `preview` · `production`                                                   |
+| Технология         | Назначение                                                                         |
+| ------------------ | ---------------------------------------------------------------------------------- |
+| **GitHub**         | Source of truth                                                                    |
+| **GitHub Actions** | CI на каждый PR: lint, format:check, typecheck, unit                               |
+| **Vercel**         | Deploy production + **Preview Deployments** на каждый PR                           |
+| **Changesets**     | Версионирование / changelog ([`versioning.md`](./versioning.md))                   |
+| **Dependabot**     | Обновления зависимостей ([`security/supply-chain.md`](./security/supply-chain.md)) |
+| **Environments**   | `local` · `preview` · `production`                                                 |
 
 **CI skeleton (шаг 012):** [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) — job `quality` на `pull_request` и `push` в `main`; Node из [`.nvmrc`](../.nvmrc) (`node-version-file`); gate: `npm ci` → `npm run ci` (lint + format:check + typecheck + unit). Playwright / e2e в pipeline — waived (**085** / **086** cancelled).
 
-**Conventional Commits (шаг 093):** `@commitlint/config-conventional`; job `commitlint` на `pull_request` проверяет range base…head; канон — [`commit-convention.md`](./commit-convention.md); hint в [`.github/PULL_REQUEST_TEMPLATE.md`](../.github/PULL_REQUEST_TEMPLATE.md). Husky не используем.
+**Conventional Commits (шаг 093, enforcement снят):** CI job `commitlint` и пакеты Commitlint убраны — формат сообщений больше не gate. Dependabot по-прежнему пишет `chore(deps): …`. Husky не используем.
 
 **Changesets (шаг 094):** `@changesets/cli`; single-package `blog` (`private` + `privatePackages.version: true`); scripts `changeset` / `changeset:version` / `release` (bump + `CHANGELOG.md`, без npm publish); канон — [`versioning.md`](./versioning.md).
 
-**Release policy (шаг 095):** `main` = Vercel Production; merge только через PR с зелёными `quality` + `commitlint`; bump/tag не блокер деплоя; канон — [`release-policy.md`](./release-policy.md).
+**Release policy (шаг 095):** `main` = Vercel Production; merge только через PR с зелёным `quality`; bump/tag не блокер деплоя; канон — [`release-policy.md`](./release-policy.md).
 
-**Branch protection (шаг 096):** Ruleset на `main` — PR-only, required checks `quality` + `commitlint`; чеклист UI — [`runbooks/branch-protection.md`](./runbooks/branch-protection.md).
+**Branch protection (шаг 096):** Ruleset на `main` — PR-only, required check `quality`; чеклист UI — [`runbooks/branch-protection.md`](./runbooks/branch-protection.md).
 
 **Neon:** один production project (без сложной ветвящейся schema-стратегии на старте). Preview шарит ту же БД; Neon branch per PR — по мере необходимости. Схема на Vercel: `npm run build:deploy` (migrate до `next build`) с `DATABASE_URL_UNPOOLED`; runtime — pooled `DATABASE_URL` (ADR-001; без cold-start `prodMigrations`).
 

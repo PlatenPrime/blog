@@ -1,6 +1,6 @@
 # Versioning & changelog (Changesets)
 
-Канон semver и changelog для приложения `blog`. Сообщения коммитов — в [`commit-convention.md`](./commit-convention.md). Как катим в production (`main` = prod, required checks) — [`release-policy.md`](./release-policy.md).
+Канон semver и changelog для приложения `blog`. Как катим в production (`main` = prod, required check `quality`) — [`release-policy.md`](./release-policy.md).
 
 Пакет **не** публикуется в npm (`"private": true`). Changesets нужны для номера версии в `package.json` и корневого `CHANGELOG.md`, не для `npm publish`.
 
@@ -15,7 +15,7 @@
 | breaking / major — несовместимое изменение поведения              | Dependabot bump без user-facing эффекта            |
 | заметное изменение UX / контент-модели / публичного API маршрутов | внутренний рефактор без смены поведения            |
 
-CI **не** требует changeset на каждый PR (как и без husky на 093). Политика — дисциплина в PR, не gate в Actions.
+CI **не** требует changeset на каждый PR. Политика — дисциплина в PR, не gate в Actions.
 
 ## Поток: changeset → bump → changelog
 
@@ -70,7 +70,6 @@ PR (feat/fix) → .changeset/*.md → merge main
 
 ## Связанное
 
-- Conventional Commits: [`commit-convention.md`](./commit-convention.md)
 - Стек / релизный трек: [`tech-stack.md`](./tech-stack.md) §13
 - PR hint: [`.github/PULL_REQUEST_TEMPLATE.md`](../.github/PULL_REQUEST_TEMPLATE.md)
 - Production release process: [`release-policy.md`](./release-policy.md)

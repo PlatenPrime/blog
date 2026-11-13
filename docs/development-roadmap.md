@@ -921,7 +921,7 @@ v1 считается завершённым, когда одновременн�
 - **Deliverables:** Commitlint или documented convention + PR template hint.
 - **Verify:** Плохой commit message ловится (hook или CI).
 - **DoD:** Convention enforced.
-- **Notes:** `@commitlint/cli` + `@commitlint/config-conventional`; [`commitlint.config.mjs`](../commitlint.config.mjs); script `npm run commitlint`. CI job `commitlint` на `pull_request` (range base…head, `fetch-depth: 0`); husky не вводили. Канон [`commit-convention.md`](./commit-convention.md); hint [`.github/PULL_REQUEST_TEMPLATE.md`](../.github/PULL_REQUEST_TEMPLATE.md). Dependabot `commit-message` prefix `chore` + scope. Changesets — **094**.
+- **Notes:** Изначально: `@commitlint/cli` + `@commitlint/config-conventional`, CI job `commitlint` на PR, канон `commit-convention.md`, hint в PR template; husky не вводили. **Enforcement снят (ops-fix):** job, пакеты, config и канон удалены — формат сообщений больше не gate. Dependabot `commit-message` prefix `chore` + scope оставлен. Changesets — **094**.
 
 ### 094 — Changesets
 
@@ -930,7 +930,7 @@ v1 считается завершённым, когда одновременн�
 - **Deliverables:** Changesets setup; release script; `CHANGELOG.md` policy.
 - **Verify:** changeset file → version bump flow documented.
 - **DoD:** Релизы не «из головы».
-- **Notes:** `@changesets/cli`; [`.changeset/config.json`](../.changeset/config.json) — `baseBranch: main`, `access: restricted`, `commit: false`, `privatePackages.version: true` (CLI 3 иначе пропускает `private`). Scripts: `changeset`, `changeset:version`, `release` (= version bump + `CHANGELOG.md`, без npm publish). Канон [`versioning.md`](./versioning.md); hint в PR template; связка из [`commit-convention.md`](./commit-convention.md) и tech-stack §13. Changeset на PR — дисциплина (не CI gate); процесс выкладки — [`release-policy.md`](./release-policy.md) (**095**).
+- **Notes:** `@changesets/cli`; [`.changeset/config.json`](../.changeset/config.json) — `baseBranch: main`, `access: restricted`, `commit: false`, `privatePackages.version: true` (CLI 3 иначе пропускает `private`). Scripts: `changeset`, `changeset:version`, `release` (= version bump + `CHANGELOG.md`, без npm publish). Канон [`versioning.md`](./versioning.md); hint в PR template; tech-stack §13. Changeset на PR — дисциплина (не CI gate); процесс выкладки — [`release-policy.md`](./release-policy.md) (**095**).
 
 ### 095 — Release policy
 
@@ -939,7 +939,7 @@ v1 считается завершённым, когда одновременн�
 - **Deliverables:** `docs/release-policy.md` (main = prod, PR checks required).
 - **Verify:** Согласовано с branch protection notes.
 - **DoD:** Релизный процесс явный.
-- **Notes:** Канон [`release-policy.md`](./release-policy.md): `main` = Vercel Production; в `main` только через PR; перед merge зелёные `quality` + `commitlint`; Preview на PR; hotfix тем же путём. Version bump / tag `vX.Y.Z` после `npm run release` — не блокер деплоя кода; GitHub Release опционален; npm publish нет. Changeset CI gate не вводили (как в `versioning.md`). Enforce в GitHub UI (required checks, no direct push) — **096**.
+- **Notes:** Канон [`release-policy.md`](./release-policy.md): `main` = Vercel Production; в `main` только через PR; перед merge зелёный `quality` (commitlint снят); Preview на PR; hotfix тем же путём. Version bump / tag `vX.Y.Z` после `npm run release` — не блокер деплоя кода; GitHub Release опционален; npm publish нет. Changeset CI gate не вводили (как в `versioning.md`). Enforce в GitHub UI (required checks, no direct push) — **096**.
 
 ### 096 — Branch protection notes
 
@@ -948,7 +948,7 @@ v1 считается завершённым, когда одновременн�
 - **Deliverables:** Doc checklist: required checks, no direct push (насколько GitHub free позволяет).
 - **Verify:** Список шагов для ручной настройки GitHub.
 - **DoD:** Защита main описана и выполнима.
-- **Notes:** Runbook [`runbooks/branch-protection.md`](./runbooks/branch-protection.md): Ruleset на `main` — Restrict deletions, Block force pushes, Require PR (0 approvals), required status checks `quality` + `commitlint`, up to date, без bypass. Имена checks = job names из [`ci.yml`](../.github/workflows/ci.yml). Public Free — полный набор; private Free — оговорка + ссылка на GitHub docs. Verify: push в `main` отклонён; merge без зелёных checks заблокирован. Связки из release-policy, tech-stack, vercel-connect. GitHub UI не меняли из агента — ручная настройка по чеклисту.
+- **Notes:** Runbook [`runbooks/branch-protection.md`](./runbooks/branch-protection.md): Ruleset на `main` — Restrict deletions, Block force pushes, Require PR (0 approvals), required status check `quality` (commitlint снят — убрать из Ruleset, если ещё числится), up to date, без bypass. Имена checks = job names из [`ci.yml`](../.github/workflows/ci.yml). Public Free — полный набор; private Free — оговорка + ссылка на GitHub docs. Verify: push в `main` отклонён; merge без зелёного `quality` заблокирован. Связки из release-policy, tech-stack, vercel-connect. GitHub UI не меняли из агента — ручная настройка по чеклисту.
 
 ---
 

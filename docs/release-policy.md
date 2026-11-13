@@ -1,6 +1,6 @@
 # Release policy
 
-Канон: как код попадает в production. Версии и changelog — в [`versioning.md`](./versioning.md). Сообщения коммитов — в [`commit-convention.md`](./commit-convention.md). Ручная настройка защиты ветки в GitHub — [`runbooks/branch-protection.md`](./runbooks/branch-protection.md).
+Канон: как код попадает в production. Версии и changelog — в [`versioning.md`](./versioning.md). Ручная настройка защиты ветки в GitHub — [`runbooks/branch-protection.md`](./runbooks/branch-protection.md).
 
 ## Инварианты
 
@@ -8,7 +8,7 @@
 | ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **`main` = Production**  | Ветка `main` — единственный источник Vercel **Production**. Каждый merge/`push` в `main` → Production deploy (`npm run build:deploy`, migrate-on-deploy). |
 | **Только через PR**      | В `main` не пушим напрямую. Изменения — feature-ветка → Pull Request → merge.                                                                             |
-| **Checks перед merge**   | PR мержим только когда зелёные обязательные CI jobs (ниже). Hotfix — тот же путь, без обхода checks.                                                      |
+| **Checks перед merge**   | PR мержим только когда зелёный обязательный CI job (ниже). Hotfix — тот же путь, без обхода checks.                                                       |
 | **Preview ≠ Production** | Каждый PR получает Vercel **Preview**. Shared Neon и отличи Preview env — [`runbooks/vercel-preview.md`](./runbooks/vercel-preview.md).                   |
 
 Enforce «no direct push» и «required status checks» в UI GitHub — [`runbooks/branch-protection.md`](./runbooks/branch-protection.md). Этот документ фиксирует _политику_ и _какие_ checks считать обязательными.
@@ -17,21 +17,20 @@ Enforce «no direct push» и «required status checks» в UI GitHub — [`runb
 
 Workflow: [`.github/workflows/ci.yml`](../.github/workflows/ci.yml).
 
-| Job          | Когда                               | Что закрывает                                                 |
-| ------------ | ----------------------------------- | ------------------------------------------------------------- |
-| `quality`    | `pull_request` (+ `push` на `main`) | `npm ci` → `npm run ci` (lint, format:check, typecheck, unit) |
-| `commitlint` | только `pull_request`               | Conventional Commits на range base…head                       |
+| Job       | Когда                               | Что закрывает                                                 |
+| --------- | ----------------------------------- | ------------------------------------------------------------- |
+| `quality` | `pull_request` (+ `push` на `main`) | `npm ci` → `npm run ci` (lint, format:check, typecheck, unit) |
 
-Перед merge оба job’а на PR должны быть зелёными. Имена для GitHub «Require status checks» — в [`runbooks/branch-protection.md`](./runbooks/branch-protection.md).
+Перед merge job `quality` на PR должен быть зелёным. Имя для GitHub «Require status checks» — в [`runbooks/branch-protection.md`](./runbooks/branch-protection.md). Commitlint / формат сообщений коммитов **не** gate (enforcement шага 093 снят).
 
-**Changeset на каждый PR CI не требует** — дисциплина и hint в PR template ([`versioning.md`](./versioning.md)). Gate в Actions сознательно не ставим (как без husky на 093).
+**Changeset на каждый PR CI не требует** — дисциплина и hint в PR template ([`versioning.md`](./versioning.md)). Gate в Actions сознательно не ставим.
 
 ## Поток: feature → production
 
 ```text
 feature branch → PR (+ Preview deploy)
        ↓
-  quality + commitlint green
+  quality green
        ↓
   merge → main → Vercel Production
        ↓
@@ -40,7 +39,7 @@ feature branch → PR (+ Preview deploy)
 
 1. Ветка от `main`, PR в `main`.
 2. Дождаться зелёного CI и осмысленного Preview (smoke по ссылке в Deployments / PR).
-3. Merge (squash или merge — как принято в репо; история коммитов на PR уже прошла commitlint).
+3. Merge (squash или merge — как принято в репо).
 4. Убедиться, что Production Deployment на Vercel успешен (build + migrate).
 5. Версия / changelog — отдельно (следующий раздел); bump **не** блокирует уже случившийся deploy кода.
 
@@ -58,7 +57,7 @@ Semver и `CHANGELOG.md` — [`versioning.md`](./versioning.md). Кратко д
 
 ## Hotfix
 
-Тот же контур: ветка → PR → green `quality` + `commitlint` → merge → Production. Не пушить в `main` в обход PR и не отключать checks «на минутку». Если нужен patch в changelog — changeset `patch` в том же PR, затем обычный `npm run release` / tag.
+Тот же контур: ветка → PR → green `quality` → merge → Production. Не пушить в `main` в обход PR и не отключать checks «на минутку». Если нужен patch в changelog — changeset `patch` в том же PR, затем обычный `npm run release` / tag.
 
 ## Вне scope этого документа
 
@@ -73,7 +72,6 @@ Semver и `CHANGELOG.md` — [`versioning.md`](./versioning.md). Кратко д
 ## Связанное
 
 - Versioning / Changesets: [`versioning.md`](./versioning.md)
-- Conventional Commits: [`commit-convention.md`](./commit-convention.md)
 - Стек / CI: [`tech-stack.md`](./tech-stack.md) §13
 - Vercel connect: [`runbooks/vercel-connect.md`](./runbooks/vercel-connect.md)
 - Preview: [`runbooks/vercel-preview.md`](./runbooks/vercel-preview.md)
