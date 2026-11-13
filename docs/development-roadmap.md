@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked` · `cancelled`.
 
-**Baseline Status:** следующий шаг — `093` (Conventional Commits). Шаги `001`–`085`, `087`–`092` — `done`; `086` — `cancelled`.
+**Baseline Status:** следующий шаг — `094` (Changesets). Шаги `001`–`085`, `087`–`093` — `done`; `086` — `cancelled`.
 
 **Pivot: author-only (2026-11-12).** Продуктовая модель — один admin, гости без аккаунтов; без comments/bookmarks, публичной auth, Resend/OAuth/Turnstile/Upstash как фич продукта. Канон: [ADR-007](adr/007-author-only-no-public-auth.md), миграция `src/migrations/20261112_130000_drop_reader_social.ts`. Исторические шаги **021–022**, **025–032**, **057–061**, **028–029**, **074–075**, **082** остаются **`done` как история**; их DoD описывает то, что строили тогда — **superseded** для текущего продукта. Синхронизация docs + кода pivot — **сознательный waive** правила «один PR = один шаг» (вне нумерации).
 
@@ -916,11 +916,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 093 — Conventional Commits
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Чистая история.
 - **Deliverables:** Commitlint или documented convention + PR template hint.
 - **Verify:** Плохой commit message ловится (hook или CI).
 - **DoD:** Convention enforced.
+- **Notes:** `@commitlint/cli` + `@commitlint/config-conventional`; [`commitlint.config.mjs`](../commitlint.config.mjs); script `npm run commitlint`. CI job `commitlint` на `pull_request` (range base…head, `fetch-depth: 0`); husky не вводили. Канон [`commit-convention.md`](./commit-convention.md); hint [`.github/PULL_REQUEST_TEMPLATE.md`](../.github/PULL_REQUEST_TEMPLATE.md). Dependabot `commit-message` prefix `chore` + scope. Changesets — **094**.
 
 ### 094 — Changesets
 
