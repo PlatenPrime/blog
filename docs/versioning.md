@@ -1,6 +1,6 @@
 # Versioning & changelog (Changesets)
 
-Канон semver и changelog для приложения `blog`. Сообщения коммитов — в [`commit-convention.md`](./commit-convention.md). Как катим в production (`main` = prod, required checks) — шаг **095** (`docs/release-policy.md`).
+Канон semver и changelog для приложения `blog`. Сообщения коммитов — в [`commit-convention.md`](./commit-convention.md). Как катим в production (`main` = prod, required checks) — [`release-policy.md`](./release-policy.md).
 
 Пакет **не** публикуется в npm (`"private": true`). Changesets нужны для номера версии в `package.json` и корневого `CHANGELOG.md`, не для `npm publish`.
 
@@ -41,7 +41,7 @@ CI **не** требует changeset на каждый PR (как и без husk
    - дописывает корневой [`CHANGELOG.md`](../CHANGELOG.md);
    - удаляет применённые файлы из `.changeset/` (кроме `config.json` / `README.md`).
 
-5. Закоммить результат: `chore: release x.y.z` (или `chore(release): x.y.z`). Тег / GitHub Release / deploy policy — **095+**, не этот документ.
+5. Закоммить результат: `chore: release x.y.z` (или `chore(release): x.y.z`). Annotated tag `vX.Y.Z`, опциональный GitHub Release и правило `main` = prod — [`release-policy.md`](./release-policy.md).
 
 ```text
 PR (feat/fix) → .changeset/*.md → merge main
@@ -73,4 +73,4 @@ PR (feat/fix) → .changeset/*.md → merge main
 - Conventional Commits: [`commit-convention.md`](./commit-convention.md)
 - Стек / релизный трек: [`tech-stack.md`](./tech-stack.md) §13
 - PR hint: [`.github/PULL_REQUEST_TEMPLATE.md`](../.github/PULL_REQUEST_TEMPLATE.md)
-- Production release process — шаг **095**
+- Production release process: [`release-policy.md`](./release-policy.md)

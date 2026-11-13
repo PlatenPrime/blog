@@ -82,3 +82,4 @@ Job `commitlint` в [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) н
 - Стек / релизный трек: [`tech-stack.md`](./tech-stack.md) §13
 - PR hint: [`.github/PULL_REQUEST_TEMPLATE.md`](../.github/PULL_REQUEST_TEMPLATE.md)
 - Changesets / changelog: [`versioning.md`](./versioning.md)
+- Production release: [`release-policy.md`](./release-policy.md)

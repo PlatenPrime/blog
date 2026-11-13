@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked` · `cancelled`.
 
-**Baseline Status:** следующий шаг — `095` (Release policy). Шаги `001`–`085`, `087`–`094` — `done`; `086` — `cancelled`.
+**Baseline Status:** следующий шаг — `096` (Branch protection notes). Шаги `001`–`085`, `087`–`095` — `done`; `086` — `cancelled`.
 
 **Pivot: author-only (2026-11-12).** Продуктовая модель — один admin, гости без аккаунтов; без comments/bookmarks, публичной auth, Resend/OAuth/Turnstile/Upstash как фич продукта. Канон: [ADR-007](adr/007-author-only-no-public-auth.md), миграция `src/migrations/20261112_130000_drop_reader_social.ts`. Исторические шаги **021–022**, **025–032**, **057–061**, **028–029**, **074–075**, **082** остаются **`done` как история**; их DoD описывает то, что строили тогда — **superseded** для текущего продукта. Синхронизация docs + кода pivot — **сознательный waive** правила «один PR = один шаг» (вне нумерации).
 
@@ -930,15 +930,16 @@ v1 считается завершённым, когда одновременн�
 - **Deliverables:** Changesets setup; release script; `CHANGELOG.md` policy.
 - **Verify:** changeset file → version bump flow documented.
 - **DoD:** Релизы не «из головы».
-- **Notes:** `@changesets/cli`; [`.changeset/config.json`](../.changeset/config.json) — `baseBranch: main`, `access: restricted`, `commit: false`, `privatePackages.version: true` (CLI 3 иначе пропускает `private`). Scripts: `changeset`, `changeset:version`, `release` (= version bump + `CHANGELOG.md`, без npm publish). Канон [`versioning.md`](./versioning.md); hint в PR template; связка из [`commit-convention.md`](./commit-convention.md) и tech-stack §13. CI «changeset обязателен» и `release-policy.md` — **095**.
+- **Notes:** `@changesets/cli`; [`.changeset/config.json`](../.changeset/config.json) — `baseBranch: main`, `access: restricted`, `commit: false`, `privatePackages.version: true` (CLI 3 иначе пропускает `private`). Scripts: `changeset`, `changeset:version`, `release` (= version bump + `CHANGELOG.md`, без npm publish). Канон [`versioning.md`](./versioning.md); hint в PR template; связка из [`commit-convention.md`](./commit-convention.md) и tech-stack §13. Changeset на PR — дисциплина (не CI gate); процесс выкладки — [`release-policy.md`](./release-policy.md) (**095**).
 
 ### 095 — Release policy
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Как катим в production.
 - **Deliverables:** `docs/release-policy.md` (main = prod, PR checks required).
 - **Verify:** Согласовано с branch protection notes.
 - **DoD:** Релизный процесс явный.
+- **Notes:** Канон [`release-policy.md`](./release-policy.md): `main` = Vercel Production; в `main` только через PR; перед merge зелёные `quality` + `commitlint`; Preview на PR; hotfix тем же путём. Version bump / tag `vX.Y.Z` после `npm run release` — не блокер деплоя кода; GitHub Release опционален; npm publish нет. Changeset CI gate не вводили (как в `versioning.md`). Enforce в GitHub UI (required checks, no direct push) — **096**.
 
 ### 096 — Branch protection notes
 

@@ -546,7 +546,9 @@ Payload не выбирает две коллекции одним запрос�
 
 Шаг 093. Сообщения коммитов перестали быть «как получится». Поставили Commitlint на `@commitlint/config-conventional` и отдельный CI job на каждый PR: range от base до head, плохой subject не проходит. Локальный husky не ставили — enforcement в Actions достаточно, меньше трения на Windows. Рядом короткий канон [commit-convention.md](./commit-convention.md) и подсказка в PR template. Dependabot научили писать `chore(deps): …`, чтобы weekly bump не краснел на новом gate.
 
-Шаг 094. Номер версии перестал быть цифрой «из головы». Поставили `@changesets/cli` на single-package `blog` (`private`): pending-файлы в `.changeset/`, bump через `npm run release` (alias `changeset:version`) пишет `package.json` и корневой `CHANGELOG.md`. Publish в npm не делаем — это приложение, не библиотека. В конфиге явно `privatePackages.version: true`: иначе Changesets 3 молча считает private неversionable. Канон — [versioning.md](./versioning.md); в PR template — hint для user-facing изменений. Как катим в prod — следующий шаг 095.
+Шаг 094. Номер версии перестал быть цифрой «из головы». Поставили `@changesets/cli` на single-package `blog` (`private`): pending-файлы в `.changeset/`, bump через `npm run release` (alias `changeset:version`) пишет `package.json` и корневой `CHANGELOG.md`. Publish в npm не делаем — это приложение, не библиотека. В конфиге явно `privatePackages.version: true`: иначе Changesets 3 молча считает private неversionable. Канон — [versioning.md](./versioning.md); в PR template — hint для user-facing изменений.
+
+Шаг 095. «Как катим в prod» перестало быть устным договором. В [release-policy.md](./release-policy.md) зафиксировали: `main` = Vercel Production; в `main` только через PR; перед merge зелёные `quality` и `commitlint`; Preview на каждый PR — не prod. Hotfix тем же путём. `npm run release` и tag `vX.Y.Z` осознанно после merge’ей с changesets — номер версии не блокирует уже случившийся deploy кода. Changeset в Actions не gate’им (дисциплина, как без husky). Кнопки branch protection в GitHub — следующий шаг 096.
 
 Рядом с выкладкой — операционка (097–103). Аналитика, которая уважает согласие на куки. Логи, по которым видно, что вход сломался. Осознанное «подключаем ли сбор ошибок» или честный отказ. Записки, как не потерять базу и бакет картинок. Сид с правдоподобными статьями, чтобы локальный сайт не зиял пустотой. Указатель на эти записки, потому что runbook, который нельзя найти, равен отсутствующему.
 
@@ -610,6 +612,6 @@ Payload не выбирает две коллекции одним запрос�
 - Глава 11 — шаги 079–082 записаны (Resend runbook — история; почта снята с продукта).
 - Pivot author-only — глава выше (ADR-007); `086` cancelled.
 - Качество / factories — шаги **083–087** (в обзоре выше; Track 10).
-- Выход с ноутбука / Vercel connect — шаг **088**; Preview Deployments — шаг **089**; Production Neon / migrate-on-deploy — шаг **090**; Vercel Postgres adapter — шаг **091**; Secrets matrix — шаг **092**; Conventional Commits — шаг **093**; Changesets — шаг **094** (в обзоре выше; Track 11); следующий по чертежу: **095**.
+- Выход с ноутбука / Vercel connect — шаг **088**; Preview Deployments — шаг **089**; Production Neon / migrate-on-deploy — шаг **090**; Vercel Postgres adapter — шаг **091**; Secrets matrix — шаг **092**; Conventional Commits — шаг **093**; Changesets — шаг **094**; Release policy — шаг **095** (в обзоре выше; Track 11); следующий по чертежу: **096**.
 
 Свериться с полями и правами, не перечитывая главы: [content-model.md](./content-model.md), [security/access-matrix.md](./security/access-matrix.md). Поднять проект руками: [LOCAL_SETUP.md](./LOCAL_SETUP.md). Идти по работе: [development-roadmap.md](./development-roadmap.md).

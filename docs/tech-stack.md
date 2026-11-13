@@ -205,6 +205,8 @@ OpenTelemetry full stack — не обязателен в v1.
 
 **Changesets (шаг 094):** `@changesets/cli`; single-package `blog` (`private` + `privatePackages.version: true`); scripts `changeset` / `changeset:version` / `release` (bump + `CHANGELOG.md`, без npm publish); канон — [`versioning.md`](./versioning.md).
 
+**Release policy (шаг 095):** `main` = Vercel Production; merge только через PR с зелёными `quality` + `commitlint`; bump/tag не блокер деплоя; канон — [`release-policy.md`](./release-policy.md). Branch protection UI — **096**.
+
 **Neon:** один production project (без сложной ветвящейся schema-стратегии на старте). Preview шарит ту же БД; Neon branch per PR — по мере необходимости. Схема на Vercel: `npm run build:deploy` (migrate до `next build`) с `DATABASE_URL_UNPOOLED`; runtime — pooled `DATABASE_URL` (ADR-001; без cold-start `prodMigrations`).
 
 ---
@@ -239,6 +241,7 @@ OpenTelemetry full stack — не обязателен в v1.
 | `docs/adr/`                   | Architecture Decision Records                                                                                                                       |
 | `docs/security/`              | Access matrix, session hardening, supply-chain, threat model, [checklist](./security/checklist.md)                                                  |
 | `docs/runbooks/`              | Vercel connect (**088**), Preview (**089**), [secrets matrix](./runbooks/secrets.md) (**092**), R2 media, backup/restore Neon + R2, incident basics |
+| `docs/release-policy.md`      | Как катим в production: `main` = prod, PR + required checks (**095**); branch protection UI — **096**                                               |
 | `docs/content-model.md`       | Описание collections и полей                                                                                                                        |
 | `README.md`                   | Точка входа в проект                                                                                                                                |
 | Privacy / Terms pages         | Юридические страницы в продукте + краткие заметки в docs при необходимости                                                                          |

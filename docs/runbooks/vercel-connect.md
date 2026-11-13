@@ -130,6 +130,7 @@ npm run seed:admin       # один admin; повтор = skip
 ## Связанные документы
 
 - [secrets.md](./secrets.md) — матрица «где какой секрет» (**092**)
+- [release-policy.md](../release-policy.md) — `main` = Production, PR + checks (**095**)
 - [tech-stack.md](../tech-stack.md) — хостинг и env
 - [LOCAL_SETUP.md](../LOCAL_SETUP.md) — локальный путь (Docker Postgres)
 - [r2-media.md](./r2-media.md) — R2 ключи и CORS
