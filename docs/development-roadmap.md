@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked` · `cancelled`.
 
-**Baseline Status:** следующий шаг — `105` (Image performance). Шаги `001`–`085`, `087`–`104` — `done`; `086` — `cancelled`.
+**Baseline Status:** следующий шаг — `106` (Bundle / route performance pass). Шаги `001`–`085`, `087`–`105` — `done`; `086` — `cancelled`.
 
 **Pivot: author-only (2026-11-12).** Продуктовая модель — один admin, гости без аккаунтов; без comments/bookmarks, публичной auth, Resend/OAuth/Turnstile/Upstash как фич продукта. Канон: [ADR-007](adr/007-author-only-no-public-auth.md), миграция `src/migrations/20261112_130000_drop_reader_social.ts`. Исторические шаги **021–022**, **025–032**, **057–061**, **028–029**, **074–075**, **082** остаются **`done` как история**; их DoD описывает то, что строили тогда — **superseded** для текущего продукта. Синхронизация docs + кода pivot — **сознательный waive** правила «один PR = один шаг» (вне нумерации).
 
@@ -1032,11 +1032,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 105 — Image performance
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Быстрые картинки.
 - **Deliverables:** next/image или R2 URLs + sizes; lazy loading.
 - **Verify:** LCP hero не катастрофический на article page.
 - **DoD:** Медиа не убивает UX.
+- **Notes:** Канон — `next/image` (не plain R2 `<img>`). [`ContentImage`](../src/components/media/content-image.tsx) + helpers [`contentImage.ts`](../src/media/contentImage.ts): `CONTENT_IMAGE_SIZES` под `max-w-measure` / 65ch; `remotePatternFromPublicOrigin` → `next.config` `images.remotePatterns` из `R2_PUBLIC_URL` (localPatterns `/api/media/file/**` сохранены). Article hero — `priority` (LCP). Lexical `upload` converter в [`PayloadRichText`](../src/components/rich-text/PayloadRichText.tsx) — тот же компонент без priority (lazy). Payload `imageSizes` / ленточные thumbnails / OG Satori — вне шага. Unit: `tests/unit/contentImage.test.ts`. Bundle pass — **106**.
 
 ### 106 — Bundle / route performance pass
 

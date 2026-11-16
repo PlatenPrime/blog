@@ -40,4 +40,4 @@ Scheduled publish остаётся **query-time** ([ADR-003](./003-scheduled-pub
 - Канон реализации: [`src/cache/`](../../src/cache/) + hook [`src/hooks/revalidatePublicContent.ts`](../../src/hooks/revalidatePublicContent.ts).
 - Автор после Publish видит обновление на следующем запросе (tag expire 0); отложенный пост — в пределах ~60s после `publishedAt`.
 - Media без собственного hook: смена cover отражается после save parent article/note/page.
-- Image perf и bundle pass — шаги **105** / **106**, не этот ADR.
+- Image perf — шаг **105** (`next/image`); bundle pass — **106**, не этот ADR.

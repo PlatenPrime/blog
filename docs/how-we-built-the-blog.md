@@ -570,7 +570,9 @@ Payload не выбирает две коллекции одним запрос�
 
 Шаг 104. Публичные страницы перестали бить в Neon на каждого гостя. Loaders в `src/content/*` обернули в `unstable_cache` с тегами и soft TTL 60 секунд; словарь тегов и on-demand сброс — [ADR-009](./adr/009-caching-isr-revalidate.md). После save/delete в articles/notes/pages/categories/tags Payload hook зовёт `revalidateTag(..., { expire: 0 })`, чтобы следующий запрос не тащил stale. Минута TTL закрывает отложенный `publishedAt` без cron (видимость по-прежнему query-time, ADR-003). RSS, sitemap, search и draft preview сознательно оставили без этого кеша. `"use cache"` / Redis page cache не включали.
 
-Последний заход перед тем, как дать ссылку людям (105–110 и хвост документации 111–115). Картинки, которые не тянут первый экран. Вычищение лишнего JavaScript. Настоящий текст «обо мне» вместо рыбы. Чеклист выкладки. Адрес `*.vercel.app`. И отдельно, уже после запуска: свой домен, свой домен для картинок, второй фактор, поиск взрослее. Это не забытые задачи v1. Это сознательная граница, чтобы v1 имел конец.
+Шаг 105. Картинки на публичке перестали быть «полным оригиналом как получится». Обложку статьи и картинки из Lexical перевели на `next/image`: общий `ContentImage`, `sizes` под колонку чтения (`65ch`), у hero — `priority`, чтобы LCP не ловил гигантский WebP целиком. В `next.config` к локальным `/api/media/file/**` добавили `remotePatterns` из `R2_PUBLIC_URL`, иначе оптимизатор не имеет права тянуть бакет. Отдельные нарезанные размеры в Payload (`imageSizes`) и превью в лентах сознательно не делали: один WebP + ресайз Next достаточно для v1; ленты по-прежнему без thumbnails. OG-картинки для соцсетей — другой контур (Satori), его не трогали.
+
+Последний заход перед тем, как дать ссылку людям (106–110 и хвост документации 111–115). Вычищение лишнего JavaScript. Настоящий текст «обо мне» вместо рыбы. Чеклист выкладки. Адрес `*.vercel.app`. И отдельно, уже после запуска: свой домен, свой домен для картинок, второй фактор, поиск взрослее. Это не забытые задачи v1. Это сознательная граница, чтобы v1 имел конец.
 
 Документация в хвосте чертежа (глубокий README, картинка архитектуры, оглавление ADR, глоссарий, сверка «документы не врут») не заменяет эту книгу. Глоссарий будет короткой шпаргалкой терминов. Архитектура будет схемой для того, кто уже понял мотивы. Книга останется рассказом о ходе. Если ход изменился — правится соответствующая глава, а не дописывается оправдание внизу.
 
@@ -632,6 +634,6 @@ Payload не выбирает две коллекции одним запрос�
 - Качество / factories — шаги **083–087** (в обзоре выше; Track 10).
 - Выход с ноутбука / Vercel connect — шаг **088**; Preview Deployments — шаг **089**; Production Neon / migrate-on-deploy — шаг **090**; Vercel Postgres adapter — шаг **091**; Secrets matrix — шаг **092**; Conventional Commits (enforcement снят) — шаг **093**; Changesets — шаг **094**; Release policy — шаг **095**; Branch protection — шаг **096** (в обзоре выше; Track 11).
 - Ops / observability — шаги **097** (Vercel Analytics + consent), **098** (Logging baseline), **099** (Sentry waived, ADR-008), **100** (Neon backup runbook + restore drill), **101** (R2 backup / retention), **102** (Seed + faker, author-only), **103** (Ops runbook index).
-- Launch polish — шаг **104** (Caching / ISR, ADR-009); следующий по чертежу: **105**.
+- Launch polish — шаги **104** (Caching / ISR, ADR-009), **105** (Image performance / `next/image`); следующий по чертежу: **106**.
 
 Свериться с полями и правами, не перечитывая главы: [content-model.md](./content-model.md), [security/access-matrix.md](./security/access-matrix.md). Поднять проект руками: [LOCAL_SETUP.md](./LOCAL_SETUP.md). Идти по работе: [development-roadmap.md](./development-roadmap.md).

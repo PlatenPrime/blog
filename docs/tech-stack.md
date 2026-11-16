@@ -75,13 +75,14 @@ Vercel (Next.js SSR/ISR + Payload /admin)
 
 ## 5. Медиа и хранилище
 
-| Технология                                                         | Назначение                                                                                 |
-| ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ |
-| **Cloudflare R2**                                                  | Object storage для изображений (S3-compatible API, бесплатный egress в типичных сценариях) |
-| **`@payloadcms/storage-s3`** (или актуальный R2/S3 plugin Payload) | Интеграция upload Media → R2                                                               |
-| **WebP pipeline**                                                  | Payload `upload.formatOptions` + sharp → WebP (quality 80) на Media upload                 |
-| **YouTube embeds**                                                 | Видео только по ссылке (Lexical block / field), без upload видео в R2                      |
-| **CDN / custom domain для R2**                                     | Опционально после v1; на старте достаточно публичного R2 URL                               |
+| Технология                                                         | Назначение                                                                                         |
+| ------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------- |
+| **Cloudflare R2**                                                  | Object storage для изображений (S3-compatible API, бесплатный egress в типичных сценариях)         |
+| **`@payloadcms/storage-s3`** (или актуальный R2/S3 plugin Payload) | Интеграция upload Media → R2                                                                       |
+| **WebP pipeline**                                                  | Payload `upload.formatOptions` + sharp → WebP (quality 80) на Media upload                         |
+| **`next/image` (публичка)**                                        | Hero + Lexical uploads: `sizes`, LCP `priority` на обложке; R2 в `images.remotePatterns` (**105**) |
+| **YouTube embeds**                                                 | Видео только по ссылке (Lexical block / field), без upload видео в R2                              |
+| **CDN / custom domain для R2**                                     | Опционально после v1; на старте достаточно публичного R2 URL                                       |
 
 Upload медиа — **только admin**. Читатели не загружают файлы.
 

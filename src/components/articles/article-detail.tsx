@@ -1,3 +1,4 @@
+import { ContentImage } from '@/components/media/content-image'
 import { TableOfContents } from '@/components/reading/table-of-contents'
 import { PayloadRichText } from '@/components/rich-text/PayloadRichText'
 import { TaxonomyLine } from '@/components/taxonomy/taxonomy-line'
@@ -79,14 +80,13 @@ export function ArticleDetail({ article, labels, locale }: ArticleDetailProps) {
 
 function ArticleHero({ hero }: { hero: ArticleHeroImage }) {
   return (
-    // next/image and sizes are step 105. A plain img serves both local files and R2 URLs.
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
+    <ContentImage
       alt={hero.alt}
       className="mb-10 h-auto w-full"
-      height={hero.height ?? undefined}
+      height={hero.height}
+      priority
       src={hero.url}
-      width={hero.width ?? undefined}
+      width={hero.width}
     />
   )
 }
