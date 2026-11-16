@@ -3,6 +3,10 @@ import type { Access, CollectionConfig } from 'payload'
 import { isAdmin } from '../access/isAdmin'
 import { publishedOrAdmin } from '../access/publishedOrAdmin'
 import type { AccessUser } from '../access/types'
+import {
+  revalidatePublicContentAfterChange,
+  revalidatePublicContentAfterDelete,
+} from '../hooks/revalidatePublicContent'
 import { setPublishedAtOnPublish } from '../hooks/setPublishedAtOnPublish'
 import { createPreviewUrl } from '../preview/generatePreviewUrl'
 import { adminGroups, collectionLabels } from './adminUi'
@@ -39,6 +43,8 @@ export const Pages: CollectionConfig = {
   hooks: {
     beforeValidate: [ensureSlugFromTitle],
     beforeChange: [setPublishedAtOnPublish],
+    afterChange: [revalidatePublicContentAfterChange],
+    afterDelete: [revalidatePublicContentAfterDelete],
   },
   fields: [
     ...taxonomyTitleAndSlugFields,

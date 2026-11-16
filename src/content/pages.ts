@@ -2,6 +2,8 @@ import config from '@payload-config'
 import { cache } from 'react'
 import { getPayload } from 'payload'
 
+import { detailCacheTags } from '@/cache/contentTags'
+import { withContentCache } from '@/cache/withContentCache'
 import { pageDetailFindArgs, publicPageForLocale, type PublicPage } from '@/content/pagesQuery'
 import { resolveContentLocale } from '@/i18n/contentLocale'
 
@@ -18,29 +20,35 @@ import { resolveContentLocale } from '@/i18n/contentLocale'
  */
 export const findPublicPage = cache(
   async (locale: string, slug: string): Promise<PublicPage | null> => {
-    const payload = await getPayload({ config })
-    const contentLocale = resolveContentLocale(locale)
-    const args = pageDetailFindArgs({ locale: contentLocale, slug })
-    const found = await payload.find(args)
-    const direct = found.docs[0]
-    if (direct) return publicPageForLocale(direct, slug)
-    if (contentLocale === 'uk') return null
+    return withContentCache(
+      ['findPublicPage', locale, slug],
+      detailCacheTags('pages'),
+      async () => {
+        const payload = await getPayload({ config })
+        const contentLocale = resolveContentLocale(locale)
+        const args = pageDetailFindArgs({ locale: contentLocale, slug })
+        const found = await payload.find(args)
+        const direct = found.docs[0]
+        if (direct) return publicPageForLocale(direct, slug)
+        if (contentLocale === 'uk') return null
 
-    const fallback = await payload.find(pageDetailFindArgs({ locale: 'uk', slug }))
-    const base = fallback.docs[0]
-    if (!base) return null
+        const fallback = await payload.find(pageDetailFindArgs({ locale: 'uk', slug }))
+        const base = fallback.docs[0]
+        if (!base) return null
 
-    const localized = await payload.findByID({
-      collection: 'pages',
-      id: base.id,
-      depth: args.depth,
-      draft: false,
-      fallbackLocale: 'uk',
-      locale: contentLocale,
-      overrideAccess: false,
-      select: args.select,
-    })
+        const localized = await payload.findByID({
+          collection: 'pages',
+          id: base.id,
+          depth: args.depth,
+          draft: false,
+          fallbackLocale: 'uk',
+          locale: contentLocale,
+          overrideAccess: false,
+          select: args.select,
+        })
 
-    return publicPageForLocale(localized, slug)
+        return publicPageForLocale(localized, slug)
+      },
+    )
   },
 )

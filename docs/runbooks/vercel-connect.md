@@ -117,21 +117,46 @@ npm run seed:admin       # один admin; повтор = skip
 3. Создать/править черновик (article или note) → Save → данные остаются после reload.
 4. Негатив: migrate только с pooled URL (без UNPOOLED) на PgBouncer часто ломается session-level DDL — поэтому UNPOOLED обязателен на билде.
 
+### Recovery: interactive migrate / exit 13 на Vercel
+
+**Симптом:** Build Command `npm run build:deploy` падает на `npm run migrate` с промптом Payload вроде _«It looks like you've run Payload in dev mode… data loss will occur. Would you like to proceed? (y/N)»_ и `BUILD_UTILS_SPAWN_13` / exit 13. На Vercel stdin нет — confirm ответить нельзя.
+
+**Причина:** в shared Neon (Production/Preview) лежит маркер Drizzle push: строка в `payload_migrations` с `batch = -1` (обычно `name = 'dev'`). Она появляется, если `npm run dev` с `push: true` указывали на эту БД ([`src/db/adapter.ts`](../../src/db/adapter.ts)).
+
+**Исправление** (когда numbered миграции уже applied и схема совпадает с репо — типичный случай после случайного `dev` против Neon):
+
+```sql
+DELETE FROM payload_migrations WHERE batch = -1;
+```
+
+Затем **Redeploy** / Retry упавшего Deployment. В логах: migrate без prompt → `next build`.
+
+**Не делать:** `yes | npm run migrate` или auto-accept в CI — это согласие на data loss при реальном drift. Если схема реально разъехалась после push — отдельный разбор (не этот SQL).
+
+**Запрет:** не гонять `npm run dev` против Neon / shared БД. Локально — Docker Postgres + `migrate:local` / `seed:local` ([LOCAL_SETUP.md](../LOCAL_SETUP.md)); на Neon схему менять только через `migrate` / migrate-on-deploy.
+
 ## Что не в этом шаге
 
-| Тема                                  | Шаг                                                |
-| ------------------------------------- | -------------------------------------------------- |
-| Preview env vars / общая preview-БД   | **089** ([vercel-preview.md](./vercel-preview.md)) |
-| Уточнение vercel-postgres adapter     | **091**                                            |
-| Матрица секретов                      | **092** ([secrets.md](./secrets.md))               |
-| Backup Neon                           | **100**                                            |
-| Analytics, custom domain, go-live URL | **097+**, **109**                                  |
+| Тема                                | Шаг                                                    |
+| ----------------------------------- | ------------------------------------------------------ |
+| Preview env vars / общая preview-БД | **089** ([vercel-preview.md](./vercel-preview.md))     |
+| Уточнение vercel-postgres adapter   | **091**                                                |
+| Матрица секретов                    | **092** ([secrets.md](./secrets.md))                   |
+| Backup Neon                         | **100** ([backup-neon.md](./backup-neon.md))           |
+| Backup R2                           | **101** ([backup-r2.md](./backup-r2.md))               |
+| Web Analytics (consent-aware)       | **097** ([vercel-analytics.md](./vercel-analytics.md)) |
+| Runtime Logs / app logger           | **098** ([vercel-logs.md](./vercel-logs.md))           |
+| Custom domain, go-live URL          | **109**                                                |
 
 ## Связанные документы
 
 - [secrets.md](./secrets.md) — матрица «где какой секрет» (**092**)
 - [release-policy.md](../release-policy.md) — `main` = Production, PR + checks (**095**)
 - [branch-protection.md](./branch-protection.md) — Ruleset / required checks на `main` (**096**)
+- [vercel-analytics.md](./vercel-analytics.md) — Web Analytics + consent (**097**)
+- [vercel-logs.md](./vercel-logs.md) — Runtime Logs + app logger (**098**)
+- [backup-neon.md](./backup-neon.md) — Neon PITR / snapshot / `pg_dump` (**100**)
+- [backup-r2.md](./backup-r2.md) — R2 mirror / retention (**101**)
 - [tech-stack.md](../tech-stack.md) — хостинг и env
 - [LOCAL_SETUP.md](../LOCAL_SETUP.md) — локальный путь (Docker Postgres)
 - [r2-media.md](./r2-media.md) — R2 ключи и CORS

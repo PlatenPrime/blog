@@ -12,7 +12,7 @@ Vercel (Next.js SSR/ISR + Payload /admin)
  (контент, users, схемы)      (медиа / изображения)
 ```
 
-Документ описывает **что** используем и **зачем**. Почему этот стек (и почему не отдельный API) — [`adr/000-payload-next-neon-r2.md`](./adr/000-payload-next-neon-r2.md). Порядок внедрения — в [`development-roadmap.md`](./development-roadmap.md).
+Документ описывает **что** используем и **зачем**. Диаграммы и потоки запросов — [`architecture.md`](./architecture.md). Почему этот стек (и почему не отдельный API) — [`adr/000-payload-next-neon-r2.md`](./adr/000-payload-next-neon-r2.md). Порядок внедрения — в [`development-roadmap.md`](./development-roadmap.md).
 
 ---
 
@@ -43,13 +43,14 @@ Vercel (Next.js SSR/ISR + Payload /admin)
 
 ## 3. Приложение и CMS
 
-| Технология                      | Назначение                                                        |
-| ------------------------------- | ----------------------------------------------------------------- |
-| **Next.js (App Router)**        | Публичный сайт (SSR/ISR), API routes, единый deploy unit          |
-| **React**                       | UI публичного сайта и admin shell Payload                         |
-| **Payload CMS v3**              | Headless CMS + admin UI на `/admin`, Local API, access control    |
-| **Lexical** (Payload rich text) | Редактор тела статей и заметок                                    |
-| **Payload Local API / REST**    | Чтение/запись контента из Next Server Components и route handlers |
+| Технология                      | Назначение                                                                                                                                 |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Next.js (App Router)**        | Публичный сайт (SSR/ISR), API routes, единый deploy unit                                                                                   |
+| **Публичный JS**                | RSC по умолчанию; below-fold consent/analytics — client boundary + `next/dynamic` (`ssr: false`); share — dynamic на post routes (**106**) |
+| **React**                       | UI публичного сайта и admin shell Payload                                                                                                  |
+| **Payload CMS v3**              | Headless CMS + admin UI на `/admin`, Local API, access control                                                                             |
+| **Lexical** (Payload rich text) | Редактор тела статей и заметок                                                                                                             |
+| **Payload Local API / REST**    | Чтение/запись контента из Next Server Components и route handlers                                                                          |
 
 Один репозиторий, **один Next.js application**: website + Payload admin в одном процессе/деплое (без отдельного Nest API и без monorepo-пакетов на старте).
 
@@ -75,13 +76,14 @@ Vercel (Next.js SSR/ISR + Payload /admin)
 
 ## 5. Медиа и хранилище
 
-| Технология                                                         | Назначение                                                                                 |
-| ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ |
-| **Cloudflare R2**                                                  | Object storage для изображений (S3-compatible API, бесплатный egress в типичных сценариях) |
-| **`@payloadcms/storage-s3`** (или актуальный R2/S3 plugin Payload) | Интеграция upload Media → R2                                                               |
-| **WebP pipeline**                                                  | Payload `upload.formatOptions` + sharp → WebP (quality 80) на Media upload                 |
-| **YouTube embeds**                                                 | Видео только по ссылке (Lexical block / field), без upload видео в R2                      |
-| **CDN / custom domain для R2**                                     | Опционально после v1; на старте достаточно публичного R2 URL                               |
+| Технология                                                         | Назначение                                                                                         |
+| ------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------- |
+| **Cloudflare R2**                                                  | Object storage для изображений (S3-compatible API, бесплатный egress в типичных сценариях)         |
+| **`@payloadcms/storage-s3`** (или актуальный R2/S3 plugin Payload) | Интеграция upload Media → R2                                                                       |
+| **WebP pipeline**                                                  | Payload `upload.formatOptions` + sharp → WebP (quality 80) на Media upload                         |
+| **`next/image` (публичка)**                                        | Hero + Lexical uploads: `sizes`, LCP `priority` на обложке; R2 в `images.remotePatterns` (**105**) |
+| **YouTube embeds**                                                 | Видео только по ссылке (Lexical block / field), без upload видео в R2                              |
+| **CDN / custom domain для R2**                                     | Опционально после v1; на старте достаточно публичного R2 URL                                       |
 
 Upload медиа — **только admin**. Читатели не загружают файлы.
 
@@ -89,14 +91,14 @@ Upload медиа — **только admin**. Читатели не загруж
 
 ## 6. Аутентификация и авторизация
 
-| Технология                   | Назначение                                                            |
-| ---------------------------- | --------------------------------------------------------------------- |
-| **Payload Auth**             | Users + sessions/cookies только для входа в `/admin` и Local API      |
-| **Roles**                    | `admin` only (ADR-007)                                                |
-| **Email + password**         | Логин автора в `/admin`; bootstrap `seed:admin` или create-first-user |
-| **Password change**          | В `/admin` или прямое обновление в БД; **без** email reset            |
-| **Access Control (Payload)** | Admin panel, drafts/preview; публичное чтение `publishedOrAdmin`      |
-| **MFA (TOTP)**               | Out of scope v1 (заложено «позже»)                                    |
+| Технология                   | Назначение                                                                             |
+| ---------------------------- | -------------------------------------------------------------------------------------- |
+| **Payload Auth**             | Users + sessions/cookies только для входа в `/admin` и Local API                       |
+| **Roles**                    | `admin` only (ADR-007)                                                                 |
+| **Email + password**         | Логин автора в `/admin`; bootstrap `seed:admin` / `npm run seed` или create-first-user |
+| **Password change**          | В `/admin` или прямое обновление в БД; **без** email reset                             |
+| **Access Control (Payload)** | Admin panel, drafts/preview; публичное чтение `publishedOrAdmin`                       |
+| **MFA (TOTP)**               | Out of scope v1 (заложено «позже»)                                                     |
 
 Публичный сайт **без** login/register. Канон pivot — [ADR-007](./adr/007-author-only-no-public-auth.md).
 
@@ -125,17 +127,18 @@ Upload медиа — **только admin**. Читатели не загруж
 
 ## 9. Контентные возможности (зависят от стека)
 
-| Возможность                          | Реализация (ориентир)                                                                         |
-| ------------------------------------ | --------------------------------------------------------------------------------------------- |
-| Drafts / Preview / Scheduled publish | Payload drafts + preview URL; schedule = query-time (`publishedAt <= now`, ADR-003) — не cron |
-| Share / Copy link                    | UI на деталях article/note для гостей (`ShareActions`)                                        |
-| Search                               | Postgres (`ILIKE` / `tsvector`) — без Meilisearch/Algolia                                     |
-| Related posts                        | По tags/categories                                                                            |
-| Reading time / TOC                   | Вычисление на publish/render                                                                  |
-| Code highlighting                    | Shiki dual-theme в Lexical JSX pipeline (`CodeBlock` + `PayloadRichText`)                     |
-| RSS / Sitemap / OG / JSON-LD         | Next route handlers + Metadata API                                                            |
-| Versioning / rollback                | **Не используем в v1**                                                                        |
-| Audit log CMS                        | **Не используем в v1** (один admin)                                                           |
+| Возможность                          | Реализация (ориентир)                                                                                                               |
+| ------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------- |
+| Drafts / Preview / Scheduled publish | Payload drafts + preview URL; schedule = query-time (`publishedAt <= now`, ADR-003) — не cron                                       |
+| Public page cache / ISR              | `unstable_cache` + tags + soft TTL 60s; on-demand `revalidateTag` из Payload hooks ([ADR-009](./adr/009-caching-isr-revalidate.md)) |
+| Share / Copy link                    | UI на деталях article/note для гостей (`ShareActions`)                                                                              |
+| Search                               | Postgres (`ILIKE` / `tsvector`) — без Meilisearch/Algolia                                                                           |
+| Related posts                        | По tags/categories                                                                                                                  |
+| Reading time / TOC                   | Вычисление на publish/render                                                                                                        |
+| Code highlighting                    | Shiki dual-theme в Lexical JSX pipeline (`CodeBlock` + `PayloadRichText`)                                                           |
+| RSS / Sitemap / OG / JSON-LD         | Next route handlers + Metadata API                                                                                                  |
+| Versioning / rollback                | **Не используем в v1**                                                                                                              |
+| Audit log CMS                        | **Не используем в v1** (один admin)                                                                                                 |
 
 **Стержневые collections (v1):** Users, Media, Categories, Tags, Articles, Notes, Pages.
 
@@ -161,12 +164,12 @@ WAF: использовать бесплатные возможности Vercel
 
 ## 11. Observability и аналитика
 
-| Технология                                       | Назначение                                                           |
-| ------------------------------------------------ | -------------------------------------------------------------------- |
-| **Vercel Logs**                                  | Runtime logs production/preview                                      |
-| **Vercel Analytics** (free tier)                 | Web analytics                                                        |
-| **Sentry** (free tier, если подключение простое) | Error tracking; если overhead велик — отложить, оставить Vercel logs |
-| **Structured logging**                           | Единый формат логов в server code (без тяжёлого стека на старте)     |
+| Технология                       | Назначение                                                                                                                           |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| **Vercel Logs**                  | Runtime logs production/preview; как смотреть — [runbooks/vercel-logs.md](./runbooks/vercel-logs.md) (**098**)                       |
+| **Vercel Analytics** (free tier) | Web analytics; consent-aware через `ConsentAwareAnalytics` (**097**, [runbooks/vercel-analytics.md](./runbooks/vercel-analytics.md)) |
+| **Sentry**                       | **Waived** до критериев включения — [ADR-008](./adr/008-sentry-waive-until-needed.md) (**099**); канон ошибок — Vercel Logs + logger |
+| **Structured logging**           | [`src/lib/logger.ts`](../src/lib/logger.ts) — JSON в `console.*`, optional `requestId` (**098**)                                     |
 
 OpenTelemetry full stack — не обязателен в v1.
 
@@ -214,17 +217,17 @@ OpenTelemetry full stack — не обязателен в v1.
 
 ## 14. Инфраструктура и внешние сервисы
 
-| Сервис                   | Роль                                   | Тариф (ориентир) |
-| ------------------------ | -------------------------------------- | ---------------- |
-| **Vercel**               | App hosting, previews, analytics, logs | Hobby / Free     |
-| **Neon**                 | PostgreSQL                             | Free             |
-| **Cloudflare R2**        | Media storage                          | Free tier        |
-| ~~Resend~~               | _(removed)_                            | —                |
-| ~~Google OAuth~~         | _(removed)_                            | —                |
-| ~~Cloudflare Turnstile~~ | _(removed)_                            | —                |
-| ~~Upstash Redis~~        | _(removed)_                            | —                |
-| **Sentry** (optional)    | Errors                                 | Free tier        |
-| **Docker** (local)       | Postgres для разработки                | Local            |
+| Сервис                   | Роль                                                                    | Тариф (ориентир) |
+| ------------------------ | ----------------------------------------------------------------------- | ---------------- |
+| **Vercel**               | App hosting, previews, analytics, logs                                  | Hobby / Free     |
+| **Neon**                 | PostgreSQL                                                              | Free             |
+| **Cloudflare R2**        | Media storage                                                           | Free tier        |
+| ~~Resend~~               | _(removed)_                                                             | —                |
+| ~~Google OAuth~~         | _(removed)_                                                             | —                |
+| ~~Cloudflare Turnstile~~ | _(removed)_                                                             | —                |
+| ~~Upstash Redis~~        | _(removed)_                                                             | —                |
+| **Sentry**               | Errors — **waived** ([ADR-008](./adr/008-sentry-waive-until-needed.md)) | —                |
+| **Docker** (local)       | Postgres для разработки                                                 | Local            |
 
 ---
 
@@ -232,26 +235,31 @@ OpenTelemetry full stack — не обязателен в v1.
 
 На старте создаются канонические файлы стека и роадмапа. Далее по роадмапу наращиваем:
 
-| Документ                      | Назначение                                                                                                                                                                                                          |
-| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `docs/tech-stack.md`          | Этот файл                                                                                                                                                                                                           |
-| `docs/development-roadmap.md` | Инженерный роадмап до v1                                                                                                                                                                                            |
-| `docs/testing.md`             | Политика тестов (must-cover, слои, review gate)                                                                                                                                                                     |
-| `.env.example`                | Канон переменных окружения (плейсхолдеры, без секретов)                                                                                                                                                             |
-| `docs/LOCAL_SETUP.md`         | Локальный запуск, env, Docker, seed                                                                                                                                                                                 |
-| `docs/adr/`                   | Architecture Decision Records                                                                                                                                                                                       |
-| `docs/security/`              | Access matrix, session hardening, supply-chain, threat model, [checklist](./security/checklist.md)                                                                                                                  |
-| `docs/runbooks/`              | Vercel connect (**088**), Preview (**089**), [secrets matrix](./runbooks/secrets.md) (**092**), [branch protection](./runbooks/branch-protection.md) (**096**), R2 media, backup/restore Neon + R2, incident basics |
-| `docs/release-policy.md`      | Как катим в production: `main` = prod, PR + required checks (**095**); enforce UI — [`runbooks/branch-protection.md`](./runbooks/branch-protection.md) (**096**)                                                    |
-| `docs/content-model.md`       | Описание collections и полей                                                                                                                                                                                        |
-| `README.md`                   | Точка входа в проект                                                                                                                                                                                                |
-| Privacy / Terms pages         | Юридические страницы в продукте + краткие заметки в docs при необходимости                                                                                                                                          |
+| Документ                                | Назначение                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `docs/tech-stack.md`                    | Этот файл                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `docs/architecture.md`                  | Диаграммы системы и потоки (Vercel / Neon / R2 / Auth) — шаг **112**                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `docs/development-roadmap.md`           | Инженерный роадмап до v1                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| `docs/testing.md`                       | Политика тестов (must-cover, слои, review gate)                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| `.env.example`                          | Канон переменных окружения (плейсхолдеры, без секретов)                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `docs/LOCAL_SETUP.md`                   | Локальный запуск, env, Docker, seed                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| [`docs/adr/README.md`](./adr/README.md) | Индекс ADR (000–009) + практика «когда писать»                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `docs/security/`                        | Access matrix, session hardening, supply-chain, threat model, [checklist](./security/checklist.md)                                                                                                                                                                                                                                                                                                                                                                         |
+| `docs/runbooks/`                        | Точка входа — [runbooks/README.md](./runbooks/README.md) (**103**): connect (**088**), Preview (**089**), [secrets](./runbooks/secrets.md) (**092**), [branch protection](./runbooks/branch-protection.md) (**096**), [analytics](./runbooks/vercel-analytics.md) (**097**), [logs](./runbooks/vercel-logs.md) (**098**), [Neon backup](./runbooks/backup-neon.md) (**100**), [R2 media](./runbooks/r2-media.md) (**037**), [R2 backup](./runbooks/backup-r2.md) (**101**) |
+| `docs/release-policy.md`                | Как катим в production: `main` = prod, PR + required checks (**095**); enforce UI — [`runbooks/branch-protection.md`](./runbooks/branch-protection.md) (**096**)                                                                                                                                                                                                                                                                                                           |
+| `docs/content-model.md`                 | Описание collections и полей                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| [`docs/glossary.md`](./glossary.md)     | Общий язык продукта (Article/Note, admin/guest, draft/preview) — шаг **114**                                                                                                                                                                                                                                                                                                                                                                                               |
+| `docs/post-v1.md`                       | Горизонт после announce v1 (custom domain, MFA, search upgrade, …) — шаг **110**                                                                                                                                                                                                                                                                                                                                                                                           |
+| `README.md`                             | Точка входа в проект                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| Privacy / Terms pages                   | Юридические страницы в продукте + краткие заметки в docs при необходимости                                                                                                                                                                                                                                                                                                                                                                                                 |
 
 Язык документации: **русский**, с EN-терминами где принято (deploy, preview, access control, ISR и т.д.).
 
 ---
 
 ## 16. Явный out of scope (v1)
+
+Краткий список. Развёрнутый горизонт после announce (граница v1 / v1.1, ops hygiene) — [`post-v1.md`](./post-v1.md) (**110**).
 
 - Multi-tenant SaaS / несколько авторов-редакторов
 - MFA / WebAuthn

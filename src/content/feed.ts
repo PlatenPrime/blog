@@ -1,6 +1,8 @@
 import config from '@payload-config'
 import { getPayload } from 'payload'
 
+import { mixedContentCacheTags } from '@/cache/contentTags'
+import { withContentCache } from '@/cache/withContentCache'
 import {
   feedCountArgs,
   feedFindArgs,
@@ -19,11 +21,26 @@ export type PublicFeedResult =
  * One page of the mixed public feed.
  * Counts first, so an out-of-range `page` never becomes a find limit.
  * Does not receive the session user: see `feedCountArgs` and `feedFindArgs`.
+ * Optional `now` bypasses the cross-request cache (tests / explicit clock).
  */
 export async function findPublicFeed(
   locale: string,
   rawPage: string | undefined,
   now?: Date,
+): Promise<PublicFeedResult> {
+  if (now) {
+    return loadPublicFeed(locale, rawPage, now)
+  }
+
+  return withContentCache(['findPublicFeed', locale, rawPage ?? ''], mixedContentCacheTags(), () =>
+    loadPublicFeed(locale, rawPage, new Date()),
+  )
+}
+
+async function loadPublicFeed(
+  locale: string,
+  rawPage: string | undefined,
+  now: Date,
 ): Promise<PublicFeedResult> {
   const payload = await getPayload({ config })
   const [articlesCount, notesCount] = await Promise.all([

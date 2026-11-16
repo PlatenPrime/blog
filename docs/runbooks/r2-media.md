@@ -62,7 +62,7 @@ S3 endpoint **не** отдаёт файлы публично. Нужен оди
 
 - **Ротация ключей:** новый API token → обновить env → redeploy; старый revoke.
 - **Удаление файла:** delete в Payload admin удаляет объект в R2 (через storage adapter).
-- **Бэкапы bucket:** политика R2 backups — Track ops (позже); не часть 037.
+- **Бэкапы bucket:** [backup-r2.md](./backup-r2.md) (**101**); не часть 037.
 
 ## Вне скоупа этого шага
 

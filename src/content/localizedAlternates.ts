@@ -2,6 +2,8 @@ import config from '@payload-config'
 import { cache } from 'react'
 import { getPayload } from 'payload'
 
+import { detailCacheTags } from '@/cache/contentTags'
+import { withContentCache } from '@/cache/withContentCache'
 import { getServerUrl } from '@/lib/serverUrl'
 import {
   languageAlternatesFromSlugs,
@@ -20,22 +22,28 @@ type TaxonomyCollection = 'categories' | 'tags'
  */
 export const findContentLanguageAlternates = cache(
   async (collection: ContentCollection, id: number): Promise<Record<string, string>> => {
-    const origin = getServerUrl()
-    const payload = await getPayload({ config })
-    const now = new Date()
-    const slugsByLocale: Partial<Record<AppLocale, string>> = {}
+    return withContentCache(
+      ['findContentLanguageAlternates', collection, String(id)],
+      detailCacheTags(collection, id),
+      async () => {
+        const origin = getServerUrl()
+        const payload = await getPayload({ config })
+        const now = new Date()
+        const slugsByLocale: Partial<Record<AppLocale, string>> = {}
 
-    await Promise.all(
-      routing.locales.map(async (locale) => {
-        const found = await payload.find(
-          localizedContentSlugFindArgs({ collection, id, locale, now }),
+        await Promise.all(
+          routing.locales.map(async (locale) => {
+            const found = await payload.find(
+              localizedContentSlugFindArgs({ collection, id, locale, now }),
+            )
+            const slug = slugFromLocalizedDoc(found.docs[0])
+            if (slug) slugsByLocale[locale] = slug
+          }),
         )
-        const slug = slugFromLocalizedDoc(found.docs[0])
-        if (slug) slugsByLocale[locale] = slug
-      }),
-    )
 
-    return languageAlternatesFromSlugs(origin, collection, slugsByLocale)
+        return languageAlternatesFromSlugs(origin, collection, slugsByLocale)
+      },
+    )
   },
 )
 
@@ -44,18 +52,30 @@ export const findContentLanguageAlternates = cache(
  */
 export const findTaxonomyLanguageAlternates = cache(
   async (collection: TaxonomyCollection, id: number): Promise<Record<string, string>> => {
-    const origin = getServerUrl()
-    const payload = await getPayload({ config })
-    const slugsByLocale: Partial<Record<AppLocale, string>> = {}
+    return withContentCache(
+      ['findTaxonomyLanguageAlternates', collection, String(id)],
+      detailCacheTags(collection, id),
+      async () => {
+        const origin = getServerUrl()
+        const payload = await getPayload({ config })
+        const slugsByLocale: Partial<Record<AppLocale, string>> = {}
 
-    await Promise.all(
-      routing.locales.map(async (locale) => {
-        const found = await payload.find(localizedTaxonomySlugFindArgs({ collection, id, locale }))
-        const slug = slugFromLocalizedDoc(found.docs[0])
-        if (slug) slugsByLocale[locale] = slug
-      }),
+        await Promise.all(
+          routing.locales.map(async (locale) => {
+            const found = await payload.find(
+              localizedTaxonomySlugFindArgs({ collection, id, locale }),
+            )
+            const slug = slugFromLocalizedDoc(found.docs[0])
+            if (slug) slugsByLocale[locale] = slug
+          }),
+        )
+
+        return languageAlternatesFromSlugs(
+          origin,
+          collection as LocalizedSlugSegment,
+          slugsByLocale,
+        )
+      },
     )
-
-    return languageAlternatesFromSlugs(origin, collection as LocalizedSlugSegment, slugsByLocale)
   },
 )

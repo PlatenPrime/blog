@@ -3,9 +3,15 @@ import type { JSXConvertersFunction } from '@payloadcms/richtext-lexical/react'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import type { SerializedEditorState } from 'lexical'
 
+import { ContentImage } from '@/components/media/content-image'
 import { HighlightedCode } from '@/components/rich-text/highlighted-code'
 import { allocateHeadingId, headingPlainText, isTocHeading } from '@/lib/tableOfContents'
 import { toYouTubeEmbedSrc } from '@/lib/youtube'
+import {
+  contentImageSourceFromUploadNode,
+  isNonImageUpload,
+  type LexicalUploadNodeLike,
+} from '@/media/contentImage'
 
 type YouTubeFields = {
   blockType: 'youtube'
@@ -32,6 +38,39 @@ function createJsxConverters(): JSXConvertersFunction<NodeTypes> {
 
   return ({ defaultConverters }) => ({
     ...defaultConverters,
+    upload: ({ node }) => {
+      const uploadNode = node as LexicalUploadNodeLike
+      if (typeof uploadNode.value !== 'object' || uploadNode.value === null) {
+        return null
+      }
+
+      if (isNonImageUpload(uploadNode.value)) {
+        const href = typeof uploadNode.value.url === 'string' ? uploadNode.value.url : null
+        const label =
+          typeof uploadNode.value.filename === 'string' && uploadNode.value.filename.length > 0
+            ? uploadNode.value.filename
+            : href
+        if (!href || !label) return null
+        return (
+          <a href={href} rel="noopener noreferrer">
+            {label}
+          </a>
+        )
+      }
+
+      const source = contentImageSourceFromUploadNode(uploadNode)
+      if (!source) return null
+
+      return (
+        <ContentImage
+          alt={source.alt}
+          className="h-auto max-w-full"
+          height={source.height}
+          src={source.src}
+          width={source.width}
+        />
+      )
+    },
     heading: ({ node, nodesToJSX }) => {
       const children = nodesToJSX({ nodes: node.children })
       const NodeTag = (ALLOWED_HEADING_TAGS.has(node.tag) ? node.tag : 'h1') as HeadingTag
@@ -86,7 +125,7 @@ type PayloadRichTextProps = {
 }
 
 /**
- * Lexical → JSX with Upload (default), YouTube, Code (Shiki 064), TOC heading anchors (063).
+ * Lexical → JSX with Upload (next/image, 105), YouTube, Code (Shiki 064), TOC heading anchors (063).
  */
 export function PayloadRichText({ data, className }: PayloadRichTextProps) {
   return <RichText data={data} converters={createJsxConverters()} className={className} />

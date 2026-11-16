@@ -9,6 +9,7 @@ import 'dotenv/config'
 
 import { getPayload } from 'payload'
 
+import { logger } from '../lib/logger'
 import config from '../payload.config'
 import { decideAdminSeed, readAdminSeedEnv } from '../seed/adminSeed'
 
@@ -39,7 +40,7 @@ async function main(): Promise<void> {
 
   if (decision.action === 'skip') {
     payload.logger.info(`seed:admin — skip: ${decision.reason}`)
-    return
+    process.exit(0)
   }
 
   await payload.create({
@@ -53,9 +54,10 @@ async function main(): Promise<void> {
   })
 
   payload.logger.info(`seed:admin — created admin ${decision.email}`)
+  process.exit(0)
 }
 
 main().catch((error: unknown) => {
-  console.error('seed:admin failed:', error)
-  process.exitCode = 1
+  logger.error('seed:admin failed', { err: error })
+  process.exit(1)
 })

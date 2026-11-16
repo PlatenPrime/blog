@@ -74,26 +74,26 @@
 
 Закрывает оператор перед публичным URL (или waive с причиной в таблице ниже). Полный env/R2 — шаг **108**. Короткие копии — [`production-checklist.md`](../production-checklist.md) (§Security).
 
-- [ ] **Dependabot:** Settings → Code security → Dependabot updates/alerts включены; конфиг [`.github/dependabot.yml`](../../.github/dependabot.yml) валиден (076 / [supply-chain.md](./supply-chain.md)).
-- [ ] **Secret scanning** включён (или waived: private repo / plan limitation — строка в waivers).
-- [ ] **Push protection** включён (или waived там же).
-- [ ] **Headers smoke:** на prod URL видны `X-Frame-Options` / CSP / (prod) HSTS; публичные страницы и `/admin` открываются.
-- [ ] **ACL sanity:** anonymous не пишет Media и контент; только admin заходит в `/admin`.
+- [x] **Dependabot:** updates/alerts + security updates включены; конфиг [`.github/dependabot.yml`](../../.github/dependabot.yml) валиден (076 / [supply-chain.md](./supply-chain.md); gate **108**).
+- [x] **Secret scanning** включён (public repo; gate **108**).
+- [x] **Push protection** включён (gate **108**).
+- [x] **Headers smoke:** на prod URL видны `X-Frame-Options` / CSP / (prod) HSTS; публичные страницы и `/admin` открываются (gate **108**, `https://platenprimeblog.vercel.app`).
+- [x] **ACL sanity:** anonymous не пишет Media и контент; только admin заходит в `/admin` (gate **108**: anonymous POST → 403).
 
 ---
 
 ## Сознательно нет / waivers (не считать багом чеклиста)
 
-| Нет / residual                | Заметка                                        |
-| ----------------------------- | ---------------------------------------------- |
-| MFA / WebAuthn                | v1 out of scope (tech-stack §16, threat-model) |
-| Product WAF                   | Вне приложения                                 |
-| Nonce/hash CSP                | Public CSP phase 1 с `'unsafe-inline'`         |
-| Private / signed R2 media     | Public-read by design                          |
-| Custom R2 CDN domain          | v1 out of scope                                |
-| Multi-tenant / multi-author   | Один admin                                     |
-| Reader / comment / rate limit | Superseded ADR-007                             |
-| Analytics / consent CSP       | Шаги **081** / **097**                         |
+| Нет / residual                | Заметка                                                                                                                              |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| MFA / WebAuthn                | v1 out of scope (tech-stack §16, threat-model)                                                                                       |
+| Product WAF                   | Вне приложения                                                                                                                       |
+| Nonce/hash CSP                | Public CSP phase 1 с `'unsafe-inline'`                                                                                               |
+| Private / signed R2 media     | Public-read by design                                                                                                                |
+| Custom R2 CDN domain          | v1 out of scope                                                                                                                      |
+| Multi-tenant / multi-author   | Один admin                                                                                                                           |
+| Reader / comment / rate limit | Superseded ADR-007                                                                                                                   |
+| Analytics / consent CSP       | **081** / **097** done — opt-in gate + `va.vercel-scripts.com` в public CSP ([vercel-analytics.md](../runbooks/vercel-analytics.md)) |
 
 ---
 
@@ -106,5 +106,6 @@
 | Headers / CSP | `tests/unit/securityHeaders.test.ts`                                                              |
 | Access        | `tests/unit/access.test.ts`, `tests/unit/contentAccess.test.ts`, `tests/unit/mediaAccess.test.ts` |
 | Media API     | `tests/int/media.int.spec.ts` (needs Postgres)                                                    |
+| Int suite     | также `tests/int/api.int.spec.ts`, `contentLocale.int.spec.ts`, `factories.int.spec.ts`           |
 
-Legacy tests (`readerAccess`, `comments*`, `bookmarks*`, `rateLimit`, `turnstile`, `auth.int`) — к удалению/рефактору отдельно от docs pivot.
+Reader / comments / bookmarks / rate-limit / Turnstile / public-auth test suites сняты вместе с продуктом (ADR-007); anti-regression якоря — в unit access / i18nMessages.

@@ -1,12 +1,17 @@
 import { hasLocale } from 'next-intl'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Metadata } from 'next'
+import dynamic from 'next/dynamic'
 import { notFound } from 'next/navigation'
 
 import { ArticleDetail } from '@/components/articles/article-detail'
 import { RelatedContent } from '@/components/reading/related-content'
-import { ShareActions } from '@/components/share/share-actions'
 import { JsonLd } from '@/components/seo/json-ld'
+
+const ShareActions = dynamic(
+  () => import('@/components/share/share-actions').then((mod) => mod.ShareActions),
+  { loading: () => null },
+)
 import { findPublicArticle } from '@/content/articles'
 import { buildArticleJsonLd } from '@/content/jsonLd'
 import { findContentLanguageAlternates } from '@/content/localizedAlternates'

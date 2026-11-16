@@ -7,6 +7,7 @@ import type { PayloadRequest } from 'payload'
 
 import { isAdmin } from '@/access/isAdmin'
 import type { AccessUser } from '@/access/types'
+import { getRequestId, logger } from '@/lib/logger'
 import { isAllowedPreviewPath, isPreviewCollection } from '@/preview/paths'
 
 /**
@@ -43,7 +44,10 @@ export async function GET(req: NextRequest): Promise<Response> {
     })
     user = (authResult.user as AccessUser) ?? null
   } catch (error) {
-    payload.logger.error({ err: error }, 'Error verifying token for draft preview')
+    logger.error('Error verifying token for draft preview', {
+      err: error,
+      requestId: getRequestId(req.headers),
+    })
     return new Response('You are not allowed to preview this page', { status: 403 })
   }
 

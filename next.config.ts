@@ -4,6 +4,7 @@ import createNextIntlPlugin from 'next-intl/plugin'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
+import { remotePatternFromPublicOrigin } from './src/media/contentImage'
 import { buildRouteSecurityHeaders, originFromPublicUrl } from './src/security/headers'
 
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts')
@@ -14,6 +15,7 @@ const dirname = path.dirname(__filename)
 const isProduction = process.env.NODE_ENV === 'production'
 const r2PublicOrigin = originFromPublicUrl(process.env.R2_PUBLIC_URL)
 const r2EndpointOrigin = originFromPublicUrl(process.env.R2_ENDPOINT)
+const r2RemotePattern = remotePatternFromPublicOrigin(r2PublicOrigin)
 
 const nextConfig: NextConfig = {
   images: {
@@ -22,6 +24,7 @@ const nextConfig: NextConfig = {
         pathname: '/api/media/file/**',
       },
     ],
+    ...(r2RemotePattern ? { remotePatterns: [r2RemotePattern] } : {}),
   },
   async headers() {
     const publicHeaders = buildRouteSecurityHeaders({

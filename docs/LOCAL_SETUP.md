@@ -127,14 +127,35 @@ Unit helpers: `npm test` → `tests/unit/adminSeed.test.ts`.
 
 Бюджет кликов (после login): **сайдбар Articles → Create → title/body → Save Draft → Publish** ≈ 5–6 осознанных действий. Lexical images / YouTube — шаг **034**; preview URL — **035**.
 
-## 7. Seed (placeholder)
+## 7. Seed (admin + go-live content)
 
-| Что             | Сейчас                                                    | Позже                 |
-| --------------- | --------------------------------------------------------- | --------------------- |
-| Admin user      | `npm run seed:admin` (`ADMIN_*`) или UI create-first-user | —                     |
-| Контент / faker | Пустая БД                                                 | Track 12 (ops & seed) |
+**Локальный Docker** (даже если в `.env` лежит Neon):
 
-Для onboarding: migrate → `seed:admin` → `npm run dev` → `/admin` с `ADMIN_EMAIL` / `ADMIN_PASSWORD`.
+```bash
+docker compose up -d
+# ADMIN_EMAIL / ADMIN_PASSWORD в .env (не replace-me) — читаются как обычно
+npm run migrate:local   # если Payload спросит про push/dev — на чистом volume обычно y; либо схема уже от npm run dev
+npm run seed:local
+```
+
+`seed:local` принудительно пишет в `localhost:5432/blog` (Compose), игнорируя Neon `DATABASE_URL`. В логе будет строка `withLocalDatabaseUrl — DATABASE_URL → localhost:5432/blog`.
+
+| Что                             | Команда                       | Куда пишет           |
+| ------------------------------- | ----------------------------- | -------------------- |
+| Admin + контент → Docker        | `npm run seed:local`          | всегда local Compose |
+| Только admin → Docker           | `npm run seed:local:admin`    | local                |
+| Только контент → Docker         | `npm run seed:local:content`  | local                |
+| Admin + контент → URL из `.env` | `npm run seed`                | Neon или что задано  |
+| Admin / контент по отдельности  | `seed:admin` / `seed:content` | URL из `.env`        |
+
+Контент (шаг **107**): маркер-категория `seed-demo` + Pages `about` / `privacy` / `terms` с реальным черновиком (uk/ru/en); **articles=0**, **notes=0**, **tags=0** — публичная лента показывает empty-state. Без faker. Без readers / comments / bookmarks (ADR-007). Media / hero не сидим.
+
+Ожидание первого `seed:local:content`: `categories=1 tags=0 articles=0 notes=0 pages=3` (или `pages skipped`, если slug уже есть). Повтор: `skip: Marker category…`. Unit: `npm test` → `tests/unit/contentSeed.test.ts`.
+
+**Уже засеянная БД** (маркер есть): seed Pages и старые `seed-article-*` / `seed-note-*` **не** перезапишет. Для go-live: в `/admin` отредактируйте Pages (slug строго `about` / `privacy` / `terms` в каждой локали), unpublish или delete демо-статьи/заметки. `CONTACT_EMAIL` для mailto на About — **необязательно** (на Production waived, шаг **109**).
+
+Onboarding на Docker: `migrate:local` → `seed:local` → `npm run dev` → `/admin` и `/uk/about`, `/uk/privacy`, `/uk/terms`; `/uk/articles` и `/uk/notes` — empty-state.  
+Для `npm run dev` тоже нужен local `DATABASE_URL` в `.env` (или временно подставьте Compose URL) — иначе сайт снова пойдёт в Neon.
 
 ## 8. Media (локальный disk или R2)
 
@@ -156,7 +177,7 @@ GIF → WebP: анимация не гарантируется.
 
 **Access (шаг 039):** create/update/delete Media — только `admin`. Anonymous upload через API → отказ.  
 Unit (без БД): `npm test` → `tests/unit/mediaAccess.test.ts`.  
-Int (нужен Postgres: `docker compose up -d`): `npm run test:int` → `tests/int/media.int.spec.ts`.
+Int (нужен Postgres: `docker compose up -d`): `npm run test:int` → `tests/int/media.int.spec.ts`, `api.int.spec.ts`, `contentLocale.int.spec.ts`, `factories.int.spec.ts`.
 
 ## 9. Categories и Tags (таксономия)
 
@@ -287,6 +308,8 @@ Unit: `npm test` → `tests/unit/notesQuery.test.ts`. Draft Preview (кнопк�
 
 В `/admin` доступна коллекция **Pages** (статические страницы: About, Privacy, Terms и т.п.).
 
+На свежей БД после `seed:local` / `seed:content` (шаг **107**) документы со slug `about` / `privacy` / `terms` уже созданы с черновиком go-live — достаточно открыть публичные URL или подправить текст в admin. Seed **не** обновляет существующие Pages (skip-if-exists).
+
 | Параметр | Значение                                                                                                                                            |
 | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Write    | Только `admin` (create / update / delete)                                                                                                           |
@@ -318,7 +341,7 @@ Terms (шаг **080**, done):
 12. **Publish** → `http://localhost:3000/uk/terms` — заголовок и тело из Payload. Ссылка «Умови» / «Условия» / «Terms» в footer ведёт сюда. Черновик / чужой slug — «не найдено».
     Cookie consent (шаг **081**, done):
 
-13. Откройте `http://localhost:3000/uk` в чистом профиле / без `localStorage.cookie-consent`. Ожидание: снизу баннер «Файли cookie» с Accept / Decline и ссылкой на Privacy. Decline → баннер исчезает, `localStorage.cookie-consent === declined`, после reload баннера нет. Accept → значение `accepted` (Analytics пакет ещё не грузится — gate пустой до **097**).
+13. Откройте `http://localhost:3000/uk` в чистом профиле / без `localStorage.cookie-consent`. Ожидание: снизу баннер «Файли cookie» с Accept / Decline и ссылкой на Privacy. Decline → баннер исчезает, `localStorage.cookie-consent === declined`, после reload баннера нет; в Network нет `va.vercel-scripts.com`. Accept → значение `accepted`, грузится debug script `@vercel/analytics` с `va.vercel-scripts.com` (шаг **097**; prod dashboard — [runbooks/vercel-analytics.md](./runbooks/vercel-analytics.md)).
 
 Unit: `npm test` → `tests/unit/pagesQuery.test.ts`. Unit access/slugify — **024** (done).
 

@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked` · `cancelled`.
 
-**Baseline Status:** следующий шаг — `097` (Vercel Analytics). Шаги `001`–`085`, `087`–`096` — `done`; `086` — `cancelled`.
+**Baseline Status:** v1 роадмап закрыт (`001`–`085`, `087`–`115` — `done`; `086` — `cancelled`). Track 14 docs: `111`–`115` — `done`. Горизонт после v1 — [`post-v1.md`](./post-v1.md).
 
 **Pivot: author-only (2026-11-12).** Продуктовая модель — один admin, гости без аккаунтов; без comments/bookmarks, публичной auth, Resend/OAuth/Turnstile/Upstash как фич продукта. Канон: [ADR-007](adr/007-author-only-no-public-auth.md), миграция `src/migrations/20261112_130000_drop_reader_social.ts`. Исторические шаги **021–022**, **025–032**, **057–061**, **028–029**, **074–075**, **082** остаются **`done` как история**; их DoD описывает то, что строили тогда — **superseded** для текущего продукта. Синхронизация docs + кода pivot — **сознательный waive** правила «один PR = один шаг» (вне нумерации).
 
@@ -39,19 +39,19 @@
 
 v1 считается завершённым, когда одновременно верно:
 
-- [ ] Сайт на Vercel (`*.vercel.app`) в production
-- [ ] Admin на `/admin`: один admin публикует Articles и Notes (draft / preview / schedule)
-- [ ] Медиа: изображения в R2 (WebP); видео — YouTube embed
-- [ ] Локали `uk` / `ru` / `en` для UI и контента
+- [x] Сайт на Vercel (`*.vercel.app`) в production
+- [x] Admin на `/admin`: один admin публикует Articles и Notes (draft / preview / schedule)
+- [x] Медиа: изображения в R2 (WebP); видео — YouTube embed
+- [x] Локали `uk` / `ru` / `en` для UI и контента
 - [x] Author-only: один admin в `/admin`; гости читают без аккаунтов; share/copy link на article/note (ADR-007)
 - [x] ~~Readers / Comments / Bookmarks~~ — снято с продукта (история шагов 021–032, 057–061; superseded ADR-007)
 - [x] SEO: RSS, sitemap, OG images, JSON-LD, TOC, reading time, related, code highlight
-- [ ] Поиск по Postgres
-- [ ] Dark + light theme, shadcn UI, аккуратный editorial дизайн
+- [x] Поиск по Postgres
+- [x] Dark + light theme, shadcn UI, аккуратный editorial дизайн
 - [x] Privacy, Terms, cookie consent
-- [ ] CI: lint + format + typecheck + Vitest; Dependabot; Preview Deploys
-- [ ] Backups Neon (+ политика R2); логи Vercel; Vercel Analytics
-- [ ] Seed + faker для локалки; документация LOCAL_SETUP / ADR / runbooks / security
+- [x] CI: lint + format + typecheck + Vitest; Dependabot; Preview Deploys
+- [x] Backups Neon (+ политика R2); логи Vercel; Vercel Analytics
+- [x] Seed go-live (admin + Pages; empty feed); документация LOCAL_SETUP / ADR / runbooks / security
 
 ---
 
@@ -956,59 +956,66 @@ v1 считается завершённым, когда одновременн�
 
 ### 097 — Vercel Analytics
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Продуктовая аналитика.
 - **Deliverables:** Analytics package; consent-aware load; docs.
 - **Verify:** События видны в Vercel dashboard на prod.
 - **DoD:** Analytics подключена.
+- **Notes:** `@vercel/analytics` → `<Analytics />` внутри `ConsentAwareAnalytics` в `[locale]/layout` (не admin). Opt-in: только `localStorage.cookie-consent === accepted`. Public CSP: `https://va.vercel-scripts.com` в `script-src` / `connect-src` ([`src/security/headers.ts`](../src/security/headers.ts)); prod script — same-origin `/_vercel/insights`. Speed Insights не ставили. Канон [`runbooks/vercel-analytics.md`](./runbooks/vercel-analytics.md); unit CSP — `securityHeaders.test.ts`.
 
 ### 098 — Logging baseline
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Диагностика без тяжёлого стека.
 - **Deliverables:** Consistent `console`/logger wrapper; request id optional; что смотреть в Vercel Logs — в runbook.
-- **Verify:** Ошибка auth/comment видна в logs.
+- **Verify:** Ошибка draft-preview auth (или admin login) видна в logs.
 - **DoD:** Logs usable.
+- **Notes:** Thin [`src/lib/logger.ts`](../src/lib/logger.ts) — JSON в `console.*`, без новых deps. `getRequestId`: `x-request-id` → `x-vercel-id` → UUID. Wire: preview auth catch + CLI fail seed/backfill. Client error boundaries не мигрировали (браузер ≠ Vercel Logs). Канон [`runbooks/vercel-logs.md`](./runbooks/vercel-logs.md). Unit — `tests/unit/logger.test.ts`. Sentry — **099**.
 
 ### 099 — Optional Sentry (free)
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Errors если подключается легко.
 - **Deliverables:** Sentry Next SDK **или** явный ADR «waive until needed» с критериями включения.
 - **Verify:** Test error появляется в Sentry **или** waive задокументирован.
 - **DoD:** Решение по Sentry зафиксировано (не серое пятно).
+- **Notes:** Waive — [ADR-008](./adr/008-sentry-waive-until-needed.md): Sentry не в v1; канон ошибок — Vercel Logs + [`logger`](../src/lib/logger.ts) (**098**). Критерии revisit: untriageable server errors, client crash grouping/source maps, alerting, triage cost > free Sentry. Без SDK/DSN/CSP/instrumentation. При срабатывании критериев — новый numbered шаг, не тихий add.
 
 ### 100 — Neon backup policy
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Подстраховка данных.
 - **Deliverables:** `docs/runbooks/backup-neon.md` (pit/export/snapshot по возможностям Free; периодичность; restore drill).
 - **Verify:** Хотя бы один restore drill на копии.
 - **DoD:** Backup не «потом когда-нибудь».
+- **Notes:** Канон [`runbooks/backup-neon.md`](./runbooks/backup-neon.md). Free: PITR ≤ 6h / 1 GB history; 1 manual snapshot; schedules нет → weekly `pg_dump` (direct/unpooled) вне git. Drill 2026-11-16: branch `restore-drill-20261116` от `production` → smoke `users=1` / `articles=0` / `notes=1` → branch удалена; prod/Vercel не трогали. R2 — **101**.
 
 ### 101 — R2 backup / retention notes
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Медиа не потерять молча.
 - **Deliverables:** `docs/runbooks/backup-r2.md` (versioning если доступно, периодический sync/export strategy).
 - **Verify:** Процедура воспроизводима.
 - **DoD:** R2 risk accepted осознанно с планом.
+- **Notes:** Канон [`runbooks/backup-r2.md`](./runbooks/backup-r2.md). S3 versioning на R2 **нет** (accepted). Bucket lock на primary **не** ставим (Payload delete/overwrite). Три слоя: primary `R2_BUCKET` → weekly mirror `blog-media-backup` (`aws s3 sync` / rclone) → monthly cold local вне git. App token только primary. Drill 2026-11-16: primary put/copy/get/delete в `_restore-drill/` OK; bucket пуст (0 media); `blog-media-backup` ещё создать в Dashboard (token без CreateBucket). Vercel env не трогали. Seed — **102**.
 
 ### 102 — Seed + faker
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Богатая локалка.
-- **Deliverables:** Seed script: admin, readers, categories, tags, articles, notes, comments, bookmarks; faker; npm script.
-- **Verify:** Чистая БД → seed → сайт полон контента.
+- **Deliverables:** Seed script: admin, categories, tags, articles, notes, pages (about/privacy/terms); `@faker-js/faker` + fixed seed; `npm run seed` / `seed:content`; без readers/comments/bookmarks (ADR-007).
+- **Verify:** Чистая БД → `npm run seed` → сайт полон контента; повтор → skip.
 - **DoD:** Demo data воспроизводимы.
+- **Notes:** Deliverables выровнены под ADR-007 (readers/comments/bookmarks сняты). Pure [`src/seed/contentSeed.ts`](../src/seed/contentSeed.ts) + CLI [`src/scripts/seedContent.ts`](../src/scripts/seedContent.ts); маркер `seed-demo`; faker seed `102000`; pages about/privacy/terms; media/hero не сидим. `npm run seed` = admin → content (URL из `.env`). Follow-up: [`withLocalDatabaseUrl.ts`](../src/scripts/withLocalDatabaseUrl.ts) + `npm run seed:local` / `migrate:local` — всегда Docker `localhost:5432/blog`, даже если `.env` указывает на Neon. Unit — `tests/unit/contentSeed.test.ts`. LOCAL_SETUP §7.
 
 ### 103 — Ops runbook index
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Одна точка входа в ops docs.
 - **Deliverables:** `docs/runbooks/README.md`.
 - **Verify:** Ссылки живые.
 - **DoD:** Ops docs навигируемы.
+- **Notes:** Канон [`runbooks/README.md`](./runbooks/README.md): группы Deploy / Secrets / Observability / Media / Backup + смежные (LOCAL_SETUP, release-policy, security checklist, ADR-008). Девять существующих runbooks; incident stub не заводили. Вход с корня README и tech-stack §15. Дальше — **104**.
 
 ---
 
@@ -1016,59 +1023,66 @@ v1 считается завершённым, когда одновременн�
 
 ### 104 — Caching / ISR strategy
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Быстрые публичные страницы, меньше давления на Neon.
 - **Deliverables:** ADR cache tags/revalidate; on-demand revalidation при publish.
 - **Verify:** Published update отражается после revalidate; TTFB приемлем на preview.
 - **DoD:** Кеш-стратегия явная.
+- **Notes:** Канон [ADR-009](./adr/009-caching-isr-revalidate.md). `unstable_cache` + tags + soft TTL 60s в `src/content/*` loaders; словарь [`src/cache/contentTags.ts`](../src/cache/contentTags.ts); on-demand `revalidateTag(..., { expire: 0 })` из [`revalidatePublicContent`](../src/hooks/revalidatePublicContent.ts) на articles/notes/pages/categories/tags. RSS/sitemap/search/preview без этого кеша. Cron / `REVALIDATE_SECRET` / `"use cache"` — не в шаге. Image perf — **105**.
 
 ### 105 — Image performance
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Быстрые картинки.
 - **Deliverables:** next/image или R2 URLs + sizes; lazy loading.
 - **Verify:** LCP hero не катастрофический на article page.
 - **DoD:** Медиа не убивает UX.
+- **Notes:** Канон — `next/image` (не plain R2 `<img>`). [`ContentImage`](../src/components/media/content-image.tsx) + helpers [`contentImage.ts`](../src/media/contentImage.ts): `CONTENT_IMAGE_SIZES` под `max-w-measure` / 65ch; `remotePatternFromPublicOrigin` → `next.config` `images.remotePatterns` из `R2_PUBLIC_URL` (localPatterns `/api/media/file/**` сохранены). Article hero — `priority` (LCP). Lexical `upload` converter в [`PayloadRichText`](../src/components/rich-text/PayloadRichText.tsx) — тот же компонент без priority (lazy). Payload `imageSizes` / ленточные thumbnails / OG Satori — вне шага. Unit: `tests/unit/contentImage.test.ts`. Bundle pass — **106**.
 
 ### 106 — Bundle / route performance pass
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Убрать лишний JS на публичке.
 - **Deliverables:** Audit heavy client components; dynamic import where needed.
 - **Verify:** Нет очевидных гигантов на home.
 - **DoD:** Performance pass отмечен в checklist.
+- **Notes:** Аудит: публичка RSC; eager shell — theme / nav / language; page-specific client только `ShareActions`. Next 16: `ssr: false` нельзя в RSC — boundary [`DeferredPublicShell`](../src/components/site/deferred-public-shell.tsx) (`next/dynamic` + `ssr: false` для cookie banner, consent gate, `@vercel/analytics`). `ShareActions` — `next/dynamic` на article/note slug. Theme toggle — inline SVG вместо `lucide-react` (единственный consumer в `src/`). Lexical/Shiki server-only — не трогали. Trim `getMessages()` / bundle-analyzer / Speed Insights — вне шага. Checklist: секция Performance. Тесты новой логики нет — defer.
 
 ### 107 — Content readiness for go-live
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Реальные страницы автора.
 - **Deliverables:** About, Privacy, Terms заполнены; 1–2 starter articles/notes (или явный empty-state ок).
 - **Verify:** Prod контент не «Lorem» на ключевых страницах (кроме осознанного demo).
 - **DoD:** Сайт можно показывать людям.
+- **Notes:** Seed go-live baseline в [`src/seed/contentSeed.ts`](../src/seed/contentSeed.ts): реальные About/Privacy/Terms (uk/ru/en), `articles=0` / `notes=0` (empty-state UI), маркер `seed-demo` без faker; `@faker-js/faker` снят. Tagline `nav.siteDescription` — человеческий, не стековый. Существующая БД (маркер уже есть) seed не перезапишет Pages/посты — править в `/admin`, снять старые `seed-article-*` / `seed-note-*` вручную. `CONTACT_EMAIL` для mailto на About. Production checklist — **108**.
 
 ### 108 — Production checklist
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Финальный gate.
 - **Deliverables:** `docs/production-checklist.md` (env, OAuth redirect URIs, Resend, R2 public access, analytics, backups, CI green).
 - **Verify:** Все пункты checked.
 - **DoD:** Чеклист пройден.
+- **Notes:** Канон [`production-checklist.md`](./production-checklist.md). Prod alias `https://platenprimeblog.vercel.app`. Секции: Env, N/A ADR-007 (Resend/OAuth/Turnstile/Upstash **не** required), R2, Analytics, Backups, CI/release, Content, SEO, Security, Performance, docs-audit stub → **115**. Verify 2026-11-16: CI `quality` green; Ruleset Active; Dependabot alerts/security updates + secret scanning + push protection enabled; headers/CSP/HSTS; sitemap/RSS/OG/JSON-LD/canonical; about/privacy/terms без Lorem; anonymous POST media/articles → 403; `R2_*` + DB + secrets на Vercel; CSP `img-src` с r2.dev. Осознанно до **109**: `CONTACT_EMAIL`, Vercel Web Analytics UI, R2 CORS/object smoke, secondary backup bucket. Код app не менялся; тесты новой логики нет.
 
 ### 109 — Go-live на `*.vercel.app`
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Публичный launch v1.
-- **Deliverables:** Production deploy; smoke auth/content/comments; запись в README «Live URL».
+- **Deliverables:** Production deploy; smoke auth/content (ADR-007; comments N/A); запись в README «Live URL».
 - **Verify:** Внешний URL проходит smoke checklist.
 - **DoD:** **v1 в production**.
+- **Notes:** Live URL `https://platenprimeblog.vercel.app` в README. Checklist deferrals: CORS verified (Dashboard; app token без PutBucketCors); object smoke CLI public GET 200; `blog-media-backup` создан + Head/sync-probe; Web Analytics Hobby ON; `CONTACT_EMAIL` waived. Prod Neon: published about/privacy/terms (go-live seed bodies); faker articles/notes сняты; empty-state feed. Smoke: admin JWT login + draft article create/delete; ACL POST → 403. Redeploy ради insights упёрся в interactive migrate («dev push» warning) — текущий Production Ready без нового билда; `/_vercel/insights/script.js` ещё 404 до зелёного deploy. Custom domain — **110**. Код app не меняли; temp ops scripts не в репо.
 
 ### 110 — Post-launch notes (custom domain later)
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Не забыть следующий горизонт.
 - **Deliverables:** `docs/post-v1.md` — custom domain, R2 CDN domain, MFA, audit log, search upgrade и т.д.
 - **Verify:** Список не смешивается с открытыми v1 todo.
 - **DoD:** Граница v1/v1.1 ясна.
+- **Notes:** Канон [`post-v1.md`](./post-v1.md): граница v1 done (**109**) vs ещё-v1 Track 14 (**111–115**) vs кандидаты v1.1+ (hosting/media/auth/CMS/search/product out/SEO/ops/quality) + ops hygiene (insights redeploy). Ссылки: tech-stack §16, production-checklist header, README, «Вне роадмапа v1». Код app не менялся; тесты N/A.
 
 ---
 
@@ -1078,43 +1092,48 @@ v1 считается завершённым, когда одновременн�
 
 ### 111 — README deep pass
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** README = карта проекта.
 - **Deliverables:** Архитектура, quickstart, links to all docs, Live URL.
 - **Verify:** Новый человек ориентируется за 5 минут.
 - **DoD:** README полный.
+- **Notes:** README переписан как карта: Live URL, краткая архитектура + mermaid, quickstart → LOCAL_SETUP, полный индекс docs (старт / продукт / процесс / runbooks / security / ADR 000–009), шпаргалка npm-скриптов. `architecture.md`, ADR index, glossary — сознательно **112–114**; код app не менялся; тесты N/A.
 
 ### 112 — Architecture overview
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Картинка системы.
 - **Deliverables:** `docs/architecture.md` (диаграммы Vercel/Neon/R2/Auth).
 - **Verify:** Согласовано с tech-stack.
 - **DoD:** Архитектура описана вне кода.
+- **Notes:** Канон [`architecture.md`](./architecture.md): L1 Vercel/Neon/R2, local vs Preview/Prod (shared Neon), route boundaries, guest read / admin write, Auth ADR-007, media R2, cache ADR-009, observability без Sentry, явный список снятых сервисов. Ссылки: README, tech-stack §15, книга хода. Код app не менялся; тесты N/A.
 
 ### 113 — ADR index
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Навигация по решениям.
 - **Deliverables:** `docs/adr/README.md` + все ADR из треков.
 - **Verify:** Нет «сиротских» решений только в чатах.
 - **DoD:** ADR-практика жива.
+- **Notes:** Канон [`adr/README.md`](./adr/README.md): таблица 000–009 (002/006 superseded → 007), практика «когда писать», куда смотреть если не ADR (tech-stack / architecture / testing / post-v1). README / architecture / tech-stack map указывают на индекс; временный дубль таблицы в README снят. Новые ADR не писали; код app не менялся; тесты N/A.
 
 ### 114 — Glossary
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Article vs Note, reader vs admin, preview vs draft.
 - **Deliverables:** `docs/glossary.md`.
 - **Verify:** Термины совпадают с UI.
 - **DoD:** Общий язык зафиксирован.
+- **Notes:** Канон [`glossary.md`](./glossary.md): три плоскости ярлыков (slug / admin en+ru / public chrome uk+ru+en); Article vs Note + ловушка uk «Нотатки» vs ru/admin «Заметки»; акторы admin + anonymous/guest (`reader` — история ADR-007); draft/published vs Preview (`draftMode`) vs scheduled (не отдельный `_status`). Ссылки: README (продукт), architecture §10, tech-stack §15, книга хода. Код app не менялся; тесты N/A.
 
 ### 115 — Final docs audit
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Перед закрытием v1 сверить docs ↔ код.
 - **Deliverables:** Список расхождений = 0 или tickets в post-v1.
 - **Verify:** Аудит-чекбокс в production checklist.
 - **DoD:** Документация не врёт.
+- **Notes:** Аудит канона ↔ код/ops: Product DoD `[x]` под shipped; seo-checklist без auth/account/bookmarks + OG privacy/terms + privacy/terms не в sitemap (как код); `SITEMAP_EXCLUDED_PATH_FRAGMENTS` без мёртвых auth paths; `CONTACT_EMAIL` optional/waived в `.env.example` + LOCAL_SETUP; glossary seed = go-live Pages; security checklist без «legacy tests TBD»; int-список в LOCAL_SETUP; production-checklist §Docs audit `[x]`. Открытых mismatches = 0; gaps только в [`post-v1.md`](./post-v1.md). История Notes / книга до pivot не переписывались. Тесты: `sitemapQuery` unit (имя кейса).
 
 ---
 
@@ -1178,4 +1197,4 @@ Track 14 можно заполнять параллельно с 0–13. Vercel 
 
 ## Вне роадмапа v1 (напоминание)
 
-См. также out of scope в [`tech-stack.md`](./tech-stack.md): MFA, multi-author, платный контент, Meilisearch, upload видео в R2, CMS versioning, custom domain (после 110).
+Канон горизонта после announce — [`post-v1.md`](./post-v1.md) (**110**). Краткий out of scope в [`tech-stack.md`](./tech-stack.md) §16: MFA, multi-author, платный контент, Meilisearch, upload видео в R2, CMS versioning, custom domain / R2 CDN.

@@ -2,6 +2,8 @@ import config from '@payload-config'
 import { cache } from 'react'
 import { getPayload } from 'payload'
 
+import { detailCacheTags, listCacheTags } from '@/cache/contentTags'
+import { withContentCache } from '@/cache/withContentCache'
 import {
   articlesCountArgs,
   articlesDetailFindArgs,
@@ -24,26 +26,34 @@ export type PublicArticlesResult =
  */
 export const findPublicArticles = cache(
   async (locale: string, rawPage: string | undefined): Promise<PublicArticlesResult> => {
-    const now = new Date()
-    const payload = await getPayload({ config })
-    const counted = await payload.count(articlesCountArgs({ locale, now }))
-    const resolution = resolveArticlesPage(rawPage, counted.totalDocs)
+    return withContentCache(
+      ['findPublicArticles', locale, rawPage ?? ''],
+      listCacheTags('articles'),
+      async () => {
+        const now = new Date()
+        const payload = await getPayload({ config })
+        const counted = await payload.count(articlesCountArgs({ locale, now }))
+        const resolution = resolveArticlesPage(rawPage, counted.totalDocs)
 
-    if (resolution.kind === 'redirect') {
-      return { kind: 'redirect', page: resolution.page }
-    }
+        if (resolution.kind === 'redirect') {
+          return { kind: 'redirect', page: resolution.page }
+        }
 
-    const found = await payload.find(articlesListFindArgs({ locale, now, page: resolution.page }))
+        const found = await payload.find(
+          articlesListFindArgs({ locale, now, page: resolution.page }),
+        )
 
-    return {
-      items: found.docs.flatMap((doc) => {
-        const item = toLatestPublicDoc(doc)
-        return item ? [item] : []
-      }),
-      kind: 'render',
-      page: resolution.page,
-      pageCount: articlesPageCount(counted.totalDocs),
-    }
+        return {
+          items: found.docs.flatMap((doc) => {
+            const item = toLatestPublicDoc(doc)
+            return item ? [item] : []
+          }),
+          kind: 'render' as const,
+          page: resolution.page,
+          pageCount: articlesPageCount(counted.totalDocs),
+        }
+      },
+    )
   },
 )
 
@@ -54,10 +64,16 @@ export const findPublicArticles = cache(
  */
 export const findPublicArticle = cache(
   async (locale: string, slug: string): Promise<PublicArticle | null> => {
-    const payload = await getPayload({ config })
-    const found = await payload.find(articlesDetailFindArgs({ locale, slug }))
-    const doc = found.docs[0]
-    if (!doc) return null
-    return toPublicArticle(doc)
+    return withContentCache(
+      ['findPublicArticle', locale, slug],
+      detailCacheTags('articles'),
+      async () => {
+        const payload = await getPayload({ config })
+        const found = await payload.find(articlesDetailFindArgs({ locale, slug }))
+        const doc = found.docs[0]
+        if (!doc) return null
+        return toPublicArticle(doc)
+      },
+    )
   },
 )

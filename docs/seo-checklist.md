@@ -1,6 +1,6 @@
 # SEO checklist
 
-Операционная шпаргалка Track 7 (шаги **067–072**): что уже есть в коде, как проверить и что заполнять в CMS. Короткие галочки перед go-live — в [`production-checklist.md`](./production-checklist.md) (§SEO). Полный gate выкладки (env, OAuth, R2, …) — шаг **108**.
+Операционная шпаргалка Track 7 (шаги **067–072**): что уже есть в коде, как проверить и что заполнять в CMS. Короткие галочки перед go-live — в [`production-checklist.md`](./production-checklist.md) (§SEO). Полный gate выкладки (env, R2, …) — шаг **108** (OAuth / Resend / Turnstile — N/A, ADR-007).
 
 Инварианты ниже должны совпадать с кодом. Если расходятся — править документ или код, не оставлять «как хотелось бы».
 
@@ -16,7 +16,7 @@
 - Статика на каждую локаль `uk` / `ru` / `en`: `/`, `/feed`, `/articles`, `/notes`, `/categories`, `/tags`, `/search` (`SITEMAP_STATIC_PATHS`).
 - Динамика: published articles/notes по slug; все categories/tags; `/about` **только** если CMS page `about` опубликована.
 - hreflang: общие пути — `languageAlternatesForPath`; локализованные slug — группировка по `id`; `x-default` = `uk`.
-- Не в карте: auth, `/account`, `/bookmarks`, `/dev/`, `/admin`, `/api/`, `?page=`, `?q=`, drafts и scheduled.
+- Не в карте: `/dev/`, `/admin`, `/api/`, `/next/`, `?page=`, `?q=`, drafts и scheduled; публичные auth/account/bookmarks сняты (ADR-007). Privacy/terms — **сознательно не** в sitemap (только `about` среди CMS pages).
 
 ### RSS
 
@@ -29,7 +29,7 @@
 ### Open Graph images
 
 - Convention Next: `opengraph-image.tsx` + `ImageResponse` (`next/og`), без `/api/og`.
-- Generators: locale brand card; детали articles / notes / about.
+- Generators: locale brand card; детали articles / notes / about; также `privacy` / `terms` (`opengraph-image.tsx`).
 - Размер: **1200×630**, `image/png` (`OG_SIZE` / `OG_CONTENT_TYPE` в [`src/content/ogImage.ts`](../src/content/ogImage.ts)).
 - Цепочка media: `seo.ogImage` → `heroImage` (**только статьи**) → title card; media рисуется **внутри** PNG, один `og:image` URL на страницу.
 - `metadataBase` из `getServerUrl()` в locale layout.
@@ -51,7 +51,7 @@
 - Lists / taxonomy / search / about / detail: segment title + description + `alternates.canonical` **без query** (`?page=` / `?q=` → clean path).
 - CMS detail: title = `seo.metaTitle` ?? `title`; description = `rssExcerpt(metaDescription, searchText)`.
 - hreflang: shared paths — `languageAlternatesForPath`; articles/notes/categories/tags — sibling slug по id ([`localizedAlternates.ts`](../src/content/localizedAlternates.ts)).
-- `NOINDEX_ROBOTS` (`index: false`, `follow: false`): auth, `/account`, `/bookmarks`, `/search?q=` (непустой `q`), 404; `/dev` — noindex отдельно.
+- `NOINDEX_ROBOTS` (`index: false`, `follow: false`): `/search?q=` (непустой `q`), 404; `/dev` — noindex отдельно. Публичные auth/account/bookmarks сняты (ADR-007) — отдельных noindex-маршрутов для них нет.
 
 ### Reader / on-page (не `<head>`, но Track 7)
 
@@ -83,7 +83,7 @@
 
 ### OG images
 
-- [ ] Locale shell и детали article/note/about: в `<head>` есть `og:image`.
+- [ ] Locale shell и детали article/note/about/privacy/terms: в `<head>` есть `og:image`.
 - [ ] URL из meta отдаёт `image/png` размером 1200×630.
 - [ ] Статья без `seo.ogImage`, но с hero — карточка с обложкой; без обоих — title card.
 - [ ] Черновик по публичному slug → 404 страницы (и brand fallback у OG route, не утечка draft title в index).
@@ -100,7 +100,7 @@
 - [ ] Home: `<title>` = голый site title (без суффикса `— …`).
 - [ ] List/detail: уникальный title, `meta[name=description]`, `link[rel=canonical]` без query.
 - [ ] Пагинация (`?page=2`) и поиск (`?q=…`): canonical на clean path списка / `/search`.
-- [ ] Auth / bookmarks / account и `/search?q=` — `noindex` (robots meta).
+- [ ] `/search?q=` и 404 — `noindex` (robots meta).
 - [ ] hreflang в `<head>` согласован с locale/slug (как в sitemap; `x-default` = uk).
 
 ---
@@ -122,14 +122,15 @@
 
 ## Сознательно нет (не считать багом чеклиста)
 
-| Нет                                       | Заметка                                               |
-| ----------------------------------------- | ----------------------------------------------------- |
-| `robots.ts` / `robots.txt`                | Indexing control сегодня — per-page `robots` metadata |
-| BreadcrumbList JSON-LD                    | Не реализован                                         |
-| `BlogPosting` для notes                   | Notes тоже `Article`                                  |
-| Atom, category RSS, full HTML body в фиде | RSS 2.0, excerpt only                                 |
-| e2e XML sitemap/RSS, Rich Results e2e     | Unit/smoke + metadata e2e; остальное вне 067–072      |
-| CMS Site Settings для JSON-LD             | Person/WebSite из словаря + `CONTACT_EMAIL`           |
+| Нет                                       | Заметка                                                |
+| ----------------------------------------- | ------------------------------------------------------ |
+| `robots.ts` / `robots.txt`                | Indexing control сегодня — per-page `robots` metadata  |
+| Privacy / terms в sitemap                 | В карте только `about` среди CMS pages; маршруты живые |
+| BreadcrumbList JSON-LD                    | Не реализован                                          |
+| `BlogPosting` для notes                   | Notes тоже `Article`                                   |
+| Atom, category RSS, full HTML body в фиде | RSS 2.0, excerpt only                                  |
+| e2e XML sitemap/RSS, Rich Results e2e     | Unit/smoke + metadata e2e; остальное вне 067–072       |
+| CMS Site Settings для JSON-LD             | Person/WebSite из словаря + `CONTACT_EMAIL`            |
 
 ---
 
