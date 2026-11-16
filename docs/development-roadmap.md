@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked` · `cancelled`.
 
-**Baseline Status:** следующий шаг — `115` (Final docs audit, Track 14). Шаги `001`–`085`, `087`–`114` — `done`; `086` — `cancelled`. Track 14 docs: `111`–`114` — `done`; `115` — `todo`.
+**Baseline Status:** v1 роадмап закрыт (`001`–`085`, `087`–`115` — `done`; `086` — `cancelled`). Track 14 docs: `111`–`115` — `done`. Горизонт после v1 — [`post-v1.md`](./post-v1.md).
 
 **Pivot: author-only (2026-11-12).** Продуктовая модель — один admin, гости без аккаунтов; без comments/bookmarks, публичной auth, Resend/OAuth/Turnstile/Upstash как фич продукта. Канон: [ADR-007](adr/007-author-only-no-public-auth.md), миграция `src/migrations/20261112_130000_drop_reader_social.ts`. Исторические шаги **021–022**, **025–032**, **057–061**, **028–029**, **074–075**, **082** остаются **`done` как история**; их DoD описывает то, что строили тогда — **superseded** для текущего продукта. Синхронизация docs + кода pivot — **сознательный waive** правила «один PR = один шаг» (вне нумерации).
 
@@ -40,18 +40,18 @@
 v1 считается завершённым, когда одновременно верно:
 
 - [x] Сайт на Vercel (`*.vercel.app`) в production
-- [ ] Admin на `/admin`: один admin публикует Articles и Notes (draft / preview / schedule)
-- [ ] Медиа: изображения в R2 (WebP); видео — YouTube embed
-- [ ] Локали `uk` / `ru` / `en` для UI и контента
+- [x] Admin на `/admin`: один admin публикует Articles и Notes (draft / preview / schedule)
+- [x] Медиа: изображения в R2 (WebP); видео — YouTube embed
+- [x] Локали `uk` / `ru` / `en` для UI и контента
 - [x] Author-only: один admin в `/admin`; гости читают без аккаунтов; share/copy link на article/note (ADR-007)
 - [x] ~~Readers / Comments / Bookmarks~~ — снято с продукта (история шагов 021–032, 057–061; superseded ADR-007)
 - [x] SEO: RSS, sitemap, OG images, JSON-LD, TOC, reading time, related, code highlight
-- [ ] Поиск по Postgres
-- [ ] Dark + light theme, shadcn UI, аккуратный editorial дизайн
+- [x] Поиск по Postgres
+- [x] Dark + light theme, shadcn UI, аккуратный editorial дизайн
 - [x] Privacy, Terms, cookie consent
-- [ ] CI: lint + format + typecheck + Vitest; Dependabot; Preview Deploys
-- [ ] Backups Neon (+ политика R2); логи Vercel; Vercel Analytics
-- [x] Seed + faker для локалки; документация LOCAL_SETUP / ADR / runbooks / security
+- [x] CI: lint + format + typecheck + Vitest; Dependabot; Preview Deploys
+- [x] Backups Neon (+ политика R2); логи Vercel; Vercel Analytics
+- [x] Seed go-live (admin + Pages; empty feed); документация LOCAL_SETUP / ADR / runbooks / security
 
 ---
 
@@ -1128,11 +1128,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 115 — Final docs audit
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Перед закрытием v1 сверить docs ↔ код.
 - **Deliverables:** Список расхождений = 0 или tickets в post-v1.
 - **Verify:** Аудит-чекбокс в production checklist.
 - **DoD:** Документация не врёт.
+- **Notes:** Аудит канона ↔ код/ops: Product DoD `[x]` под shipped; seo-checklist без auth/account/bookmarks + OG privacy/terms + privacy/terms не в sitemap (как код); `SITEMAP_EXCLUDED_PATH_FRAGMENTS` без мёртвых auth paths; `CONTACT_EMAIL` optional/waived в `.env.example` + LOCAL_SETUP; glossary seed = go-live Pages; security checklist без «legacy tests TBD»; int-список в LOCAL_SETUP; production-checklist §Docs audit `[x]`. Открытых mismatches = 0; gaps только в [`post-v1.md`](./post-v1.md). История Notes / книга до pivot не переписывались. Тесты: `sitemapQuery` unit (имя кейса).
 
 ---
 

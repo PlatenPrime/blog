@@ -136,7 +136,7 @@ describe('absolutePublicUrl / languageAlternatesForPath', () => {
 })
 
 describe('buildSitemapEntries', () => {
-  it('emits every locale for static shells and skips auth/dev fragments', () => {
+  it('emits every locale for static shells and skips admin/dev/api/preview fragments', () => {
     const entries = buildSitemapEntries({
       aboutPublished: false,
       articlesByLocale: {},

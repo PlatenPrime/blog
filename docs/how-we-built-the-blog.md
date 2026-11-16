@@ -23,7 +23,7 @@ Roadmap — рулетка. Эта книга — разговор на объе
 
 Мы сознательно не стали пересказывать чертёж другими словами. Если абзац можно заменить строкой «сделали коллекцию Articles», его здесь быть не должно. Здесь должно быть: какую боль это снимает, что сломается, если сделать наоборот, и как этот кусок держит следующий.
 
-Ещё одна договорённость о честности. v1 на `*.vercel.app` уже в production (**109**); горизонт после announce зафиксирован в [post-v1.md](./post-v1.md) (**110**); хвост документации чертежа — **111–115**. Публичный сайт отдаёт ленту, статьи, заметки, SEO-артефакты; админ публикует в `/admin`. После pivot **2026-11-12** мы сознательно убрали слой читателя (регистрация, комментарии, закладки) — см. главу про pivot перед «Картой». Исторические главы про reader-auth остаются как рассказ о том, что строили тогда; актуальная модель — один автор и гости.
+Ещё одна договорённость о честности. v1 на `*.vercel.app` уже в production (**109**); горизонт после announce зафиксирован в [post-v1.md](./post-v1.md) (**110**); Track 14 docs (**111–115**) закрыт. Публичный сайт отдаёт ленту, статьи, заметки, SEO-артефакты; админ публикует в `/admin`. После pivot **2026-11-12** мы сознательно убрали слой читателя (регистрация, комментарии, закладки) — см. главу про pivot перед «Картой». Исторические главы про reader-auth остаются как рассказ о том, что строили тогда; актуальная модель — один автор и гости.
 
 ---
 
@@ -590,7 +590,9 @@ Payload не выбирает две коллекции одним запрос�
 
 Шаг 114. Общий язык перестал жить только в чутье и в трёх несовпадающих ярлыках. В [glossary.md](./glossary.md) зафиксировали шпаргалку: Article vs Note (и почему uk говорит «нотатки», а admin RU — «заметки»), admin vs guest вместо устаревшего reader, и разводку draft / published / Preview / scheduled — чтобы никто не искал `_status: scheduled` и не путал кнопку Preview с публичным URL. README, architecture и tech-stack map ведут сюда; схемы и ADR не дублировали. Сверка «документы не врут» — **115**.
 
-Документация в хвосте чертежа (сверка «документы не врут») не заменяет эту книгу. Глоссарий — короткая шпаргалка терминов. Архитектура — схема для того, кто уже понял мотивы. Книга останется рассказом о ходе. Если ход изменился — правится соответствующая глава, а не дописывается оправдание внизу.
+Шаг 115. Документы перестали обещать то, чего в коде уже нет. Финальный аудит сверил канон с author-only go-live: Product DoD отметил shipped; seo-checklist и sitemap exclusions убрали мёртвые auth/account/bookmarks; `CONTACT_EMAIL` стал optional/waived, а не «must before launch»; glossary seed — go-live Pages и пустая лента, не «demo content»; security checklist больше не ждёт удаления уже отсутствующих reader-тестов. Осознанный gap вроде privacy/terms вне sitemap уехал в [post-v1.md](./post-v1.md), а не в «починить заодно». В [production-checklist.md](./production-checklist.md) секция Docs audit закрыта `[x]`. Историю Notes и главы до pivot не переписывали — канон «как сейчас», книга «как шли».
+
+Документация в хвосте чертежа закрыта сверкой «документы не врут»; она не заменяет эту книгу. Глоссарий — короткая шпаргалка терминов. Архитектура — схема для того, кто уже понял мотивы. Книга останется рассказом о ходе. Если ход изменился — правится соответствующая глава, а не дописывается оправдание внизу.
 
 ---
 
@@ -651,6 +653,6 @@ Payload не выбирает две коллекции одним запрос�
 - Выход с ноутбука / Vercel connect — шаг **088**; Preview Deployments — шаг **089**; Production Neon / migrate-on-deploy — шаг **090**; Vercel Postgres adapter — шаг **091**; Secrets matrix — шаг **092**; Conventional Commits (enforcement снят) — шаг **093**; Changesets — шаг **094**; Release policy — шаг **095**; Branch protection — шаг **096** (в обзоре выше; Track 11).
 - Ops / observability — шаги **097** (Vercel Analytics + consent), **098** (Logging baseline), **099** (Sentry waived, ADR-008), **100** (Neon backup runbook + restore drill), **101** (R2 backup / retention), **102** (Seed + faker, author-only), **103** (Ops runbook index).
 - Launch polish — шаги **104** (Caching / ISR, ADR-009), **105** (Image performance / `next/image`), **106** (Bundle / route performance pass), **107** (Content readiness / go-live seed), **108** (Production checklist), **109** (Go-live `*.vercel.app` / Live URL), **110** (Post-launch notes / [`post-v1.md`](./post-v1.md)).
-- Track 14 / docs — шаги **111** (README = карта проекта), **112** (architecture overview), **113** (ADR index), **114** (glossary); следующий по чертежу: **115** (final docs audit).
+- Track 14 / docs — шаги **111** (README = карта проекта), **112** (architecture overview), **113** (ADR index), **114** (glossary), **115** (final docs audit). Горизонт после v1 — [post-v1.md](./post-v1.md).
 
 Свериться с полями и правами, не перечитывая главы: [content-model.md](./content-model.md), [security/access-matrix.md](./security/access-matrix.md). Поднять проект руками: [LOCAL_SETUP.md](./LOCAL_SETUP.md). Идти по работе: [development-roadmap.md](./development-roadmap.md).

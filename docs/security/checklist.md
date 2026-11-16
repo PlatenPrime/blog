@@ -106,5 +106,6 @@
 | Headers / CSP | `tests/unit/securityHeaders.test.ts`                                                              |
 | Access        | `tests/unit/access.test.ts`, `tests/unit/contentAccess.test.ts`, `tests/unit/mediaAccess.test.ts` |
 | Media API     | `tests/int/media.int.spec.ts` (needs Postgres)                                                    |
+| Int suite     | также `tests/int/api.int.spec.ts`, `contentLocale.int.spec.ts`, `factories.int.spec.ts`           |
 
-Legacy tests (`readerAccess`, `comments*`, `bookmarks*`, `rateLimit`, `turnstile`, `auth.int`) — к удалению/рефактору отдельно от docs pivot.
+Reader / comments / bookmarks / rate-limit / Turnstile / public-auth test suites сняты вместе с продуктом (ADR-007); anti-regression якоря — в unit access / i18nMessages.

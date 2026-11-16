@@ -28,21 +28,8 @@ export const SITEMAP_STATIC_PATHS = [
 
 export type SitemapStaticPath = (typeof SITEMAP_STATIC_PATHS)[number]
 
-/** Paths that must never appear in the sitemap (auth, private, preview, admin). */
-export const SITEMAP_EXCLUDED_PATH_FRAGMENTS = [
-  '/login',
-  '/register',
-  '/forgot-password',
-  '/reset-password',
-  '/verify',
-  '/logout',
-  '/account',
-  '/bookmarks',
-  '/dev/',
-  '/admin',
-  '/api/',
-  '/next/',
-] as const
+/** Paths that must never appear in the sitemap (dev, admin, API, preview). */
+export const SITEMAP_EXCLUDED_PATH_FRAGMENTS = ['/dev/', '/admin', '/api/', '/next/'] as const
 
 export type SitemapContentCollection = 'articles' | 'notes'
 

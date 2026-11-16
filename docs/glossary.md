@@ -83,7 +83,7 @@
 | **Feed**                   | Смешанная лента articles+notes: `/{locale}/feed` (uk «Стрічка», ru «Лента», en «Feed»).                                          |
 | **Local API**              | Вызов Payload из Next в том же процессе (RSC), без отдельного HTTP API-сервера.                                                  |
 | **Media**                  | Коллекция загрузок (admin-only write); `alt` обязателен; storage → R2 в cloud.                                                   |
-| **Seed**                   | `npm run seed` = admin + demo content; без reader-аккаунтов.                                                                     |
+| **Seed**                   | `npm run seed` = admin + go-live Pages (`about` / `privacy` / `terms`); лента articles/notes пустая; без reader-аккаунтов.       |
 | **ISR / revalidate**       | Кэш публичных выборок + `revalidateTag` при сохранении ([ADR-009](./adr/009-caching-isr-revalidate.md)).                         |
 
 ---

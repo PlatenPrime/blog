@@ -152,7 +152,7 @@ npm run seed:local
 
 Ожидание первого `seed:local:content`: `categories=1 tags=0 articles=0 notes=0 pages=3` (или `pages skipped`, если slug уже есть). Повтор: `skip: Marker category…`. Unit: `npm test` → `tests/unit/contentSeed.test.ts`.
 
-**Уже засеянная БД** (маркер есть): seed Pages и старые `seed-article-*` / `seed-note-*` **не** перезапишет. Для go-live: в `/admin` отредактируйте Pages (slug строго `about` / `privacy` / `terms` в каждой локали), unpublish или delete демо-статьи/заметки; задайте `CONTACT_EMAIL` для mailto на About.
+**Уже засеянная БД** (маркер есть): seed Pages и старые `seed-article-*` / `seed-note-*` **не** перезапишет. Для go-live: в `/admin` отредактируйте Pages (slug строго `about` / `privacy` / `terms` в каждой локали), unpublish или delete демо-статьи/заметки. `CONTACT_EMAIL` для mailto на About — **необязательно** (на Production waived, шаг **109**).
 
 Onboarding на Docker: `migrate:local` → `seed:local` → `npm run dev` → `/admin` и `/uk/about`, `/uk/privacy`, `/uk/terms`; `/uk/articles` и `/uk/notes` — empty-state.  
 Для `npm run dev` тоже нужен local `DATABASE_URL` в `.env` (или временно подставьте Compose URL) — иначе сайт снова пойдёт в Neon.
@@ -177,7 +177,7 @@ GIF → WebP: анимация не гарантируется.
 
 **Access (шаг 039):** create/update/delete Media — только `admin`. Anonymous upload через API → отказ.  
 Unit (без БД): `npm test` → `tests/unit/mediaAccess.test.ts`.  
-Int (нужен Postgres: `docker compose up -d`): `npm run test:int` → `tests/int/media.int.spec.ts`.
+Int (нужен Postgres: `docker compose up -d`): `npm run test:int` → `tests/int/media.int.spec.ts`, `api.int.spec.ts`, `contentLocale.int.spec.ts`, `factories.int.spec.ts`.
 
 ## 9. Categories и Tags (таксономия)
 

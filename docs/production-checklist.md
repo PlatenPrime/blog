@@ -3,7 +3,7 @@
 Операционный gate перед go-live (шаг **108**). Author-only продукт — [ADR-007](adr/007-author-only-no-public-auth.md).
 
 **Канонический Production URL (v1):** `https://platenprimeblog.vercel.app`  
-Публичный announce + Live URL в README — шаг **109**. Горизонт после v1 — [`post-v1.md`](./post-v1.md) (**110**). Полный docs audit — **115**.
+Публичный announce + Live URL в README — шаг **109**. Горизонт после v1 — [`post-v1.md`](./post-v1.md) (**110**). Полный docs audit — **115** (закрыт ниже).
 
 Не дублировать runbooks: здесь короткие галочки и ссылки. Матрица секретов — [`runbooks/secrets.md`](./runbooks/secrets.md). Карта ops — [`runbooks/README.md`](./runbooks/README.md).
 
@@ -111,9 +111,16 @@ Speed Insights в v1 не подключаем.
 
 ---
 
-## Docs audit (не этот шаг)
+## Docs audit (**115**)
 
-- [ ] **Full docs ↔ code audit** — шаг **115** (чеклист-заглушка здесь, чтобы не потерять).
+Сверка канона docs ↔ код / ops после ADR-007 и go-live. История Notes / главы книги до pivot не «чинится» под настоящее.
+
+- [x] **Actors / auth** — admin-only `/admin`; нет public login/register/OAuth/reader; glossary + access-matrix согласованы.
+- [x] **Collections / routes** — docs ↔ `src/collections` + App Router; comments/bookmarks отсутствуют.
+- [x] **Integrations** — Resend / Turnstile / Upstash / Sentry / MFA: removed | waived | post-v1 (не required для v1).
+- [x] **Env / scripts** — `.env.example` + LOCAL_SETUP / secrets; `CONTACT_EMAIL` optional (waived on prod); npm scripts ↔ `package.json`.
+- [x] **SEO / security canon** — seo-checklist и security checklist без мёртвых auth paths; sitemap exclusions без login/account/bookmarks; Product DoD и seed wording = **107**/**109**.
+- [x] **Full docs ↔ code audit** — список открытых mismatches = 0; осознанные gaps только в [`post-v1.md`](./post-v1.md).
 
 ---
 

@@ -8,13 +8,12 @@
 
 ## Граница v1 / post-v1
 
-| Зона                     | Что сюда                                                                                                |
-| ------------------------ | ------------------------------------------------------------------------------------------------------- |
-| **v1 done**              | Go-live на `*.vercel.app` (**109**). Live URL: `https://platenprimeblog.vercel.app`.                    |
-| **Ещё v1 (не сюда)**     | Track 14 docs: **111**–**115** (README deep pass, architecture, ADR index, glossary, final docs audit). |
-| **Сюда (v1.1+ / later)** | Custom domain, R2 CDN, MFA, audit log, search upgrade и прочее ниже.                                    |
+| Зона                     | Что сюда                                                                                                                    |
+| ------------------------ | --------------------------------------------------------------------------------------------------------------------------- |
+| **v1 done**              | Go-live на `*.vercel.app` (**109**). Live URL: `https://platenprimeblog.vercel.app`. Track 14 docs **111**–**115** закрыты. |
+| **Сюда (v1.1+ / later)** | Custom domain, R2 CDN, MFA, audit log, search upgrade и прочее ниже.                                                        |
 
-Verify границы: если пункт ещё в открытых шагах `111`–`115` — он **не** кандидат post-v1. Если он в Notes/waivers как «после go-live» / out of scope — он **здесь**.
+Verify границы: новый must-have после announce → сюда (или новый трек), не в закрытый чертёж v1. Waivers / out of scope — **здесь**.
 
 ---
 
@@ -60,6 +59,7 @@ Verify границы: если пункт ещё в открытых шагах
 ### SEO / UX polish
 
 - `robots.ts` / `robots.txt` — seo-checklist «сознательно нет».
+- Privacy / terms в sitemap (сейчас только `about` среди CMS pages) — seo-checklist «сознательно нет» (**115**).
 - BreadcrumbList JSON-LD; CMS Site Settings для JSON-LD — seo-checklist / Notes **070**.
 - Atom feeds, category RSS, full HTML в RSS — seo-checklist / Notes **068**.
 - `CONTACT_EMAIL` на Production (mailto на About) — waived на **109**.
@@ -90,6 +90,6 @@ Verify границы: если пункт ещё в открытых шагах
 
 ## Как пользоваться
 
-1. Новая идея «после announce» → пункт сюда (или numbered шаг в новом треке), не в открытые `111`–`115`.
-2. Расхождение docs ↔ код при аудите (**115**) → либо правка канона, либо ticket сюда.
+1. Новая идея «после announce» → пункт сюда (или numbered шаг в новом треке), не в закрытый чертёж v1.
+2. Расхождение docs ↔ код → либо правка канона, либо ticket сюда (аудит **115** закрыт с mismatches = 0).
 3. Реализация пункта — отдельное решение и отдельная работа; этот файл только держит горизонт.
