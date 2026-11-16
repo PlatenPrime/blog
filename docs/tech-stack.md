@@ -43,13 +43,14 @@ Vercel (Next.js SSR/ISR + Payload /admin)
 
 ## 3. Приложение и CMS
 
-| Технология                      | Назначение                                                        |
-| ------------------------------- | ----------------------------------------------------------------- |
-| **Next.js (App Router)**        | Публичный сайт (SSR/ISR), API routes, единый deploy unit          |
-| **React**                       | UI публичного сайта и admin shell Payload                         |
-| **Payload CMS v3**              | Headless CMS + admin UI на `/admin`, Local API, access control    |
-| **Lexical** (Payload rich text) | Редактор тела статей и заметок                                    |
-| **Payload Local API / REST**    | Чтение/запись контента из Next Server Components и route handlers |
+| Технология                      | Назначение                                                                                                                                 |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Next.js (App Router)**        | Публичный сайт (SSR/ISR), API routes, единый deploy unit                                                                                   |
+| **Публичный JS**                | RSC по умолчанию; below-fold consent/analytics — client boundary + `next/dynamic` (`ssr: false`); share — dynamic на post routes (**106**) |
+| **React**                       | UI публичного сайта и admin shell Payload                                                                                                  |
+| **Payload CMS v3**              | Headless CMS + admin UI на `/admin`, Local API, access control                                                                             |
+| **Lexical** (Payload rich text) | Редактор тела статей и заметок                                                                                                             |
+| **Payload Local API / REST**    | Чтение/запись контента из Next Server Components и route handlers                                                                          |
 
 Один репозиторий, **один Next.js application**: website + Payload admin в одном процессе/деплое (без отдельного Nest API и без monorepo-пакетов на старте).
 

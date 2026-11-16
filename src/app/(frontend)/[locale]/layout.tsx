@@ -1,4 +1,3 @@
-import { Analytics } from '@vercel/analytics/next'
 import { hasLocale, NextIntlClientProvider } from 'next-intl'
 import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Metadata } from 'next'
@@ -8,8 +7,7 @@ import React from 'react'
 
 import { getServerUrl } from '@/lib/serverUrl'
 import { JsonLd } from '@/components/seo/json-ld'
-import { ConsentAwareAnalytics } from '@/components/site/consent-aware-analytics'
-import { CookieConsentBanner } from '@/components/site/cookie-consent-banner'
+import { DeferredPublicShell } from '@/components/site/deferred-public-shell'
 import { SiteFooter } from '@/components/site/site-footer'
 import { SiteHeader } from '@/components/site/site-header'
 import { SkipLink } from '@/components/site/skip-link'
@@ -98,10 +96,7 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
                 {children}
               </main>
               <SiteFooter />
-              <CookieConsentBanner />
-              <ConsentAwareAnalytics>
-                <Analytics />
-              </ConsentAwareAnalytics>
+              <DeferredPublicShell />
             </div>
           </NextIntlClientProvider>
         </ThemeProvider>

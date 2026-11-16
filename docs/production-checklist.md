@@ -19,3 +19,9 @@
 - [ ] **Headers:** на prod URL в ответе есть `X-Frame-Options: DENY`, `Content-Security-Policy`, в production — HSTS; публичные страницы и `/admin` открываются без CSP-поломок.
 - [ ] **GitHub:** Dependabot updates/alerts включены; secret scanning + push protection on (или waived с пометкой plan limitation в security checklist).
 - [ ] **ACL sanity:** anonymous не upload Media и не пишет контент; только admin входит в `/admin` (ADR-007).
+
+## Performance
+
+Кеш и картинки — шаги **104** / **105**. Bundle / route pass — **106**.
+
+- [x] **Bundle / route pass:** на home нет очевидных client-гигантов (редактор, highlighter, charts); cookie banner / consent analytics — `DeferredPublicShell` + `next/dynamic` (`ssr: false`); `ShareActions` — отдельный chunk на article/note; theme toggle без `lucide-react` на публичке.

@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked` · `cancelled`.
 
-**Baseline Status:** следующий шаг — `106` (Bundle / route performance pass). Шаги `001`–`085`, `087`–`105` — `done`; `086` — `cancelled`.
+**Baseline Status:** следующий шаг — `107` (Content readiness for go-live). Шаги `001`–`085`, `087`–`106` — `done`; `086` — `cancelled`.
 
 **Pivot: author-only (2026-11-12).** Продуктовая модель — один admin, гости без аккаунтов; без comments/bookmarks, публичной auth, Resend/OAuth/Turnstile/Upstash как фич продукта. Канон: [ADR-007](adr/007-author-only-no-public-auth.md), миграция `src/migrations/20261112_130000_drop_reader_social.ts`. Исторические шаги **021–022**, **025–032**, **057–061**, **028–029**, **074–075**, **082** остаются **`done` как история**; их DoD описывает то, что строили тогда — **superseded** для текущего продукта. Синхронизация docs + кода pivot — **сознательный waive** правила «один PR = один шаг» (вне нумерации).
 
@@ -1041,11 +1041,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 106 — Bundle / route performance pass
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Убрать лишний JS на публичке.
 - **Deliverables:** Audit heavy client components; dynamic import where needed.
 - **Verify:** Нет очевидных гигантов на home.
 - **DoD:** Performance pass отмечен в checklist.
+- **Notes:** Аудит: публичка RSC; eager shell — theme / nav / language; page-specific client только `ShareActions`. Next 16: `ssr: false` нельзя в RSC — boundary [`DeferredPublicShell`](../src/components/site/deferred-public-shell.tsx) (`next/dynamic` + `ssr: false` для cookie banner, consent gate, `@vercel/analytics`). `ShareActions` — `next/dynamic` на article/note slug. Theme toggle — inline SVG вместо `lucide-react` (единственный consumer в `src/`). Lexical/Shiki server-only — не трогали. Trim `getMessages()` / bundle-analyzer / Speed Insights — вне шага. Checklist: секция Performance. Тесты новой логики нет — defer.
 
 ### 107 — Content readiness for go-live
 
