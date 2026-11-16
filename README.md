@@ -21,7 +21,7 @@ flowchart LR
   app --> r2
 ```
 
-Полная схема системы (отдельный документ с диаграммами) — шаг **112** чертежа; пока держись tech-stack и этой картинки.
+Полная схема системы (диаграммы и потоки) — [`docs/architecture.md`](docs/architecture.md).
 
 ## Quickstart
 
@@ -49,6 +49,7 @@ npm run dev
 | [LOCAL_SETUP.md](docs/LOCAL_SETUP.md)                     | Локальный запуск с нуля         |
 | [local-postgres.md](docs/local-postgres.md)               | Docker Compose Postgres         |
 | [tech-stack.md](docs/tech-stack.md)                       | Канон технологий и рамки        |
+| [architecture.md](docs/architecture.md)                   | Диаграммы и потоки системы      |
 | [how-we-built-the-blog.md](docs/how-we-built-the-blog.md) | Ход проекта человеческим языком |
 
 ### Продукт и контент

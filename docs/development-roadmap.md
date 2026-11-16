@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked` · `cancelled`.
 
-**Baseline Status:** следующий шаг — `111` (README deep pass, Track 14). Шаги `001`–`085`, `087`–`110` — `done`; `086` — `cancelled`. Track 14 docs (`111`–`115`) — `todo`.
+**Baseline Status:** следующий шаг — `113` (ADR index, Track 14). Шаги `001`–`085`, `087`–`112` — `done`; `086` — `cancelled`. Track 14 docs: `111`–`112` — `done`; `113`–`115` — `todo`.
 
 **Pivot: author-only (2026-11-12).** Продуктовая модель — один admin, гости без аккаунтов; без comments/bookmarks, публичной auth, Resend/OAuth/Turnstile/Upstash как фич продукта. Канон: [ADR-007](adr/007-author-only-no-public-auth.md), миграция `src/migrations/20261112_130000_drop_reader_social.ts`. Исторические шаги **021–022**, **025–032**, **057–061**, **028–029**, **074–075**, **082** остаются **`done` как история**; их DoD описывает то, что строили тогда — **superseded** для текущего продукта. Синхронизация docs + кода pivot — **сознательный waive** правила «один PR = один шаг» (вне нумерации).
 
@@ -1101,11 +1101,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 112 — Architecture overview
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Картинка системы.
 - **Deliverables:** `docs/architecture.md` (диаграммы Vercel/Neon/R2/Auth).
 - **Verify:** Согласовано с tech-stack.
 - **DoD:** Архитектура описана вне кода.
+- **Notes:** Канон [`architecture.md`](./architecture.md): L1 Vercel/Neon/R2, local vs Preview/Prod (shared Neon), route boundaries, guest read / admin write, Auth ADR-007, media R2, cache ADR-009, observability без Sentry, явный список снятых сервисов. Ссылки: README, tech-stack §15, книга хода. Код app не менялся; тесты N/A.
 
 ### 113 — ADR index
 
