@@ -582,7 +582,9 @@ Payload не выбирает две коллекции одним запрос�
 
 Шаг 110. Граница «v1 закончился» перестала жить только в Notes и waivers. В [post-v1.md](./post-v1.md) собрали горизонт после announce: custom domain, R2 CDN, MFA, audit log, search upgrade и остальное из tech-stack §16 / security checklist — отдельно от ещё открытых шагов документации Track 14. Ops-хвост вроде redeploy ради insights не смешали с фичами v1.1: это hygiene, не продукт. Адрес v1 остаётся `*.vercel.app`; свой домен и соседние улучшения — сознательно следующий горизонт, чтобы v1 имел конец.
 
-Документация в хвосте чертежа (глубокий README, картинка архитектуры, оглавление ADR, глоссарий, сверка «документы не врут») не заменяет эту книгу. Глоссарий будет короткой шпаргалкой терминов. Архитектура будет схемой для того, кто уже понял мотивы. Книга останется рассказом о ходе. Если ход изменился — правится соответствующая глава, а не дописывается оправдание внизу.
+Шаг 111. README перестал быть визиткой с восемью ссылками и стал картой входа. С корня видно: что за продукт и Live URL, как устроено приложение одной картинкой (Browser → Next+Payload на Vercel → Neon / R2), как поднять локально за пять команд без копипасты LOCAL_SETUP, и куда идти за каждым существующим документом — старт, модель контента, процесс, runbooks, security, ADR 000–009. Отдельный `architecture.md`, оглавление ADR и глоссарий сознательно оставили на **112–114**: карта указывает на них как на следующие двери, а не подменяет.
+
+Документация в хвосте чертежа (картинка архитектуры, оглавление ADR, глоссарий, сверка «документы не врут») не заменяет эту книгу. Глоссарий будет короткой шпаргалкой терминов. Архитектура будет схемой для того, кто уже понял мотивы. Книга останется рассказом о ходе. Если ход изменился — правится соответствующая глава, а не дописывается оправдание внизу.
 
 ---
 
@@ -642,6 +644,7 @@ Payload не выбирает две коллекции одним запрос�
 - Качество / factories — шаги **083–087** (в обзоре выше; Track 10).
 - Выход с ноутбука / Vercel connect — шаг **088**; Preview Deployments — шаг **089**; Production Neon / migrate-on-deploy — шаг **090**; Vercel Postgres adapter — шаг **091**; Secrets matrix — шаг **092**; Conventional Commits (enforcement снят) — шаг **093**; Changesets — шаг **094**; Release policy — шаг **095**; Branch protection — шаг **096** (в обзоре выше; Track 11).
 - Ops / observability — шаги **097** (Vercel Analytics + consent), **098** (Logging baseline), **099** (Sentry waived, ADR-008), **100** (Neon backup runbook + restore drill), **101** (R2 backup / retention), **102** (Seed + faker, author-only), **103** (Ops runbook index).
-- Launch polish — шаги **104** (Caching / ISR, ADR-009), **105** (Image performance / `next/image`), **106** (Bundle / route performance pass), **107** (Content readiness / go-live seed), **108** (Production checklist), **109** (Go-live `*.vercel.app` / Live URL), **110** (Post-launch notes / [`post-v1.md`](./post-v1.md)); следующий по чертежу: **111** (Track 14).
+- Launch polish — шаги **104** (Caching / ISR, ADR-009), **105** (Image performance / `next/image`), **106** (Bundle / route performance pass), **107** (Content readiness / go-live seed), **108** (Production checklist), **109** (Go-live `*.vercel.app` / Live URL), **110** (Post-launch notes / [`post-v1.md`](./post-v1.md)).
+- Track 14 / docs — шаг **111** (README = карта проекта); следующий по чертежу: **112** (architecture overview).
 
 Свериться с полями и правами, не перечитывая главы: [content-model.md](./content-model.md), [security/access-matrix.md](./security/access-matrix.md). Поднять проект руками: [LOCAL_SETUP.md](./LOCAL_SETUP.md). Идти по работе: [development-roadmap.md](./development-roadmap.md).

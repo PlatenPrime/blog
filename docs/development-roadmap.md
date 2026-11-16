@@ -1092,11 +1092,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 111 — README deep pass
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** README = карта проекта.
 - **Deliverables:** Архитектура, quickstart, links to all docs, Live URL.
 - **Verify:** Новый человек ориентируется за 5 минут.
 - **DoD:** README полный.
+- **Notes:** README переписан как карта: Live URL, краткая архитектура + mermaid, quickstart → LOCAL_SETUP, полный индекс docs (старт / продукт / процесс / runbooks / security / ADR 000–009), шпаргалка npm-скриптов. `architecture.md`, ADR index, glossary — сознательно **112–114**; код app не менялся; тесты N/A.
 
 ### 112 — Architecture overview
 
