@@ -1,9 +1,10 @@
 /**
- * CLI: seed demo taxonomy + content for local onboarding (roadmap 102).
+ * CLI: seed go-live baseline content for local onboarding (roadmap 102 → 107).
  *
  *   npm run seed:content
  *
  * Idempotent: skips when marker category `seed-demo` already exists.
+ * Seeds marker category + About/Privacy/Terms; no articles/notes (empty-state OK).
  * Does not seed readers / comments / bookmarks (ADR-007).
  * Media / hero images intentionally omitted (no R2 dependency for local seed).
  */
@@ -17,7 +18,6 @@ import {
   CONTENT_LOCALES,
   CONTENT_SEED_MARKER_SLUG,
   buildContentSeedPlan,
-  createSeedFaker,
   decideContentSeed,
   lexicalParagraph,
   type ContentDocSeedItem,
@@ -159,7 +159,7 @@ async function main(): Promise<void> {
     process.exit(0)
   }
 
-  const plan = buildContentSeedPlan(createSeedFaker())
+  const plan = buildContentSeedPlan()
 
   const categoryIds: number[] = []
   for (const category of plan.categories) {

@@ -127,7 +127,7 @@ Unit helpers: `npm test` → `tests/unit/adminSeed.test.ts`.
 
 Бюджет кликов (после login): **сайдбар Articles → Create → title/body → Save Draft → Publish** ≈ 5–6 осознанных действий. Lexical images / YouTube — шаг **034**; preview URL — **035**.
 
-## 7. Seed (admin + demo content)
+## 7. Seed (admin + go-live content)
 
 **Локальный Docker** (даже если в `.env` лежит Neon):
 
@@ -148,11 +148,13 @@ npm run seed:local
 | Admin + контент → URL из `.env` | `npm run seed`                | Neon или что задано  |
 | Admin / контент по отдельности  | `seed:admin` / `seed:content` | URL из `.env`        |
 
-Контент: categories, tags, articles, notes, pages (about/privacy/terms); `@faker-js/faker` seed `102000`; маркер `seed-demo`; повтор → skip. Без readers / comments / bookmarks (ADR-007). Media / hero не сидим.
+Контент (шаг **107**): маркер-категория `seed-demo` + Pages `about` / `privacy` / `terms` с реальным черновиком (uk/ru/en); **articles=0**, **notes=0**, **tags=0** — публичная лента показывает empty-state. Без faker. Без readers / comments / bookmarks (ADR-007). Media / hero не сидим.
 
-Ожидание первого `seed:local:content`: counts (`categories=4 tags=8 articles=12 notes=8 pages=…`). Повтор: `skip: Marker category…`. Unit: `npm test` → `tests/unit/contentSeed.test.ts`.
+Ожидание первого `seed:local:content`: `categories=1 tags=0 articles=0 notes=0 pages=3` (или `pages skipped`, если slug уже есть). Повтор: `skip: Marker category…`. Unit: `npm test` → `tests/unit/contentSeed.test.ts`.
 
-Onboarding на Docker: `migrate:local` → `seed:local` → `npm run dev` → `/admin` и `/uk/articles`, `/uk/notes`, `/uk/about`.  
+**Уже засеянная БД** (маркер есть): seed Pages и старые `seed-article-*` / `seed-note-*` **не** перезапишет. Для go-live: в `/admin` отредактируйте Pages (slug строго `about` / `privacy` / `terms` в каждой локали), unpublish или delete демо-статьи/заметки; задайте `CONTACT_EMAIL` для mailto на About.
+
+Onboarding на Docker: `migrate:local` → `seed:local` → `npm run dev` → `/admin` и `/uk/about`, `/uk/privacy`, `/uk/terms`; `/uk/articles` и `/uk/notes` — empty-state.  
 Для `npm run dev` тоже нужен local `DATABASE_URL` в `.env` (или временно подставьте Compose URL) — иначе сайт снова пойдёт в Neon.
 
 ## 8. Media (локальный disk или R2)
@@ -305,6 +307,8 @@ Unit: `npm test` → `tests/unit/notesQuery.test.ts`. Draft Preview (кнопк�
 ## 12. Pages
 
 В `/admin` доступна коллекция **Pages** (статические страницы: About, Privacy, Terms и т.п.).
+
+На свежей БД после `seed:local` / `seed:content` (шаг **107**) документы со slug `about` / `privacy` / `terms` уже созданы с черновиком go-live — достаточно открыть публичные URL или подправить текст в admin. Seed **не** обновляет существующие Pages (skip-if-exists).
 
 | Параметр | Значение                                                                                                                                            |
 | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |

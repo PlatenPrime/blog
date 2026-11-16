@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked` · `cancelled`.
 
-**Baseline Status:** следующий шаг — `107` (Content readiness for go-live). Шаги `001`–`085`, `087`–`106` — `done`; `086` — `cancelled`.
+**Baseline Status:** следующий шаг — `108` (Production checklist). Шаги `001`–`085`, `087`–`107` — `done`; `086` — `cancelled`.
 
 **Pivot: author-only (2026-11-12).** Продуктовая модель — один admin, гости без аккаунтов; без comments/bookmarks, публичной auth, Resend/OAuth/Turnstile/Upstash как фич продукта. Канон: [ADR-007](adr/007-author-only-no-public-auth.md), миграция `src/migrations/20261112_130000_drop_reader_social.ts`. Исторические шаги **021–022**, **025–032**, **057–061**, **028–029**, **074–075**, **082** остаются **`done` как история**; их DoD описывает то, что строили тогда — **superseded** для текущего продукта. Синхронизация docs + кода pivot — **сознательный waive** правила «один PR = один шаг» (вне нумерации).
 
@@ -1050,11 +1050,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 107 — Content readiness for go-live
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Реальные страницы автора.
 - **Deliverables:** About, Privacy, Terms заполнены; 1–2 starter articles/notes (или явный empty-state ок).
 - **Verify:** Prod контент не «Lorem» на ключевых страницах (кроме осознанного demo).
 - **DoD:** Сайт можно показывать людям.
+- **Notes:** Seed go-live baseline в [`src/seed/contentSeed.ts`](../src/seed/contentSeed.ts): реальные About/Privacy/Terms (uk/ru/en), `articles=0` / `notes=0` (empty-state UI), маркер `seed-demo` без faker; `@faker-js/faker` снят. Tagline `nav.siteDescription` — человеческий, не стековый. Существующая БД (маркер уже есть) seed не перезапишет Pages/посты — править в `/admin`, снять старые `seed-article-*` / `seed-note-*` вручную. `CONTACT_EMAIL` для mailto на About. Production checklist — **108**.
 
 ### 108 — Production checklist
 
