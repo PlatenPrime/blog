@@ -247,6 +247,7 @@ OpenTelemetry full stack — не обязателен в v1.
 | `docs/runbooks/`              | Точка входа — [runbooks/README.md](./runbooks/README.md) (**103**): connect (**088**), Preview (**089**), [secrets](./runbooks/secrets.md) (**092**), [branch protection](./runbooks/branch-protection.md) (**096**), [analytics](./runbooks/vercel-analytics.md) (**097**), [logs](./runbooks/vercel-logs.md) (**098**), [Neon backup](./runbooks/backup-neon.md) (**100**), [R2 media](./runbooks/r2-media.md) (**037**), [R2 backup](./runbooks/backup-r2.md) (**101**) |
 | `docs/release-policy.md`      | Как катим в production: `main` = prod, PR + required checks (**095**); enforce UI — [`runbooks/branch-protection.md`](./runbooks/branch-protection.md) (**096**)                                                                                                                                                                                                                                                                                                           |
 | `docs/content-model.md`       | Описание collections и полей                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| `docs/post-v1.md`             | Горизонт после announce v1 (custom domain, MFA, search upgrade, …) — шаг **110**                                                                                                                                                                                                                                                                                                                                                                                           |
 | `README.md`                   | Точка входа в проект                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | Privacy / Terms pages         | Юридические страницы в продукте + краткие заметки в docs при необходимости                                                                                                                                                                                                                                                                                                                                                                                                 |
 
@@ -255,6 +256,8 @@ OpenTelemetry full stack — не обязателен в v1.
 ---
 
 ## 16. Явный out of scope (v1)
+
+Краткий список. Развёрнутый горизонт после announce (граница v1 / v1.1, ops hygiene) — [`post-v1.md`](./post-v1.md) (**110**).
 
 - Multi-tenant SaaS / несколько авторов-редакторов
 - MFA / WebAuthn

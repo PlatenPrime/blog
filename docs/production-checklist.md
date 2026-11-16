@@ -3,7 +3,7 @@
 Операционный gate перед go-live (шаг **108**). Author-only продукт — [ADR-007](adr/007-author-only-no-public-auth.md).
 
 **Канонический Production URL (v1):** `https://platenprimeblog.vercel.app`  
-Публичный announce + Live URL в README — шаг **109**. Custom domain / post-v1 — **110**. Полный docs audit — **115**.
+Публичный announce + Live URL в README — шаг **109**. Горизонт после v1 — [`post-v1.md`](./post-v1.md) (**110**). Полный docs audit — **115**.
 
 Не дублировать runbooks: здесь короткие галочки и ссылки. Матрица секретов — [`runbooks/secrets.md`](./runbooks/secrets.md). Карта ops — [`runbooks/README.md`](./runbooks/README.md).
 

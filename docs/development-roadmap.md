@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked` · `cancelled`.
 
-**Baseline Status:** следующий шаг — `110` (Post-launch notes). Шаги `001`–`085`, `087`–`109` — `done`; `086` — `cancelled`. Track 14 docs (`111`–`115`) — параллельно, `todo`.
+**Baseline Status:** следующий шаг — `111` (README deep pass, Track 14). Шаги `001`–`085`, `087`–`110` — `done`; `086` — `cancelled`. Track 14 docs (`111`–`115`) — `todo`.
 
 **Pivot: author-only (2026-11-12).** Продуктовая модель — один admin, гости без аккаунтов; без comments/bookmarks, публичной auth, Resend/OAuth/Turnstile/Upstash как фич продукта. Канон: [ADR-007](adr/007-author-only-no-public-auth.md), миграция `src/migrations/20261112_130000_drop_reader_social.ts`. Исторические шаги **021–022**, **025–032**, **057–061**, **028–029**, **074–075**, **082** остаются **`done` как история**; их DoD описывает то, что строили тогда — **superseded** для текущего продукта. Синхронизация docs + кода pivot — **сознательный waive** правила «один PR = один шаг» (вне нумерации).
 
@@ -1077,11 +1077,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 110 — Post-launch notes (custom domain later)
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Не забыть следующий горизонт.
 - **Deliverables:** `docs/post-v1.md` — custom domain, R2 CDN domain, MFA, audit log, search upgrade и т.д.
 - **Verify:** Список не смешивается с открытыми v1 todo.
 - **DoD:** Граница v1/v1.1 ясна.
+- **Notes:** Канон [`post-v1.md`](./post-v1.md): граница v1 done (**109**) vs ещё-v1 Track 14 (**111–115**) vs кандидаты v1.1+ (hosting/media/auth/CMS/search/product out/SEO/ops/quality) + ops hygiene (insights redeploy). Ссылки: tech-stack §16, production-checklist header, README, «Вне роадмапа v1». Код app не менялся; тесты N/A.
 
 ---
 
@@ -1191,4 +1192,4 @@ Track 14 можно заполнять параллельно с 0–13. Vercel 
 
 ## Вне роадмапа v1 (напоминание)
 
-См. также out of scope в [`tech-stack.md`](./tech-stack.md): MFA, multi-author, платный контент, Meilisearch, upload видео в R2, CMS versioning, custom domain (после 110).
+Канон горизонта после announce — [`post-v1.md`](./post-v1.md) (**110**). Краткий out of scope в [`tech-stack.md`](./tech-stack.md) §16: MFA, multi-author, платный контент, Meilisearch, upload видео в R2, CMS versioning, custom domain / R2 CDN.

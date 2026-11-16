@@ -48,6 +48,7 @@ Sentry в v1 **не** подключен — [ADR-008](../adr/008-sentry-waive-u
 | [release-policy.md](../release-policy.md)                                       | `main` = Production; PR + зелёный `quality`                 |
 | [security/checklist.md](../security/checklist.md)                               | Security inventory и operator must до публичного URL        |
 | [production-checklist.md](../production-checklist.md)                           | Pre-go-live gate (**108**): env, R2, analytics, backups, CI |
+| [post-v1.md](../post-v1.md)                                                     | Горизонт после announce (**110**): domain, MFA, search, …   |
 | [adr/008-sentry-waive-until-needed.md](../adr/008-sentry-waive-until-needed.md) | Почему нет Sentry и когда revisit                           |
 
 ## Чего здесь нет
