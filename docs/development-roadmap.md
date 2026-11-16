@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked` · `cancelled`.
 
-**Baseline Status:** следующий шаг — `098` (Logging baseline). Шаги `001`–`085`, `087`–`097` — `done`; `086` — `cancelled`.
+**Baseline Status:** следующий шаг — `099` (Optional Sentry). Шаги `001`–`085`, `087`–`098` — `done`; `086` — `cancelled`.
 
 **Pivot: author-only (2026-11-12).** Продуктовая модель — один admin, гости без аккаунтов; без comments/bookmarks, публичной auth, Resend/OAuth/Turnstile/Upstash как фич продукта. Канон: [ADR-007](adr/007-author-only-no-public-auth.md), миграция `src/migrations/20261112_130000_drop_reader_social.ts`. Исторические шаги **021–022**, **025–032**, **057–061**, **028–029**, **074–075**, **082** остаются **`done` как история**; их DoD описывает то, что строили тогда — **superseded** для текущего продукта. Синхронизация docs + кода pivot — **сознательный waive** правила «один PR = один шаг» (вне нумерации).
 
@@ -965,11 +965,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 098 — Logging baseline
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Диагностика без тяжёлого стека.
 - **Deliverables:** Consistent `console`/logger wrapper; request id optional; что смотреть в Vercel Logs — в runbook.
-- **Verify:** Ошибка auth/comment видна в logs.
+- **Verify:** Ошибка draft-preview auth (или admin login) видна в logs.
 - **DoD:** Logs usable.
+- **Notes:** Thin [`src/lib/logger.ts`](../src/lib/logger.ts) — JSON в `console.*`, без новых deps. `getRequestId`: `x-request-id` → `x-vercel-id` → UUID. Wire: preview auth catch + CLI fail seed/backfill. Client error boundaries не мигрировали (браузер ≠ Vercel Logs). Канон [`runbooks/vercel-logs.md`](./runbooks/vercel-logs.md). Unit — `tests/unit/logger.test.ts`. Sentry — **099**.
 
 ### 099 — Optional Sentry (free)
 

@@ -11,8 +11,9 @@ import { convertLexicalToPlaintext } from '@payloadcms/richtext-lexical/plaintex
 import type { SerializedEditorState } from 'lexical'
 import { getPayload } from 'payload'
 
-import config from '../payload.config'
 import { routing } from '../i18n/routing'
+import { logger } from '../lib/logger'
+import config from '../payload.config'
 
 const collections = ['articles', 'notes'] as const
 const pageSize = 50
@@ -68,6 +69,6 @@ function isLexicalBody(value: unknown): value is SerializedEditorState {
 }
 
 main().catch((error: unknown) => {
-  console.error('backfill:search-text failed:', error)
+  logger.error('backfill:search-text failed', { err: error })
   process.exitCode = 1
 })

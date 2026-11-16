@@ -554,9 +554,11 @@ Payload не выбирает две коллекции одним запрос�
 
 Рядом с выкладкой — операционка (097–103).
 
-Шаг 097. Пустой gate согласия из 081 наконец получил содержимое: `@vercel/analytics` монтирует `<Analytics />` только после Accept в cookie banner. Admin layout не трогали — счётчик только на публичном `[locale]` layout. В public CSP открыли `https://va.vercel-scripts.com` для local debug-скрипта; на production пакет ходит на same-origin `/_vercel/insights`. Speed Insights сознательно не ставили. Как включить Web Analytics в Vercel UI и что смотреть в Network — [runbooks/vercel-analytics.md](./runbooks/vercel-analytics.md). Дальше по треку: логи (098), решение по Sentry (099), бэкапы и seed.
+Шаг 097. Пустой gate согласия из 081 наконец получил содержимое: `@vercel/analytics` монтирует `<Analytics />` только после Accept в cookie banner. Admin layout не трогали — счётчик только на публичном `[locale]` layout. В public CSP открыли `https://va.vercel-scripts.com` для local debug-скрипта; на production пакет ходит на same-origin `/_vercel/insights`. Speed Insights сознательно не ставили. Как включить Web Analytics в Vercel UI и что смотреть в Network — [runbooks/vercel-analytics.md](./runbooks/vercel-analytics.md).
 
-Логи, по которым видно, что вход сломался. Осознанное «подключаем ли сбор ошибок» или честный отказ. Записки, как не потерять базу и бакет картинок. Сид с правдоподобными статьями, чтобы локальный сайт не зиял пустотой. Указатель на эти записки, потому что runbook, который нельзя найти, равен отсутствующему.
+Шаг 098. Диагностика перестала быть «найди console.error». Появился тонкий [`src/lib/logger.ts`](../src/lib/logger.ts): одна JSON-строка на событие через `console.*`, без pino/winston. Request id опционален — `x-request-id`, иначе `x-vercel-id`, иначе UUID; в `proxy` не тащили (matcher и так режет `/api`/`/admin`/`/next`). Первый серверный probe — catch draft-preview auth; CLI fail у seed/backfill пишет тем же форматом. Reader auth/comments после ADR-007 нет — Verify смотрит preview, не комментарий. Куда кликать в Vercel Logs — [runbooks/vercel-logs.md](./runbooks/vercel-logs.md). Sentry сознательно на **099**.
+
+Осознанное «подключаем ли сбор ошибок» или честный отказ. Записки, как не потерять базу и бакет картинок. Сид с правдоподобными статьями, чтобы локальный сайт не зиял пустотой. Указатель на эти записки, потому что runbook, который нельзя найти, равен отсутствующему.
 
 Последний заход перед тем, как дать ссылку людям (104–110 и хвост документации 111–115). Кэш публичных страниц и способ сбрасывать его в момент публикации — вот где вспоминают, что отложенный пост не имеет крона. Картинки, которые не тянут первый экран. Вычищение лишнего JavaScript. Настоящий текст «обо мне» вместо рыбы. Чеклист выкладки. Адрес `*.vercel.app`. И отдельно, уже после запуска: свой домен, свой домен для картинок, второй фактор, поиск взрослее. Это не забытые задачи v1. Это сознательная граница, чтобы v1 имел конец.
 
@@ -619,6 +621,6 @@ Payload не выбирает две коллекции одним запрос�
 - Pivot author-only — глава выше (ADR-007); `086` cancelled.
 - Качество / factories — шаги **083–087** (в обзоре выше; Track 10).
 - Выход с ноутбука / Vercel connect — шаг **088**; Preview Deployments — шаг **089**; Production Neon / migrate-on-deploy — шаг **090**; Vercel Postgres adapter — шаг **091**; Secrets matrix — шаг **092**; Conventional Commits (enforcement снят) — шаг **093**; Changesets — шаг **094**; Release policy — шаг **095**; Branch protection — шаг **096** (в обзоре выше; Track 11).
-- Ops / observability — шаг **097** (Vercel Analytics + consent); следующий по чертежу: **098**.
+- Ops / observability — шаги **097** (Vercel Analytics + consent), **098** (Logging baseline); следующий по чертежу: **099**.
 
 Свериться с полями и правами, не перечитывая главы: [content-model.md](./content-model.md), [security/access-matrix.md](./security/access-matrix.md). Поднять проект руками: [LOCAL_SETUP.md](./LOCAL_SETUP.md). Идти по работе: [development-roadmap.md](./development-roadmap.md).

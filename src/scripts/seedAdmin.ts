@@ -9,6 +9,7 @@ import 'dotenv/config'
 
 import { getPayload } from 'payload'
 
+import { logger } from '../lib/logger'
 import config from '../payload.config'
 import { decideAdminSeed, readAdminSeedEnv } from '../seed/adminSeed'
 
@@ -56,6 +57,6 @@ async function main(): Promise<void> {
 }
 
 main().catch((error: unknown) => {
-  console.error('seed:admin failed:', error)
+  logger.error('seed:admin failed', { err: error })
   process.exitCode = 1
 })
