@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked` · `cancelled`.
 
-**Baseline Status:** следующий шаг — `113` (ADR index, Track 14). Шаги `001`–`085`, `087`–`112` — `done`; `086` — `cancelled`. Track 14 docs: `111`–`112` — `done`; `113`–`115` — `todo`.
+**Baseline Status:** следующий шаг — `114` (Glossary, Track 14). Шаги `001`–`085`, `087`–`113` — `done`; `086` — `cancelled`. Track 14 docs: `111`–`113` — `done`; `114`–`115` — `todo`.
 
 **Pivot: author-only (2026-11-12).** Продуктовая модель — один admin, гости без аккаунтов; без comments/bookmarks, публичной auth, Resend/OAuth/Turnstile/Upstash как фич продукта. Канон: [ADR-007](adr/007-author-only-no-public-auth.md), миграция `src/migrations/20261112_130000_drop_reader_social.ts`. Исторические шаги **021–022**, **025–032**, **057–061**, **028–029**, **074–075**, **082** остаются **`done` как история**; их DoD описывает то, что строили тогда — **superseded** для текущего продукта. Синхронизация docs + кода pivot — **сознательный waive** правила «один PR = один шаг» (вне нумерации).
 
@@ -1110,11 +1110,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 113 — ADR index
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Навигация по решениям.
 - **Deliverables:** `docs/adr/README.md` + все ADR из треков.
 - **Verify:** Нет «сиротских» решений только в чатах.
 - **DoD:** ADR-практика жива.
+- **Notes:** Канон [`adr/README.md`](./adr/README.md): таблица 000–009 (002/006 superseded → 007), практика «когда писать», куда смотреть если не ADR (tech-stack / architecture / testing / post-v1). README / architecture / tech-stack map указывают на индекс; временный дубль таблицы в README снят. Новые ADR не писали; код app не менялся; тесты N/A.
 
 ### 114 — Glossary
 

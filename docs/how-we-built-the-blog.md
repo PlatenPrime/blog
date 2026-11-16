@@ -586,7 +586,9 @@ Payload не выбирает две коллекции одним запрос�
 
 Шаг 112. Картинка системы перестала жить только в ASCII tech-stack и кратком mermaid README. В [architecture.md](./architecture.md) собрали диаграммы «как есть»: одно приложение Next+Payload на Vercel, Neon и R2, local vs Preview/Prod (общий Neon на preview), границы маршрутов, поток гостя через кэш и Local API, поток admin с upload в R2, auth только на `/admin` (ADR-007), кэш ADR-009 и явный список того, чего на схеме больше нет (OAuth, Resend, Upstash, Turnstile, reader auth). Tech-stack остаётся «что/зачем»; этот документ — «куда течёт запрос». Оглавление ADR и глоссарий — следующие двери (**113–114**).
 
-Документация в хвосте чертежа (оглавление ADR, глоссарий, сверка «документы не врут») не заменяет эту книгу. Глоссарий будет короткой шпаргалкой терминов. Архитектура — схема для того, кто уже понял мотивы. Книга останется рассказом о ходе. Если ход изменился — правится соответствующая глава, а не дописывается оправдание внизу.
+Шаг 113. Решения перестали жить россыпью ссылок без двери входа. В [adr/README.md](./adr/README.md) собрали индекс 000–009 со статусами (002 и 006 — superseded через ADR-007), правило «когда писать новый ADR» и указатель на канон вне ADR — tech-stack, architecture, testing, post-v1. README больше не дублирует таблицу «пока до 113»; architecture и tech-stack map ведут в один индекс. Новые ADR на search ILIKE или shared Neon не плодили: это не чат-сироты, а уже записанный канон. Глоссарий — **114**.
+
+Документация в хвосте чертежа (глоссарий, сверка «документы не врут») не заменяет эту книгу. Глоссарий будет короткой шпаргалкой терминов. Архитектура — схема для того, кто уже понял мотивы. Книга останется рассказом о ходе. Если ход изменился — правится соответствующая глава, а не дописывается оправдание внизу.
 
 ---
 
@@ -647,6 +649,6 @@ Payload не выбирает две коллекции одним запрос�
 - Выход с ноутбука / Vercel connect — шаг **088**; Preview Deployments — шаг **089**; Production Neon / migrate-on-deploy — шаг **090**; Vercel Postgres adapter — шаг **091**; Secrets matrix — шаг **092**; Conventional Commits (enforcement снят) — шаг **093**; Changesets — шаг **094**; Release policy — шаг **095**; Branch protection — шаг **096** (в обзоре выше; Track 11).
 - Ops / observability — шаги **097** (Vercel Analytics + consent), **098** (Logging baseline), **099** (Sentry waived, ADR-008), **100** (Neon backup runbook + restore drill), **101** (R2 backup / retention), **102** (Seed + faker, author-only), **103** (Ops runbook index).
 - Launch polish — шаги **104** (Caching / ISR, ADR-009), **105** (Image performance / `next/image`), **106** (Bundle / route performance pass), **107** (Content readiness / go-live seed), **108** (Production checklist), **109** (Go-live `*.vercel.app` / Live URL), **110** (Post-launch notes / [`post-v1.md`](./post-v1.md)).
-- Track 14 / docs — шаги **111** (README = карта проекта), **112** (architecture overview); следующий по чертежу: **113** (ADR index).
+- Track 14 / docs — шаги **111** (README = карта проекта), **112** (architecture overview), **113** (ADR index); следующий по чертежу: **114** (glossary).
 
 Свериться с полями и правами, не перечитывая главы: [content-model.md](./content-model.md), [security/access-matrix.md](./security/access-matrix.md). Поднять проект руками: [LOCAL_SETUP.md](./LOCAL_SETUP.md). Идти по работе: [development-roadmap.md](./development-roadmap.md).

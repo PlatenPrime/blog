@@ -99,20 +99,7 @@ npm run dev
 
 ### ADR
 
-Оглавление каталога — шаг **113**. Пока — список решений:
-
-| ADR                                                          | Тема                                           |
-| ------------------------------------------------------------ | ---------------------------------------------- |
-| [000](docs/adr/000-payload-next-neon-r2.md)                  | Payload + Next + Neon + R2                     |
-| [001](docs/adr/001-migrations-policy.md)                     | Миграции: push vs migrate                      |
-| [002](docs/adr/002-auth-verification-and-account-linking.md) | Email verify / OAuth (superseded для продукта) |
-| [003](docs/adr/003-scheduled-publish-query-time.md)          | Scheduled publish                              |
-| [004](docs/adr/004-public-locale-prefix.md)                  | Locale prefix в URL                            |
-| [005](docs/adr/005-i18n-fallback-and-missing.md)             | i18n fallback                                  |
-| [006](docs/adr/006-rate-limiting.md)                         | Rate limiting (superseded для продукта)        |
-| [007](docs/adr/007-author-only-no-public-auth.md)            | Author-only, без public auth                   |
-| [008](docs/adr/008-sentry-waive-until-needed.md)             | Sentry waived                                  |
-| [009](docs/adr/009-caching-isr-revalidate.md)                | Cache tags + on-demand revalidate              |
+Полный индекс и практика — [`docs/adr/README.md`](docs/adr/README.md) (000–009; 002/006 superseded). Входные якоря: [ADR-000](docs/adr/000-payload-next-neon-r2.md) (стек), [ADR-007](docs/adr/007-author-only-no-public-auth.md) (author-only).
 
 Глоссарий терминов — шаг **114**.
 
