@@ -124,7 +124,7 @@ npm run seed:admin       # один admin; повтор = skip
 | Preview env vars / общая preview-БД | **089** ([vercel-preview.md](./vercel-preview.md))     |
 | Уточнение vercel-postgres adapter   | **091**                                                |
 | Матрица секретов                    | **092** ([secrets.md](./secrets.md))                   |
-| Backup Neon                         | **100**                                                |
+| Backup Neon                         | **100** ([backup-neon.md](./backup-neon.md))           |
 | Web Analytics (consent-aware)       | **097** ([vercel-analytics.md](./vercel-analytics.md)) |
 | Runtime Logs / app logger           | **098** ([vercel-logs.md](./vercel-logs.md))           |
 | Custom domain, go-live URL          | **109**                                                |
@@ -136,6 +136,7 @@ npm run seed:admin       # один admin; повтор = skip
 - [branch-protection.md](./branch-protection.md) — Ruleset / required checks на `main` (**096**)
 - [vercel-analytics.md](./vercel-analytics.md) — Web Analytics + consent (**097**)
 - [vercel-logs.md](./vercel-logs.md) — Runtime Logs + app logger (**098**)
+- [backup-neon.md](./backup-neon.md) — Neon PITR / snapshot / `pg_dump` (**100**)
 - [tech-stack.md](../tech-stack.md) — хостинг и env
 - [LOCAL_SETUP.md](../LOCAL_SETUP.md) — локальный путь (Docker Postgres)
 - [r2-media.md](./r2-media.md) — R2 ключи и CORS

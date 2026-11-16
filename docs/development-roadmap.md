@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked` · `cancelled`.
 
-**Baseline Status:** следующий шаг — `100` (Neon backup policy). Шаги `001`–`085`, `087`–`099` — `done`; `086` — `cancelled`.
+**Baseline Status:** следующий шаг — `101` (R2 backup / retention notes). Шаги `001`–`085`, `087`–`100` — `done`; `086` — `cancelled`.
 
 **Pivot: author-only (2026-11-12).** Продуктовая модель — один admin, гости без аккаунтов; без comments/bookmarks, публичной auth, Resend/OAuth/Turnstile/Upstash как фич продукта. Канон: [ADR-007](adr/007-author-only-no-public-auth.md), миграция `src/migrations/20261112_130000_drop_reader_social.ts`. Исторические шаги **021–022**, **025–032**, **057–061**, **028–029**, **074–075**, **082** остаются **`done` как история**; их DoD описывает то, что строили тогда — **superseded** для текущего продукта. Синхронизация docs + кода pivot — **сознательный waive** правила «один PR = один шаг» (вне нумерации).
 
@@ -983,11 +983,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 100 — Neon backup policy
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Подстраховка данных.
 - **Deliverables:** `docs/runbooks/backup-neon.md` (pit/export/snapshot по возможностям Free; периодичность; restore drill).
 - **Verify:** Хотя бы один restore drill на копии.
 - **DoD:** Backup не «потом когда-нибудь».
+- **Notes:** Канон [`runbooks/backup-neon.md`](./runbooks/backup-neon.md). Free: PITR ≤ 6h / 1 GB history; 1 manual snapshot; schedules нет → weekly `pg_dump` (direct/unpooled) вне git. Drill 2026-11-16: branch `restore-drill-20261116` от `production` → smoke `users=1` / `articles=0` / `notes=1` → branch удалена; prod/Vercel не трогали. R2 — **101**.
 
 ### 101 — R2 backup / retention notes
 
