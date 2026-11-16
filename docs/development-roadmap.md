@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked` · `cancelled`.
 
-**Baseline Status:** следующий шаг — `109` (Go-live на `*.vercel.app`). Шаги `001`–`085`, `087`–`108` — `done`; `086` — `cancelled`.
+**Baseline Status:** следующий шаг — `110` (Post-launch notes). Шаги `001`–`085`, `087`–`109` — `done`; `086` — `cancelled`. Track 14 docs (`111`–`115`) — параллельно, `todo`.
 
 **Pivot: author-only (2026-11-12).** Продуктовая модель — один admin, гости без аккаунтов; без comments/bookmarks, публичной auth, Resend/OAuth/Turnstile/Upstash как фич продукта. Канон: [ADR-007](adr/007-author-only-no-public-auth.md), миграция `src/migrations/20261112_130000_drop_reader_social.ts`. Исторические шаги **021–022**, **025–032**, **057–061**, **028–029**, **074–075**, **082** остаются **`done` как история**; их DoD описывает то, что строили тогда — **superseded** для текущего продукта. Синхронизация docs + кода pivot — **сознательный waive** правила «один PR = один шаг» (вне нумерации).
 
@@ -39,7 +39,7 @@
 
 v1 считается завершённым, когда одновременно верно:
 
-- [ ] Сайт на Vercel (`*.vercel.app`) в production
+- [x] Сайт на Vercel (`*.vercel.app`) в production
 - [ ] Admin на `/admin`: один admin публикует Articles и Notes (draft / preview / schedule)
 - [ ] Медиа: изображения в R2 (WebP); видео — YouTube embed
 - [ ] Локали `uk` / `ru` / `en` для UI и контента
@@ -1068,11 +1068,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 109 — Go-live на `*.vercel.app`
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Публичный launch v1.
-- **Deliverables:** Production deploy; smoke auth/content/comments; запись в README «Live URL».
+- **Deliverables:** Production deploy; smoke auth/content (ADR-007; comments N/A); запись в README «Live URL».
 - **Verify:** Внешний URL проходит smoke checklist.
 - **DoD:** **v1 в production**.
+- **Notes:** Live URL `https://platenprimeblog.vercel.app` в README. Checklist deferrals: CORS verified (Dashboard; app token без PutBucketCors); object smoke CLI public GET 200; `blog-media-backup` создан + Head/sync-probe; Web Analytics Hobby ON; `CONTACT_EMAIL` waived. Prod Neon: published about/privacy/terms (go-live seed bodies); faker articles/notes сняты; empty-state feed. Smoke: admin JWT login + draft article create/delete; ACL POST → 403. Redeploy ради insights упёрся в interactive migrate («dev push» warning) — текущий Production Ready без нового билда; `/_vercel/insights/script.js` ещё 404 до зелёного deploy. Custom domain — **110**. Код app не меняли; temp ops scripts не в репо.
 
 ### 110 — Post-launch notes (custom domain later)
 

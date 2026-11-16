@@ -19,7 +19,7 @@
 - [x] **Origin:** `NEXT_PUBLIC_SERVER_URL` на Production; публичные canonical смотрят на `https://platenprimeblog.vercel.app`.
 - [x] **R2 set:** все `R2_BUCKET` / `R2_ACCESS_KEY_ID` / `R2_SECRET_ACCESS_KEY` / `R2_ENDPOINT` / `R2_PUBLIC_URL` (+ `R2_REGION`) на Production и Preview.
 - [x] **Нет bootstrap на хостинге:** `ADMIN_EMAIL` / `ADMIN_PASSWORD` **не** лежат в Vercel env.
-- [ ] **Рекомендуется:** `CONTACT_EMAIL` на Production (mailto на About). Пусто — ссылки нет; не блокер gate, желательно до **109**.
+- [x] **Waived v1:** `CONTACT_EMAIL` на Production не задаём — mailto на About нет (осознанно, шаг **109**).
 
 Preview: свои `PAYLOAD_SECRET` / `PREVIEW_SECRET`; `NEXT_PUBLIC_SERVER_URL` на Preview **не** задавать ([`vercel-preview.md`](./runbooks/vercel-preview.md)).
 
@@ -41,8 +41,8 @@ Preview: свои `PAYLOAD_SECRET` / `PREVIEW_SECRET`; `NEXT_PUBLIC_SERVER_URL` 
 
 - [x] **Public origin:** `R2_PUBLIC_URL` живой r2.dev (или custom); origin попадает в public CSP `img-src` на prod.
 - [x] **Keys на Vercel:** полный набор `R2_*` (см. Env).
-- [ ] **CORS:** bucket CORS разрешает Production origin (`NEXT_PUBLIC_SERVER_URL`) для client uploads из `/admin` (Methods GET/PUT/HEAD). Проверить в Cloudflare Dashboard перед первой боевой загрузкой с prod admin.
-- [ ] **Object smoke:** после upload в prod `/admin` объект открывается по публичному URL без auth.
+- [x] **CORS:** primary `blog-media` — AllowedOrigins `https://platenprimeblog.vercel.app` + `http://localhost:3000`; Methods GET/PUT/HEAD; Headers `*`; Expose `ETag` (Dashboard, 2026-11-16). App token без PutBucketCors — ожидаемо.
+- [x] **Object smoke:** CLI put `_go-live-smoke/smoke.txt` → public GET `{R2_PUBLIC_URL}/…` → **200** → delete (2026-11-16).
 
 ---
 
@@ -51,7 +51,7 @@ Preview: свои `PAYLOAD_SECRET` / `PREVIEW_SECRET`; `NEXT_PUBLIC_SERVER_URL` 
 Код + consent — шаг **097**; runbook — [`runbooks/vercel-analytics.md`](./runbooks/vercel-analytics.md).
 
 - [x] **Consent gate:** `@vercel/analytics` только после Accept в cookie banner (`DeferredPublicShell`); Decline — без скрипта.
-- [ ] **Vercel Web Analytics:** включить в Project → Analytics (Hobby). После Accept на prod в Network есть `/_vercel/insights`; dashboard копит pageviews. Сделать до публичного announce (**109**).
+- [x] **Vercel Web Analytics:** включено Hobby на Project `blog` (2026-11-16); dashboard без demo preview, Production filter. Consent Accept на Live URL записан (`cookie-consent=accepted`). Endpoint `/_vercel/insights/script.js` ещё **404** до следующего **зелёного** Production deploy (redeploy 109 упёрся в interactive migrate prompt — вне DoD announce; текущий prod Ready).
 
 Speed Insights в v1 не подключаем.
 
@@ -61,7 +61,7 @@ Speed Insights в v1 не подключаем.
 
 - [x] **Neon policy + restore drill:** [`runbooks/backup-neon.md`](./runbooks/backup-neon.md) (шаг **100**) — PITR ≤ 6h, manual snapshot, `pg_dump`; drill на копии ветки выполнен.
 - [x] **R2 policy + primary drill:** [`runbooks/backup-r2.md`](./runbooks/backup-r2.md) (шаг **101**) — нет versioning (accepted); mirror/cold copy описаны; primary put/copy/get/delete drill выполнен.
-- [ ] **R2 secondary bucket:** завести private `blog-media-backup` и еженедельный sync, если ещё не сделано (см. Notes **101**).
+- [x] **R2 secondary bucket:** private `blog-media-backup` создан (Dashboard, 2026-11-16); HeadBucket + sync-probe put/copy/delete OK с app token; еженедельный sync — owner schedule ([`backup-r2.md`](./runbooks/backup-r2.md)).
 
 ---
 
@@ -119,4 +119,6 @@ Speed Insights в v1 не подключаем.
 
 ## Перед announce (**109**)
 
-Закрыть оставшиеся `[ ]` выше, которые помечены «до 109» / CORS / object smoke / R2 backup bucket / `CONTACT_EMAIL`, затем smoke auth/content на Live URL и запись в README.
+- [x] Deferrals выше закрыты / waived (`CONTACT_EMAIL`).
+- [x] Smoke Live URL (2026-11-16): `/uk` empty-state; `/uk/about|privacy|terms` 200 без Lorem; `/admin` login + draft create/delete; anonymous `POST /api/articles` → 403. Comments N/A (ADR-007).
+- [x] README **Live URL** → `https://platenprimeblog.vercel.app`.

@@ -23,7 +23,7 @@ Roadmap — рулетка. Эта книга — разговор на объе
 
 Мы сознательно не стали пересказывать чертёж другими словами. Если абзац можно заменить строкой «сделали коллекцию Articles», его здесь быть не должно. Здесь должно быть: какую боль это снимает, что сломается, если сделать наоборот, и как этот кусок держит следующий.
 
-Ещё одна договорённость о честности. Сделано не всё: production на Vercel и часть ops-трека ещё впереди. Но публичный сайт уже отдаёт ленту, статьи, заметки, SEO-артефакты; админ публикует в `/admin`. После pivot **2026-11-12** мы сознательно убрали слой читателя (регистрация, комментарии, закладки) — см. главу про pivot перед «Картой». Исторические главы про reader-auth остаются как рассказ о том, что строили тогда; актуальная модель — один автор и гости.
+Ещё одна договорённость о честности. v1 на `*.vercel.app` уже в production (**109**); хвост — post-v1 заметки (**110**) и документация (**111–115**). Публичный сайт отдаёт ленту, статьи, заметки, SEO-артефакты; админ публикует в `/admin`. После pivot **2026-11-12** мы сознательно убрали слой читателя (регистрация, комментарии, закладки) — см. главу про pivot перед «Картой». Исторические главы про reader-auth остаются как рассказ о том, что строили тогда; актуальная модель — один автор и гости.
 
 ---
 
@@ -86,7 +86,7 @@ flowchart LR
 
 Локально «хранилище картинок» может быть просто папкой `media/` на диске. В бою это R2. Код один, переключается наличием ключей. Об этом будет в мастерской автора.
 
-Хостинг v1 — адрес вида `*.vercel.app`. Свой домен сознательно позже. База в бою — Neon, бесплатный ярус которого для личного блога с кэшем страниц достаточен, потому что тяжёлые байты живут не в ней. Пока прод не подключён. Локально мы не ждём Neon: Postgres поднимается в Docker, и день не зависит от интернета и чужого кабинета.
+Хостинг v1 — адрес вида `*.vercel.app` (Live URL после **109**). Свой домен сознательно позже. База в бою — Neon, бесплатный ярус которого для личного блога с кэшем страниц достаточен, потому что тяжёлые байты живут не в ней. Локально мы не ждём Neon: Postgres поднимается в Docker, и день не зависит от интернета и чужого кабинета.
 
 Вот рамка. Дальше — почему первые две недели выглядели так, будто блога нет.
 
@@ -578,7 +578,9 @@ Payload не выбирает две коллекции одним запрос�
 
 Шаг 108. Перед «вот ссылка» появился один операционный лист, а не россыпь галочек по трекам. [`production-checklist.md`](./production-checklist.md) собрал env на Vercel, R2 public, analytics, backups, CI/ruleset, content readiness, SEO и security — со ссылками на runbooks, без копипасты процедур. Устаревшие Resend и OAuth из текста deliverables честно пометили N/A по ADR-007, чтобы никто не искал callback URI перед выкладкой author-only блога. Gate прогнали по живому `https://platenprimeblog.vercel.app`: зелёный `quality`, headers и HSTS, sitemap/RSS, legal-страницы без Lorem, anonymous POST в API → 403; в GitHub включили Dependabot alerts, secret scanning и push protection. Сознательно оставили до announce (**109**): `CONTACT_EMAIL`, тумблер Web Analytics в UI Vercel, CORS/object smoke R2 и secondary backup bucket. Сам go-live и Live URL в README — следующий шаг, не этот.
 
-Последний заход перед тем, как дать ссылку людям (109–110 и хвост документации 111–115). Адрес `*.vercel.app`. И отдельно, уже после запуска: свой домен, свой домен для картинок, второй фактор, поиск взрослее. Это не забытые задачи v1. Это сознательная граница, чтобы v1 имел конец.
+Шаг 109. Ссылку наконец можно отдавать людям. Live URL — `https://platenprimeblog.vercel.app` — записали в README; вводную про «аккаунты читателей» убрали под ADR-007. На R2 подтвердили CORS для prod origin (Dashboard: app token не умеет PutBucketCors), object smoke через публичный GET, и завели private `blog-media-backup` с sync-probe. Web Analytics включили Hobby в UI Vercel; `CONTACT_EMAIL` сознательно не ставим. На Neon production не оказалось опубликованных Pages и оставались faker-статьи от старого seed — через admin API опубликовали about/privacy/terms из go-live seed и сняли демо; лента снова empty-state. Smoke: login `/admin`, draft article, ACL 403. Redeploy ради `/_vercel/insights` сорвался на interactive migrate — текущий Production Ready; insights endpoint дождётся зелёного деплоя. Дальше — post-v1 заметки (**110**) и хвост документации (**111–115**), не блокер announce.
+
+Адрес v1 — `*.vercel.app`. И отдельно, уже после запуска: свой домен, свой домен для картинок, второй фактор, поиск взрослее. Это не забытые задачи v1. Это сознательная граница, чтобы v1 имел конец.
 
 Документация в хвосте чертежа (глубокий README, картинка архитектуры, оглавление ADR, глоссарий, сверка «документы не врут») не заменяет эту книгу. Глоссарий будет короткой шпаргалкой терминов. Архитектура будет схемой для того, кто уже понял мотивы. Книга останется рассказом о ходе. Если ход изменился — правится соответствующая глава, а не дописывается оправдание внизу.
 
@@ -640,6 +642,6 @@ Payload не выбирает две коллекции одним запрос�
 - Качество / factories — шаги **083–087** (в обзоре выше; Track 10).
 - Выход с ноутбука / Vercel connect — шаг **088**; Preview Deployments — шаг **089**; Production Neon / migrate-on-deploy — шаг **090**; Vercel Postgres adapter — шаг **091**; Secrets matrix — шаг **092**; Conventional Commits (enforcement снят) — шаг **093**; Changesets — шаг **094**; Release policy — шаг **095**; Branch protection — шаг **096** (в обзоре выше; Track 11).
 - Ops / observability — шаги **097** (Vercel Analytics + consent), **098** (Logging baseline), **099** (Sentry waived, ADR-008), **100** (Neon backup runbook + restore drill), **101** (R2 backup / retention), **102** (Seed + faker, author-only), **103** (Ops runbook index).
-- Launch polish — шаги **104** (Caching / ISR, ADR-009), **105** (Image performance / `next/image`), **106** (Bundle / route performance pass), **107** (Content readiness / go-live seed), **108** (Production checklist); следующий по чертежу: **109**.
+- Launch polish — шаги **104** (Caching / ISR, ADR-009), **105** (Image performance / `next/image`), **106** (Bundle / route performance pass), **107** (Content readiness / go-live seed), **108** (Production checklist), **109** (Go-live `*.vercel.app` / Live URL); следующий по чертежу: **110**.
 
 Свериться с полями и правами, не перечитывая главы: [content-model.md](./content-model.md), [security/access-matrix.md](./security/access-matrix.md). Поднять проект руками: [LOCAL_SETUP.md](./LOCAL_SETUP.md). Идти по работе: [development-roadmap.md](./development-roadmap.md).

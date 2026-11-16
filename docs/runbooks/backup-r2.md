@@ -118,14 +118,14 @@ aws s3 cp \
 
 ### Последний drill
 
-| Поле          | Значение                                                                                                                       |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| Дата          | 2026-11-16                                                                                                                     |
-| Primary       | из `R2_BUCKET` (доступен; list/put/copy/get/delete OK)                                                                         |
-| Backup        | `blog-media-backup` — **ещё не создан** (HeadBucket 404); создать в Dashboard один раз (app token без CreateBucket — ожидаемо) |
-| Object counts | primary=0 (пустой media), backup=n/a                                                                                           |
-| Drill         | Put `_restore-drill/smoke-source.bin` → Copy → Get → Delete обоих ключей; leftover=0                                           |
-| Vercel touch  | нет                                                                                                                            |
+| Поле          | Значение                                                                                                                      |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| Дата          | 2026-11-16                                                                                                                    |
+| Primary       | из `R2_BUCKET` (доступен; list/put/copy/get/delete OK)                                                                        |
+| Backup        | `blog-media-backup` — **создан** 2026-11-16 (Dashboard; app CreateBucket AccessDenied — ожидаемо); HeadBucket OK после create |
+| Object counts | primary≈0 (media пуст / smoke cleaned), backup≈0                                                                              |
+| Drill         | 101: put/copy/get/delete `_restore-drill/`; 109: sync-probe put→copy→delete на backup                                         |
+| Vercel touch  | нет                                                                                                                           |
 
 Повторный drill после появления медиа и backup bucket: list counts primary vs backup + restore одного live key в `_restore-drill/` (шаги 1–5 выше).
 

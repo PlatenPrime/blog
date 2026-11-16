@@ -1,6 +1,8 @@
 # Blog
 
-Личный блог / персональный сайт автора: статьи и короткие заметки, админка для публикации, аккаунты читателей (комментарии и закладки).
+Личный блог / персональный сайт автора: статьи и короткие заметки, админка Payload для публикации. Гости читают анонимно (author-only, [ADR-007](docs/adr/007-author-only-no-public-auth.md)).
+
+**Live URL:** [https://platenprimeblog.vercel.app](https://platenprimeblog.vercel.app)
 
 **Стек:** Next.js + Payload CMS v3 · Neon PostgreSQL · Cloudflare R2 · деплой на Vercel.
 
