@@ -161,12 +161,12 @@ WAF: использовать бесплатные возможности Vercel
 
 ## 11. Observability и аналитика
 
-| Технология                                       | Назначение                                                                                                                           |
-| ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
-| **Vercel Logs**                                  | Runtime logs production/preview; как смотреть — [runbooks/vercel-logs.md](./runbooks/vercel-logs.md) (**098**)                       |
-| **Vercel Analytics** (free tier)                 | Web analytics; consent-aware через `ConsentAwareAnalytics` (**097**, [runbooks/vercel-analytics.md](./runbooks/vercel-analytics.md)) |
-| **Sentry** (free tier, если подключение простое) | Error tracking; если overhead велик — отложить, оставить Vercel logs (**099**)                                                       |
-| **Structured logging**                           | [`src/lib/logger.ts`](../src/lib/logger.ts) — JSON в `console.*`, optional `requestId` (**098**)                                     |
+| Технология                       | Назначение                                                                                                                           |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| **Vercel Logs**                  | Runtime logs production/preview; как смотреть — [runbooks/vercel-logs.md](./runbooks/vercel-logs.md) (**098**)                       |
+| **Vercel Analytics** (free tier) | Web analytics; consent-aware через `ConsentAwareAnalytics` (**097**, [runbooks/vercel-analytics.md](./runbooks/vercel-analytics.md)) |
+| **Sentry**                       | **Waived** до критериев включения — [ADR-008](./adr/008-sentry-waive-until-needed.md) (**099**); канон ошибок — Vercel Logs + logger |
+| **Structured logging**           | [`src/lib/logger.ts`](../src/lib/logger.ts) — JSON в `console.*`, optional `requestId` (**098**)                                     |
 
 OpenTelemetry full stack — не обязателен в v1.
 
@@ -214,17 +214,17 @@ OpenTelemetry full stack — не обязателен в v1.
 
 ## 14. Инфраструктура и внешние сервисы
 
-| Сервис                   | Роль                                   | Тариф (ориентир) |
-| ------------------------ | -------------------------------------- | ---------------- |
-| **Vercel**               | App hosting, previews, analytics, logs | Hobby / Free     |
-| **Neon**                 | PostgreSQL                             | Free             |
-| **Cloudflare R2**        | Media storage                          | Free tier        |
-| ~~Resend~~               | _(removed)_                            | —                |
-| ~~Google OAuth~~         | _(removed)_                            | —                |
-| ~~Cloudflare Turnstile~~ | _(removed)_                            | —                |
-| ~~Upstash Redis~~        | _(removed)_                            | —                |
-| **Sentry** (optional)    | Errors                                 | Free tier        |
-| **Docker** (local)       | Postgres для разработки                | Local            |
+| Сервис                   | Роль                                                                    | Тариф (ориентир) |
+| ------------------------ | ----------------------------------------------------------------------- | ---------------- |
+| **Vercel**               | App hosting, previews, analytics, logs                                  | Hobby / Free     |
+| **Neon**                 | PostgreSQL                                                              | Free             |
+| **Cloudflare R2**        | Media storage                                                           | Free tier        |
+| ~~Resend~~               | _(removed)_                                                             | —                |
+| ~~Google OAuth~~         | _(removed)_                                                             | —                |
+| ~~Cloudflare Turnstile~~ | _(removed)_                                                             | —                |
+| ~~Upstash Redis~~        | _(removed)_                                                             | —                |
+| **Sentry**               | Errors — **waived** ([ADR-008](./adr/008-sentry-waive-until-needed.md)) | —                |
+| **Docker** (local)       | Postgres для разработки                                                 | Local            |
 
 ---
 

@@ -1,6 +1,6 @@
 # Runbook: Vercel Logs
 
-Шаг **098**. Runtime-логи Production/Preview без тяжёлого стека (Sentry — **099**). Connect / Preview / Analytics — [vercel-connect.md](./vercel-connect.md), [vercel-preview.md](./vercel-preview.md), [vercel-analytics.md](./vercel-analytics.md).
+Шаг **098**. Runtime-логи Production/Preview без тяжёлого стека. Sentry **waived** до критериев — [ADR-008](../adr/008-sentry-waive-until-needed.md) (**099**). Connect / Preview / Analytics — [vercel-connect.md](./vercel-connect.md), [vercel-preview.md](./vercel-preview.md), [vercel-analytics.md](./vercel-analytics.md).
 
 ## Что подключено
 

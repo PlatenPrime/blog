@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked` · `cancelled`.
 
-**Baseline Status:** следующий шаг — `099` (Optional Sentry). Шаги `001`–`085`, `087`–`098` — `done`; `086` — `cancelled`.
+**Baseline Status:** следующий шаг — `100` (Neon backup policy). Шаги `001`–`085`, `087`–`099` — `done`; `086` — `cancelled`.
 
 **Pivot: author-only (2026-11-12).** Продуктовая модель — один admin, гости без аккаунтов; без comments/bookmarks, публичной auth, Resend/OAuth/Turnstile/Upstash как фич продукта. Канон: [ADR-007](adr/007-author-only-no-public-auth.md), миграция `src/migrations/20261112_130000_drop_reader_social.ts`. Исторические шаги **021–022**, **025–032**, **057–061**, **028–029**, **074–075**, **082** остаются **`done` как история**; их DoD описывает то, что строили тогда — **superseded** для текущего продукта. Синхронизация docs + кода pivot — **сознательный waive** правила «один PR = один шаг» (вне нумерации).
 
@@ -974,11 +974,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 099 — Optional Sentry (free)
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Errors если подключается легко.
 - **Deliverables:** Sentry Next SDK **или** явный ADR «waive until needed» с критериями включения.
 - **Verify:** Test error появляется в Sentry **или** waive задокументирован.
 - **DoD:** Решение по Sentry зафиксировано (не серое пятно).
+- **Notes:** Waive — [ADR-008](./adr/008-sentry-waive-until-needed.md): Sentry не в v1; канон ошибок — Vercel Logs + [`logger`](../src/lib/logger.ts) (**098**). Критерии revisit: untriageable server errors, client crash grouping/source maps, alerting, triage cost > free Sentry. Без SDK/DSN/CSP/instrumentation. При срабатывании критериев — новый numbered шаг, не тихий add.
 
 ### 100 — Neon backup policy
 
