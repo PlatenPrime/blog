@@ -1,6 +1,6 @@
 # Runbook: Neon backup & restore
 
-Шаг **100**. Подстраховка Postgres на Free (project `blog`, region `aws-us-east-2`). R2 — отдельно, [шаг **101**](../development-roadmap.md) / будущий `backup-r2.md`. Connect / migrate — [vercel-connect.md](./vercel-connect.md) (**088** / **090**).
+Шаг **100**. Подстраховка Postgres на Free (project `blog`, region `aws-us-east-2`). R2 — отдельно, [backup-r2.md](./backup-r2.md) (**101**). Connect / migrate — [vercel-connect.md](./vercel-connect.md) (**088** / **090**).
 
 ## Prefconditions
 
@@ -112,13 +112,13 @@ SELECT
 
 ## Что не в этом шаге
 
-| Тема                          | Шаг / место              |
-| ----------------------------- | ------------------------ |
-| R2 backup / retention         | **101**                  |
-| Ops runbook index             | **103**                  |
-| Branch-per-PR Neon            | позже / по необходимости |
-| Upgrade Neon plan / schedules | вне v1 Free              |
-| Автоматизация dump в CI       | сознательно нет          |
+| Тема                          | Шаг / место                              |
+| ----------------------------- | ---------------------------------------- |
+| R2 backup / retention         | **101** ([backup-r2.md](./backup-r2.md)) |
+| Ops runbook index             | **103**                                  |
+| Branch-per-PR Neon            | позже / по необходимости                 |
+| Upgrade Neon plan / schedules | вне v1 Free                              |
+| Автоматизация dump в CI       | сознательно нет                          |
 
 ## Связанные документы
 

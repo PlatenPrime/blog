@@ -562,7 +562,9 @@ Payload не выбирает две коллекции одним запрос�
 
 Шаг 100. «Как не потерять базу» перестало быть устным «потом». В [runbooks/backup-neon.md](./runbooks/backup-neon.md) зафиксировали три слоя под Neon Free: instant restore ≤ 6 часов, один ручной snapshot с ротацией, и еженедельный `pg_dump` на direct URL вне git — потому что расписаний бэкапа на Free нет. Restore drill сделали на копии: ветка `restore-drill-20261116` от `production`, smoke по `users` / `articles` / `notes`, ветку удалили; Production и Vercel env не трогали. Бакет картинок — отдельно на **101**.
 
-Дальше — записки про R2, сид с правдоподобными статьями, чтобы локальный сайт не зиял пустотой, и указатель на ops-runbooks, потому что runbook, который нельзя найти, равен отсутствующему.
+Шаг 101. Картинки перестали быть «надеемся на Cloudflare». В [runbooks/backup-r2.md](./runbooks/backup-r2.md) зафиксировали честный пробел: S3 versioning на R2 нет, bucket lock на live media не ставим — иначе Payload не сможет удалить или перезаписать объект. Три слоя как у Neon, но другими инструментами: primary из `R2_BUCKET`, еженедельный mirror в private `blog-media-backup` через S3 API (`aws s3 sync` / rclone), и раз в месяц cold copy на шифрованный диск вне git — потому что два бакета в одном аккаунте не спасают от wipe аккаунта. App-токен только на primary; backup credentials не кладём в Vercel. Drill 2026-11-16: на пустом primary прогнали put → copy → get → delete под `_restore-drill/`; backup bucket ещё завести руками в Dashboard (scoped token не создаёт бакеты). Vercel env не трогали.
+
+Дальше — сид с правдоподобными статьями, чтобы локальный сайт не зиял пустотой, и указатель на ops-runbooks, потому что runbook, который нельзя найти, равен отсутствующему.
 
 Последний заход перед тем, как дать ссылку людям (104–110 и хвост документации 111–115). Кэш публичных страниц и способ сбрасывать его в момент публикации — вот где вспоминают, что отложенный пост не имеет крона. Картинки, которые не тянут первый экран. Вычищение лишнего JavaScript. Настоящий текст «обо мне» вместо рыбы. Чеклист выкладки. Адрес `*.vercel.app`. И отдельно, уже после запуска: свой домен, свой домен для картинок, второй фактор, поиск взрослее. Это не забытые задачи v1. Это сознательная граница, чтобы v1 имел конец.
 
@@ -625,6 +627,6 @@ Payload не выбирает две коллекции одним запрос�
 - Pivot author-only — глава выше (ADR-007); `086` cancelled.
 - Качество / factories — шаги **083–087** (в обзоре выше; Track 10).
 - Выход с ноутбука / Vercel connect — шаг **088**; Preview Deployments — шаг **089**; Production Neon / migrate-on-deploy — шаг **090**; Vercel Postgres adapter — шаг **091**; Secrets matrix — шаг **092**; Conventional Commits (enforcement снят) — шаг **093**; Changesets — шаг **094**; Release policy — шаг **095**; Branch protection — шаг **096** (в обзоре выше; Track 11).
-- Ops / observability — шаги **097** (Vercel Analytics + consent), **098** (Logging baseline), **099** (Sentry waived, ADR-008), **100** (Neon backup runbook + restore drill); следующий по чертежу: **101**.
+- Ops / observability — шаги **097** (Vercel Analytics + consent), **098** (Logging baseline), **099** (Sentry waived, ADR-008), **100** (Neon backup runbook + restore drill), **101** (R2 backup / retention); следующий по чертежу: **102**.
 
 Свериться с полями и правами, не перечитывая главы: [content-model.md](./content-model.md), [security/access-matrix.md](./security/access-matrix.md). Поднять проект руками: [LOCAL_SETUP.md](./LOCAL_SETUP.md). Идти по работе: [development-roadmap.md](./development-roadmap.md).

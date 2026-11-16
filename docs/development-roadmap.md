@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked` · `cancelled`.
 
-**Baseline Status:** следующий шаг — `101` (R2 backup / retention notes). Шаги `001`–`085`, `087`–`100` — `done`; `086` — `cancelled`.
+**Baseline Status:** следующий шаг — `102` (Seed + faker). Шаги `001`–`085`, `087`–`101` — `done`; `086` — `cancelled`.
 
 **Pivot: author-only (2026-11-12).** Продуктовая модель — один admin, гости без аккаунтов; без comments/bookmarks, публичной auth, Resend/OAuth/Turnstile/Upstash как фич продукта. Канон: [ADR-007](adr/007-author-only-no-public-auth.md), миграция `src/migrations/20261112_130000_drop_reader_social.ts`. Исторические шаги **021–022**, **025–032**, **057–061**, **028–029**, **074–075**, **082** остаются **`done` как история**; их DoD описывает то, что строили тогда — **superseded** для текущего продукта. Синхронизация docs + кода pivot — **сознательный waive** правила «один PR = один шаг» (вне нумерации).
 
@@ -992,11 +992,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 101 — R2 backup / retention notes
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Медиа не потерять молча.
 - **Deliverables:** `docs/runbooks/backup-r2.md` (versioning если доступно, периодический sync/export strategy).
 - **Verify:** Процедура воспроизводима.
 - **DoD:** R2 risk accepted осознанно с планом.
+- **Notes:** Канон [`runbooks/backup-r2.md`](./runbooks/backup-r2.md). S3 versioning на R2 **нет** (accepted). Bucket lock на primary **не** ставим (Payload delete/overwrite). Три слоя: primary `R2_BUCKET` → weekly mirror `blog-media-backup` (`aws s3 sync` / rclone) → monthly cold local вне git. App token только primary. Drill 2026-11-16: primary put/copy/get/delete в `_restore-drill/` OK; bucket пуст (0 media); `blog-media-backup` ещё создать в Dashboard (token без CreateBucket). Vercel env не трогали. Seed — **102**.
 
 ### 102 — Seed + faker
 
