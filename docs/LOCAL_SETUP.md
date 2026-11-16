@@ -318,7 +318,7 @@ Terms (шаг **080**, done):
 12. **Publish** → `http://localhost:3000/uk/terms` — заголовок и тело из Payload. Ссылка «Умови» / «Условия» / «Terms» в footer ведёт сюда. Черновик / чужой slug — «не найдено».
     Cookie consent (шаг **081**, done):
 
-13. Откройте `http://localhost:3000/uk` в чистом профиле / без `localStorage.cookie-consent`. Ожидание: снизу баннер «Файли cookie» с Accept / Decline и ссылкой на Privacy. Decline → баннер исчезает, `localStorage.cookie-consent === declined`, после reload баннера нет. Accept → значение `accepted` (Analytics пакет ещё не грузится — gate пустой до **097**).
+13. Откройте `http://localhost:3000/uk` в чистом профиле / без `localStorage.cookie-consent`. Ожидание: снизу баннер «Файли cookie» с Accept / Decline и ссылкой на Privacy. Decline → баннер исчезает, `localStorage.cookie-consent === declined`, после reload баннера нет; в Network нет `va.vercel-scripts.com`. Accept → значение `accepted`, грузится debug script `@vercel/analytics` с `va.vercel-scripts.com` (шаг **097**; prod dashboard — [runbooks/vercel-analytics.md](./runbooks/vercel-analytics.md)).
 
 Unit: `npm test` → `tests/unit/pagesQuery.test.ts`. Unit access/slugify — **024** (done).
 

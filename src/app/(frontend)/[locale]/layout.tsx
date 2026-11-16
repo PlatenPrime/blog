@@ -1,3 +1,4 @@
+import { Analytics } from '@vercel/analytics/next'
 import { hasLocale, NextIntlClientProvider } from 'next-intl'
 import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Metadata } from 'next'
@@ -98,7 +99,9 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
               </main>
               <SiteFooter />
               <CookieConsentBanner />
-              <ConsentAwareAnalytics />
+              <ConsentAwareAnalytics>
+                <Analytics />
+              </ConsentAwareAnalytics>
             </div>
           </NextIntlClientProvider>
         </ThemeProvider>

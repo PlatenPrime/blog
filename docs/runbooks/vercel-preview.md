@@ -96,13 +96,14 @@ npx vercel env ls
 
 ## Что не в этом шаге
 
-| Тема                                | Шаг                                  |
-| ----------------------------------- | ------------------------------------ |
-| Prod admin smoke / connect runbook  | **090** / vercel-connect             |
-| Уточнение vercel-postgres adapter   | **091**                              |
-| Матрица секретов (Vercel + Actions) | **092** ([secrets.md](./secrets.md)) |
-| Neon branch per PR                  | позже / по необходимости             |
-| Custom domain, analytics            | **097+**, **109**                    |
+| Тема                                | Шаг                                                    |
+| ----------------------------------- | ------------------------------------------------------ |
+| Prod admin smoke / connect runbook  | **090** / vercel-connect                               |
+| Уточнение vercel-postgres adapter   | **091**                                                |
+| Матрица секретов (Vercel + Actions) | **092** ([secrets.md](./secrets.md))                   |
+| Neon branch per PR                  | позже / по необходимости                               |
+| Web Analytics                       | **097** ([vercel-analytics.md](./vercel-analytics.md)) |
+| Custom domain                       | **109**                                                |
 
 ## Связанные документы
 

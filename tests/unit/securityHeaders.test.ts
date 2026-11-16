@@ -61,13 +61,13 @@ describe('buildBaselineHeaders', () => {
 })
 
 describe('buildContentSecurityPolicy', () => {
-  it('public CSP blocks framing and allows youtube-nocookie only', () => {
+  it('public CSP blocks framing and allows youtube-nocookie + Vercel Analytics origins', () => {
     const csp = buildContentSecurityPolicy({ audience: 'public' })
     expect(csp).toContain("frame-ancestors 'none'")
     expect(csp).toContain('frame-src https://www.youtube-nocookie.com')
     expect(csp).not.toContain('challenges.cloudflare.com')
-    expect(csp).toContain("script-src 'self' 'unsafe-inline'")
-    expect(csp).toContain("connect-src 'self'")
+    expect(csp).toContain("script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com")
+    expect(csp).toContain("connect-src 'self' https://va.vercel-scripts.com")
     expect(csp).not.toContain("'unsafe-eval'")
     expect(csp).toContain("object-src 'none'")
   })

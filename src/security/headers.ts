@@ -25,6 +25,8 @@ export type BuildBaselineHeadersOptions = {
 export type BuildRouteSecurityHeadersOptions = BuildBaselineHeadersOptions & BuildCspOptions
 
 const YOUTUBE_NOCOOKIE_ORIGIN = 'https://www.youtube-nocookie.com'
+/** Debug script / connect for `@vercel/analytics` (prod uses same-origin `/_vercel/insights`). */
+const VERCEL_ANALYTICS_SCRIPTS_ORIGIN = 'https://va.vercel-scripts.com'
 
 const PERMISSIONS_POLICY = [
   'camera=()',
@@ -81,11 +83,14 @@ export function buildContentSecurityPolicy(options: BuildCspOptions): string {
   const scriptSrc =
     options.audience === 'admin'
       ? ["'self'", "'unsafe-inline'", "'unsafe-eval'"]
-      : ["'self'", "'unsafe-inline'"]
+      : ["'self'", "'unsafe-inline'", VERCEL_ANALYTICS_SCRIPTS_ORIGIN]
 
   const styleSrc = ["'self'", "'unsafe-inline'"]
 
   const connectSrc = ["'self'"]
+  if (options.audience === 'public') {
+    connectSrc.push(VERCEL_ANALYTICS_SCRIPTS_ORIGIN)
+  }
   if (options.audience === 'admin') {
     if (r2Origin) connectSrc.push(r2Origin)
     const endpointOrigin = options.r2EndpointOrigin?.replace(/\/$/, '') || null

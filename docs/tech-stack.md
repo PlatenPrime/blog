@@ -161,12 +161,12 @@ WAF: использовать бесплатные возможности Vercel
 
 ## 11. Observability и аналитика
 
-| Технология                                       | Назначение                                                           |
-| ------------------------------------------------ | -------------------------------------------------------------------- |
-| **Vercel Logs**                                  | Runtime logs production/preview                                      |
-| **Vercel Analytics** (free tier)                 | Web analytics                                                        |
-| **Sentry** (free tier, если подключение простое) | Error tracking; если overhead велик — отложить, оставить Vercel logs |
-| **Structured logging**                           | Единый формат логов в server code (без тяжёлого стека на старте)     |
+| Технология                                       | Назначение                                                                                                                           |
+| ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
+| **Vercel Logs**                                  | Runtime logs production/preview                                                                                                      |
+| **Vercel Analytics** (free tier)                 | Web analytics; consent-aware через `ConsentAwareAnalytics` (**097**, [runbooks/vercel-analytics.md](./runbooks/vercel-analytics.md)) |
+| **Sentry** (free tier, если подключение простое) | Error tracking; если overhead велик — отложить, оставить Vercel logs                                                                 |
+| **Structured logging**                           | Единый формат логов в server code (без тяжёлого стека на старте)                                                                     |
 
 OpenTelemetry full stack — не обязателен в v1.
 
@@ -232,20 +232,20 @@ OpenTelemetry full stack — не обязателен в v1.
 
 На старте создаются канонические файлы стека и роадмапа. Далее по роадмапу наращиваем:
 
-| Документ                      | Назначение                                                                                                                                                                                                          |
-| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `docs/tech-stack.md`          | Этот файл                                                                                                                                                                                                           |
-| `docs/development-roadmap.md` | Инженерный роадмап до v1                                                                                                                                                                                            |
-| `docs/testing.md`             | Политика тестов (must-cover, слои, review gate)                                                                                                                                                                     |
-| `.env.example`                | Канон переменных окружения (плейсхолдеры, без секретов)                                                                                                                                                             |
-| `docs/LOCAL_SETUP.md`         | Локальный запуск, env, Docker, seed                                                                                                                                                                                 |
-| `docs/adr/`                   | Architecture Decision Records                                                                                                                                                                                       |
-| `docs/security/`              | Access matrix, session hardening, supply-chain, threat model, [checklist](./security/checklist.md)                                                                                                                  |
-| `docs/runbooks/`              | Vercel connect (**088**), Preview (**089**), [secrets matrix](./runbooks/secrets.md) (**092**), [branch protection](./runbooks/branch-protection.md) (**096**), R2 media, backup/restore Neon + R2, incident basics |
-| `docs/release-policy.md`      | Как катим в production: `main` = prod, PR + required checks (**095**); enforce UI — [`runbooks/branch-protection.md`](./runbooks/branch-protection.md) (**096**)                                                    |
-| `docs/content-model.md`       | Описание collections и полей                                                                                                                                                                                        |
-| `README.md`                   | Точка входа в проект                                                                                                                                                                                                |
-| Privacy / Terms pages         | Юридические страницы в продукте + краткие заметки в docs при необходимости                                                                                                                                          |
+| Документ                      | Назначение                                                                                                                                                                                                                                                                        |
+| ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `docs/tech-stack.md`          | Этот файл                                                                                                                                                                                                                                                                         |
+| `docs/development-roadmap.md` | Инженерный роадмап до v1                                                                                                                                                                                                                                                          |
+| `docs/testing.md`             | Политика тестов (must-cover, слои, review gate)                                                                                                                                                                                                                                   |
+| `.env.example`                | Канон переменных окружения (плейсхолдеры, без секретов)                                                                                                                                                                                                                           |
+| `docs/LOCAL_SETUP.md`         | Локальный запуск, env, Docker, seed                                                                                                                                                                                                                                               |
+| `docs/adr/`                   | Architecture Decision Records                                                                                                                                                                                                                                                     |
+| `docs/security/`              | Access matrix, session hardening, supply-chain, threat model, [checklist](./security/checklist.md)                                                                                                                                                                                |
+| `docs/runbooks/`              | Vercel connect (**088**), Preview (**089**), [secrets matrix](./runbooks/secrets.md) (**092**), [branch protection](./runbooks/branch-protection.md) (**096**), [Vercel Analytics](./runbooks/vercel-analytics.md) (**097**), R2 media, backup/restore Neon + R2, incident basics |
+| `docs/release-policy.md`      | Как катим в production: `main` = prod, PR + required checks (**095**); enforce UI — [`runbooks/branch-protection.md`](./runbooks/branch-protection.md) (**096**)                                                                                                                  |
+| `docs/content-model.md`       | Описание collections и полей                                                                                                                                                                                                                                                      |
+| `README.md`                   | Точка входа в проект                                                                                                                                                                                                                                                              |
+| Privacy / Terms pages         | Юридические страницы в продукте + краткие заметки в docs при необходимости                                                                                                                                                                                                        |
 
 Язык документации: **русский**, с EN-терминами где принято (deploy, preview, access control, ISR и т.д.).
 

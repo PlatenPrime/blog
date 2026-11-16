@@ -119,19 +119,21 @@ npm run seed:admin       # один admin; повтор = skip
 
 ## Что не в этом шаге
 
-| Тема                                  | Шаг                                                |
-| ------------------------------------- | -------------------------------------------------- |
-| Preview env vars / общая preview-БД   | **089** ([vercel-preview.md](./vercel-preview.md)) |
-| Уточнение vercel-postgres adapter     | **091**                                            |
-| Матрица секретов                      | **092** ([secrets.md](./secrets.md))               |
-| Backup Neon                           | **100**                                            |
-| Analytics, custom domain, go-live URL | **097+**, **109**                                  |
+| Тема                                | Шаг                                                    |
+| ----------------------------------- | ------------------------------------------------------ |
+| Preview env vars / общая preview-БД | **089** ([vercel-preview.md](./vercel-preview.md))     |
+| Уточнение vercel-postgres adapter   | **091**                                                |
+| Матрица секретов                    | **092** ([secrets.md](./secrets.md))                   |
+| Backup Neon                         | **100**                                                |
+| Web Analytics (consent-aware)       | **097** ([vercel-analytics.md](./vercel-analytics.md)) |
+| Custom domain, go-live URL          | **109**                                                |
 
 ## Связанные документы
 
 - [secrets.md](./secrets.md) — матрица «где какой секрет» (**092**)
 - [release-policy.md](../release-policy.md) — `main` = Production, PR + checks (**095**)
 - [branch-protection.md](./branch-protection.md) — Ruleset / required checks на `main` (**096**)
+- [vercel-analytics.md](./vercel-analytics.md) — Web Analytics + consent (**097**)
 - [tech-stack.md](../tech-stack.md) — хостинг и env
 - [LOCAL_SETUP.md](../LOCAL_SETUP.md) — локальный путь (Docker Postgres)
 - [r2-media.md](./r2-media.md) — R2 ключи и CORS

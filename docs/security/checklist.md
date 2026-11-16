@@ -84,16 +84,16 @@
 
 ## Сознательно нет / waivers (не считать багом чеклиста)
 
-| Нет / residual                | Заметка                                        |
-| ----------------------------- | ---------------------------------------------- |
-| MFA / WebAuthn                | v1 out of scope (tech-stack §16, threat-model) |
-| Product WAF                   | Вне приложения                                 |
-| Nonce/hash CSP                | Public CSP phase 1 с `'unsafe-inline'`         |
-| Private / signed R2 media     | Public-read by design                          |
-| Custom R2 CDN domain          | v1 out of scope                                |
-| Multi-tenant / multi-author   | Один admin                                     |
-| Reader / comment / rate limit | Superseded ADR-007                             |
-| Analytics / consent CSP       | Шаги **081** / **097**                         |
+| Нет / residual                | Заметка                                                                                                                              |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| MFA / WebAuthn                | v1 out of scope (tech-stack §16, threat-model)                                                                                       |
+| Product WAF                   | Вне приложения                                                                                                                       |
+| Nonce/hash CSP                | Public CSP phase 1 с `'unsafe-inline'`                                                                                               |
+| Private / signed R2 media     | Public-read by design                                                                                                                |
+| Custom R2 CDN domain          | v1 out of scope                                                                                                                      |
+| Multi-tenant / multi-author   | Один admin                                                                                                                           |
+| Reader / comment / rate limit | Superseded ADR-007                                                                                                                   |
+| Analytics / consent CSP       | **081** / **097** done — opt-in gate + `va.vercel-scripts.com` в public CSP ([vercel-analytics.md](../runbooks/vercel-analytics.md)) |
 
 ---
 

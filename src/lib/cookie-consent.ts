@@ -1,6 +1,6 @@
 /**
  * Opt-in analytics consent (step 081). Session cookies are out of scope.
- * Vercel Analytics mounts inside ConsentAwareAnalytics in step 097.
+ * Vercel Analytics mounts inside ConsentAwareAnalytics (step 097).
  */
 
 export const COOKIE_CONSENT_STORAGE_KEY = 'cookie-consent'

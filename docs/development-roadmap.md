@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked` · `cancelled`.
 
-**Baseline Status:** следующий шаг — `097` (Vercel Analytics). Шаги `001`–`085`, `087`–`096` — `done`; `086` — `cancelled`.
+**Baseline Status:** следующий шаг — `098` (Logging baseline). Шаги `001`–`085`, `087`–`097` — `done`; `086` — `cancelled`.
 
 **Pivot: author-only (2026-11-12).** Продуктовая модель — один admin, гости без аккаунтов; без comments/bookmarks, публичной auth, Resend/OAuth/Turnstile/Upstash как фич продукта. Канон: [ADR-007](adr/007-author-only-no-public-auth.md), миграция `src/migrations/20261112_130000_drop_reader_social.ts`. Исторические шаги **021–022**, **025–032**, **057–061**, **028–029**, **074–075**, **082** остаются **`done` как история**; их DoD описывает то, что строили тогда — **superseded** для текущего продукта. Синхронизация docs + кода pivot — **сознательный waive** правила «один PR = один шаг» (вне нумерации).
 
@@ -956,11 +956,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 097 — Vercel Analytics
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Продуктовая аналитика.
 - **Deliverables:** Analytics package; consent-aware load; docs.
 - **Verify:** События видны в Vercel dashboard на prod.
 - **DoD:** Analytics подключена.
+- **Notes:** `@vercel/analytics` → `<Analytics />` внутри `ConsentAwareAnalytics` в `[locale]/layout` (не admin). Opt-in: только `localStorage.cookie-consent === accepted`. Public CSP: `https://va.vercel-scripts.com` в `script-src` / `connect-src` ([`src/security/headers.ts`](../src/security/headers.ts)); prod script — same-origin `/_vercel/insights`. Speed Insights не ставили. Канон [`runbooks/vercel-analytics.md`](./runbooks/vercel-analytics.md); unit CSP — `securityHeaders.test.ts`.
 
 ### 098 — Logging baseline
 

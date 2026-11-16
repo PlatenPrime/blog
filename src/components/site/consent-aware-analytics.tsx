@@ -14,8 +14,7 @@ type ConsentAwareAnalyticsProps = {
 }
 
 /**
- * Renders children only after Accept. Step 081 ships an empty gate;
- * step 097 places `@vercel/analytics` inside.
+ * Renders children only after Accept (opt-in analytics, step 081 / 097).
  */
 export function ConsentAwareAnalytics({ children }: ConsentAwareAnalyticsProps) {
   const choice = useSyncExternalStore(subscribeConsent, readConsent, getServerConsentSnapshot)
