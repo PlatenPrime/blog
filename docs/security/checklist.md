@@ -74,11 +74,11 @@
 
 Закрывает оператор перед публичным URL (или waive с причиной в таблице ниже). Полный env/R2 — шаг **108**. Короткие копии — [`production-checklist.md`](../production-checklist.md) (§Security).
 
-- [ ] **Dependabot:** Settings → Code security → Dependabot updates/alerts включены; конфиг [`.github/dependabot.yml`](../../.github/dependabot.yml) валиден (076 / [supply-chain.md](./supply-chain.md)).
-- [ ] **Secret scanning** включён (или waived: private repo / plan limitation — строка в waivers).
-- [ ] **Push protection** включён (или waived там же).
-- [ ] **Headers smoke:** на prod URL видны `X-Frame-Options` / CSP / (prod) HSTS; публичные страницы и `/admin` открываются.
-- [ ] **ACL sanity:** anonymous не пишет Media и контент; только admin заходит в `/admin`.
+- [x] **Dependabot:** updates/alerts + security updates включены; конфиг [`.github/dependabot.yml`](../../.github/dependabot.yml) валиден (076 / [supply-chain.md](./supply-chain.md); gate **108**).
+- [x] **Secret scanning** включён (public repo; gate **108**).
+- [x] **Push protection** включён (gate **108**).
+- [x] **Headers smoke:** на prod URL видны `X-Frame-Options` / CSP / (prod) HSTS; публичные страницы и `/admin` открываются (gate **108**, `https://platenprimeblog.vercel.app`).
+- [x] **ACL sanity:** anonymous не пишет Media и контент; только admin заходит в `/admin` (gate **108**: anonymous POST → 403).
 
 ---
 

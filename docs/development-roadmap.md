@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked` · `cancelled`.
 
-**Baseline Status:** следующий шаг — `108` (Production checklist). Шаги `001`–`085`, `087`–`107` — `done`; `086` — `cancelled`.
+**Baseline Status:** следующий шаг — `109` (Go-live на `*.vercel.app`). Шаги `001`–`085`, `087`–`108` — `done`; `086` — `cancelled`.
 
 **Pivot: author-only (2026-11-12).** Продуктовая модель — один admin, гости без аккаунтов; без comments/bookmarks, публичной auth, Resend/OAuth/Turnstile/Upstash как фич продукта. Канон: [ADR-007](adr/007-author-only-no-public-auth.md), миграция `src/migrations/20261112_130000_drop_reader_social.ts`. Исторические шаги **021–022**, **025–032**, **057–061**, **028–029**, **074–075**, **082** остаются **`done` как история**; их DoD описывает то, что строили тогда — **superseded** для текущего продукта. Синхронизация docs + кода pivot — **сознательный waive** правила «один PR = один шаг» (вне нумерации).
 
@@ -1059,11 +1059,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 108 — Production checklist
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Финальный gate.
 - **Deliverables:** `docs/production-checklist.md` (env, OAuth redirect URIs, Resend, R2 public access, analytics, backups, CI green).
 - **Verify:** Все пункты checked.
 - **DoD:** Чеклист пройден.
+- **Notes:** Канон [`production-checklist.md`](./production-checklist.md). Prod alias `https://platenprimeblog.vercel.app`. Секции: Env, N/A ADR-007 (Resend/OAuth/Turnstile/Upstash **не** required), R2, Analytics, Backups, CI/release, Content, SEO, Security, Performance, docs-audit stub → **115**. Verify 2026-11-16: CI `quality` green; Ruleset Active; Dependabot alerts/security updates + secret scanning + push protection enabled; headers/CSP/HSTS; sitemap/RSS/OG/JSON-LD/canonical; about/privacy/terms без Lorem; anonymous POST media/articles → 403; `R2_*` + DB + secrets на Vercel; CSP `img-src` с r2.dev. Осознанно до **109**: `CONTACT_EMAIL`, Vercel Web Analytics UI, R2 CORS/object smoke, secondary backup bucket. Код app не менялся; тесты новой логики нет.
 
 ### 109 — Go-live на `*.vercel.app`
 

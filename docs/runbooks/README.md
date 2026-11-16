@@ -42,12 +42,13 @@ Sentry в v1 **не** подключен — [ADR-008](../adr/008-sentry-waive-u
 
 ## Смежное (не runbook)
 
-| Документ                                                                        | Зачем                                                |
-| ------------------------------------------------------------------------------- | ---------------------------------------------------- |
-| [LOCAL_SETUP.md](../LOCAL_SETUP.md)                                             | Локальный Node / Docker / env / migrate / seed       |
-| [release-policy.md](../release-policy.md)                                       | `main` = Production; PR + зелёный `quality`          |
-| [security/checklist.md](../security/checklist.md)                               | Security inventory и operator must до публичного URL |
-| [adr/008-sentry-waive-until-needed.md](../adr/008-sentry-waive-until-needed.md) | Почему нет Sentry и когда revisit                    |
+| Документ                                                                        | Зачем                                                       |
+| ------------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| [LOCAL_SETUP.md](../LOCAL_SETUP.md)                                             | Локальный Node / Docker / env / migrate / seed              |
+| [release-policy.md](../release-policy.md)                                       | `main` = Production; PR + зелёный `quality`                 |
+| [security/checklist.md](../security/checklist.md)                               | Security inventory и operator must до публичного URL        |
+| [production-checklist.md](../production-checklist.md)                           | Pre-go-live gate (**108**): env, R2, analytics, backups, CI |
+| [adr/008-sentry-waive-until-needed.md](../adr/008-sentry-waive-until-needed.md) | Почему нет Sentry и когда revisit                           |
 
 ## Чего здесь нет
 
