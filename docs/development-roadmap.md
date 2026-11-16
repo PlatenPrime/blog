@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked` · `cancelled`.
 
-**Baseline Status:** следующий шаг — `103` (Ops runbook index). Шаги `001`–`085`, `087`–`102` — `done`; `086` — `cancelled`.
+**Baseline Status:** следующий шаг — `104` (Caching / ISR strategy). Шаги `001`–`085`, `087`–`103` — `done`; `086` — `cancelled`.
 
 **Pivot: author-only (2026-11-12).** Продуктовая модель — один admin, гости без аккаунтов; без comments/bookmarks, публичной auth, Resend/OAuth/Turnstile/Upstash как фич продукта. Канон: [ADR-007](adr/007-author-only-no-public-auth.md), миграция `src/migrations/20261112_130000_drop_reader_social.ts`. Исторические шаги **021–022**, **025–032**, **057–061**, **028–029**, **074–075**, **082** остаются **`done` как история**; их DoD описывает то, что строили тогда — **superseded** для текущего продукта. Синхронизация docs + кода pivot — **сознательный waive** правила «один PR = один шаг» (вне нумерации).
 
@@ -1010,11 +1010,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 103 — Ops runbook index
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Одна точка входа в ops docs.
 - **Deliverables:** `docs/runbooks/README.md`.
 - **Verify:** Ссылки живые.
 - **DoD:** Ops docs навигируемы.
+- **Notes:** Канон [`runbooks/README.md`](./runbooks/README.md): группы Deploy / Secrets / Observability / Media / Backup + смежные (LOCAL_SETUP, release-policy, security checklist, ADR-008). Девять существующих runbooks; incident stub не заводили. Вход с корня README и tech-stack §15. Дальше — **104**.
 
 ---
 
