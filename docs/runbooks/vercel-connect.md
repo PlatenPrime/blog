@@ -117,6 +117,24 @@ npm run seed:admin       # один admin; повтор = skip
 3. Создать/править черновик (article или note) → Save → данные остаются после reload.
 4. Негатив: migrate только с pooled URL (без UNPOOLED) на PgBouncer часто ломается session-level DDL — поэтому UNPOOLED обязателен на билде.
 
+### Recovery: interactive migrate / exit 13 на Vercel
+
+**Симптом:** Build Command `npm run build:deploy` падает на `npm run migrate` с промптом Payload вроде _«It looks like you've run Payload in dev mode… data loss will occur. Would you like to proceed? (y/N)»_ и `BUILD_UTILS_SPAWN_13` / exit 13. На Vercel stdin нет — confirm ответить нельзя.
+
+**Причина:** в shared Neon (Production/Preview) лежит маркер Drizzle push: строка в `payload_migrations` с `batch = -1` (обычно `name = 'dev'`). Она появляется, если `npm run dev` с `push: true` указывали на эту БД ([`src/db/adapter.ts`](../../src/db/adapter.ts)).
+
+**Исправление** (когда numbered миграции уже applied и схема совпадает с репо — типичный случай после случайного `dev` против Neon):
+
+```sql
+DELETE FROM payload_migrations WHERE batch = -1;
+```
+
+Затем **Redeploy** / Retry упавшего Deployment. В логах: migrate без prompt → `next build`.
+
+**Не делать:** `yes | npm run migrate` или auto-accept в CI — это согласие на data loss при реальном drift. Если схема реально разъехалась после push — отдельный разбор (не этот SQL).
+
+**Запрет:** не гонять `npm run dev` против Neon / shared БД. Локально — Docker Postgres + `migrate:local` / `seed:local` ([LOCAL_SETUP.md](../LOCAL_SETUP.md)); на Neon схему менять только через `migrate` / migrate-on-deploy.
+
 ## Что не в этом шаге
 
 | Тема                                | Шаг                                                    |
