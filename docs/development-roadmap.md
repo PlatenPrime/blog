@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked` · `cancelled`.
 
-**Baseline Status:** следующий шаг — `114` (Glossary, Track 14). Шаги `001`–`085`, `087`–`113` — `done`; `086` — `cancelled`. Track 14 docs: `111`–`113` — `done`; `114`–`115` — `todo`.
+**Baseline Status:** следующий шаг — `115` (Final docs audit, Track 14). Шаги `001`–`085`, `087`–`114` — `done`; `086` — `cancelled`. Track 14 docs: `111`–`114` — `done`; `115` — `todo`.
 
 **Pivot: author-only (2026-11-12).** Продуктовая модель — один admin, гости без аккаунтов; без comments/bookmarks, публичной auth, Resend/OAuth/Turnstile/Upstash как фич продукта. Канон: [ADR-007](adr/007-author-only-no-public-auth.md), миграция `src/migrations/20261112_130000_drop_reader_social.ts`. Исторические шаги **021–022**, **025–032**, **057–061**, **028–029**, **074–075**, **082** остаются **`done` как история**; их DoD описывает то, что строили тогда — **superseded** для текущего продукта. Синхронизация docs + кода pivot — **сознательный waive** правила «один PR = один шаг» (вне нумерации).
 
@@ -1119,11 +1119,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 114 — Glossary
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Article vs Note, reader vs admin, preview vs draft.
 - **Deliverables:** `docs/glossary.md`.
 - **Verify:** Термины совпадают с UI.
 - **DoD:** Общий язык зафиксирован.
+- **Notes:** Канон [`glossary.md`](./glossary.md): три плоскости ярлыков (slug / admin en+ru / public chrome uk+ru+en); Article vs Note + ловушка uk «Нотатки» vs ru/admin «Заметки»; акторы admin + anonymous/guest (`reader` — история ADR-007); draft/published vs Preview (`draftMode`) vs scheduled (не отдельный `_status`). Ссылки: README (продукт), architecture §10, tech-stack §15, книга хода. Код app не менялся; тесты N/A.
 
 ### 115 — Final docs audit
 

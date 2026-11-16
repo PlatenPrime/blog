@@ -252,4 +252,4 @@ flowchart LR
 - Коллекции и связи — ER в [`content-model.md`](./content-model.md).
 - Краткий mermaid на входе — [`README.md`](../README.md).
 - Индекс ADR — [`adr/README.md`](./adr/README.md).
-- Глоссарий терминов — шаг **114**.
+- Глоссарий терминов — [`glossary.md`](./glossary.md).

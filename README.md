@@ -54,11 +54,12 @@ npm run dev
 
 ### Продукт и контент
 
-| Документ                                          | Зачем                           |
-| ------------------------------------------------- | ------------------------------- |
-| [content-model.md](docs/content-model.md)         | Коллекции Payload, поля, access |
-| [design-principles.md](docs/design-principles.md) | UI / UX принципы                |
-| [seo-checklist.md](docs/seo-checklist.md)         | SEO-артефакты и проверки        |
+| Документ                                          | Зачем                                                |
+| ------------------------------------------------- | ---------------------------------------------------- |
+| [content-model.md](docs/content-model.md)         | Коллекции Payload, поля, access                      |
+| [glossary.md](docs/glossary.md)                   | Общий язык: Article/Note, admin/guest, draft/preview |
+| [design-principles.md](docs/design-principles.md) | UI / UX принципы                                     |
+| [seo-checklist.md](docs/seo-checklist.md)         | SEO-артефакты и проверки                             |
 
 ### Процесс и качество
 
@@ -100,8 +101,6 @@ npm run dev
 ### ADR
 
 Полный индекс и практика — [`docs/adr/README.md`](docs/adr/README.md) (000–009; 002/006 superseded). Входные якоря: [ADR-000](docs/adr/000-payload-next-neon-r2.md) (стек), [ADR-007](docs/adr/007-author-only-no-public-auth.md) (author-only).
-
-Глоссарий терминов — шаг **114**.
 
 ## Скрипты (шпаргалка)
 
