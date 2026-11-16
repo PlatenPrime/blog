@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked` · `cancelled`.
 
-**Baseline Status:** следующий шаг — `102` (Seed + faker). Шаги `001`–`085`, `087`–`101` — `done`; `086` — `cancelled`.
+**Baseline Status:** следующий шаг — `103` (Ops runbook index). Шаги `001`–`085`, `087`–`102` — `done`; `086` — `cancelled`.
 
 **Pivot: author-only (2026-11-12).** Продуктовая модель — один admin, гости без аккаунтов; без comments/bookmarks, публичной auth, Resend/OAuth/Turnstile/Upstash как фич продукта. Канон: [ADR-007](adr/007-author-only-no-public-auth.md), миграция `src/migrations/20261112_130000_drop_reader_social.ts`. Исторические шаги **021–022**, **025–032**, **057–061**, **028–029**, **074–075**, **082** остаются **`done` как история**; их DoD описывает то, что строили тогда — **superseded** для текущего продукта. Синхронизация docs + кода pivot — **сознательный waive** правила «один PR = один шаг» (вне нумерации).
 
@@ -51,7 +51,7 @@ v1 считается завершённым, когда одновременн�
 - [x] Privacy, Terms, cookie consent
 - [ ] CI: lint + format + typecheck + Vitest; Dependabot; Preview Deploys
 - [ ] Backups Neon (+ политика R2); логи Vercel; Vercel Analytics
-- [ ] Seed + faker для локалки; документация LOCAL_SETUP / ADR / runbooks / security
+- [x] Seed + faker для локалки; документация LOCAL_SETUP / ADR / runbooks / security
 
 ---
 
@@ -1001,11 +1001,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 102 — Seed + faker
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Богатая локалка.
-- **Deliverables:** Seed script: admin, readers, categories, tags, articles, notes, comments, bookmarks; faker; npm script.
-- **Verify:** Чистая БД → seed → сайт полон контента.
+- **Deliverables:** Seed script: admin, categories, tags, articles, notes, pages (about/privacy/terms); `@faker-js/faker` + fixed seed; `npm run seed` / `seed:content`; без readers/comments/bookmarks (ADR-007).
+- **Verify:** Чистая БД → `npm run seed` → сайт полон контента; повтор → skip.
 - **DoD:** Demo data воспроизводимы.
+- **Notes:** Deliverables выровнены под ADR-007 (readers/comments/bookmarks сняты). Pure [`src/seed/contentSeed.ts`](../src/seed/contentSeed.ts) + CLI [`src/scripts/seedContent.ts`](../src/scripts/seedContent.ts); маркер `seed-demo`; faker seed `102000`; pages about/privacy/terms; media/hero не сидим. `npm run seed` = admin → content (URL из `.env`). Follow-up: [`withLocalDatabaseUrl.ts`](../src/scripts/withLocalDatabaseUrl.ts) + `npm run seed:local` / `migrate:local` — всегда Docker `localhost:5432/blog`, даже если `.env` указывает на Neon. Unit — `tests/unit/contentSeed.test.ts`. LOCAL_SETUP §7.
 
 ### 103 — Ops runbook index
 

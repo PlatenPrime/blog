@@ -40,7 +40,7 @@ async function main(): Promise<void> {
 
   if (decision.action === 'skip') {
     payload.logger.info(`seed:admin — skip: ${decision.reason}`)
-    return
+    process.exit(0)
   }
 
   await payload.create({
@@ -54,9 +54,10 @@ async function main(): Promise<void> {
   })
 
   payload.logger.info(`seed:admin — created admin ${decision.email}`)
+  process.exit(0)
 }
 
 main().catch((error: unknown) => {
   logger.error('seed:admin failed', { err: error })
-  process.exitCode = 1
+  process.exit(1)
 })

@@ -89,14 +89,14 @@ Upload медиа — **только admin**. Читатели не загруж
 
 ## 6. Аутентификация и авторизация
 
-| Технология                   | Назначение                                                            |
-| ---------------------------- | --------------------------------------------------------------------- |
-| **Payload Auth**             | Users + sessions/cookies только для входа в `/admin` и Local API      |
-| **Roles**                    | `admin` only (ADR-007)                                                |
-| **Email + password**         | Логин автора в `/admin`; bootstrap `seed:admin` или create-first-user |
-| **Password change**          | В `/admin` или прямое обновление в БД; **без** email reset            |
-| **Access Control (Payload)** | Admin panel, drafts/preview; публичное чтение `publishedOrAdmin`      |
-| **MFA (TOTP)**               | Out of scope v1 (заложено «позже»)                                    |
+| Технология                   | Назначение                                                                             |
+| ---------------------------- | -------------------------------------------------------------------------------------- |
+| **Payload Auth**             | Users + sessions/cookies только для входа в `/admin` и Local API                       |
+| **Roles**                    | `admin` only (ADR-007)                                                                 |
+| **Email + password**         | Логин автора в `/admin`; bootstrap `seed:admin` / `npm run seed` или create-first-user |
+| **Password change**          | В `/admin` или прямое обновление в БД; **без** email reset                             |
+| **Access Control (Payload)** | Admin panel, drafts/preview; публичное чтение `publishedOrAdmin`                       |
+| **MFA (TOTP)**               | Out of scope v1 (заложено «позже»)                                                     |
 
 Публичный сайт **без** login/register. Канон pivot — [ADR-007](./adr/007-author-only-no-public-auth.md).
 

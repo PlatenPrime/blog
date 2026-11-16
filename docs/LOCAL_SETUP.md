@@ -127,14 +127,33 @@ Unit helpers: `npm test` → `tests/unit/adminSeed.test.ts`.
 
 Бюджет кликов (после login): **сайдбар Articles → Create → title/body → Save Draft → Publish** ≈ 5–6 осознанных действий. Lexical images / YouTube — шаг **034**; preview URL — **035**.
 
-## 7. Seed (placeholder)
+## 7. Seed (admin + demo content)
 
-| Что             | Сейчас                                                    | Позже                 |
-| --------------- | --------------------------------------------------------- | --------------------- |
-| Admin user      | `npm run seed:admin` (`ADMIN_*`) или UI create-first-user | —                     |
-| Контент / faker | Пустая БД                                                 | Track 12 (ops & seed) |
+**Локальный Docker** (даже если в `.env` лежит Neon):
 
-Для onboarding: migrate → `seed:admin` → `npm run dev` → `/admin` с `ADMIN_EMAIL` / `ADMIN_PASSWORD`.
+```bash
+docker compose up -d
+# ADMIN_EMAIL / ADMIN_PASSWORD в .env (не replace-me) — читаются как обычно
+npm run migrate:local   # если Payload спросит про push/dev — на чистом volume обычно y; либо схема уже от npm run dev
+npm run seed:local
+```
+
+`seed:local` принудительно пишет в `localhost:5432/blog` (Compose), игнорируя Neon `DATABASE_URL`. В логе будет строка `withLocalDatabaseUrl — DATABASE_URL → localhost:5432/blog`.
+
+| Что                             | Команда                       | Куда пишет           |
+| ------------------------------- | ----------------------------- | -------------------- |
+| Admin + контент → Docker        | `npm run seed:local`          | всегда local Compose |
+| Только admin → Docker           | `npm run seed:local:admin`    | local                |
+| Только контент → Docker         | `npm run seed:local:content`  | local                |
+| Admin + контент → URL из `.env` | `npm run seed`                | Neon или что задано  |
+| Admin / контент по отдельности  | `seed:admin` / `seed:content` | URL из `.env`        |
+
+Контент: categories, tags, articles, notes, pages (about/privacy/terms); `@faker-js/faker` seed `102000`; маркер `seed-demo`; повтор → skip. Без readers / comments / bookmarks (ADR-007). Media / hero не сидим.
+
+Ожидание первого `seed:local:content`: counts (`categories=4 tags=8 articles=12 notes=8 pages=…`). Повтор: `skip: Marker category…`. Unit: `npm test` → `tests/unit/contentSeed.test.ts`.
+
+Onboarding на Docker: `migrate:local` → `seed:local` → `npm run dev` → `/admin` и `/uk/articles`, `/uk/notes`, `/uk/about`.  
+Для `npm run dev` тоже нужен local `DATABASE_URL` в `.env` (или временно подставьте Compose URL) — иначе сайт снова пойдёт в Neon.
 
 ## 8. Media (локальный disk или R2)
 

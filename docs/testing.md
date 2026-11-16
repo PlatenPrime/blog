@@ -29,7 +29,7 @@
 
 Браузерный E2E (Playwright) **снят** шагом **085**: не держится локально и в Actions; suite удалён.
 
-Hermetic create для unit/int — `tests/helpers/factories/` (**087**): `user` / `article` / `note` (pure `build*Data` + Local API `createTest*`). Без comment/bookmark; без ручного seed в UI админки. Product content seed / faker — шаг **102**, не этот слой.
+Hermetic create для unit/int — `tests/helpers/factories/` (**087**): `user` / `article` / `note` (pure `build*Data` + Local API `createTest*`). Без comment/bookmark; без ручного seed в UI админки. Product content seed / faker — `src/seed/contentSeed.ts` + `npm run seed` (**102**); factories и demo-seed — разные слои.
 
 `npm run ci` сейчас: lint + format:check + typecheck + **unit**.
 
