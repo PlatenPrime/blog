@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked` · `cancelled`.
 
-**Baseline Status:** следующий шаг — `104` (Caching / ISR strategy). Шаги `001`–`085`, `087`–`103` — `done`; `086` — `cancelled`.
+**Baseline Status:** следующий шаг — `105` (Image performance). Шаги `001`–`085`, `087`–`104` — `done`; `086` — `cancelled`.
 
 **Pivot: author-only (2026-11-12).** Продуктовая модель — один admin, гости без аккаунтов; без comments/bookmarks, публичной auth, Resend/OAuth/Turnstile/Upstash как фич продукта. Канон: [ADR-007](adr/007-author-only-no-public-auth.md), миграция `src/migrations/20261112_130000_drop_reader_social.ts`. Исторические шаги **021–022**, **025–032**, **057–061**, **028–029**, **074–075**, **082** остаются **`done` как история**; их DoD описывает то, что строили тогда — **superseded** для текущего продукта. Синхронизация docs + кода pivot — **сознательный waive** правила «один PR = один шаг» (вне нумерации).
 
@@ -1023,11 +1023,12 @@ v1 считается завершённым, когда одновременн�
 
 ### 104 — Caching / ISR strategy
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Быстрые публичные страницы, меньше давления на Neon.
 - **Deliverables:** ADR cache tags/revalidate; on-demand revalidation при publish.
 - **Verify:** Published update отражается после revalidate; TTFB приемлем на preview.
 - **DoD:** Кеш-стратегия явная.
+- **Notes:** Канон [ADR-009](./adr/009-caching-isr-revalidate.md). `unstable_cache` + tags + soft TTL 60s в `src/content/*` loaders; словарь [`src/cache/contentTags.ts`](../src/cache/contentTags.ts); on-demand `revalidateTag(..., { expire: 0 })` из [`revalidatePublicContent`](../src/hooks/revalidatePublicContent.ts) на articles/notes/pages/categories/tags. RSS/sitemap/search/preview без этого кеша. Cron / `REVALIDATE_SECRET` / `"use cache"` — не в шаге. Image perf — **105**.
 
 ### 105 — Image performance
 

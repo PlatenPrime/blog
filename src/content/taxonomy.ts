@@ -1,6 +1,8 @@
 import config from '@payload-config'
 import { getPayload } from 'payload'
 
+import { detailCacheTags, listCacheTags, mixedContentCacheTags } from '@/cache/contentTags'
+import { withContentCache } from '@/cache/withContentCache'
 import { feedPageCount, mergePublicFeed, resolveFeedPage, type FeedItem } from '@/content/feedQuery'
 import { toLatestPublicDoc, type LatestPublicDoc } from '@/content/latestPublicQuery'
 import {
@@ -32,13 +34,19 @@ export async function findPublicTaxonomyIndex(
   collection: TaxonomyCollection,
   locale: string,
 ): Promise<TaxonomyTerm[]> {
-  const payload = await getPayload({ config })
-  const result = await payload.find(taxonomyIndexFindArgs({ collection, locale }))
+  return withContentCache(
+    ['findPublicTaxonomyIndex', collection, locale],
+    listCacheTags(collection),
+    async () => {
+      const payload = await getPayload({ config })
+      const result = await payload.find(taxonomyIndexFindArgs({ collection, locale }))
 
-  return result.docs.flatMap((doc) => {
-    const term = toTaxonomyTerm(doc)
-    return term ? [term] : []
-  })
+      return result.docs.flatMap((doc) => {
+        const term = toTaxonomyTerm(doc)
+        return term ? [term] : []
+      })
+    },
+  )
 }
 
 /**
@@ -50,9 +58,15 @@ export async function findPublicTaxonomyTerm(
   locale: string,
   slug: string,
 ): Promise<TaxonomyTerm | null> {
-  const payload = await getPayload({ config })
-  const result = await payload.find(taxonomyTermFindArgs({ collection, locale, slug }))
-  return toTaxonomyTerm(result.docs[0])
+  return withContentCache(
+    ['findPublicTaxonomyTerm', collection, locale, slug],
+    detailCacheTags(collection),
+    async () => {
+      const payload = await getPayload({ config })
+      const result = await payload.find(taxonomyTermFindArgs({ collection, locale, slug }))
+      return toTaxonomyTerm(result.docs[0])
+    },
+  )
 }
 
 /**
@@ -60,6 +74,7 @@ export async function findPublicTaxonomyTerm(
  * Counts first, so an out-of-range `page` never becomes a find limit.
  * A missing shelf is `missing`. The page turns that into the localized 404.
  * Does not receive the session user: see `taxonomyFeedCountArgs` and `taxonomyFeedFindArgs`.
+ * Optional `now` bypasses the cross-request cache (tests / explicit clock).
  */
 export async function findPublicTaxonomyFeed(
   collection: TaxonomyCollection,
@@ -67,6 +82,24 @@ export async function findPublicTaxonomyFeed(
   slug: string,
   rawPage: string | undefined,
   now?: Date,
+): Promise<PublicTaxonomyFeed> {
+  if (now) {
+    return loadPublicTaxonomyFeed(collection, locale, slug, rawPage, now)
+  }
+
+  return withContentCache(
+    ['findPublicTaxonomyFeed', collection, locale, slug, rawPage ?? ''],
+    mixedContentCacheTags(collection),
+    () => loadPublicTaxonomyFeed(collection, locale, slug, rawPage, new Date()),
+  )
+}
+
+async function loadPublicTaxonomyFeed(
+  collection: TaxonomyCollection,
+  locale: string,
+  slug: string,
+  rawPage: string | undefined,
+  now: Date,
 ): Promise<PublicTaxonomyFeed> {
   const payload = await getPayload({ config })
   const term = toTaxonomyTerm(

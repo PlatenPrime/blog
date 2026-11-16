@@ -2,6 +2,10 @@ import type { Access, CollectionConfig } from 'payload'
 
 import { isAdmin } from '../access/isAdmin'
 import type { AccessUser } from '../access/types'
+import {
+  revalidatePublicContentAfterChange,
+  revalidatePublicContentAfterDelete,
+} from '../hooks/revalidatePublicContent'
 import { adminGroups, collectionLabels } from './adminUi'
 import { ensureSlugFromTitle, taxonomyTitleAndSlugFields } from './taxonomyFields'
 
@@ -30,6 +34,8 @@ export const Tags: CollectionConfig = {
   },
   hooks: {
     beforeValidate: [ensureSlugFromTitle],
+    afterChange: [revalidatePublicContentAfterChange],
+    afterDelete: [revalidatePublicContentAfterDelete],
   },
   fields: [...taxonomyTitleAndSlugFields],
 }

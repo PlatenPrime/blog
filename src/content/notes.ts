@@ -2,6 +2,8 @@ import config from '@payload-config'
 import { cache } from 'react'
 import { getPayload } from 'payload'
 
+import { detailCacheTags, listCacheTags } from '@/cache/contentTags'
+import { withContentCache } from '@/cache/withContentCache'
 import { toLatestPublicDoc, type LatestPublicDoc } from '@/content/latestPublicQuery'
 import {
   notesCountArgs,
@@ -24,26 +26,32 @@ export type PublicNotesResult =
  */
 export const findPublicNotes = cache(
   async (locale: string, rawPage: string | undefined): Promise<PublicNotesResult> => {
-    const now = new Date()
-    const payload = await getPayload({ config })
-    const counted = await payload.count(notesCountArgs({ locale, now }))
-    const resolution = resolveNotesPage(rawPage, counted.totalDocs)
+    return withContentCache(
+      ['findPublicNotes', locale, rawPage ?? ''],
+      listCacheTags('notes'),
+      async () => {
+        const now = new Date()
+        const payload = await getPayload({ config })
+        const counted = await payload.count(notesCountArgs({ locale, now }))
+        const resolution = resolveNotesPage(rawPage, counted.totalDocs)
 
-    if (resolution.kind === 'redirect') {
-      return { kind: 'redirect', page: resolution.page }
-    }
+        if (resolution.kind === 'redirect') {
+          return { kind: 'redirect', page: resolution.page }
+        }
 
-    const found = await payload.find(notesListFindArgs({ locale, now, page: resolution.page }))
+        const found = await payload.find(notesListFindArgs({ locale, now, page: resolution.page }))
 
-    return {
-      items: found.docs.flatMap((doc) => {
-        const item = toLatestPublicDoc(doc)
-        return item ? [item] : []
-      }),
-      kind: 'render',
-      page: resolution.page,
-      pageCount: notesPageCount(counted.totalDocs),
-    }
+        return {
+          items: found.docs.flatMap((doc) => {
+            const item = toLatestPublicDoc(doc)
+            return item ? [item] : []
+          }),
+          kind: 'render' as const,
+          page: resolution.page,
+          pageCount: notesPageCount(counted.totalDocs),
+        }
+      },
+    )
   },
 )
 
@@ -55,10 +63,16 @@ export const findPublicNotes = cache(
  */
 export const findPublicNote = cache(
   async (locale: string, slug: string): Promise<PublicNote | null> => {
-    const payload = await getPayload({ config })
-    const found = await payload.find(notesDetailFindArgs({ locale, slug }))
-    const doc = found.docs[0]
-    if (!doc) return null
-    return toPublicNote(doc)
+    return withContentCache(
+      ['findPublicNote', locale, slug],
+      detailCacheTags('notes'),
+      async () => {
+        const payload = await getPayload({ config })
+        const found = await payload.find(notesDetailFindArgs({ locale, slug }))
+        const doc = found.docs[0]
+        if (!doc) return null
+        return toPublicNote(doc)
+      },
+    )
   },
 )

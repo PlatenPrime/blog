@@ -125,17 +125,18 @@ Upload медиа — **только admin**. Читатели не загруж
 
 ## 9. Контентные возможности (зависят от стека)
 
-| Возможность                          | Реализация (ориентир)                                                                         |
-| ------------------------------------ | --------------------------------------------------------------------------------------------- |
-| Drafts / Preview / Scheduled publish | Payload drafts + preview URL; schedule = query-time (`publishedAt <= now`, ADR-003) — не cron |
-| Share / Copy link                    | UI на деталях article/note для гостей (`ShareActions`)                                        |
-| Search                               | Postgres (`ILIKE` / `tsvector`) — без Meilisearch/Algolia                                     |
-| Related posts                        | По tags/categories                                                                            |
-| Reading time / TOC                   | Вычисление на publish/render                                                                  |
-| Code highlighting                    | Shiki dual-theme в Lexical JSX pipeline (`CodeBlock` + `PayloadRichText`)                     |
-| RSS / Sitemap / OG / JSON-LD         | Next route handlers + Metadata API                                                            |
-| Versioning / rollback                | **Не используем в v1**                                                                        |
-| Audit log CMS                        | **Не используем в v1** (один admin)                                                           |
+| Возможность                          | Реализация (ориентир)                                                                                                               |
+| ------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------- |
+| Drafts / Preview / Scheduled publish | Payload drafts + preview URL; schedule = query-time (`publishedAt <= now`, ADR-003) — не cron                                       |
+| Public page cache / ISR              | `unstable_cache` + tags + soft TTL 60s; on-demand `revalidateTag` из Payload hooks ([ADR-009](./adr/009-caching-isr-revalidate.md)) |
+| Share / Copy link                    | UI на деталях article/note для гостей (`ShareActions`)                                                                              |
+| Search                               | Postgres (`ILIKE` / `tsvector`) — без Meilisearch/Algolia                                                                           |
+| Related posts                        | По tags/categories                                                                                                                  |
+| Reading time / TOC                   | Вычисление на publish/render                                                                                                        |
+| Code highlighting                    | Shiki dual-theme в Lexical JSX pipeline (`CodeBlock` + `PayloadRichText`)                                                           |
+| RSS / Sitemap / OG / JSON-LD         | Next route handlers + Metadata API                                                                                                  |
+| Versioning / rollback                | **Не используем в v1**                                                                                                              |
+| Audit log CMS                        | **Не используем в v1** (один admin)                                                                                                 |
 
 **Стержневые collections (v1):** Users, Media, Categories, Tags, Articles, Notes, Pages.
 
