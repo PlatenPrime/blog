@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked` · `cancelled`.
 
-**Baseline Status:** v1 роадмап закрыт (`001`–`085`, `087`–`115` — `done`; `086` — `cancelled`). Track 14 docs: `111`–`115` — `done`. Track 15 публичный вид: **116**–**121** — `done`. Открытого шага нет. Горизонт после announce — [`post-v1.md`](./post-v1.md).
+**Baseline Status:** v1 роадмап закрыт (`001`–`085`, `087`–`115` — `done`; `086` — `cancelled`). Track 14 docs: `111`–`115` — `done`. Track 15 публичный вид: **116**–**121** — `done`. Track 16 polish: **122** — `done`. Открытого шага нет. Горизонт после announce — [`post-v1.md`](./post-v1.md).
 
 **Pivot: author-only (2026-11-12).** Продуктовая модель — один admin, гости без аккаунтов; без comments/bookmarks, публичной auth, Resend/OAuth/Turnstile/Upstash как фич продукта. Канон: [ADR-007](adr/007-author-only-no-public-auth.md), миграция `src/migrations/20261112_130000_drop_reader_social.ts`. Исторические шаги **021–022**, **025–032**, **057–061**, **028–029**, **074–075**, **082** остаются **`done` как история**; их DoD описывает то, что строили тогда — **superseded** для текущего продукта. Синхронизация docs + кода pivot — **сознательный waive** правила «один PR = один шаг» (вне нумерации).
 
@@ -1205,6 +1205,15 @@ v1 считается завершённым, когда одновременн�
 - **DoD:** Публичный сайт целиком в одной системе. Админка вне scope.
 - **Notes:** Пустая полка — Manrope, `text-muted-foreground`, без иллюстрации. `StateColumn` без своего фона: 404 и `error` локали на свете комнаты, заголовок `font-sans text-h1`, ссылка домой — `siteChromeLinkClassName`. `global-error` не импортирует CSS: `#eef6fd` / `#1d2a37` / ссылка `#19517b`, системный sans. Скелет списка — ритм ряда (заголовок и мета, `bg-muted`, без `border-b`); `ListSkeleton` без сплошной заливки; `animate-pulse` гасит `motion-reduce`. Баннер — `max-w-shell`, `bg-background/75` + blur, сверху `.site-chrome-edge`. Рамка кода — `border-border` и `bg-card` на `.payload-richtext-code`; темы Shiki `github-light` / `github-dark` не менялись. OG — sRGB-слепок светлых токенов (`#eef6fd`, `#1d2a37`, `#495766`, `#19517b`); плашка фото `rgba(13, 28, 42, 0.78)`, чернила `#e3edf4`; гарнитура карточки по-прежнему Source Serif 4. Контраст пар выше 4.5:1, палитру **116** не двигали, атмосферу не анимировали. Витрина: блок Surfaces, страница без сплошного фона. Админка вне шага. Тесты N/A.
 
+### 122 — Favicon, share/footer icons, admin avatar
+
+- **Статус:** done
+- **Цель:** Вкладка, шаринг, подвал и админ-аккаунт перестают выглядеть «недоделанными»: есть знак сайта, узнаваемые иконки сетей и целая иконка пользователя в `/admin`.
+- **Deliverables:** `src/app/icon.tsx` + `apple-icon.tsx`; брендовые SVG в `src/components/icons/social-icons.tsx`; профили `src/lib/socialProfiles.ts` (X / Telegram / Facebook / Instagram / GitHub → `platenprime`); иконки в [`share-actions.tsx`](../src/components/share/share-actions.tsx); иконки-ссылки в [`site-footer.tsx`](../src/components/site/site-footer.tsx); `admin.avatar: 'default'` в [`payload.config.ts`](../src/payload.config.ts). Gravatar в CSP не открываем.
+- **Verify:** `/favicon.ico` или `/icon` во вкладке; статья — иконки в «Поділитися»; футер — пять иконок с верными href; `/admin` — SVG-аватар без битой картинки.
+- **DoD:** Четыре UX-дыры закрыты в одном шаге; a11y через `aria-label`; книга хода обновлена.
+- **Notes:** Favicon/apple-icon — ImageResponse, primary `#19517b` / ink `#eef6fd`, буква `P`. Share: lucide `Copy`/`Share2` + брендовые SVG; только иконки + `aria-label`. Footer: пять профилей под брендом. Admin: `avatar: 'default'` (не CSP allowlist Gravatar). Unit: `tests/unit/socialProfiles.test.ts`. CMS Site Settings / upload avatar — вне шага.
+
 ---
 
 ## Сводная таблица треков
@@ -1227,8 +1236,9 @@ v1 считается завершённым, когда одновременн�
 | 13    | Performance & launch | 104–110 |
 | 14    | Documentation        | 111–115 |
 | 15    | Visual identity      | 116–121 |
+| 16    | Chrome polish        | 122     |
 
-**Всего шагов v1:** 115. **Track 15 (после v1):** **116**–**121** — `done`.
+**Всего шагов v1:** 115. **Track 15 (после v1):** **116**–**121** — `done`. **Track 16:** **122** — `done`.
 
 ---
 
@@ -1249,9 +1259,10 @@ v1 считается завершённым, когда одновременн�
                       → 13 Launch
                         → 14 Docs audit
                           → 15 Public visual identity
+                            → 16 Chrome polish
 ```
 
-Треки 0–15 закрыты (**116**–**121** `done`). Горизонт после вида — [`post-v1.md`](./post-v1.md). Track 14 можно было заполнять параллельно с 0–13. Vercel Preview (088–089) имело смысл включить сразу после стабильного build, не дожидаясь конца контента.
+Треки 0–15 закрыты (**116**–**121** `done`). Track 16 (**122**) закрыт. Горизонт после вида — [`post-v1.md`](./post-v1.md). Track 14 можно было заполнять параллельно с 0–13. Vercel Preview (088–089) имело смысл включить сразу после стабильного build, не дожидаясь конца контента.
 
 ---
 

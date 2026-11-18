@@ -24,6 +24,8 @@ export default buildConfig({
   serverURL,
   admin: {
     user: Users.slug,
+    // Default SVG — CSP blocks Gravatar; we do not open img-src for it.
+    avatar: 'default',
     importMap: {
       baseDir: path.resolve(dirname),
     },
