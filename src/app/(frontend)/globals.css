@@ -113,6 +113,7 @@
   --text-small--line-height: 1.5;
 
   --container-measure: 65ch;
+  --container-shell: 72rem;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -254,6 +255,12 @@
   background-image:
     radial-gradient(ellipse 80% 50% at 8% -8%, var(--glow-a), transparent 62%),
     radial-gradient(ellipse 60% 42% at 100% 0%, var(--glow-b), transparent 58%);
+}
+
+/* Hairline under the header and above the footer. A line, not a fill. */
+.site-chrome-edge {
+  height: 1px;
+  background-image: linear-gradient(90deg, transparent, var(--glow-a), var(--glow-b), transparent);
 }
 
 /* Shiki dual themes (roadmap 064): colors live in CSS variables on each token. */
