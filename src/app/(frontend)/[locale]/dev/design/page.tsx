@@ -13,7 +13,7 @@ export const metadata: Metadata = {
  */
 export default function DesignSmokePage() {
   return (
-    <div className="bg-background font-sans text-foreground">
+    <div className="font-sans text-foreground">
       <div className="mx-auto max-w-3xl px-4 py-10">
         <p className="text-small text-muted-foreground">
           Dev scaffold. Not product chrome. The header button switches the theme.

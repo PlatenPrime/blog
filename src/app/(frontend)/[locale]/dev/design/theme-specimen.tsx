@@ -1,3 +1,5 @@
+import { siteChromeLinkClassName } from '@/components/site/site-nav'
+import { skeletonBarClassName } from '@/components/states/skeleton-status'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -107,6 +109,24 @@ export function ThemeSpecimen() {
             <Textarea id={`${fieldPrefix}-body`} placeholder="A paragraph" />
           </div>
         </div>
+      </div>
+
+      <Separator />
+
+      <div id="design-surfaces">
+        <h3 className="font-sans text-small text-muted-foreground">Surfaces</h3>
+        <p className="mt-3 mb-0 font-sans text-body text-muted-foreground">Nothing here yet.</p>
+        <div aria-hidden="true" className={`mt-4 h-6 w-2/3 max-w-sm ${skeletonBarClassName}`} />
+        <div className="mt-4 overflow-hidden rounded-md border border-border bg-card">
+          <pre className="m-0 overflow-x-auto p-4 font-mono text-small">
+            <code>const light = &apos;room&apos;</code>
+          </pre>
+        </div>
+        <p className="mt-4 mb-0 font-sans text-small">
+          <a className={siteChromeLinkClassName} href="#design-surfaces">
+            Document link
+          </a>
+        </p>
       </div>
 
       <Card>

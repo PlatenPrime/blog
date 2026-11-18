@@ -9,11 +9,8 @@ function SkeletonRows({ className }: { className: string }) {
   return (
     <ul className={className}>
       {['first', 'second', 'third'].map((row) => (
-        <li className="border-b border-border py-5" key={row}>
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-            <div className={`h-5 w-16 ${skeletonBarClassName}`} />
-            <div className={`h-6 w-2/3 max-w-xs ${skeletonBarClassName}`} />
-          </div>
+        <li className="py-3" key={row}>
+          <div className={`h-6 w-2/3 max-w-sm ${skeletonBarClassName}`} />
           <div className={`mt-2 h-3 w-24 ${skeletonBarClassName}`} />
         </li>
       ))}
@@ -24,7 +21,7 @@ function SkeletonRows({ className }: { className: string }) {
 /** Feed-shaped placeholder for a list route. The real heading replaces the bar. */
 export function ListSkeleton({ label }: ListSkeletonProps) {
   return (
-    <div className="bg-background font-sans text-foreground">
+    <div className="font-sans text-foreground">
       <div className={listColumnClassName}>
         <SkeletonStatus label={label}>
           <div className={`h-10 w-40 ${skeletonBarClassName}`} />

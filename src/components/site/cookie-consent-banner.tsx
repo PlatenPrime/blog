@@ -38,10 +38,11 @@ export function CookieConsentBanner() {
     <div
       aria-describedby="cookie-consent-body"
       aria-labelledby="cookie-consent-title"
-      className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-background/95 p-4 shadow-[0_-8px_24px_oklch(0_0_0/0.08)] backdrop-blur-sm"
+      className="fixed inset-x-0 bottom-0 z-50 bg-background/75 font-sans text-small text-foreground backdrop-blur-md"
       role="dialog"
     >
-      <div className="mx-auto flex max-w-measure flex-col gap-3 font-sans text-small text-muted-foreground sm:flex-row sm:items-end sm:justify-between sm:gap-6">
+      <div aria-hidden="true" className="site-chrome-edge" />
+      <div className="mx-auto flex max-w-shell flex-col gap-3 px-5 py-4 text-muted-foreground sm:flex-row sm:items-end sm:justify-between sm:gap-6 sm:px-6">
         <div className="min-w-0 flex-1">
           <p className="m-0 font-medium text-foreground" id="cookie-consent-title">
             {t('title')}

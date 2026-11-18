@@ -25,7 +25,7 @@ export default function LocaleError({ error, reset }: LocaleErrorProps) {
 
   return (
     <StateColumn>
-      <h1 className="m-0 font-serif text-h1 text-foreground">{t('serverTitle')}</h1>
+      <h1 className="m-0 font-sans text-h1 text-foreground">{t('serverTitle')}</h1>
       <p className="mt-6 mb-0 max-w-measure text-body text-muted-foreground">{t('serverBody')}</p>
       {error.digest ? (
         <p className="mt-4 mb-0 font-sans text-small text-muted-foreground">{error.digest}</p>

@@ -7,10 +7,14 @@ type GlobalErrorProps = {
   reset: () => void
 }
 
+/**
+ * Same light-theme sample as the share card. App CSS and Manrope may be what
+ * failed, so this screen keeps system sans and does not import `globals.css`.
+ */
 const bodyStyle = {
-  background: '#f7f4ef',
-  color: '#1a1a1a',
-  fontFamily: 'Georgia, "Times New Roman", serif',
+  background: '#eef6fd',
+  color: '#1d2a37',
+  fontFamily: 'ui-sans-serif, system-ui, sans-serif',
   lineHeight: 1.5,
   margin: 0,
   minHeight: '100vh',
@@ -20,7 +24,7 @@ const bodyStyle = {
 const linkStyle = {
   background: 'transparent',
   border: 0,
-  color: '#1a4d6d',
+  color: '#19517b',
   cursor: 'pointer',
   font: 'inherit',
   padding: 0,
@@ -54,9 +58,7 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
           </a>
         </p>
         {error.digest ? (
-          <p style={{ fontFamily: 'sans-serif', fontSize: '0.875rem', marginTop: '1rem' }}>
-            {error.digest}
-          </p>
+          <p style={{ fontSize: '0.875rem', marginTop: '1rem' }}>{error.digest}</p>
         ) : null}
       </body>
     </html>
