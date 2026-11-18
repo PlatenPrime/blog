@@ -68,14 +68,13 @@ export function ShareActions({ url, title, labels }: ShareActionsProps) {
   }
 
   const linkClassName =
-    'text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
+    'text-muted-foreground underline-offset-4 hover:text-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
 
   return (
-    <section
-      aria-label={labels.heading}
-      className="mt-12 border-t border-border pt-8 font-sans text-small text-muted-foreground"
-    >
-      <h2 className="m-0 text-foreground">{labels.heading}</h2>
+    <section aria-labelledby="share-heading" className="mt-12 font-sans text-small">
+      <h2 className="m-0 font-medium text-muted-foreground" id="share-heading">
+        {labels.heading}
+      </h2>
       <ul className="mt-4 mb-0 flex list-none flex-wrap items-center gap-x-4 gap-y-2 p-0">
         <li>
           <button

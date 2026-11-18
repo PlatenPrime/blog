@@ -19,8 +19,9 @@ type ContentRowProps = {
 
 /**
  * One material row shared by the home lists, feed, articles, notes,
- * taxonomy, and search. The whole row is the link, so hover and keyboard
- * focus land on the row. Hover is a solid accent fill, not a second glow.
+ * taxonomy, search, and related titles under a reading column.
+ * The whole row is the link, so hover and keyboard focus land on the row.
+ * Hover is a solid accent fill, not a second glow.
  */
 export function ContentRow({ href, meta, title }: ContentRowProps) {
   return (

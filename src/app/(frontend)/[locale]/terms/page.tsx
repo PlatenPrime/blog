@@ -36,11 +36,5 @@ export default async function TermsPage({ params }: TermsPageProps) {
   const page = await findPublicPage(locale, TERMS_PAGE_SLUG)
   if (!page) notFound()
 
-  return (
-    <div className="bg-background font-serif text-foreground">
-      <div className="mx-auto w-full max-w-measure px-5 pt-16 pb-24 sm:px-6 sm:pt-24">
-        <PageDetail labels={{ contact: '' }} mailto={null} page={page} />
-      </div>
-    </div>
-  )
+  return <PageDetail labels={{ contact: '' }} mailto={null} page={page} />
 }

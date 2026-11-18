@@ -39,14 +39,10 @@ export default async function AboutPage({ params }: AboutPageProps) {
   const t = await getTranslations('about')
 
   return (
-    <div className="bg-background font-serif text-foreground">
-      <div className="mx-auto w-full max-w-measure px-5 pt-16 pb-24 sm:px-6 sm:pt-24">
-        <PageDetail
-          labels={{ contact: t('contact') }}
-          mailto={contactMailto(process.env.CONTACT_EMAIL)}
-          page={page}
-        />
-      </div>
-    </div>
+    <PageDetail
+      labels={{ contact: t('contact') }}
+      mailto={contactMailto(process.env.CONTACT_EMAIL)}
+      page={page}
+    />
   )
 }
