@@ -1,6 +1,9 @@
 'use client'
 
+import { Copy, Share2 } from 'lucide-react'
 import { useEffect, useState, useSyncExternalStore } from 'react'
+
+import { FacebookIcon, TelegramIcon, XIcon } from '@/components/icons/social-icons'
 
 export type ShareLabels = {
   heading: string
@@ -40,6 +43,9 @@ function getCanNativeShare(): boolean {
   return typeof navigator !== 'undefined' && typeof navigator.share === 'function'
 }
 
+const actionClassName =
+  'inline-flex size-9 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
+
 export function ShareActions({ url, title, labels }: ShareActionsProps) {
   const [copied, setCopied] = useState(false)
   const canNativeShare = useSyncExternalStore(subscribeNoop, getCanNativeShare, () => false)
@@ -67,63 +73,65 @@ export function ShareActions({ url, title, labels }: ShareActionsProps) {
     }
   }
 
-  const linkClassName =
-    'text-muted-foreground underline-offset-4 hover:text-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
-
   return (
     <section aria-labelledby="share-heading" className="mt-12 font-sans text-small">
       <h2 className="m-0 font-medium text-muted-foreground" id="share-heading">
         {labels.heading}
       </h2>
-      <ul className="mt-4 mb-0 flex list-none flex-wrap items-center gap-x-4 gap-y-2 p-0">
+      <ul className="mt-4 mb-0 flex list-none flex-wrap items-center gap-1 p-0">
         <li>
           <button
-            className={`cursor-pointer border-0 bg-transparent p-0 ${linkClassName}`}
+            aria-label={copied ? labels.copied : labels.copy}
+            className={`cursor-pointer border-0 bg-transparent p-0 ${actionClassName}`}
             onClick={onCopy}
             type="button"
           >
-            {copied ? labels.copied : labels.copy}
+            <Copy aria-hidden="true" className="size-4" />
           </button>
         </li>
         {canNativeShare ? (
           <li>
             <button
-              className={`cursor-pointer border-0 bg-transparent p-0 ${linkClassName}`}
+              aria-label={labels.native}
+              className={`cursor-pointer border-0 bg-transparent p-0 ${actionClassName}`}
               onClick={onNativeShare}
               type="button"
             >
-              {labels.native}
+              <Share2 aria-hidden="true" className="size-4" />
             </button>
           </li>
         ) : null}
         <li>
           <a
-            className={linkClassName}
+            aria-label={labels.x}
+            className={actionClassName}
             href={shareHref('x', url, title)}
             rel="noopener noreferrer"
             target="_blank"
           >
-            {labels.x}
+            <XIcon />
           </a>
         </li>
         <li>
           <a
-            className={linkClassName}
+            aria-label={labels.telegram}
+            className={actionClassName}
             href={shareHref('telegram', url, title)}
             rel="noopener noreferrer"
             target="_blank"
           >
-            {labels.telegram}
+            <TelegramIcon />
           </a>
         </li>
         <li>
           <a
-            className={linkClassName}
+            aria-label={labels.facebook}
+            className={actionClassName}
             href={shareHref('facebook', url, title)}
             rel="noopener noreferrer"
             target="_blank"
           >
-            {labels.facebook}
+            <FacebookIcon />
           </a>
         </li>
       </ul>

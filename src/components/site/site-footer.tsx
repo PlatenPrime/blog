@@ -1,11 +1,16 @@
 import { getLocale, getTranslations } from 'next-intl/server'
 
+import { SocialNetworkIcon } from '@/components/icons/social-icons'
 import { Link } from '@/i18n/navigation'
 import { prefixPublicPath } from '@/i18n/paths'
 import { resolveAppLocale } from '@/i18n/resolveAppLocale'
+import { socialProfiles } from '@/lib/socialProfiles'
 
 import { siteQuietLinkClassName } from './site-nav'
 import { SiteNavLinks } from './site-nav-links'
+
+const socialIconLinkClassName =
+  'inline-flex size-9 items-center justify-center rounded-sm text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
 
 export async function SiteFooter() {
   const t = await getTranslations('nav')
@@ -19,6 +24,24 @@ export async function SiteFooter() {
         <div className="max-w-sm">
           <p className="m-0 font-medium text-foreground">{t('siteTitle')}</p>
           <p className="mt-2 mb-0">{t('siteDescription')}</p>
+          <ul
+            aria-label={t('social')}
+            className="mt-5 mb-0 flex list-none flex-wrap items-center gap-1 p-0"
+          >
+            {socialProfiles.map((profile) => (
+              <li key={profile.id}>
+                <a
+                  aria-label={t(profile.labelKey)}
+                  className={socialIconLinkClassName}
+                  href={profile.href}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  <SocialNetworkIcon id={profile.id} />
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
         <SiteNavLinks labelKey="footer" presentation="stack" />
         <ul className="m-0 flex list-none flex-col gap-1 p-0">
