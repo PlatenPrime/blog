@@ -1,3 +1,5 @@
+import { siteChromeLinkClassName } from '@/components/site/site-nav'
+import { skeletonBarClassName } from '@/components/states/skeleton-status'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -16,6 +18,8 @@ const swatches = [
   { className: 'bg-border', name: 'border' },
   { className: 'bg-destructive', name: 'destructive' },
   { className: 'bg-ring', name: 'ring' },
+  { className: 'bg-glow-a', name: 'glow-a' },
+  { className: 'bg-glow-b', name: 'glow-b' },
 ] as const
 
 /**
@@ -46,10 +50,11 @@ export function ThemeSpecimen() {
       <div className="max-w-measure">
         <h3 className="font-sans text-small text-muted-foreground">Type</h3>
         <div className="mt-3 flex flex-col gap-3">
-          <p className="font-serif text-display">Display</p>
-          <p className="font-serif text-h1">Heading one</p>
-          <p className="font-serif text-h2">Heading two</p>
-          <p className="font-serif text-h3">Heading three</p>
+          <p className="font-sans text-display">Display</p>
+          <p className="font-sans text-h1">Heading one</p>
+          <p className="font-sans text-h2">Heading two</p>
+          <p className="font-sans text-h3">Heading three</p>
+          <p className="font-sans text-h3">їжак, єнот, ліс, ґанок, ёлка</p>
           <p className="font-serif text-lead text-muted-foreground">
             A lead for the opening line of an essay.
           </p>
@@ -57,6 +62,7 @@ export function ThemeSpecimen() {
             Тиха типографіка тримає довге читання. Спокойный набор для русской строки. A body
             paragraph stays inside the measure.
           </p>
+          <p className="font-serif text-body">їжак, єнот, ліс, ґанок, ёлка</p>
           <p className="font-sans text-small text-muted-foreground">
             Small sans for chrome, dates, and meta.
           </p>
@@ -105,9 +111,27 @@ export function ThemeSpecimen() {
         </div>
       </div>
 
+      <Separator />
+
+      <div id="design-surfaces">
+        <h3 className="font-sans text-small text-muted-foreground">Surfaces</h3>
+        <p className="mt-3 mb-0 font-sans text-body text-muted-foreground">Nothing here yet.</p>
+        <div aria-hidden="true" className={`mt-4 h-6 w-2/3 max-w-sm ${skeletonBarClassName}`} />
+        <div className="mt-4 overflow-hidden rounded-md border border-border bg-card">
+          <pre className="m-0 overflow-x-auto p-4 font-mono text-small">
+            <code>const light = &apos;room&apos;</code>
+          </pre>
+        </div>
+        <p className="mt-4 mb-0 font-sans text-small">
+          <a className={siteChromeLinkClassName} href="#design-surfaces">
+            Document link
+          </a>
+        </p>
+      </div>
+
       <Card>
         <CardHeader>
-          <CardTitle className="font-serif">Reading card</CardTitle>
+          <CardTitle className="font-sans">Reading card</CardTitle>
           <CardDescription>A quiet surface for a note or article meta.</CardDescription>
         </CardHeader>
         <CardContent>

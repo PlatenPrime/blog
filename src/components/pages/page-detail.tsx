@@ -1,3 +1,5 @@
+import { ReadingFrame } from '@/components/reading/reading-frame'
+import { readingProseClassName, readingTitleClassName } from '@/components/reading/reading-prose'
 import { PayloadRichText } from '@/components/rich-text/PayloadRichText'
 import type { PublicPage } from '@/content/pagesQuery'
 
@@ -11,31 +13,15 @@ type PageDetailProps = {
   page: PublicPage
 }
 
-const bodyClassName = [
-  'mt-12 font-serif text-body text-foreground',
-  '[&_h2]:mt-10 [&_h2]:mb-4 [&_h2]:font-serif [&_h2]:text-h2',
-  '[&_h3]:mt-8 [&_h3]:mb-3 [&_h3]:font-serif [&_h3]:text-h3',
-  '[&_p]:my-4',
-  '[&_a]:text-primary [&_a]:underline-offset-4 hover:[&_a]:underline',
-  '[&_ul]:my-4 [&_ul]:list-disc [&_ul]:pl-6',
-  '[&_ol]:my-4 [&_ol]:list-decimal [&_ol]:pl-6',
-  '[&_blockquote]:my-6 [&_blockquote]:border-l [&_blockquote]:border-border [&_blockquote]:pl-4 [&_blockquote]:text-muted-foreground',
-  '[&_img]:my-6 [&_img]:h-auto [&_img]:max-w-full',
-  '[&_.payload-richtext-youtube]:my-6',
-  '[&_.payload-richtext-code]:my-6',
-  '[&_pre]:overflow-x-auto [&_pre]:rounded-md [&_pre]:p-4 [&_pre]:font-mono [&_pre]:text-small',
-  '[&_:not(pre)>code]:rounded-sm [&_:not(pre)>code]:bg-muted [&_:not(pre)>code]:px-1 [&_:not(pre)>code]:py-0.5 [&_:not(pre)>code]:font-mono [&_:not(pre)>code]:text-small',
-].join(' ')
-
 /**
- * Reading column for one CMS page. Title and body come from Payload.
+ * Reading room for one CMS page. Title and body come from Payload.
+ * There is no date, share, or related list: a page is not a material.
  * The mailto is optional chrome under the text, not a substitute for the body.
  */
 export function PageDetail({ labels, mailto, page }: PageDetailProps) {
   return (
-    <article>
-      <h1 className="m-0 font-serif text-h1 text-foreground">{page.title}</h1>
-      <PayloadRichText className={bodyClassName} data={page.body} />
+    <ReadingFrame header={<h1 className={`${readingTitleClassName} text-h1`}>{page.title}</h1>}>
+      <PayloadRichText className={readingProseClassName('reading')} data={page.body} />
       {mailto ? (
         <p className="mt-12 mb-0 font-sans text-small">
           <a className="text-primary underline-offset-4 hover:underline" href={mailto}>
@@ -43,6 +29,6 @@ export function PageDetail({ labels, mailto, page }: PageDetailProps) {
           </a>
         </p>
       ) : null}
-    </article>
+    </ReadingFrame>
   )
 }

@@ -1,4 +1,4 @@
-import { Badge } from '@/components/ui/badge'
+import { ContentRow } from '@/components/content/content-row'
 import { formatPublishedOn } from '@/content/formatPublishedOn'
 import { feedPageHref, type FeedItem } from '@/content/feedQuery'
 import { latestPublicPath } from '@/content/latestPublicQuery'
@@ -26,7 +26,7 @@ type FeedListProps = {
 
 /**
  * One page of the mixed feed. Titles stay links, not a second heading level:
- * the page already has its own h1.
+ * the page already has its own h1. Type sits in the meta line, not a badge.
  */
 export function FeedList({
   items,
@@ -41,29 +41,25 @@ export function FeedList({
       <ul className="m-0 mt-10 list-none p-0">
         {items.map((item) => {
           const publishedOn = item.publishedAt ? formatPublishedOn(item.publishedAt, locale) : null
+          const kind = item.collection === 'articles' ? labels.article : labels.note
 
           return (
-            <li className="border-b border-border py-5" key={`${item.collection}-${item.slug}`}>
-              <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-                <Badge className="font-sans" variant="outline">
-                  {item.collection === 'articles' ? labels.article : labels.note}
-                </Badge>
-                <Link
-                  className="font-serif text-h3 text-foreground underline-offset-4 hover:underline"
-                  href={latestPublicPath(item.collection, item.slug)}
-                >
-                  {item.title}
-                </Link>
-              </div>
-              {publishedOn && item.publishedAt ? (
-                <time
-                  className="mt-1 block font-sans text-small text-muted-foreground"
-                  dateTime={item.publishedAt}
-                >
-                  {publishedOn}
-                </time>
-              ) : null}
-            </li>
+            <ContentRow
+              href={latestPublicPath(item.collection, item.slug)}
+              key={`${item.collection}-${item.slug}`}
+              meta={
+                <>
+                  {kind}
+                  {publishedOn && item.publishedAt ? (
+                    <>
+                      {' · '}
+                      <time dateTime={item.publishedAt}>{publishedOn}</time>
+                    </>
+                  ) : null}
+                </>
+              }
+              title={item.title}
+            />
           )
         })}
       </ul>

@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
+import { listColumnClassName } from '@/components/content/content-row'
 import { FeedList } from '@/components/feed/feed-list'
 import { EmptyState } from '@/components/states/empty-state'
 import { findPublicFeed } from '@/content/feed'
@@ -49,9 +50,9 @@ export default async function FeedPage({ params, searchParams }: FeedPageProps) 
   const t = await getTranslations('feed')
 
   return (
-    <div className="bg-background font-serif text-foreground">
-      <div className="mx-auto w-full max-w-measure px-5 pt-16 pb-24 sm:px-6 sm:pt-24">
-        <h1 className="m-0 font-serif text-h1 text-foreground">{t('title')}</h1>
+    <div className="bg-background font-sans text-foreground">
+      <div className={listColumnClassName}>
+        <h1 className="m-0 font-sans text-h1 text-foreground">{t('title')}</h1>
         {result.items.length === 0 ? (
           <EmptyState>{t('empty')}</EmptyState>
         ) : (

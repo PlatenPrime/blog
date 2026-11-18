@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 
-export const skeletonBarClassName = 'animate-pulse rounded-sm bg-muted motion-reduce:animate-none'
+export const skeletonBarClassName = 'animate-pulse rounded-md bg-muted motion-reduce:animate-none'
 
 /**
  * Bars are hidden from the accessibility tree.

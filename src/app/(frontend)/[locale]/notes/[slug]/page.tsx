@@ -82,44 +82,46 @@ export default async function NotePage({ params }: NotePageProps) {
   })
 
   return (
-    <div className="bg-background font-sans text-foreground">
+    <>
       <JsonLd data={jsonLd} />
-      <div className="mx-auto w-full max-w-measure px-5 pt-16 pb-24 sm:px-6 sm:pt-24">
-        <NoteDetail
-          labels={{
-            categories: t('categories'),
-            kicker: t('kicker'),
-            tableOfContents: t('tableOfContents'),
-            tags: t('tags'),
-          }}
-          locale={locale}
-          note={note}
-        />
-        <ShareActions
-          labels={{
-            copied: share('copied'),
-            copy: share('copy'),
-            facebook: share('facebook'),
-            heading: share('heading'),
-            native: share('native'),
-            telegram: share('telegram'),
-            x: share('x'),
-          }}
-          title={note.title}
-          url={shareUrl}
-        />
-        {related.length > 0 ? (
-          <RelatedContent
-            items={related}
-            labels={{
-              article: feed('article'),
-              heading: t('related'),
-              note: feed('note'),
-            }}
-            locale={locale}
-          />
-        ) : null}
-      </div>
-    </div>
+      <NoteDetail
+        footer={
+          <>
+            <ShareActions
+              labels={{
+                copied: share('copied'),
+                copy: share('copy'),
+                facebook: share('facebook'),
+                heading: share('heading'),
+                native: share('native'),
+                telegram: share('telegram'),
+                x: share('x'),
+              }}
+              title={note.title}
+              url={shareUrl}
+            />
+            {related.length > 0 ? (
+              <RelatedContent
+                items={related}
+                labels={{
+                  article: feed('article'),
+                  heading: t('related'),
+                  note: feed('note'),
+                }}
+                locale={locale}
+              />
+            ) : null}
+          </>
+        }
+        labels={{
+          categories: t('categories'),
+          kicker: t('kicker'),
+          tableOfContents: t('tableOfContents'),
+          tags: t('tags'),
+        }}
+        locale={locale}
+        note={note}
+      />
+    </>
   )
 }

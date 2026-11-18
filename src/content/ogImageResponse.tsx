@@ -11,12 +11,18 @@ import {
 
 export { OG_CONTENT_TYPE, OG_SIZE }
 
-/** Soft paper background aligned with the public light theme. */
-const OG_BG = '#f4f1e8'
-const OG_FG = '#3a342c'
-const OG_MUTED = '#6b6358'
-const OG_ACCENT = '#2f5f7a'
-const OG_SCRIM = 'rgba(20, 16, 12, 0.62)'
+/**
+ * sRGB sample of the public light tokens. Satori does not read oklch variables.
+ * The card stays light: a messenger preview does not follow the reader's theme.
+ * `--background` `#eef6fd`, `--foreground` `#1d2a37`, `--muted-foreground` `#495766`,
+ * `--primary` `#19517b`. Scrim ink is the dark-theme foreground `#e3edf4`.
+ */
+const OG_BG = '#eef6fd'
+const OG_FG = '#1d2a37'
+const OG_MUTED = '#495766'
+const OG_ACCENT = '#19517b'
+const OG_SCRIM = 'rgba(13, 28, 42, 0.78)'
+const OG_ON_SCRIM = '#e3edf4'
 
 type OgFont = {
   data: ArrayBuffer
@@ -154,7 +160,7 @@ export function mediaOgElement(args: {
         style={{
           background: OG_SCRIM,
           bottom: 0,
-          color: '#f7f4ec',
+          color: OG_ON_SCRIM,
           display: 'flex',
           flexDirection: 'column',
           fontFamily: OG_FONT_FAMILY,

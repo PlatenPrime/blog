@@ -3,6 +3,7 @@ import { getLocale, getTranslations } from 'next-intl/server'
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
 
+import { listColumnClassName } from '@/components/content/content-row'
 import { HomeLatest } from '@/components/home/home-latest'
 import { EmptyState } from '@/components/states/empty-state'
 import { EmbeddedListSkeleton } from '@/components/states/list-skeleton'
@@ -34,11 +35,11 @@ export default async function HomePage() {
   const states = await getTranslations('states')
 
   return (
-    <div className="bg-background font-serif text-foreground">
-      <div className="mx-auto w-full max-w-measure px-5 pt-16 pb-24 sm:px-6 sm:pt-24">
+    <div className="bg-background font-sans text-foreground">
+      <div className={listColumnClassName}>
         <header data-testid="home-hero">
-          <h1 className="m-0 font-serif text-display text-foreground">{t('siteTitle')}</h1>
-          <p className="mt-5 mb-0 max-w-measure text-lead text-muted-foreground">
+          <h1 className="m-0 font-sans text-display text-foreground">{t('siteTitle')}</h1>
+          <p className="mt-5 mb-0 max-w-measure font-serif text-lead text-muted-foreground">
             {t('siteDescription')}
           </p>
         </header>

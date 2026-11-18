@@ -1,32 +1,14 @@
 import { getTranslations } from 'next-intl/server'
-import { Suspense } from 'react'
 
-import { LanguageSwitcher } from '@/components/language-switcher/LanguageSwitcher'
-import { ThemeToggle } from '@/components/theme/theme-toggle'
-import { Link } from '@/i18n/navigation'
-
-import { SiteNavLinks } from './site-nav-links'
-import { siteChromeLinkClassName } from './site-nav'
-
-function LanguageSwitcherFallback() {
-  return <div aria-hidden="true" className="min-h-8 w-24" />
-}
+import { SiteHeaderBar } from './site-header-bar'
 
 export async function SiteHeader() {
   const t = await getTranslations('nav')
 
   return (
-    <header className="flex flex-wrap items-center gap-x-6 gap-y-3 border-b border-border bg-background px-5 py-3 font-sans text-small text-foreground">
-      <Link className={`${siteChromeLinkClassName} font-medium text-foreground`} href="/">
-        {t('siteTitle')}
-      </Link>
-      <SiteNavLinks labelKey="primary" />
-      <div className="ml-auto flex flex-wrap items-center gap-x-4 gap-y-2">
-        <Suspense fallback={<LanguageSwitcherFallback />}>
-          <LanguageSwitcher />
-        </Suspense>
-        <ThemeToggle />
-      </div>
+    <header className="sticky top-0 z-40 bg-background/75 font-sans text-small text-foreground backdrop-blur-md">
+      <SiteHeaderBar menuLabel={t('primary')} siteTitle={t('siteTitle')} />
+      <div aria-hidden="true" className="site-chrome-edge" />
     </header>
   )
 }

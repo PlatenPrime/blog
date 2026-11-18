@@ -24,6 +24,10 @@ export type SiteNavItem = (typeof siteNavItems)[number]
 export const siteChromeLinkClassName =
   'rounded-sm px-0.5 text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
 
+/** Quiet header and footer links. Document actions (404, errors, consent) stay on `siteChromeLinkClassName`. */
+export const siteQuietLinkClassName =
+  'inline-flex min-h-8 items-center rounded-sm text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
+
 /**
  * A section is current on its index and on any future child path (`/notes/slug`).
  * A sibling prefix (`/notes-extra`) does not match.

@@ -8,12 +8,16 @@ type HighlightedCodeProps = {
 /**
  * Async RSC: Shiki highlight for Lexical Code blocks (roadmap 064).
  * Dual-theme CSS variables; `html.dark` swaps colors without re-highlight.
+ * The frame is a card border. Shiki themes stay `github-light` / `github-dark`.
  */
 export async function HighlightedCode({ code, language }: HighlightedCodeProps) {
   const { html, language: resolved } = await highlightCode(code, language)
 
   return (
-    <div className="payload-richtext-code" data-language={resolved}>
+    <div
+      className="payload-richtext-code overflow-hidden rounded-md border border-border bg-card"
+      data-language={resolved}
+    >
       <div dangerouslySetInnerHTML={{ __html: html }} />
     </div>
   )

@@ -4,6 +4,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
 import { ArticleList } from '@/components/articles/article-list'
+import { listColumnClassName } from '@/components/content/content-row'
 import { EmptyState } from '@/components/states/empty-state'
 import { findPublicArticles } from '@/content/articles'
 import { articlesPageHref, readArticlesPageParam } from '@/content/articlesQuery'
@@ -53,9 +54,9 @@ export default async function ArticlesPage({ params, searchParams }: ArticlesPag
   const t = await getTranslations('articles')
 
   return (
-    <div className="bg-background font-serif text-foreground">
-      <div className="mx-auto w-full max-w-measure px-5 pt-16 pb-24 sm:px-6 sm:pt-24">
-        <h1 className="m-0 font-serif text-h1 text-foreground">{t('title')}</h1>
+    <div className="bg-background font-sans text-foreground">
+      <div className={listColumnClassName}>
+        <h1 className="m-0 font-sans text-h1 text-foreground">{t('title')}</h1>
         {result.items.length === 0 ? (
           <EmptyState>{t('empty')}</EmptyState>
         ) : (

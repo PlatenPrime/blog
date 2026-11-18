@@ -2,16 +2,17 @@
 
 Шаг **110**. Список того, что **сознательно не входит в v1**, но не должно потеряться.
 
-Это не чертёж работ и не открытые todo роадмапа. Канон статусов до конца v1 — [`development-roadmap.md`](./development-roadmap.md). Стек и out of scope — [`tech-stack.md`](./tech-stack.md) §16. Author-only продукт — [ADR-007](./adr/007-author-only-no-public-auth.md).
+Это не чертёж работ и не открытые todo роадмапа. Канон статусов — [`development-roadmap.md`](./development-roadmap.md): v1 закрыт, публичный вид после него — Track 15 (шаги **116–121**). Сюда эти шаги не копируются. Стек и out of scope — [`tech-stack.md`](./tech-stack.md) §16. Author-only продукт — [ADR-007](./adr/007-author-only-no-public-auth.md).
 
 ---
 
 ## Граница v1 / post-v1
 
-| Зона                     | Что сюда                                                                                                                    |
-| ------------------------ | --------------------------------------------------------------------------------------------------------------------------- |
-| **v1 done**              | Go-live на `*.vercel.app` (**109**). Live URL: `https://platenprimeblog.vercel.app`. Track 14 docs **111**–**115** закрыты. |
-| **Сюда (v1.1+ / later)** | Custom domain, R2 CDN, MFA, audit log, search upgrade и прочее ниже.                                                        |
+| Зона                     | Что сюда                                                                                                                            |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------- |
+| **v1 done**              | Go-live на `*.vercel.app` (**109**). Live URL: `https://platenprimeblog.vercel.app`. Track 14 docs **111**–**115** закрыты.         |
+| **Уже в чертеже**        | Публичный вид — Track 15, шаги **116–121** (`done`). Холодный синий, мягкие градиенты, шрифты и layout. В этот файл не дублируется. |
+| **Сюда (v1.1+ / later)** | Custom domain, R2 CDN, MFA, audit log, search upgrade и прочее ниже.                                                                |
 
 Verify границы: новый must-have после announce → сюда (или новый трек), не в закрытый чертёж v1. Waivers / out of scope — **здесь**.
 
@@ -58,6 +59,7 @@ Verify границы: новый must-have после announce → сюда (и
 
 ### SEO / UX polish
 
+- Публичный визуальный refresh — Track 15 закрыт (**116–121** `done`). Следующий вид, если понадобится, — пункт сюда, не переписывание закрытых шагов.
 - `robots.ts` / `robots.txt` — seo-checklist «сознательно нет».
 - Privacy / terms в sitemap (сейчас только `about` среди CMS pages) — seo-checklist «сознательно нет» (**115**).
 - BreadcrumbList JSON-LD; CMS Site Settings для JSON-LD — seo-checklist / Notes **070**.
@@ -90,6 +92,6 @@ Verify границы: новый must-have после announce → сюда (и
 
 ## Как пользоваться
 
-1. Новая идея «после announce» → пункт сюда (или numbered шаг в новом треке), не в закрытый чертёж v1.
+1. Новая идея «после announce» → пункт сюда (или новый трек в чертеже), не в закрытый чертёж v1 и не в закрытый Track 15.
 2. Расхождение docs ↔ код → либо правка канона, либо ticket сюда (аудит **115** закрыт с mismatches = 0).
 3. Реализация пункта — отдельное решение и отдельная работа; этот файл только держит горизонт.

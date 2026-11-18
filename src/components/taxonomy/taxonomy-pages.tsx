@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
+import { ContentRow, listColumnClassName } from '@/components/content/content-row'
 import { FeedList } from '@/components/feed/feed-list'
 import { EmptyState } from '@/components/states/empty-state'
 import { findTaxonomyLanguageAlternates } from '@/content/localizedAlternates'
@@ -21,8 +22,6 @@ import {
 } from '@/content/taxonomyQuery'
 import { Link, redirect } from '@/i18n/navigation'
 import { routing } from '@/i18n/routing'
-
-const columnClassName = 'mx-auto w-full max-w-measure px-5 pt-16 pb-24 sm:px-6 sm:pt-24'
 
 type IndexPageProps = {
   params: Promise<{ locale: string }>
@@ -101,9 +100,9 @@ export async function TaxonomyIndexPage({
   const sibling = collection === 'categories' ? 'tags' : 'categories'
 
   return (
-    <div className="bg-background font-serif text-foreground">
-      <div className={columnClassName}>
-        <h1 className="m-0 font-serif text-h1 text-foreground">{t(titleKey(collection))}</h1>
+    <div className="bg-background font-sans text-foreground">
+      <div className={listColumnClassName}>
+        <h1 className="m-0 font-sans text-h1 text-foreground">{t(titleKey(collection))}</h1>
         <p className="mt-6 mb-0 font-sans text-small">
           <Link className="text-primary underline-offset-4 hover:underline" href={`/${sibling}`}>
             {t(titleKey(sibling))}
@@ -160,9 +159,9 @@ export async function TaxonomyTermPage({
   const t = await getTranslations('taxonomy')
 
   return (
-    <div className="bg-background font-serif text-foreground">
-      <div className={columnClassName}>
-        <h1 className="m-0 font-serif text-h1 text-foreground">{result.title}</h1>
+    <div className="bg-background font-sans text-foreground">
+      <div className={listColumnClassName}>
+        <h1 className="m-0 font-sans text-h1 text-foreground">{result.title}</h1>
         {result.items.length === 0 ? (
           <EmptyState>{t('empty')}</EmptyState>
         ) : (
@@ -197,14 +196,11 @@ function TaxonomyIndexList({
   return (
     <ul className="m-0 mt-10 list-none p-0">
       {terms.map((term) => (
-        <li className="border-b border-border py-5" key={term.id}>
-          <Link
-            className="font-serif text-h3 text-foreground underline-offset-4 hover:underline"
-            href={taxonomyTermPath(collection, term.slug)}
-          >
-            {term.title}
-          </Link>
-        </li>
+        <ContentRow
+          href={taxonomyTermPath(collection, term.slug)}
+          key={term.id}
+          title={term.title}
+        />
       ))}
     </ul>
   )
