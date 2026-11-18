@@ -18,9 +18,10 @@ export default function DesignSmokePage() {
         <p className="text-small text-muted-foreground">
           Dev scaffold. Not product chrome. The header button switches the theme.
         </p>
-        <h1 className="mt-2 font-serif text-h1">Design tokens</h1>
+        <h1 className="mt-2 font-sans text-h1">Design tokens</h1>
         <p className="mt-3 max-w-measure font-serif text-lead text-muted-foreground">
-          One specimen follows the document theme. Reading is serif. Controls are sans.
+          One specimen follows the document theme. Display and headings are Manrope. Long reading is
+          Source Serif 4.
         </p>
         <div className="mt-8">
           <ThemeSpecimen />

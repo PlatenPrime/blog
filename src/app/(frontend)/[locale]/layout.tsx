@@ -1,7 +1,7 @@
 import { hasLocale, NextIntlClientProvider } from 'next-intl'
 import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Metadata } from 'next'
-import { Source_Sans_3, Source_Serif_4 } from 'next/font/google'
+import { Manrope, Source_Serif_4 } from 'next/font/google'
 import { notFound } from 'next/navigation'
 import React from 'react'
 
@@ -21,19 +21,18 @@ import { routing } from '@/i18n/routing'
 import '../globals.css'
 
 const sourceSerif = Source_Serif_4({
-  subsets: ['cyrillic', 'latin'],
+  subsets: ['cyrillic', 'cyrillic-ext', 'latin'],
   display: 'swap',
   style: ['italic', 'normal'],
   variable: '--font-source-serif',
   weight: ['400', '600'],
 })
 
-const sourceSans = Source_Sans_3({
-  subsets: ['cyrillic', 'latin'],
+const manrope = Manrope({
+  subsets: ['cyrillic', 'cyrillic-ext', 'latin'],
   display: 'swap',
-  style: ['italic', 'normal'],
-  variable: '--font-source-sans',
-  weight: ['400', '500', '600'],
+  variable: '--font-manrope',
+  weight: ['400', '500', '600', '700'],
 })
 
 type LocaleLayoutProps = {
@@ -80,7 +79,7 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
 
   return (
     <html
-      className={`${sourceSerif.variable} ${sourceSans.variable}`}
+      className={`${sourceSerif.variable} ${manrope.variable}`}
       lang={locale}
       suppressHydrationWarning
     >

@@ -18,7 +18,7 @@
 
 **Статусы шагов:** `todo` · `doing` · `done` · `blocked` · `cancelled`.
 
-**Baseline Status:** v1 роадмап закрыт (`001`–`085`, `087`–`115` — `done`; `086` — `cancelled`). Track 14 docs: `111`–`115` — `done`. Активный горизонт — Track 15, следующий шаг **117** (`todo`); **116** — `done`. Прочий горизонт после announce — [`post-v1.md`](./post-v1.md).
+**Baseline Status:** v1 роадмап закрыт (`001`–`085`, `087`–`115` — `done`; `086` — `cancelled`). Track 14 docs: `111`–`115` — `done`. Активный горизонт — Track 15, следующий шаг **118** (`todo`); **116**–**117** — `done`. Прочий горизонт после announce — [`post-v1.md`](./post-v1.md).
 
 **Pivot: author-only (2026-11-12).** Продуктовая модель — один admin, гости без аккаунтов; без comments/bookmarks, публичной auth, Resend/OAuth/Turnstile/Upstash как фич продукта. Канон: [ADR-007](adr/007-author-only-no-public-auth.md), миграция `src/migrations/20261112_130000_drop_reader_social.ts`. Исторические шаги **021–022**, **025–032**, **057–061**, **028–029**, **074–075**, **082** остаются **`done` как история**; их DoD описывает то, что строили тогда — **superseded** для текущего продукта. Синхронизация docs + кода pivot — **сознательный waive** правила «один PR = один шаг» (вне нумерации).
 
@@ -1158,15 +1158,16 @@ v1 считается завершённым, когда одновременн�
 - **Deliverables:** Новые oklch в [`globals.css`](<../src/app/(frontend)/globals.css>) для light/dark (фон, чернила, card, muted, border, primary). Токены свечения и слой атмосферы на публичном layout. Канон в [`design-principles.md`](./design-principles.md) и формулировка в [`tech-stack.md`](./tech-stack.md) §8. Свотчи на `/dev/design`. Компоненты не перевёрстываем.
 - **Verify:** Светлая тема голубоватая, тёмная — тёмно-синяя. В публичных токенах нет hue 70/89. Текст на обеих темах читается. `/admin` выглядит как раньше.
 - **DoD:** Коричневого фона нет. Правила градиента записаны до того, как компоненты начнут импровизировать.
-- **Notes:** Публичные роли в `globals.css` — hue ~240 (свет `L 0.97`, тьма `L 0.22`, не `#000`). `destructive` оставлен красным (hue 28). `--glow-a` / `--glow-b` и слой `.site-atmosphere` на оболочке locale layout: два radial, без `background-attachment: fixed`. Правила градиента — design-principles «Атмосфера». Свотчи glow на `/dev/design`. Админка не импортирует этот CSS. Тесты N/A (нет новой логики). Отложено: шрифты — **117**; шапка/подвал — **118**; hover строк — **119**; чтение — **120**; `global-error` (`#f7f4ef`), OG `#f4f1e8`, пустые/404 — **121**.
+- **Notes:** Публичные роли в `globals.css` — hue ~240 (свет `L 0.97`, тьма `L 0.22`, не `#000`). `destructive` оставлен красным (hue 28). `--glow-a` / `--glow-b` и слой `.site-atmosphere` на оболочке locale layout: два radial, без `background-attachment: fixed`. Правила градиента — design-principles «Атмосфера». Свотчи glow на `/dev/design`. Админка не импортирует этот CSS. Тесты N/A (нет новой логики). Шрифты закрыл **117**. Отложено: шапка/подвал — **118**; hover строк — **119**; чтение — **120**; `global-error` (`#f7f4ef`), OG `#f4f1e8`, пустые/404 — **121**.
 
 ### 117 — Типографика
 
-- **Статус:** todo
+- **Статус:** done
 - **Цель:** Интерфейс и заголовки выглядят современно, длинный текст остаётся удобным на uk/ru/en.
 - **Deliverables:** Manrope через `next/font` в [`layout.tsx`](<../src/app/(frontend)/[locale]/layout.tsx>) вместо Source Sans 3. Source Serif 4 остаётся для prose. Шкала в `globals.css`: крупнее display, плотнее трекинг, размеры через `clamp`. Таблица ролей в design-principles. Образец кириллицы на `/dev/design`.
 - **Verify:** На витрине видны і ї є ґ и ё в обеих гарнитурах. Смена темы не снимает классы шрифтов с `<html>` (ловушка шага 047).
 - **DoD:** Пара шрифтов одна на весь публичный сайт. Нет латинского display с чужим фолбэком на украинском.
+- **Notes:** `Manrope` (`--font-manrope`, веса 400/500/600/700, без italic) вместо Source Sans 3; `Source_Serif_4` без смены весов (400/600, italic). Оба: `latin` + `cyrillic` + `cyrillic-ext`, `display: 'swap'`. На `<html>` только переменные; `themeInitScript` по-прежнему снимает лишь `light`/`dark`. Шкала display–lead — `clamp` и более плотный трекинг; body и small фиксированы. Роли — design-principles. Витрина: display/H1–H3 — `font-sans`, lead/body — `font-serif`, строка `їжак, єнот, ліс, ґанок, ёлка` в обеих гарнитурах. Классы `font-serif` на страницах не переключали (композиция — **119** и **120**). OG и админка вне шага. Тесты N/A.
 
 ### 118 — Оболочка
 
@@ -1223,7 +1224,7 @@ v1 считается завершённым, когда одновременн�
 | 14    | Documentation        | 111–115 |
 | 15    | Visual identity      | 116–121 |
 
-**Всего шагов v1:** 115. **Track 15 (после v1):** **116** — `done`; **117–121** — `todo`.
+**Всего шагов v1:** 115. **Track 15 (после v1):** **116**–**117** — `done`; **118–121** — `todo`.
 
 ---
 

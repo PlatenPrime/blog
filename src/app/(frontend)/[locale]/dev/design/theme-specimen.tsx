@@ -48,10 +48,11 @@ export function ThemeSpecimen() {
       <div className="max-w-measure">
         <h3 className="font-sans text-small text-muted-foreground">Type</h3>
         <div className="mt-3 flex flex-col gap-3">
-          <p className="font-serif text-display">Display</p>
-          <p className="font-serif text-h1">Heading one</p>
-          <p className="font-serif text-h2">Heading two</p>
-          <p className="font-serif text-h3">Heading three</p>
+          <p className="font-sans text-display">Display</p>
+          <p className="font-sans text-h1">Heading one</p>
+          <p className="font-sans text-h2">Heading two</p>
+          <p className="font-sans text-h3">Heading three</p>
+          <p className="font-sans text-h3">їжак, єнот, ліс, ґанок, ёлка</p>
           <p className="font-serif text-lead text-muted-foreground">
             A lead for the opening line of an essay.
           </p>
@@ -59,6 +60,7 @@ export function ThemeSpecimen() {
             Тиха типографіка тримає довге читання. Спокойный набор для русской строки. A body
             paragraph stays inside the measure.
           </p>
+          <p className="font-serif text-body">їжак, єнот, ліс, ґанок, ёлка</p>
           <p className="font-sans text-small text-muted-foreground">
             Small sans for chrome, dates, and meta.
           </p>
@@ -109,7 +111,7 @@ export function ThemeSpecimen() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="font-serif">Reading card</CardTitle>
+          <CardTitle className="font-sans">Reading card</CardTitle>
           <CardDescription>A quiet surface for a note or article meta.</CardDescription>
         </CardHeader>
         <CardContent>
