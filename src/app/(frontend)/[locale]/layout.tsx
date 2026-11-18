@@ -89,7 +89,8 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
         <JsonLd data={jsonLd} />
         <ThemeProvider>
           <NextIntlClientProvider messages={messages}>
-            <div className="flex min-h-dvh flex-col">
+            <div className="relative isolate flex min-h-dvh flex-col">
+              <div aria-hidden="true" className="site-atmosphere" />
               <SkipLink />
               <SiteHeader />
               <main className="flex-1 outline-none" id="main" tabIndex={-1}>

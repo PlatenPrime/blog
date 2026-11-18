@@ -16,6 +16,8 @@ const swatches = [
   { className: 'bg-border', name: 'border' },
   { className: 'bg-destructive', name: 'destructive' },
   { className: 'bg-ring', name: 'ring' },
+  { className: 'bg-glow-a', name: 'glow-a' },
+  { className: 'bg-glow-b', name: 'glow-b' },
 ] as const
 
 /**
