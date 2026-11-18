@@ -1,3 +1,4 @@
+import { ContentRow } from '@/components/content/content-row'
 import { articlesPageHref } from '@/content/articlesQuery'
 import { formatPublishedOn } from '@/content/formatPublishedOn'
 import { latestPublicPath, type LatestPublicDoc } from '@/content/latestPublicQuery'
@@ -20,7 +21,7 @@ type ArticleListProps = {
 
 /**
  * One page of articles. Titles stay links, not a second heading level:
- * the page already has its own h1. No type badge: every row is an article.
+ * the page already has its own h1. No type label: every row is an article.
  */
 export function ArticleList({ items, labels, locale, page, pageCount }: ArticleListProps) {
   return (
@@ -30,22 +31,16 @@ export function ArticleList({ items, labels, locale, page, pageCount }: ArticleL
           const publishedOn = item.publishedAt ? formatPublishedOn(item.publishedAt, locale) : null
 
           return (
-            <li className="border-b border-border py-5" key={item.slug}>
-              <Link
-                className="font-serif text-h3 text-foreground underline-offset-4 hover:underline"
-                href={latestPublicPath('articles', item.slug)}
-              >
-                {item.title}
-              </Link>
-              {publishedOn && item.publishedAt ? (
-                <time
-                  className="mt-1 block font-sans text-small text-muted-foreground"
-                  dateTime={item.publishedAt}
-                >
-                  {publishedOn}
-                </time>
-              ) : null}
-            </li>
+            <ContentRow
+              href={latestPublicPath('articles', item.slug)}
+              key={item.slug}
+              meta={
+                publishedOn && item.publishedAt ? (
+                  <time dateTime={item.publishedAt}>{publishedOn}</time>
+                ) : null
+              }
+              title={item.title}
+            />
           )
         })}
       </ul>

@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react'
 
 /**
- * The same reading column as the feed.
- * 404, 500, and full-page skeletons stay inside the locale chrome.
+ * Reading-width column for 404, 500, and reading skeletons.
+ * List routes use `listColumnClassName` so a loading list does not jump width.
  */
 export function StateColumn({ children }: { children: ReactNode }) {
   return (

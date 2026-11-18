@@ -113,6 +113,7 @@
   --text-small--line-height: 1.5;
 
   --container-measure: 65ch;
+  --container-list: 42rem;
   --container-shell: 72rem;
 
   --color-background: var(--background);
